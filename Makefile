@@ -14,11 +14,13 @@ else
 endif
 
 
-OUT=./bin/ChineseCheckers
-CXXFLAGS=-Wall -I./include --std=c++17
+OUT=./bin/ChineseCheckers.so
+CXXFLAGS=-Wall -fno-common -dynamic -O3 -I./include -I$(shell python3 -c "from sysconfig import get_paths as gp; print(gp()[\"include\"])") --std=c++17
+LDFLAGS=-lboost_python310
+
 
 CXXFILES = $(wildcard ./src/*.cpp)
-OFILES = $(patsubst ./objects/%.hpp, ./src/%.cpp, $(CXXFILES))
+OFILES = $(patsubst ./src/%.cpp, ./objects/%.o, $(CXXFILES))
 DIRECTORIES = ./objects ./bin
 
 
@@ -29,12 +31,11 @@ $(DIRECTORIES) :
 
 $(OUT): $(OFILES)
 	@echo "${BLUE}Linking CXX objects${RESET}"
-	@$(CXX) $(CXXFLAGS) $(LDFLAGS) -shared -o $@ $^
+	@$(CXX) $(CXXFLAGS) $(LDFLAGS) -bundle -undefined dynamic_lookup -o $@ $^
 
 ./objects/%.o: ./src/%.cpp | $(DIRECTORIES)
 	@echo "${PURPLE}Building CXX object" $@ "${RESET}"
-	@$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ -c $<
-
+	@$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 clean :
 	@echo "${RED}Cleaning${RESET}"
@@ -45,4 +46,3 @@ clean :
 mrproper : clean
 	@echo "${RED}Cleaning all files${RESET}"
 	@$(RM) $(OUT)
-	@$(RM) $(LATEXFILES_pdf)
