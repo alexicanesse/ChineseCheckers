@@ -21,7 +21,6 @@ typedef std::pair<int, int> PositionType;
 class ChineseCheckers{
 private:
     GridType grid_; /* a data structure containing the grid */
-    int nbr_players_;
     int nbr_colors_;
     std::vector<std::vector<PositionType>> position_colors_players_; /* (i,j) contains the j-th color of player i */
     Player who_is_to_play_;
@@ -30,7 +29,7 @@ private:
 public:
     bool move(Player player, std::vector<PositionType> list_moves);
     bool is_finished(); /* returns true or false to indicate if the current position is a winning position */
-    void new_game(int nbr_players, int nbr_colors);
+    void new_game(int nbr_colors);
     ChineseCheckers();
 };
 
