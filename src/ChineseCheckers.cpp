@@ -32,4 +32,7 @@ void ChineseCheckers::new_game(int nbr_colors){
 #warning TODO
 }
 
-
+int main()
+{
+  return 0;
+}
