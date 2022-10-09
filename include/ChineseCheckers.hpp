@@ -10,13 +10,14 @@
 
 
 #include <vector>
+#include <array>
 
 enum Color {Empty, Red, Orange, Yellow, Green, Blue, Purple};
 enum MoveType { Illegal, Jump, notJump};
 
 typedef int Player;
 typedef std::vector<std::vector<Color>> GridType;
-typedef std::pair<int, int> PositionType;
+typedef std::array<int, 2> PositionType;
 
 class ChineseCheckers{
 private:
