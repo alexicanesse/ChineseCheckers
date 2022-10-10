@@ -24,8 +24,29 @@ bool ChineseCheckers::move(Player player, std::vector<PositionType> list_moves){
 }
 
 bool ChineseCheckers::is_finished(){ /* returns true or false to indicate if the current position is a winning position */
-#warning TODO
-    return true; //This is just to remove the error while this function is not implemented
+    /* Check if player 0 won */
+    bool won = true;
+    for(auto x : this->position_colors_players_.at(0)){
+        if(x.at(0) < 4 || x.at(1) < 4)
+            won = false;
+    }
+    if(won)
+        return true;
+    
+    /* Check if Player 1 won */
+    won = true;
+    for(auto x : this->position_colors_players_.at(1)){
+        if(x.at(0) > 4 || x.at(1) > 4)
+            won = false;
+    }
+    /*
+     * This return is a shortcut for
+     * if(won)
+     *    return true;
+     *
+     * return false;
+     */
+    return won;
 }
 
 void ChineseCheckers::new_game(){
@@ -39,8 +60,8 @@ void ChineseCheckers::new_game(){
                 /*
                  * (i, j) |-> 3*i + j is a bijection from [|0, 3|]^2 to [|0, 9|]
                  */
-                this->position_colors_players_.at(0).at(i*3 + j) = {i, j};
-                this->position_colors_players_.at(1).at(i*3 + j) = {7-i, 7-j};
+                this->position_colors_players_.at(1).at(i*3 + j) = {i, j};
+                this->position_colors_players_.at(0).at(i*3 + j) = {7-i, 7-j};
                 std::cout << std::endl;
             }
             else{
@@ -49,7 +70,6 @@ void ChineseCheckers::new_game(){
             }
         }
     }
-    
     this->who_is_to_play_ = 0;
 }
 
