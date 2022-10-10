@@ -16,7 +16,7 @@ enum Color {Empty, Black, White};
 enum MoveType { Illegal, Jump, notJump};
 
 typedef int Player;
-typedef std::vector<std::vector<Color>> GridType;
+typedef std::array<std::array<Color, 8>, 8> GridType;
 typedef std::array<int, 2> PositionType;
 
 class ChineseCheckers{
