@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <array>
+#include <iostream>
 
 enum Color {Empty, White, Black};
 enum MoveType { Illegal, Jump, notJump};
@@ -31,6 +32,7 @@ public:
     bool is_finished(); /* returns true or false to indicate if the current position is a winning position */
     void new_game();
     ChineseCheckers();
+    void get_grid();
 };
 
 class Addon : public ChineseCheckers{

@@ -11,6 +11,7 @@ BOOST_PYTHON_MODULE(ChineseCheckers)
         .def("move", &ChineseCheckers::move)
         .def("is_finished", &ChineseCheckers::is_finished)
         .def("new_game", &ChineseCheckers::new_game)
+        .def("get_grid", &ChineseCheckers::get_grid)
     ;
 }
 
