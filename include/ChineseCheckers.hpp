@@ -12,7 +12,7 @@
 #include <vector>
 #include <array>
 
-enum Color {Empty, Black, White};
+enum Color {Empty, White, Black};
 enum MoveType { Illegal, Jump, notJump};
 
 typedef int Player;
@@ -22,7 +22,7 @@ typedef std::array<int, 2> PositionType;
 class ChineseCheckers{
 private:
     GridType grid_; /* a data structure containing the grid */
-    std::vector<std::vector<PositionType>> position_colors_players_; /* (i,j) contains the j-th color of player i */
+    std::array<std::array<PositionType, 10>, 2> position_colors_players_; /* (i,j) contains the j-th color of player i */
     Player who_is_to_play_;
     MoveType elementaryMove(PositionType original_position, PositionType arrival_position);
 
