@@ -7,8 +7,8 @@ We used some codes of an original implementation made by a member of our group. 
 
 ## Table of contents 
 1. [Getting Started](#getting-started)
-    a. [Prerequisites](#prerequisites)
-    b. [Installing](#installing)
+    1. [Prerequisites](#prerequisites)
+    2. [Installing](#installing)
 2. [Running the tests](#running-the-tests)
 3. [Built With](#built-with)
 4. [Contributing](#contributing)
@@ -30,7 +30,7 @@ Requirements for the software and other tools to build, test and push
 
 ### Installing
 
-####Installing prerequisites
+#### Installing prerequisites
 
 On Ubuntu
 
@@ -50,7 +50,7 @@ pip3 install --upgrade pip
 pip3 install tk
 ```
 
-####Compiling the library
+#### Compiling the library
 
 Run `setup.py` in order to configure `MakeFile`. Then, run `make`.
 ```sh
