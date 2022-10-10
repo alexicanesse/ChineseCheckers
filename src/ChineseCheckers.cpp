@@ -28,7 +28,7 @@ bool ChineseCheckers::is_finished(){ /* returns true or false to indicate if the
     return true; //This is just to remove the error while this function is not implemented
 }
 
-void ChineseCheckers::new_game(int nbr_colors){
+void ChineseCheckers::new_game(){
 #warning TODO
 }
 
