@@ -50,6 +50,14 @@ pip3 install --upgrade pip
 pip3 install tk
 ```
 
+On ArchLinux
+```sh
+sudo pacman -S boost
+
+pip3 install --upgrade pip
+pip3 install tk
+```
+
 #### Compiling the library
 
 Run `setup.py` in order to configure `MakeFile`. Then, run `make`.
