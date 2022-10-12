@@ -31,8 +31,14 @@ ChineseCheckers::ChineseCheckers() {
 
 bool ChineseCheckers::move(Player player,
                            std::vector<PositionType> list_moves) {
-#warning TODO
-    return true;  // This is just to remove
+  int n = list_moves.size();
+  MoveType fst_move = elementaryMove(list_moves[0],list_moves[1]);
+  if (fst_move == Illegal) return false;
+  if (fst_move == notJump) return (n == 1);
+  for (int i=1; i<n-1; ++i){
+    if (elementaryMove(list_moves[i], list_moves[i+1]) != Jump) return false;
+  }
+  return true;  // This is just to remove
                   // the error while this function is not implemented
 }
 

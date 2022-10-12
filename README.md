@@ -52,7 +52,7 @@ pip3 install tk
 
 On ArchLinux
 ```sh
-sudo pacman -S boost
+sudo pacman -S boost doxygen
 
 pip3 install --upgrade pip
 pip3 install tk
