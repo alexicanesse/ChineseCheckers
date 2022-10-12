@@ -438,5 +438,5 @@ class Board(Tk):
 
 if __name__ == "__main__":
     
-    fen = Board(1300, 1000)
+    fen = Board(1200, 900)
     fen.mainloop()
