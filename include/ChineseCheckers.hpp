@@ -27,6 +27,7 @@ class ChineseCheckers {
     /* (i,j) contains the j-th color of player i */
     std::array<std::array<PositionType, 10>, 2> position_colors_players_;
     Player who_is_to_play_;
+    bool no_pawns_between(PositionType original_position, PositionType arrival_position, int which_case, int middle_x, int middle_y);
     MoveType elementaryMove(PositionType original_position,
                             PositionType arrival_position);
 
