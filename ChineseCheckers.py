@@ -143,6 +143,8 @@ class BoardArea(Canvas):
     def highlight_cases(self, l_moves):
         '''highlights the cases in the l_moves cases list'''
         
+        for oval in self.hc:
+            self.delete(oval)
 
         for move in l_moves: # l_moves is the list of intermediate cases
             i, j = move
@@ -234,11 +236,19 @@ class BoardArea(Canvas):
             dy = event.y - self.__piece_courante.y
             self.__piece_courante.move_on_ui(dx,dy)
     
-    def coups_possibles_a_supprimer(self,p,pospions): #TODO mettre dans Human()
+
+    def coups_possibles_a_supprimer(self,p,pospions):#TODO mettre dans Human()
         rep = []
-        pospions[p] = False
+        nb_non_sauts = 0
+        for a,b in [(1,0),(0,1),(-1,0),(0,-1),(1,-1),(-1,1)]:
+            arrivex = p[0] +a
+            arrivey = p[1] +b
+            if (0 <= arrivex <= 7) and (0<= arrivey <= 7) and (not pospions[arrivex,arrivey]):
+                rep.append((arrivex,arrivey))
+                nb_non_sauts +=1
+        pospions[p[0],p[1]] = False
         #gestion des sauts
-        vus = [p]
+        vus = [(p[0],p[1])]
         a_voir = [[p]]
         while len(a_voir) != 0:
             l =  a_voir.pop(0)
@@ -248,10 +258,8 @@ class BoardArea(Canvas):
                 jj = pp[1] + b
                 saut = False
                 while (0 <= ii <= 7) and (0<= jj <= 7):#on se déplace dans la direction donnée par a,b et on cherche le premier pion
-                    if pospions[ii,jj]:
+                    if  pospions[ii,jj]:
                         saut = True
-                        sauti = ii
-                        sautj = jj
                         break
                     ii += a
                     jj += b
@@ -273,19 +281,10 @@ class BoardArea(Canvas):
                             ll.append((arrivex,arrivey))
                             a_voir.append(ll)
                             vus.append((arrivex,arrivey))
-                            rep.append((ll))
+                            rep.append((arrivex,arrivey))
                     
-        for a,b in [(1,0),(0,1),(-1,0),(0,-1),(1,-1),(-1,1)]:
-            if (0 <= p[0] +a <= 7) and (0<= p[1] +b <= 7) and (not pospions[p[0] +a,p[1]+b]):
-                rep.append([(p),(p[0]+a,p[1] +b)])
-                
-        pospions[p] = True
-        res = []
-        for r in rep: # keeping only legal moves
-            if self.coup_legal(r[0][0], r[0][1], r[1][0], r[1][1]) != 'ilegal':
-                res.append(r)
-                
-        return(res)
+        pospions[p[0],p[1]] = True
+        return(rep)
     
     def pbpn2pospion_a_supprimer(self,wp,bp):
         pospion = np.empty((8,8), dtype = 'bool')
@@ -309,13 +308,12 @@ class BoardArea(Canvas):
             etude_coup = self.coup_legal(self.__piece_courante.case_x,self.__piece_courante.case_y,ncase_x,ncase_y)
             if ncase_x == self.pospioninit[0] and ncase_y == self.pospioninit[1]:
                 # dropped the pawn on the same case as before
+                # Drawing of the reachable boxes
                 possible_moves = self.coups_possibles_a_supprimer([self.__piece_courante.case_x,
                                                                   self.__piece_courante.case_y],
-                                                                  self.pbpn2pospion_a_supprimer(self.wp, self.bp))
-                possible_dest = [] # possible arrival cases
-                for move in possible_moves:
-                    possible_dest.append(move[1])
-                self.highlight_cases(possible_dest)
+                                                                 self.pbpn2pospion_a_supprimer(self.wp, self.bp))
+                
+                self.highlight_cases(possible_moves)
                 
                 self.__piece_courante.move(event.x,event.y) 
                 self.reset_working_data()
