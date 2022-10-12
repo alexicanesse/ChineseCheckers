@@ -36,7 +36,7 @@ On Ubuntu
 
 ```sh
 sudo apt update
-sudo apt install libboost-all-dev libboost-python-dev
+sudo apt install libboost-all-dev libboost-python-dev doxygen
 
 pip3 install --upgrade pip
 pip3 install tk
@@ -44,7 +44,7 @@ pip3 install tk
 
 On macOS
 ```sh
-brew install boost boost-python3
+brew install boost boost-python3 doxygen
 
 pip3 install --upgrade pip
 pip3 install tk
