@@ -33,6 +33,9 @@ DIRECTORIES = ./objects ./bin
 
 
 all: $(DIRECTORIES) $(OUT)
+	@echo "${BLUE}Updating the documentation${RESET}"
+	@doxygen > /dev/null
+
 $(DIRECTORIES) :
 	@echo "${GREEN}Creating missing directory" $@ "${RESET}"
 	@mkdir $@
