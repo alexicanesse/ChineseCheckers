@@ -19,7 +19,7 @@ UNAME := $(shell uname)
 
 OUT=./bin/ChineseCheckers.so
 CXXFLAGS=-Wno-unused-result -Wsign-compare -Wunreachable-code -fno-common -fwrapv -dynamic -O3 -I./include -I$(shell python3 -c "from sysconfig import get_paths as gp; print(gp()[\"include\"])") --std=c++17
-LDFLAGS=-lboost_python310
+LDFLAGS=-lboost_python310 
 
 ifneq ($(UNAME), Darwin)
 	CXXFLAGS += -lpython3.10 -fPIC

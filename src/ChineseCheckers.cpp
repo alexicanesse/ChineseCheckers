@@ -12,6 +12,7 @@
  *
  */
 
+
 #include "../include/ChineseCheckers.hpp"
 
 #include <vector>
