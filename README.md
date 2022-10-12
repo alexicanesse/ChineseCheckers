@@ -39,7 +39,7 @@ sudo apt update
 sudo apt install libboost-all-dev libboost-python-dev doxygen
 
 pip3 install --upgrade pip
-pip3 install tk
+pip3 install tk cpplint
 ```
 
 On macOS
@@ -47,7 +47,7 @@ On macOS
 brew install boost boost-python3 doxygen
 
 pip3 install --upgrade pip
-pip3 install tk
+pip3 install tk cpplint
 ```
 
 On ArchLinux
@@ -55,7 +55,7 @@ On ArchLinux
 sudo pacman -S boost doxygen
 
 pip3 install --upgrade pip
-pip3 install tk
+pip3 install tk cpplint
 ```
 
 #### Compiling the library

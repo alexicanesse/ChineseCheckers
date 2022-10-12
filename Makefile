@@ -35,6 +35,8 @@ DIRECTORIES = ./objects ./bin
 all: $(DIRECTORIES) $(OUT)
 	@echo "${BLUE}Updating the documentation${RESET}"
 	@doxygen > /dev/null
+	@echo "${BLUE}Checking if the C++ code respect Google's conventions${RESET}"
+	@cpplint ./src/* ./include/*
 
 $(DIRECTORIES) :
 	@echo "${GREEN}Creating missing directory" $@ "${RESET}"
