@@ -18,7 +18,8 @@ enum MoveType { Illegal, Jump, notJump};
 
 typedef int Player;
 typedef std::array<std::array<Color, 8>, 8> GridType;
-typedef std::array<int, 2> PositionType;
+typedef std::vector<int> PositionType;
+typedef std::vector<PositionType> ListOfPositionType;
 
 class ChineseCheckers {
  private:
@@ -32,7 +33,7 @@ class ChineseCheckers {
                             PositionType arrival_position);
 
  public:
-    bool move(Player player, std::vector<PositionType> list_moves);
+    bool move(Player player, const ListOfPositionType &list_moves);
     /*
      * returns true or false to indicate if
      * the current position is a winning position

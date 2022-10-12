@@ -91,9 +91,9 @@ Inheritance diagram for ChineseCheckers:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae21288b0d13b85813b225e1a95622054"><td class="memItemLeft" align="right" valign="top"><a id="ae21288b0d13b85813b225e1a95622054" name="ae21288b0d13b85813b225e1a95622054"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>move</b> (Player player, std::vector&lt; PositionType &gt; list_moves)</td></tr>
-<tr class="separator:ae21288b0d13b85813b225e1a95622054"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30b0208c019ac1348374ac9c34eb7f7a"><td class="memItemLeft" align="right" valign="top"><a id="a30b0208c019ac1348374ac9c34eb7f7a" name="a30b0208c019ac1348374ac9c34eb7f7a"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>move</b> (Player player, const ListOfPositionType &amp;list_moves)</td></tr>
+<tr class="separator:a30b0208c019ac1348374ac9c34eb7f7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a019cc95b3cfbb20de4470e5528286b1e"><td class="memItemLeft" align="right" valign="top"><a id="a019cc95b3cfbb20de4470e5528286b1e" name="a019cc95b3cfbb20de4470e5528286b1e"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_finished</b> ()</td></tr>
 <tr class="separator:a019cc95b3cfbb20de4470e5528286b1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -112,6 +112,9 @@ Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
+<tr class="memitem:a36f1a4a47505109fe569d1120f2d61c4"><td class="memItemLeft" align="right" valign="top"><a id="a36f1a4a47505109fe569d1120f2d61c4" name="a36f1a4a47505109fe569d1120f2d61c4"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>no_pawns_between</b> (PositionType original_position, PositionType arrival_position, int which_case, int middle_x, int middle_y)</td></tr>
+<tr class="separator:a36f1a4a47505109fe569d1120f2d61c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64b4bc66e20170f44e6f30eb6a022c3e"><td class="memItemLeft" align="right" valign="top"><a id="a64b4bc66e20170f44e6f30eb6a022c3e" name="a64b4bc66e20170f44e6f30eb6a022c3e"></a>
 MoveType&#160;</td><td class="memItemRight" valign="bottom"><b>elementaryMove</b> (PositionType original_position, PositionType arrival_position)</td></tr>
 <tr class="separator:a64b4bc66e20170f44e6f30eb6a022c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
