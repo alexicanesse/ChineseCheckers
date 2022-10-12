@@ -66,6 +66,9 @@ python3 setup.py
 make
 ```
 
+## Documentation
+
+The full documentation is accessible at [Documentation](https://alexicanesse.github.io/ChineseCheckers/index.html).
 
 ## Running the tests
 
