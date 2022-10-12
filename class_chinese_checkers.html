@@ -79,6 +79,11 @@ $(function() {
   <div class="headertitle"><div class="title">ChineseCheckers Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>The core of the game.  
+ <a href="class_chinese_checkers.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_chinese_checkers_8hpp_source.html">ChineseCheckers.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for ChineseCheckers:</div>
 <div class="dyncontent">
@@ -91,46 +96,248 @@ Inheritance diagram for ChineseCheckers:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a30b0208c019ac1348374ac9c34eb7f7a"><td class="memItemLeft" align="right" valign="top"><a id="a30b0208c019ac1348374ac9c34eb7f7a" name="a30b0208c019ac1348374ac9c34eb7f7a"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>move</b> (Player player, const ListOfPositionType &amp;list_moves)</td></tr>
+<tr class="memitem:a30b0208c019ac1348374ac9c34eb7f7a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a30b0208c019ac1348374ac9c34eb7f7a">move</a> (<a class="el" href="_chinese_checkers_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a> player, const <a class="el" href="_chinese_checkers_8hpp.html#ac71100c33eb0cab30b54caf2736a8121">ListOfPositionType</a> &amp;list_moves)</td></tr>
 <tr class="separator:a30b0208c019ac1348374ac9c34eb7f7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a019cc95b3cfbb20de4470e5528286b1e"><td class="memItemLeft" align="right" valign="top"><a id="a019cc95b3cfbb20de4470e5528286b1e" name="a019cc95b3cfbb20de4470e5528286b1e"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_finished</b> ()</td></tr>
+<tr class="memitem:a019cc95b3cfbb20de4470e5528286b1e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a019cc95b3cfbb20de4470e5528286b1e">is_finished</a> ()</td></tr>
 <tr class="separator:a019cc95b3cfbb20de4470e5528286b1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae26bfd9b34e8c60e0e8195e654fa4a66"><td class="memItemLeft" align="right" valign="top"><a id="ae26bfd9b34e8c60e0e8195e654fa4a66" name="ae26bfd9b34e8c60e0e8195e654fa4a66"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>new_game</b> ()</td></tr>
+<tr class="memitem:ae26bfd9b34e8c60e0e8195e654fa4a66"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#ae26bfd9b34e8c60e0e8195e654fa4a66">new_game</a> ()</td></tr>
 <tr class="separator:ae26bfd9b34e8c60e0e8195e654fa4a66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f30f3fad3187b9fa698e27717a7dbd3"><td class="memItemLeft" align="right" valign="top"><a id="a1f30f3fad3187b9fa698e27717a7dbd3" name="a1f30f3fad3187b9fa698e27717a7dbd3"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>get_grid</b> ()</td></tr>
+<tr class="memitem:a1f30f3fad3187b9fa698e27717a7dbd3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a1f30f3fad3187b9fa698e27717a7dbd3">get_grid</a> ()</td></tr>
 <tr class="separator:a1f30f3fad3187b9fa698e27717a7dbd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:aadb3291cd51877deb8c95f6c0926cb03"><td class="memItemLeft" align="right" valign="top"><a id="aadb3291cd51877deb8c95f6c0926cb03" name="aadb3291cd51877deb8c95f6c0926cb03"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>fen</b> = Board(1300, 1000)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>fen</b> = Board(1200, 900)</td></tr>
 <tr class="separator:aadb3291cd51877deb8c95f6c0926cb03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a36f1a4a47505109fe569d1120f2d61c4"><td class="memItemLeft" align="right" valign="top"><a id="a36f1a4a47505109fe569d1120f2d61c4" name="a36f1a4a47505109fe569d1120f2d61c4"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>no_pawns_between</b> (PositionType original_position, PositionType arrival_position, int which_case, int middle_x, int middle_y)</td></tr>
-<tr class="separator:a36f1a4a47505109fe569d1120f2d61c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64b4bc66e20170f44e6f30eb6a022c3e"><td class="memItemLeft" align="right" valign="top"><a id="a64b4bc66e20170f44e6f30eb6a022c3e" name="a64b4bc66e20170f44e6f30eb6a022c3e"></a>
-MoveType&#160;</td><td class="memItemRight" valign="bottom"><b>elementaryMove</b> (PositionType original_position, PositionType arrival_position)</td></tr>
+<tr class="memitem:a64b4bc66e20170f44e6f30eb6a022c3e"><td class="memItemLeft" align="right" valign="top">MoveType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a64b4bc66e20170f44e6f30eb6a022c3e">elementaryMove</a> (<a class="el" href="_chinese_checkers_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a> original_position, <a class="el" href="_chinese_checkers_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a> arrival_position)</td></tr>
 <tr class="separator:a64b4bc66e20170f44e6f30eb6a022c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a680f263ed13c76a154eae56521302c97"><td class="memItemLeft" align="right" valign="top"><a id="a680f263ed13c76a154eae56521302c97" name="a680f263ed13c76a154eae56521302c97"></a>
-GridType&#160;</td><td class="memItemRight" valign="bottom"><b>grid_</b></td></tr>
+<tr class="memitem:a680f263ed13c76a154eae56521302c97"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_chinese_checkers_8hpp.html#a2323f67766c1d3ce0bbfafaa00c21a78">GridType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a680f263ed13c76a154eae56521302c97">grid_</a></td></tr>
 <tr class="separator:a680f263ed13c76a154eae56521302c97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8977ba0a0af034477ba21c7a2f46c412"><td class="memItemLeft" align="right" valign="top"><a id="a8977ba0a0af034477ba21c7a2f46c412" name="a8977ba0a0af034477ba21c7a2f46c412"></a>
-std::array&lt; std::array&lt; PositionType, 10 &gt;, 2 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>position_colors_players_</b></td></tr>
+<tr class="memitem:a8977ba0a0af034477ba21c7a2f46c412"><td class="memItemLeft" align="right" valign="top">std::array&lt; std::array&lt; <a class="el" href="_chinese_checkers_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a>, 10 &gt;, 2 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a8977ba0a0af034477ba21c7a2f46c412">position_colors_players_</a></td></tr>
 <tr class="separator:a8977ba0a0af034477ba21c7a2f46c412"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58000710730305c43b809d8a2f258432"><td class="memItemLeft" align="right" valign="top"><a id="a58000710730305c43b809d8a2f258432" name="a58000710730305c43b809d8a2f258432"></a>
-Player&#160;</td><td class="memItemRight" valign="bottom"><b>who_is_to_play_</b></td></tr>
+<tr class="memitem:a58000710730305c43b809d8a2f258432"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_chinese_checkers_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a58000710730305c43b809d8a2f258432">who_is_to_play_</a></td></tr>
 <tr class="separator:a58000710730305c43b809d8a2f258432"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >The core of the game. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a64b4bc66e20170f44e6f30eb6a022c3e" name="a64b4bc66e20170f44e6f30eb6a022c3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64b4bc66e20170f44e6f30eb6a022c3e">&#9670;&#160;</a></span>elementaryMove()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">MoveType ChineseCheckers::elementaryMove </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="_chinese_checkers_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a>&#160;</td>
+          <td class="paramname"><em>original_position</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="_chinese_checkers_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a>&#160;</td>
+          <td class="paramname"><em>arrival_position</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p >A member returning the type of an elementary move (not a succession of jumps).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">original_position</td><td>The position. </td></tr>
+    <tr><td class="paramname">arrival_position</td><td>The arrival position. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The type of elementary move (<code>Illegal</code>, <code>Jump</code> or <code>notJump</code>). </dd></dl>
+<dl class="section see"><dt>See also</dt><dd>move(Player player, const ListOfPositionType &amp;list_moves). </dd></dl>
+
+</div>
+</div>
+<a id="a1f30f3fad3187b9fa698e27717a7dbd3" name="a1f30f3fad3187b9fa698e27717a7dbd3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f30f3fad3187b9fa698e27717a7dbd3">&#9670;&#160;</a></span>get_grid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ChineseCheckers::get_grid </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Prints the grid. </p>
+
+</div>
+</div>
+<a id="a019cc95b3cfbb20de4470e5528286b1e" name="a019cc95b3cfbb20de4470e5528286b1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a019cc95b3cfbb20de4470e5528286b1e">&#9670;&#160;</a></span>is_finished()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ChineseCheckers::is_finished </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Indicates if someone won the game.</p>
+<dl class="section return"><dt>Returns</dt><dd>The <code>bool true</code> if and only if someone won the game. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd>new_game(). </dd></dl>
+
+</div>
+</div>
+<a id="a30b0208c019ac1348374ac9c34eb7f7a" name="a30b0208c019ac1348374ac9c34eb7f7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30b0208c019ac1348374ac9c34eb7f7a">&#9670;&#160;</a></span>move()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ChineseCheckers::move </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="_chinese_checkers_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a>&#160;</td>
+          <td class="paramname"><em>player</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="_chinese_checkers_8hpp.html#ac71100c33eb0cab30b54caf2736a8121">ListOfPositionType</a> &amp;&#160;</td>
+          <td class="paramname"><em>list_moves</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >This member checks if a move is legal and executes it if it is legal.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Player</td><td>indicates which player made the move. </td></tr>
+    <tr><td class="paramname">ListOfPositionType</td><td>contains the list of intermediate positions. of a move (including the starting point and the arrival point). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The <code>bool true</code> if and only if the move was indeed legal. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd>elementaryMove(PositionType original_position, PositionType arrival_position). </dd></dl>
+
+</div>
+</div>
+<a id="ae26bfd9b34e8c60e0e8195e654fa4a66" name="ae26bfd9b34e8c60e0e8195e654fa4a66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae26bfd9b34e8c60e0e8195e654fa4a66">&#9670;&#160;</a></span>new_game()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ChineseCheckers::new_game </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Creates a new game. </p><dl class="section see"><dt>See also</dt><dd>new_game(). </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a680f263ed13c76a154eae56521302c97" name="a680f263ed13c76a154eae56521302c97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a680f263ed13c76a154eae56521302c97">&#9670;&#160;</a></span>grid_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="_chinese_checkers_8hpp.html#a2323f67766c1d3ce0bbfafaa00c21a78">GridType</a> ChineseCheckers::grid_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p >A data structure containing the grid </p>
+
+</div>
+</div>
+<a id="a8977ba0a0af034477ba21c7a2f46c412" name="a8977ba0a0af034477ba21c7a2f46c412"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8977ba0a0af034477ba21c7a2f46c412">&#9670;&#160;</a></span>position_colors_players_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt;std::array&lt;<a class="el" href="_chinese_checkers_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a>, 10&gt;, 2&gt; ChineseCheckers::position_colors_players_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p >The variable <code>position_colors_players_.at(player).at(i)</code> contains the position (of type <code>PositionType</code>) of the player <code>player</code> </p>
+
+</div>
+</div>
+<a id="a58000710730305c43b809d8a2f258432" name="a58000710730305c43b809d8a2f258432"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58000710730305c43b809d8a2f258432">&#9670;&#160;</a></span>who_is_to_play_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="_chinese_checkers_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a> ChineseCheckers::who_is_to_play_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p >Indicate which is the next player to play </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/<a class="el" href="_chinese_checkers_8hpp_source.html">ChineseCheckers.hpp</a></li>
 <li>ChineseCheckers.py</li>
