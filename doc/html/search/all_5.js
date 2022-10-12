@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['highlight_5fcases_0',['highlight_cases',['../class_chinese_checkers_1_1_board_area.html#a70b9655ddda26fe596e1302db8001d0e',1,'ChineseCheckers::BoardArea']]]
+  ['from_5fpython_0',['from_python',['../structiterable__converter.html#afa6d6e154a0c300995c7af79c529fc36',1,'iterable_converter']]]
 ];

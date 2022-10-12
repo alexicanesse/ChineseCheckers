@@ -4,6 +4,14 @@
  * Copyright 2022 - ENS de Lyon
  */
 
+/**
+ * \file ChineseCheckersWrapper.hpp
+ * \brief Wrapper for the python library
+ *
+ * This file is used to make the C++ code of ChineseCheckers available to Python.
+ *
+ */
+
 #include <boost/python.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 #include <boost/python/stl_iterator.hpp>

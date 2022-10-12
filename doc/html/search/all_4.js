@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['from_5fpython_0',['from_python',['../structiterable__converter.html#afa6d6e154a0c300995c7af79c529fc36',1,'iterable_converter']]]
+  ['elementarymove_0',['elementaryMove',['../class_chinese_checkers.html#a64b4bc66e20170f44e6f30eb6a022c3e',1,'ChineseCheckers']]]
 ];
