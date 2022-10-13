@@ -47,7 +47,7 @@ On macOS
 brew install boost boost-python3 doxygen
 
 pip3 install --upgrade pip
-pip3 install tk cpplint
+pip3 install python-tk cpplint
 ```
 
 On ArchLinux
