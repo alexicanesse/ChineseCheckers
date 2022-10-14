@@ -159,6 +159,11 @@ bool ChineseCheckers::is_finished() {
 
 void ChineseCheckers::new_game() {
     /* Initialize the grid */
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j)
+            this->grid_.at(i).at(j) = Empty;
+    }
+
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             if (i + j < 4) {
@@ -170,10 +175,6 @@ void ChineseCheckers::new_game() {
                  */
                 this->position_colors_players_.at(1).at(i*3 + j) = {i, j};
                 this->position_colors_players_.at(0).at(i*3 + j) = {7-i, 7-j};
-                std::cout << std::endl;
-            } else {
-                this->grid_.at(i).at(j) = Empty;
-                this->grid_.at(7-i).at(7-j) = Empty;
             }
         }
     }
@@ -181,9 +182,9 @@ void ChineseCheckers::new_game() {
 }
 
 void ChineseCheckers::get_grid() {
-    for (auto x : this->grid_) {
-        for (auto y : x)
-            std::cout << y << " ";
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j)
+            std::cout << this->grid_.at(i).at(j) << " ";
         std::cout << "\n";
     }
 }
