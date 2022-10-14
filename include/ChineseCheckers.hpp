@@ -20,6 +20,7 @@
 #include <array>
 #include <iostream>
 #include <utility>
+#include <boost/python.hpp>
 
 /*! \enum Color
     \brief Used to denote the colors.
@@ -37,7 +38,7 @@ typedef int Player;
 /*! \typedef GridType
     \brief Used to denote the grid.
 */
-typedef std::array<std::array<Color, 8>, 8> GridType;
+typedef std::vector<std::vector<Color>> GridType;
 /*! \typedef PositionType
     \brief Used to denote a position.
 */
@@ -102,7 +103,11 @@ class ChineseCheckers {
     /*!
      * Prints the grid.
      */
-    void get_grid();
+    void print_grid();
+    /*!
+     * Returns the grid.
+     */
+    GridType get_grid();
     ChineseCheckers();
 };
 

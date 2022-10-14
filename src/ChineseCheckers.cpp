@@ -16,6 +16,7 @@
 #include "../include/ChineseCheckers.hpp"
 
 #include <vector>
+#include <boost/python.hpp>
 
 
 MoveType ChineseCheckers::elementaryMove(PositionType original_position,
@@ -159,10 +160,7 @@ bool ChineseCheckers::is_finished() {
 
 void ChineseCheckers::new_game() {
     /* Initialize the grid */
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j)
-            this->grid_.at(i).at(j) = Empty;
-    }
+    this->grid_ = GridType(8, std::vector<Color>(8, Empty));
 
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
@@ -181,10 +179,24 @@ void ChineseCheckers::new_game() {
     this->who_is_to_play_ = 0;
 }
 
-void ChineseCheckers::get_grid() {
+void ChineseCheckers::print_grid() {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j)
             std::cout << this->grid_.at(i).at(j) << " ";
         std::cout << "\n";
     }
 }
+
+GridType ChineseCheckers::get_grid() {
+//    boost::python::list result;
+//    for(std::vector<Color> x : this->grid_){
+//        boost::python::list row;
+//        for(Color value : x)
+//            row.append((int) value);
+//        result.append(row);
+//    }
+//    return result;
+    return this->grid_;
+}
+
+
