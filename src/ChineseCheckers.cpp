@@ -188,14 +188,6 @@ void ChineseCheckers::print_grid() {
 }
 
 GridType ChineseCheckers::get_grid() {
-//    boost::python::list result;
-//    for(std::vector<Color> x : this->grid_){
-//        boost::python::list row;
-//        for(Color value : x)
-//            row.append((int) value);
-//        result.append(row);
-//    }
-//    return result;
     return this->grid_;
 }
 
