@@ -14,15 +14,17 @@ else
 endif
 
 
-#Tools to check if the OS is macOS.
+#Tools to check what the OS is
 UNAME := $(shell uname)
+
+	PYTHON_SUB_VERSION = $(word 2, $(wordlist 2,4,$(subst ., ,$(shell python3 --version 2>&1))))
 
 OUT=./bin/ChineseCheckers.so
 CXXFLAGS=-Wno-unused-result -Wsign-compare -Wunreachable-code -fno-common -fwrapv -dynamic -O3 -I./include -I$(shell python3 -c "from sysconfig import get_paths as gp; print(gp()[\"include\"])") --std=c++17
-LDFLAGS=-lboost_python310 
+LDFLAGS=-lboost_python3$(PYTHON_SUB_VERSION)
 
 ifneq ($(UNAME), Darwin)
-	CXXFLAGS += -lpython3.10 -fPIC
+	CXXFLAGS += -lpython3.-lpython3.$(PYTHON_SUB_VERSION) -fPIC
 else
 	CXXFLAGS += -undefined dynamic_lookup
 endif
