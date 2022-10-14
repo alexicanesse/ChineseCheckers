@@ -77,18 +77,35 @@ struct iterable_converter {
     }
 };
 
+struct gridtype_to_list {
+    static PyObject* convert(GridType const& grid) {
+        boost::python::list result;
+        for (std::vector<Color> x : grid) {
+            boost::python::list row;
+            for (Color value : x)
+                row.append(static_cast<int>(value));
+            result.append(row);
+        }
+        return boost::python::incref(result.ptr());
+    }
+};
+
 
 BOOST_PYTHON_MODULE(ChineseCheckers) {
+    boost::python::to_python_converter<GridType, gridtype_to_list>();
+
     iterable_converter()
       .from_python<std::vector<int> >()
       .from_python<std::vector<PositionType> >()
       .from_python< ListOfPositionType >()
-      .from_python<std::vector<std::vector<int> > >();
+      .from_python<std::vector<std::vector<int> > >()
+      .from_python<std::vector<std::vector<Color> > >();
 
     boost::python::class_<ChineseCheckers>("Game")
         .def("move", &ChineseCheckers::move)
         .def("is_finished", &ChineseCheckers::is_finished)
         .def("new_game", &ChineseCheckers::new_game)
+        .def("print_grid", &ChineseCheckers::print_grid)
         .def("get_grid", &ChineseCheckers::get_grid);
 }
 
