@@ -44,7 +44,7 @@ typedef std::vector<std::vector<Color>> GridType;
 */
 typedef std::vector<int> PositionType;
 /*! \typedef ListOfPositionType
-    \brief Used to denote the a vector of positions.
+    \brief Used to denote a vector of positions.
  */
 typedef std::vector<PositionType> ListOfPositionType;
 
@@ -58,7 +58,7 @@ class ChineseCheckers {
     GridType grid_;
     /*! The variable `position_colors_players_.at(player).at(i)` contains the position
      *  (of type `PositionType`) of the player `player` */
-    std::array<std::array<PositionType, 10>, 2> position_colors_players_;
+    std::vector<std::vector<PositionType>> position_colors_players_;
     /*! Indicate which is the next player to play */
     Player who_is_to_play_;
     /*! A member returning the type of an elementary move
@@ -103,11 +103,27 @@ class ChineseCheckers {
     /*!
      * Prints the grid.
      */
-    void print_grid();
+    void print_grid_();
     /*!
      * Returns the grid.
      */
-    GridType get_grid();
+    GridType get_grid_();
+    /*!
+     * Prints position_colors_players_
+     */
+    void print_position_colors_players_();
+    /*!
+     * Returns the position_colors_players_;
+     */
+    std::vector<std::vector<PositionType>> get_position_colors_players_();
+    /*!
+     * Prints who_is_to_play_.
+     */
+    void print_who_is_to_play_();
+    /*!
+     * Returns who_is_to_play_.
+     */
+    Player get_who_is_to_play_();
     ChineseCheckers();
 };
 

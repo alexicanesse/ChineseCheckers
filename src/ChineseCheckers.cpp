@@ -161,6 +161,9 @@ bool ChineseCheckers::is_finished() {
 void ChineseCheckers::new_game() {
     /* Initialize the grid */
     this->grid_ = GridType(8, std::vector<Color>(8, Empty));
+    this->position_colors_players_ =
+                            std::vector<std::vector<PositionType>>
+                                (2, std::vector(10, PositionType(2, 0)));
 
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
@@ -168,18 +171,15 @@ void ChineseCheckers::new_game() {
                 this->grid_.at(i).at(j) = White;
                 this->grid_.at(7-i).at(7-j) = Black;
 
-                /*
-                 * (i, j) |-> 3*i + j is a bijection from [|0, 3|]^2 to [|0, 9|]
-                 */
-                this->position_colors_players_.at(1).at(i*3 + j) = {i, j};
-                this->position_colors_players_.at(0).at(i*3 + j) = {7-i, 7-j};
+                this->position_colors_players_.at(0).at(i*3 + j) = {i, j};
+                this->position_colors_players_.at(1).at(i*3 + j) = {7-i, 7-j};
             }
         }
     }
     this->who_is_to_play_ = 0;
 }
 
-void ChineseCheckers::print_grid() {
+void ChineseCheckers::print_grid_() {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j)
             std::cout << this->grid_.at(i).at(j) << " ";
@@ -187,8 +187,32 @@ void ChineseCheckers::print_grid() {
     }
 }
 
-GridType ChineseCheckers::get_grid() {
+GridType ChineseCheckers::get_grid_() {
     return this->grid_;
 }
 
+void ChineseCheckers::print_position_colors_players_() {
+    for (std::vector<PositionType> pawns_positions :
+                        this->position_colors_players_) {
+        for (PositionType position : pawns_positions)
+            std::cout << "("
+                      << position.at(0)
+                      << ", "
+                      << position.at(1)
+                      << ") ";
+        std::cout << std::endl;
+    }
+}
 
+std::vector<std::vector<PositionType>>
+            ChineseCheckers::get_position_colors_players_() {
+    return this->position_colors_players_;
+}
+
+void ChineseCheckers::print_who_is_to_play_() {
+    std::cout << this->who_is_to_play_ << "\n";
+}
+
+Player ChineseCheckers::get_who_is_to_play_() {
+    return this->who_is_to_play_;
+}

@@ -79,20 +79,40 @@ struct iterable_converter {
 
 struct gridtype_to_list {
     static PyObject* convert(GridType const& grid) {
-        boost::python::list result;
+        boost::python::list *result = new boost::python::list;
         for (std::vector<Color> x : grid) {
             boost::python::list row;
             for (Color value : x)
                 row.append(static_cast<int>(value));
-            result.append(row);
+            result->append(row);
         }
-        return boost::python::incref(result.ptr());
+        return boost::python::incref(result->ptr());
+    }
+};
+
+struct vector_of_vector_of_positiontype_to_list {
+    static PyObject* convert(std::vector<std::vector<PositionType>>
+                             const& position_colors_players_) {
+        boost::python::list *result = new boost::python::list;
+        for (std::vector<PositionType> x : position_colors_players_) {
+            boost::python::list row;
+            for (PositionType value : x) {
+                boost::python::list position;
+                position.append(value.at(0));
+                position.append(value.at(1));
+                row.append(position);
+            }
+            result->append(row);
+        }
+        return boost::python::incref(result->ptr());
     }
 };
 
 
 BOOST_PYTHON_MODULE(ChineseCheckers) {
     boost::python::to_python_converter<GridType, gridtype_to_list>();
+    boost::python::to_python_converter<std::vector<std::vector<PositionType>>,
+                                    vector_of_vector_of_positiontype_to_list>();
 
     iterable_converter()
       .from_python<std::vector<int> >()
@@ -105,8 +125,14 @@ BOOST_PYTHON_MODULE(ChineseCheckers) {
         .def("move", &ChineseCheckers::move)
         .def("is_finished", &ChineseCheckers::is_finished)
         .def("new_game", &ChineseCheckers::new_game)
-        .def("print_grid", &ChineseCheckers::print_grid)
-        .def("get_grid", &ChineseCheckers::get_grid);
+        .def("print_grid_", &ChineseCheckers::print_grid_)
+        .def("get_grid_", &ChineseCheckers::get_grid_)
+        .def("print_position_colors_players_",
+             &ChineseCheckers::print_position_colors_players_)
+        .def("get_position_colors_players_",
+             &ChineseCheckers::get_position_colors_players_)
+        .def("print_who_is_to_play_", &ChineseCheckers::print_who_is_to_play_)
+        .def("get_who_is_to_play_", &ChineseCheckers::get_who_is_to_play_);
 }
 
 
