@@ -32,6 +32,8 @@ MoveType ChineseCheckers::elementaryMove(PositionType original_position,
           && 0<= original_position[1]
           && original_position[1] <= 7)
         ) {
+        /* Debug output */
+        std::cout << "elementaryMove : 0" << std::endl;
         return(Illegal);
     }
 
@@ -41,6 +43,8 @@ MoveType ChineseCheckers::elementaryMove(PositionType original_position,
      */
     if ((this->grid_.at(arrival_position[0]).at(arrival_position[1]))
         != Empty) {
+        /* Debug output */
+        std::cout << "elementaryMove : 1" << std::endl;
         return Illegal;
     }
 
@@ -48,32 +52,53 @@ MoveType ChineseCheckers::elementaryMove(PositionType original_position,
     int b = original_position[1];
     int c = arrival_position[0];
     int d = arrival_position[1];
-    bool rep = (abs(a-c+b-d) <= 1) && (abs(a-c) +abs(b-d) <= 2);
+    bool rep;
 
     /* Checks if the direction is legal */
     if (((c - a) * (d - b) == 0) || ((d - b) / (c - a) == -1)) {
+        rep = (abs(a-c+b-d) <= 1) && (abs(a-c) +abs(b-d) <= 2);
+        /* Debug output */
+        std::cout << "Temp cout rep before:" << rep << std::endl;
         for (int i = 0; i < 2; ++i) {
+            /* Debug output */
+            std::cout << "cible" << (a + c)/2 << " " << (b+d)/2 << std::endl;
             for (auto x : this->position_colors_players_.at(i)) {
-                if (   x[0] == (a + c)/2
-                    && x[1] == (b + d)/2 ) {
-                    rep = true;
-                } else if ((  x[0] - a)*(d-b) == (x[1] - b)*(c - a)
-                           && (x[0] -a)*(c-a) + (x[1]-b)*(d-b) >= 0
-                           && (x[0] -c)*(a-c) + (x[1]-d)*(b-d) >= 0) {
-                    return Illegal;
+                std::cout<< x.at(0) << " " << x.at(1) <<std::endl;
+                if ((x.at(0) != a) || (x.at(1) != b)) {
+                    if (   x.at(0) == (a + c)/2
+                        && x.at(1) == (b + d)/2 ) {
+                        rep = true;
+                    } else if (((x.at(0) - a) * (d - b)
+                                == (x.at(1) - b) * (c - a))
+                            && ((x.at(0) - a) * (c - a)
+                                + (x.at(1)-b) * (d - b)
+                                                    >= 0)
+                            && ((x.at(0) - c) * (a - c)
+                                + (x.at(1) - d)*(b - d)
+                                                    >= 0)
+                               ) {
+                        /* Debug output */
+                        std::cout<< "elementaryMove : 2" << std::endl;
+                        return Illegal;
+                    }
                 }
             }
         }
-
+        /* Debug output */
+        std::cout << "Temp cout rep after:" << rep << std::endl;
         if (rep) {
             if ((abs(a-c+b-d) <= 1) && (abs(a-c) +abs(b-d) <= 2))
                 return(notJump);
             else
                 return(Jump);
         } else {
+            /* Debug output */
+            std::cout << "elementaryMove : 3" << std::endl;
             return Illegal;
         }
     } else {
+        /* Debug output */
+        std::cout << "elementaryMove : 4" << std::endl;
         return Illegal;
     }
 }
@@ -86,25 +111,39 @@ bool ChineseCheckers::move(Player player,
                            const ListOfPositionType &list_moves) {
     /* Check that the right player is playing */
     if (this->grid_.at(list_moves.at(0).at(0)).at(list_moves.at(0).at(1))
-                                                            != player + 1)
+                                                            != player + 1) {
+        /* Debug output */
+        std::cout << "move: 0" << std::endl;
         return false;
+        }
 
-    if (player != this->who_is_to_play_)
+    if (player != this->who_is_to_play_) {
+        /* Debug output */
+        std::cout << "move: 1" << std::endl;
         return false;
+        }
 
 
     /* Check that every moves are legals */
     int n = static_cast<int>(list_moves.size());
     MoveType fst_move = elementaryMove(list_moves[0], list_moves[1]);
     if (fst_move == Illegal) {
+        /* Debug output */
+        std::cout << "move: 2" << std::endl;
         return false;
     } else if (fst_move == notJump) {
-        if (n != 2)
+        if (n != 2) {
+            /* Debug output */
+            std::cout << "move: 3" << std::endl;
             return false;
+        }
     } else {
         for (int i=1; i < n - 1; ++i)
-            if (elementaryMove(list_moves.at(i), list_moves.at(i+1)) != Jump)
+            if (elementaryMove(list_moves.at(i), list_moves.at(i+1)) != Jump) {
+                /* Debug output */
+                std::cout << "move: 4" << std::endl;
                 return false;
+            }
     }
 
     /* Now that we know that the move is legal, we just have to apply it */
@@ -112,7 +151,8 @@ bool ChineseCheckers::move(Player player,
                 grid_.at(list_moves.at(0).at(0)).at(list_moves.at(0).at(1));
     this->grid_.at(list_moves.at(0).at(0)).at(list_moves.at(0).at(1)) = Empty;
 
-    for (int i = 0; i < 8; ++i) {
+    std::cout << "Actualisation of position_colors_player" << std::endl;
+    for (int i = 0; i < 10; ++i) {
         if ((this->position_colors_players_.at(player).at(i).at(0)
                                             == list_moves.at(0).at(0))
            && (this->position_colors_players_.at(player).at(i).at(1)
@@ -121,6 +161,9 @@ bool ChineseCheckers::move(Player player,
                                                 = list_moves.at(n-1).at(0);
             this->position_colors_players_.at(player).at(i).at(1)
                                                 = list_moves.at(n-1).at(1);
+            /* Debug output */
+            std::cout << "Actualisation done !" << std::endl;
+            break;
         }
     }
 
