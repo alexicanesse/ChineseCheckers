@@ -78,7 +78,7 @@ MoveType ChineseCheckers::elementaryMove(PositionType original_position,
                                                     >= 0)
                                ) {
                         /* Debug output */
-                        std::cout<< "elementaryMove : 2" << std::endl;
+                        std::cout<< "elementaryMove : 2" << x.at(0) << " " << x.at(1) << std::endl;
                         return Illegal;
                     }
                 }
@@ -109,6 +109,9 @@ ChineseCheckers::ChineseCheckers() {
 
 bool ChineseCheckers::move(Player player,
                            const ListOfPositionType &list_moves) {
+    if(list_moves.size() == 0)
+        return false;
+    
     /* Check that the right player is playing */
     if (this->grid_.at(list_moves.at(0).at(0)).at(list_moves.at(0).at(1))
                                                             != player + 1) {
@@ -205,8 +208,7 @@ void ChineseCheckers::new_game() {
     /* Initialize the grid */
     this->grid_ = GridType(8, std::vector<Color>(8, Empty));
     this->position_colors_players_ =
-                            std::vector<std::vector<PositionType>>
-                                (2, std::vector(10, PositionType(2, 0)));
+                            std::vector<std::vector<PositionType>>(2);
 
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
@@ -214,8 +216,10 @@ void ChineseCheckers::new_game() {
                 this->grid_.at(i).at(j) = White;
                 this->grid_.at(7-i).at(7-j) = Black;
 
-                this->position_colors_players_.at(0).at(i*3 + j) = {i, j};
-                this->position_colors_players_.at(1).at(i*3 + j) = {7-i, 7-j};
+                PositionType pos_temp = {i, j};
+                this->position_colors_players_.at(0).push_back(pos_temp);
+                pos_temp = {7-i, 7-j};
+                this->position_colors_players_.at(1).push_back(pos_temp);
             }
         }
     }
