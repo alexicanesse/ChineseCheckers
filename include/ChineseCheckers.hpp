@@ -72,6 +72,22 @@ class ChineseCheckers {
     */
     MoveType elementaryMove(PositionType original_position,
                             PositionType arrival_position);
+    /*! A member setting the position of a pawn to (-1, -1)
+     */
+    /*!
+      \param player The player to which belongs the pawn.
+      \param position The position of the pawn.
+      \sa reset_pawn(Player player, PositionType position)
+    */
+    void remove_pawn(Player player, PositionType position);
+    /*! A member setting the position of a pawn which has been removed
+     */
+    /*!
+      \param player The player to which belongs the pawn.
+      \param position The position of the pawn.
+      \sa remove_pawn(Player player, PositionType position)
+    */
+    void reset_pawn(Player player, PositionType position);
 
  public:
     /*!

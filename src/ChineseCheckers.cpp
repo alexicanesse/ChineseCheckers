@@ -78,7 +78,15 @@ MoveType ChineseCheckers::elementaryMove(PositionType original_position,
                                                     >= 0)
                                ) {
                         /* Debug output */
-                        std::cout<< "elementaryMove : 2" << x.at(0) << " " << x.at(1) << std::endl;
+                        std::cout << "elementaryMove : 2"
+                                  << x.at(0)
+                                  << " "
+                                  << x.at(1)
+                                  << " "
+                                  << a
+                                  << " "
+                                  << b
+                                  << std::endl;
                         return Illegal;
                     }
                 }
@@ -107,11 +115,37 @@ ChineseCheckers::ChineseCheckers() {
     this->new_game();
 }
 
+void ChineseCheckers::remove_pawn(Player player, PositionType position) {
+    for (int i = 0; i < 10; ++i) {
+        if (this->position_colors_players_.at(player).at(i).at(0)
+                                                    == position.at(0)
+            && this->position_colors_players_.at(player).at(i).at(1)
+                                                    == position.at(1)) {
+            this->position_colors_players_.at(player).at(i).at(0) = -1;
+            this->position_colors_players_.at(player).at(i).at(1) = -1;
+            return;
+        }
+    }
+}
+
+void ChineseCheckers::reset_pawn(Player player, PositionType position) {
+    for (int i = 0; i < 10; ++i) {
+        if (this->position_colors_players_.at(player).at(i).at(0) == -1
+           && this->position_colors_players_.at(player).at(i).at(1) == -1) {
+            this->position_colors_players_.at(player).at(i).at(0)
+                                                    = position.at(0);
+            this->position_colors_players_.at(player).at(i).at(1)
+                                                    = position.at(1);
+            return;
+        }
+    }
+}
+
 bool ChineseCheckers::move(Player player,
                            const ListOfPositionType &list_moves) {
-    if(list_moves.size() == 0)
+    if (list_moves.size() == 0)
         return false;
-    
+
     /* Check that the right player is playing */
     if (this->grid_.at(list_moves.at(0).at(0)).at(list_moves.at(0).at(1))
                                                             != player + 1) {
@@ -129,15 +163,18 @@ bool ChineseCheckers::move(Player player,
 
     /* Check that every moves are legals */
     int n = static_cast<int>(list_moves.size());
+    this->remove_pawn(player, list_moves.at(0));
     MoveType fst_move = elementaryMove(list_moves[0], list_moves[1]);
     if (fst_move == Illegal) {
         /* Debug output */
         std::cout << "move: 2" << std::endl;
+        this->reset_pawn(player, list_moves.at(0));
         return false;
     } else if (fst_move == notJump) {
         if (n != 2) {
             /* Debug output */
             std::cout << "move: 3" << std::endl;
+            this->reset_pawn(player, list_moves.at(0));
             return false;
         }
     } else {
@@ -145,6 +182,7 @@ bool ChineseCheckers::move(Player player,
             if (elementaryMove(list_moves.at(i), list_moves.at(i+1)) != Jump) {
                 /* Debug output */
                 std::cout << "move: 4" << std::endl;
+                this->reset_pawn(player, list_moves.at(0));
                 return false;
             }
     }
@@ -157,9 +195,9 @@ bool ChineseCheckers::move(Player player,
     std::cout << "Actualisation of position_colors_player" << std::endl;
     for (int i = 0; i < 10; ++i) {
         if ((this->position_colors_players_.at(player).at(i).at(0)
-                                            == list_moves.at(0).at(0))
+                                            == -1)
            && (this->position_colors_players_.at(player).at(i).at(1)
-                                            == list_moves.at(0).at(1))) {
+                                            == -1)) {
             this->position_colors_players_.at(player).at(i).at(0)
                                                 = list_moves.at(n-1).at(0);
             this->position_colors_players_.at(player).at(i).at(1)
