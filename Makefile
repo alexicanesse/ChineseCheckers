@@ -17,7 +17,7 @@ endif
 #Tools to check what the OS is
 UNAME := $(shell uname)
 
-	PYTHON_SUB_VERSION = $(word 2, $(wordlist 2,4,$(subst ., ,$(shell python3 --version 2>&1))))
+PYTHON_SUB_VERSION = $(word 2, $(wordlist 2,4,$(subst ., ,$(shell python3 --version 2>&1))))
 
 OUT=./bin/ChineseCheckers.so
 CXXFLAGS=-Wno-unused-result -Wsign-compare -Wunreachable-code -fno-common -fwrapv -dynamic -O3 -I./include -I$(shell python3 -c "from sysconfig import get_paths as gp; print(gp()[\"include\"])") --std=c++17
@@ -46,11 +46,11 @@ $(DIRECTORIES) :
 
 $(OUT): $(OFILES)
 	@echo "${BLUE}Linking CXX objects${RESET}"
-	@$(CXX) $(CXXFLAGS) $(LDFLAGS) -shared -o $@ $^
+	@$(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS) -shared
 
 ./objects/%.o: ./src/%.cpp | $(DIRECTORIES)
 	@echo "${PURPLE}Building CXX object" $@ "${RESET}"
-	@$(CXX) $(CXXFLAGS) -o $@ -c $<
+	@$(CXX)  -o $@ -c $< $(CXXFLAGS)
 
 clean :
 	@echo "${RED}Cleaning${RESET}"
