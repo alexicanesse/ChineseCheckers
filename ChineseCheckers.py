@@ -17,7 +17,8 @@ class Pion:
                                          x + self._canvas.pawn_radius,
                                          y + self._canvas.pawn_radius,
                                          fill =self._color,
-                                         outline="")
+                                         outline="black",
+                                         width=2)
         self.x = x
         self.y = y
         self.case_x, self.case_y = self._canvas._canv2plat(x,y)
@@ -29,6 +30,10 @@ class Pion:
     def __repr__(self):
         c = "b" if self._color =="white" else "n"
         return(f"P{c}{self.case_x}{self.case_y}")
+
+    def set_xy(self, x, y):
+        self.x = x
+        self.y = y
     
     def redraw(self): 
         ''' deletes and redraws the pawn '''
@@ -37,8 +42,9 @@ class Pion:
                                          self.y - self._canvas.pawn_radius,
                                          self.x + self._canvas.pawn_radius,
                                          self.y + self._canvas.pawn_radius,
-                                         fill =self._color,
-                                         outline="")
+                                         fill=self._color,
+                                         outline="black",
+                                         width=2)
         
     def move_on_ui(self, dx, dy): 
         ''' moves the pawn on the UI '''
@@ -62,20 +68,44 @@ class Pion:
         self.y = yf
         self.case_x = ncase_x
         self.case_y = ncase_y
-
-class BoardArea(Canvas):
+        
+class Areas(Canvas):
+    
+    def from_rgb(self, rgb):
+        '''translates an rgb tuple of int to a tkinter friendly color code'''
+        return "#%02x%02x%02x" % rgb   
+        
+class ControlArea(Areas):
     
     def __init__(self, parent, width, height):
         # initialization of the canvas
         Canvas.__init__(self, parent, width=width, height=height, highlightthickness=0)
+        self.configure(bg=self.from_rgb((49, 46, 43)))
+
+class BoardArea(Areas):
+    
+    def __init__(self, parent, width, height):
+        # initialization of the canvas
+        Canvas.__init__(self, parent, width=width, height=height, highlightthickness=0)
+        self.bind("<Configure>", self.on_resize)
         self.width = width # width of the board area
         self.height = height # height of the board area
         self.case_width = width/13 # width of a case (for the hitbox)
         self.case_height = height/13 # height of a case
         self.case_radius = self.case_width/5 # radius of a case
-        self.pawn_radius = self.case_width/3 # radius of a pawn
-        # TODO couleurs rouge&vert à la place de noir&blanc ?
-        # TODO ajuster couleurs (prendre les codes RGB sur lichess par ex ?)
+        self.pawn_radius = self.case_width/2.5 # radius of a pawn
+        self.DARK = self.from_rgb((119, 149, 86)) # color of the board
+        self.LIGHT = self.from_rgb((235, 236, 208)) # color of the cases
+        self.WHITE = self.from_rgb((249, 249, 249)) # color of white pawns
+        self.BLACK = self.from_rgb((87, 84, 82)) # color of black pawns
+        self.HIGHLIGHT = "coral" # color of highlighted cases
+        self.configure(bg=self.DARK)
+        # couleurs OK
+        # TODO annuler coup
+        # TODO flèches sur son propre coup
+        # resize OK
+        # TODO Human()
+        # ControlArea() OK
         
         # drawing the board cases
         for i in range(8):
@@ -85,7 +115,7 @@ class BoardArea(Canvas):
                                  posy - self.case_radius,
                                  posx + self.case_radius,
                                  posy + self.case_radius,
-                                 fill = "light grey",
+                                 fill = self.LIGHT,
                                  outline="")
       
         # adding pieces
@@ -97,9 +127,9 @@ class BoardArea(Canvas):
             for j in range(4):
                 if i + j <= 3:
                     x,y = self._plat2canv(i, j)
-                    self.wp.append(Pion(self, x, y, "white"))
+                    self.wp.append(Pion(self, x, y, self.WHITE))
                     x,y = self._plat2canv(7 - i, 7 - j)
-                    self.bp.append(Pion(self, x, y, "black"))
+                    self.bp.append(Pion(self, x, y, self.BLACK))
                     
         # TEST
         self.ia = IA(self,'black')
@@ -150,12 +180,13 @@ class BoardArea(Canvas):
 
         for move in l_moves: # l_moves is the list of intermediate cases
             i, j = move
+            r = self.case_radius / 1.5
             x, y = self._plat2canv(i, j)
-            self.hc.append(self.create_oval(x - self.case_radius,
-                                 y - self.case_radius,
-                                 x + self.case_radius,
-                                 y + self.case_radius,
-                                 fill="spring green",
+            self.hc.append(self.create_oval(x - r,
+                                 y - r,
+                                 x + r,
+                                 y + r,
+                                 fill=self.HIGHLIGHT,
                                  outline=""))
     
     def show_arrows(self, l_moves):
@@ -198,6 +229,25 @@ class BoardArea(Canvas):
                                                   fill="SteelBlue2",
                                                   width=6))
             last = new
+    
+    def on_resize(self, event):
+        ''' called on resize events '''
+        # determine the ratio
+        scale = float(event.height)/self.height
+        self.width = event.height
+        self.height = event.height      
+        # resize the canvas 
+        self.config(width=self.width, height=self.height)
+        # rescale all the objects tagged with the "all" tag
+        self.scale("all", 0, 0, scale, scale)  
+        
+        # update values
+        self.case_width = self.width/13 # width of a case (for the hitbox)
+        self.case_height = self.height/13 # height of a case
+        self.case_radius = self.case_width/5 # radius of a case
+        self.pawn_radius = self.case_width/2.5 # radius of a pawn
+        for pawn in self.wp:
+            pawn.set_xy(pawn.x * scale, pawn.y * scale)
     
     # All of the following functions in the class are TEST
     
@@ -391,7 +441,7 @@ class BoardArea(Canvas):
     # TODO ajouter classe Human() pour regrouper les fonctions permettant de jouer manuellement
 
 
-class Board(Tk):
+class Board(Tk,Areas):
 
     def __init__(self, width, height):
 
@@ -407,16 +457,20 @@ class Board(Tk):
         # put the window in the center of the screen
         print(f"screen is {screen_height}x{screen_width}, putting window at ({window_x},{window_y})")
         self.geometry(f"{width}x{height}+{int(window_x)}+{int(window_y)}")
-        self.configure(bg = "white")
+        self.aspect(width, height, width, height) # Keep the aspect ratio fixed when user resizes
 
         # Initializing the board
         self.__boardArea = BoardArea(self, height, height)
-        self.__boardArea.configure(bg='burlywood3')
-        self.__boardArea.pack(padx = 0,side = LEFT)
+        self.__boardArea.addtag_all("all")
+        self.__boardArea.pack(padx=0, side=LEFT, fill=BOTH)
         
         # Buttons and mouse events
-        self.boutonIA= Button(self,text = "Jouer IA")
-        self.boutonIA.pack(side=LEFT, padx  = 10)
+        self.__controlArea = ControlArea(self, width - height, height)
+        self.__controlArea.addtag_all("all")
+        self.__controlArea.pack(side=RIGHT, padx=0, fill=BOTH, expand=YES)
+        
+        self.boutonIA= Button(self.__controlArea, text = "Jouer IA")
+        self.boutonIA.pack(side=LEFT, padx=10)
         bfont = font.Font(family='Helvetica', size=40)
         self.boutonIA.config(command = self.__boardArea.jouerIA, bg = 'lightgrey', font = bfont)
         
@@ -424,19 +478,8 @@ class Board(Tk):
         self.__boardArea.bind("<ButtonRelease-1>", self.__boardArea.bouton1_relache)
         self.__boardArea.bind("<Button-1>", self.__boardArea.bouton1_appuye)
         self.__boardArea.bind("<B1-Motion>", self.__boardArea.bouton1_deplace)
-        
-        # TEST
-        '''
-        self.__boardArea.show_coordinates()
-        l = [(0,0), (3,4), (5,0)]
-        self.__boardArea.highlight_cases(l)
-        l = [(0,1), (7,4), (2,4)]
-        self.__boardArea.highlight_cases(l)
-        l = [(0,1), (4,1), (4,4), (0,3), (0,1)]
-        self.__boardArea.show_arrows(l)
-        '''
 
 if __name__ == "__main__":
     
-    fen = Board(1200, 900)
+    fen = Board(1100, 800)
     fen.mainloop()
