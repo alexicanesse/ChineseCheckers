@@ -12,11 +12,18 @@
  *
  */
 
+/* C++ Libraries */
+/* The following pragma are used to removed depraction warning from boost
+ * header files. Using them avoid to remove this warning from the entire project.
+ */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/python.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 #include <boost/python/stl_iterator.hpp>
+#pragma GCC diagnostic pop
 
-
+/* Other */
 #include "../include/ChineseCheckers.hpp"
 
 /// @brief Type that allows for registration of conversions from
