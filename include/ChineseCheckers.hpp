@@ -15,42 +15,15 @@
 #ifndef INCLUDE_CHINESECHECKERS_HPP_
 #define INCLUDE_CHINESECHECKERS_HPP_
 
-
+/* C++ libraries */
 #include <vector>
 #include <array>
 #include <iostream>
 #include <utility>
 #include <boost/python.hpp>
 
-/*! \enum Color
-    \brief Used to denote the colors.
-*/
-enum Color {Empty, White, Black};
-/*! \enum Movetype
-    \brief Used to denote the move types (Illegal, Jump and notJump).
-*/
-enum MoveType { Illegal, Jump, notJump};
-
-/*! \typedef Player
-    \brief Used to denote the players.
-*/
-typedef int Player;
-/*! \typedef GridType
-    \brief Used to denote the grid.
-*/
-typedef std::vector<std::vector<Color>> GridType;
-/*! \typedef PositionType
-    \brief Used to denote a position.
-*/
-typedef std::vector<int> PositionType;
-/*! \typedef ListOfPositionType
-    \brief Used to denote a vector of positions.
- */
-typedef std::vector<PositionType> ListOfPositionType;
-
-/*! \class ChineseCheckers
-    \brief The core of the game.
-*/
+/* Other */
+#include "Types.hpp"
 
 class ChineseCheckers {
  private:

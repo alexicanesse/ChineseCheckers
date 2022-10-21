@@ -12,11 +12,15 @@
  *
  */
 
+/* ChineseCheckers.hpp */
+#include "ChineseCheckers.hpp"
 
-#include "../include/ChineseCheckers.hpp"
-
+/* C++ libraries */
 #include <vector>
 #include <boost/python.hpp>
+
+/* Other */
+#include <Types.hpp>
 
 
 MoveType ChineseCheckers::elementaryMove(PositionType original_position,
