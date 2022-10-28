@@ -20,7 +20,7 @@ UNAME := $(shell uname)
 PYTHON_SUB_VERSION = $(word 2, $(wordlist 2,4,$(subst ., ,$(shell python3 --version 2>&1))))
 
 OUT=./bin/ChineseCheckers.so
-CXXFLAGS=-Wno-unused-result -Wsign-compare -Wunreachable-code -fno-common -fwrapv -dynamic -O3 -I./include -I$(shell python3 -c "from sysconfig import get_paths as gp; print(gp()[\"include\"])") --std=c++17
+CXXFLAGS=-Wno-unused-result -Wsign-compare -Wunreachable-code -fno-common -fwrapv -dynamic -O3 -I./include -I$(shell python3 -c "from sysconfig import get_paths as gp; print(gp()[\"include\"])") --std=c++20
 LDFLAGS=-lboost_python3$(PYTHON_SUB_VERSION)
 
 ifneq ($(UNAME), Darwin)
@@ -31,9 +31,9 @@ endif
 
 CXXFILES = $(wildcard ./src/*.cpp)
 OFILES = $(patsubst ./src/%.cpp, ./objects/%.o, $(CXXFILES))
-DIRECTORIES = ./objects ./bin
+DIRECTORIES = ./objects ./bin ./bin/solvers
 
-
+####Main library
 all: $(DIRECTORIES) $(OUT)
 	@echo "${BLUE}Updating the documentation${RESET}"
 	@doxygen > /dev/null
@@ -51,7 +51,23 @@ $(OUT): $(OFILES)
 ./objects/%.o: ./src/%.cpp | $(DIRECTORIES)
 	@echo "${PURPLE}Building CXX object" $@ "${RESET}"
 	@$(CXX)  -o $@ -c $< $(CXXFLAGS)
+	
+	
+####Solvers
 
+#AlphaBeta
+AlphaBeta: $(DIRECTORIES) ./bin/solvers/AlphaBeta.so
+
+./bin/solvers/%.so: ./objects/%.o ./objects/%Wrapper.o
+	@echo "${BLUE}Linking CXX objects${RESET}"
+	@$(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS) -shared
+	
+./objects/%.o: ./solvers/AlphaBeta/src/%.cpp ./solvers/AlphaBeta/src/*Wrapper.cpp
+	@echo "${PURPLE}Building CXX object" $@ "${RESET}"
+	@$(CXX)  -o $@ -c $< $(CXXFLAGS) -I./solvers/AlphaBeta/include/
+	@cpplint ./solvers/AlphaBeta/src/* ./solvers/AlphaBeta/include/*
+
+####Cleaning
 clean :
 	@echo "${RED}Cleaning${RESET}"
 	@$(RM) $(OFILES)
@@ -60,4 +76,4 @@ clean :
 
 mrproper : clean
 	@echo "${RED}Cleaning all files${RESET}"
-	@$(RM) $(OUT)
+	@$(RM) -dr ./bin
