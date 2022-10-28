@@ -20,6 +20,7 @@
 #include <array>
 #include <iostream>
 #include <utility>
+#include <map>
 /* The following pragma are used to removed depraction warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
  */
@@ -40,6 +41,8 @@ class ChineseCheckers {
     std::vector<std::vector<PositionType>> position_colors_players_;
     /*! Indicate which is the next player to play */
     Player who_is_to_play_;
+    /*! Indicates the number of times a position has been seen */
+    std::map<GridType, int> number_of_times_seen;
     /*! A member returning the type of an elementary move
      * (not a succession of jumps).
      */
@@ -86,10 +89,10 @@ class ChineseCheckers {
      * Indicates if someone won the game.
      */
     /*!
-      \return The `bool true` if and only if someone won the game.
+      \return The the current state of the game
       \sa new_game().
     */
-    bool is_finished();
+    Result state_of_game();
     /*!
      * Creates a new game.
      * \sa new_game().

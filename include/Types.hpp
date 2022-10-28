@@ -23,10 +23,14 @@
 */
 enum Color {Empty, White, Black};
 
+/*! \enum Result
+    \brief Used to return the current state of a game
+ */
+enum Result { NotFinished, Draw, WhiteWon, BlackWon};
+
 /*! \enum Movetype
     \brief Used to denote the move types (Illegal, Jump and notJump).
 */
-
 enum MoveType { Illegal, Jump, notJump};
 
 /*! \typedef Player
@@ -48,6 +52,12 @@ typedef std::vector<int> PositionType;
     \brief Used to denote a vector of positions.
  */
 typedef std::vector<PositionType> ListOfPositionType;
+
+/*! \typedef ListOfMoves
+    \brief Used to denote a list of moves
+ */
+typedef std::vector<ListOfPositionType> ListOfMoves;
+
 
 
 

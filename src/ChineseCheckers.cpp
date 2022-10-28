@@ -29,6 +29,9 @@
 /* Other */
 #include <Types.hpp>
 
+/* The number of time a grid state can be seen before setling for a draw */
+#define MAX_NUMBER_OF_CYCLES_FOR_DRAW_ 2
+
 
 MoveType ChineseCheckers::elementaryMove(PositionType original_position,
                                          PositionType arrival_position) {
@@ -154,6 +157,13 @@ void ChineseCheckers::reset_pawn(Player player, PositionType position) {
 
 bool ChineseCheckers::move(Player player,
                            const ListOfPositionType &list_moves) {
+    /* Check if the game is over */
+    if (this->state_of_game() != NotFinished) {
+        std::cout << "\nGame is over!\nState of game: " << this->state_of_game() << "\n\n";
+        return false;
+    }
+    
+    /* Check that there actually is a move to play */
     if (list_moves.size() == 0)
         return false;
 
@@ -200,7 +210,7 @@ bool ChineseCheckers::move(Player player,
 
     /* Now that we know that the move is legal, we just have to apply it */
     this->grid_.at(list_moves.at(n-1).at(0)).at(list_moves.at(n-1).at(1)) =
-                grid_.at(list_moves.at(0).at(0)).at(list_moves.at(0).at(1));
+    grid_.at(list_moves.at(0).at(0)).at(list_moves.at(0).at(1));
     this->grid_.at(list_moves.at(0).at(0)).at(list_moves.at(0).at(1)) = Empty;
 
     std::cout << "Actualisation of position_colors_player" << std::endl;
@@ -219,41 +229,90 @@ bool ChineseCheckers::move(Player player,
         }
     }
 
+    /* indicates that is position has been seen another time */
+    if (this->number_of_times_seen.contains(this->grid_))
+        this->number_of_times_seen.at(this->grid_)++;
+    else
+        this->number_of_times_seen.insert({this->grid_, 1});
+
+//#warning DEBUG
+//    for (auto x : this->number_of_times_seen) {
+//        for (auto line : x.first) {
+//            for (auto i : line) {
+//                std::cout << i << " ";
+//            }
+//            std::cout << "\n";
+//        }
+//        std::cout << "\n" << x.second << "\n";
+//    }
+    
+    
     this->who_is_to_play_ = 1 - this->who_is_to_play_;
     return true;
 }
-
+#warning add the two rules
 /*
  * returns true or false to indicate if
  * the current position is a winning position
  */
-bool ChineseCheckers::is_finished() {
+Result ChineseCheckers::state_of_game() {
     /* Check if player 0 won */
-    bool won = true;
-    for (auto x : this->position_colors_players_.at(0)) {
-        if (x.at(0) < 4 || x.at(1) < 4)
-            won = false;
+    bool lost = false;
+    bool could_win = false;
+    for (int i = 0; i < 4 && !lost; ++i) {
+        for (int j = 0; j < 4 && !lost; ++j) {
+            if (i + j < 4) {
+                switch (this->grid_.at(7-i).at(7-j)) {
+                    case White:
+                        could_win = true;
+                        break;
+                        
+                    case Empty:
+                        lost = true;
+                        
+                    default:
+                        break;
+                }
+            }
+        }
     }
-    if (won)
-        return true;
+    if ((!lost) && could_win)
+        return WhiteWon;
 
     /* Check if Player 1 won */
-    won = true;
-    for (auto x : this->position_colors_players_.at(1)) {
-        if (x.at(0) > 4 || x.at(1) > 4)
-            won = false;
+    lost = false;
+    could_win = false;
+    for (int i = 0; i < 4 && !lost; ++i) {
+        for (int j = 0; j < 4 && !lost; ++j) {
+            if (i + j < 4) {
+                switch (this->grid_.at(i).at(j)) {
+                    case Black:
+                        could_win = true;
+                        break;
+                        
+                    case Empty:
+                        lost = true;
+                        
+                    default:
+                        break;
+                }
+            }
+        }
     }
-    /*
-     * This return is a shortcut for
-     * if(won)
-     *    return true;
-     *
-     * return false;
-     */
-    return won;
+    if ((!lost) && could_win)
+        return BlackWon;
+
+    /* Check for a draw */
+    for (auto grid : this->number_of_times_seen) {
+        if (grid.second > MAX_NUMBER_OF_CYCLES_FOR_DRAW_)
+            return Draw;
+    }
+    
+    return NotFinished;
 }
 
 void ChineseCheckers::new_game() {
+#warning TODO init history
     /* Initialize the grid */
     this->grid_ = GridType(8, std::vector<Color>(8, Empty));
     this->position_colors_players_ =

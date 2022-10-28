@@ -130,7 +130,7 @@ BOOST_PYTHON_MODULE(ChineseCheckers) {
 
     boost::python::class_<ChineseCheckers>("Game")
         .def("move", &ChineseCheckers::move)
-        .def("is_finished", &ChineseCheckers::is_finished)
+        .def("state_of_game", &ChineseCheckers::state_of_game)
         .def("new_game", &ChineseCheckers::new_game)
         .def("print_grid_", &ChineseCheckers::print_grid_)
         .def("get_grid_", &ChineseCheckers::get_grid_)
