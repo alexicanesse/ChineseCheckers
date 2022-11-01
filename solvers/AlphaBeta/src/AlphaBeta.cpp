@@ -245,7 +245,7 @@ int AlphaBeta::evaluate(Player player) {
 
 ListOfPositionType AlphaBeta::getMove(int depth, double alpha, double beta) {
     this->maximizing_player_ = this->who_is_to_play_;
-    std::cout << "Value: " << AlphaBetaEval(depth, alpha, beta, true, true) << "\n";
+    AlphaBetaEval(depth, alpha, beta, true, true);
     return this->best_move_;
 }
 
@@ -280,6 +280,27 @@ int AlphaBeta::AlphaBetaEval(int depth, double alpha, double beta, bool maximizi
     /* The state is not a termination node */
     int value = 0;
     ListOfMoves possible_moves = this->availableMoves(this->who_is_to_play_);
+    
+    /* Order the moves according to a heuristic */
+    if (this->who_is_to_play_ == 0) {
+        std::sort(possible_moves.begin(), possible_moves.end(),
+            [](ListOfPositionType a, ListOfPositionType b) {
+                return (a.at(a.size() - 1).at(0) + a.at(a.size() - 1).at(1))
+                            - (a.at(0).at(0) + a.at(0).at(1))
+                        <
+                       (b.at(b.size() - 1).at(0) + b.at(b.size() - 1).at(1))
+                            - (b.at(0).at(0) + b.at(0).at(1));
+            });
+    } else {
+        std::sort(possible_moves.begin(), possible_moves.end(),
+            [](ListOfPositionType a, ListOfPositionType b) {
+            return ((a.at(0).at(0) + a.at(0).at(1))
+                            - (a.at(a.size() - 1).at(0) + a.at(a.size() - 1).at(1))
+                        <
+                        (b.at(0).at(0) + b.at(0).at(1))
+                            - (b.at(b.size() - 1).at(0) + b.at(b.size() - 1).at(1)));
+            });
+    }
     
     /* keeping state to restore too after applying temp moves */
     std::map<GridType, int> temp_number_of_times_seen = this->number_of_times_seen;

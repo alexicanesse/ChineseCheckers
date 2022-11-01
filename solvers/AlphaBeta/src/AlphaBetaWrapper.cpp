@@ -110,6 +110,14 @@ struct ListOfPositionType_to_list {
     }
 };
 
+struct Result_to_int {
+    static PyObject* convert(Result const& value) {
+        boost::python::long_ *result = new boost::python::long_;
+        *result = boost::python::long_(value);
+        return boost::python::incref(result->ptr());
+    }
+};
+
 struct fromPythonToColor {
     fromPythonToColor() {
         boost::python::converter::registry::push_back(
@@ -152,8 +160,8 @@ struct fromPythonToColor {
 
 BOOST_PYTHON_MODULE(AlphaBeta) {
     boost::python::to_python_converter<GridType, gridtype_to_list>();
+//    boost::python::to_python_converter<Result, Result_to_int>();
     boost::python::to_python_converter<ListOfPositionType, ListOfPositionType_to_list>();
-
     fromPythonToColor();
 
     iterable_converter()
@@ -164,9 +172,17 @@ BOOST_PYTHON_MODULE(AlphaBeta) {
       .from_python<std::vector<Color> >()
       .from_python<std::vector<std::vector<Color> > >();
 
+    boost::python::enum_<Result>("Result")
+        .value("NotFinished", NotFinished)
+        .value("Draw", Draw)
+        .value("WhiteWon", WhiteWon)
+        .value("BlackWon", BlackWon);
+    
     boost::python::class_<AlphaBeta>("Solver")
         .def("availableMoves", &AlphaBeta::availableMoves)
         .def("getMove", &AlphaBeta::getMove)
+        .def("state_of_game", &AlphaBeta::state_of_game)
+        .def("print_grid_", &AlphaBeta::print_grid_)
         .def("move", &AlphaBeta::move);
 }
 
