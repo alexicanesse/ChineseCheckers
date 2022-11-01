@@ -57,6 +57,7 @@ $(OUT): $(OFILES)
 
 #AlphaBeta
 AlphaBeta: $(DIRECTORIES) ./bin/solvers/AlphaBeta.so
+	@cpplint ./solvers/AlphaBeta/src/* ./solvers/AlphaBeta/include/*
 
 ./bin/solvers/%.so: ./objects/%.o ./objects/%Wrapper.o
 	@echo "${BLUE}Linking CXX objects${RESET}"
@@ -65,7 +66,7 @@ AlphaBeta: $(DIRECTORIES) ./bin/solvers/AlphaBeta.so
 ./objects/%.o: ./solvers/AlphaBeta/src/%.cpp ./solvers/AlphaBeta/src/*Wrapper.cpp
 	@echo "${PURPLE}Building CXX object" $@ "${RESET}"
 	@$(CXX)  -o $@ -c $< $(CXXFLAGS) -I./solvers/AlphaBeta/include/
-	@cpplint ./solvers/AlphaBeta/src/* ./solvers/AlphaBeta/include/*
+	
 
 ####Cleaning
 clean :
