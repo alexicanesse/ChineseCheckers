@@ -21,6 +21,9 @@
 #include <map>
 #include <algorithm>
 
+#warning JUST FOR TESTS
+#include <boost/thread.hpp>
+
 /* Other */
 #include "Types.hpp"
 #include "ChineseCheckers.hpp"
@@ -245,44 +248,47 @@ int AlphaBeta::evaluate(Player player) {
 
 ListOfPositionType AlphaBeta::getMove(int depth, double alpha, double beta) {
     this->maximizing_player_ = this->who_is_to_play_;
-    AlphaBetaEval(depth, alpha, beta, true, true);
+    AlphaBetaEval(depth, alpha, beta, false, true);
     return this->best_move_;
 }
 
 int AlphaBeta::AlphaBetaEval(int depth, double alpha, double beta, bool maximizingPlayer, bool keepMove) {
-    if (depth == 0)
-        return heuristicValue();
-    
     /* Check if the current node is a terminating node */
     switch (this->state_of_game()) {
         case WhiteWon:
             if (this->maximizing_player_ == 0)
-                return 100000;
-            else
                 return -100000;
+            else
+                return 100000;
             break;
 
         case BlackWon:
             if (this->maximizing_player_ == 1)
-                return 100000;
-            else
                 return -100000;
+            else
+                return 100000;
             break;
             
         case Draw:
-            return 0;
+            if (this->maximizing_player_ == 1)
+                return 50000;
+            else
+                return -50000;
             break;
             
         default: /* the game is not over */
             break;
     }
     
+    if (depth == 0)
+        return heuristicValue();
+    
     /* The state is not a termination node */
     int value = 0;
     ListOfMoves possible_moves = this->availableMoves(this->who_is_to_play_);
     
     /* Order the moves according to a heuristic */
-    if (this->who_is_to_play_ == 0) {
+    if (this->who_is_to_play_ == 1) {
         std::sort(possible_moves.begin(), possible_moves.end(),
             [](ListOfPositionType a, ListOfPositionType b) {
                 return (a.at(a.size() - 1).at(0) + a.at(a.size() - 1).at(1))
@@ -302,7 +308,7 @@ int AlphaBeta::AlphaBetaEval(int depth, double alpha, double beta, bool maximizi
             });
     }
     
-    /* keeping state to restore too after applying temp moves */
+    /* keeping state to restore to after applying temp moves */
     std::map<GridType, int> temp_number_of_times_seen = this->number_of_times_seen;
     Player temp_who_is_to_play_ = this->who_is_to_play_;
     GridType temp_grid_ = this->grid_;
@@ -314,6 +320,12 @@ int AlphaBeta::AlphaBetaEval(int depth, double alpha, double beta, bool maximizi
         value = -100000; /* -\infty */
         /* For each possible move */
         for (ListOfPositionType move : possible_moves) {
+            /* restore to current game state */
+            this->number_of_times_seen = temp_number_of_times_seen;
+            this->who_is_to_play_ = temp_who_is_to_play_;
+            this->grid_ = temp_grid_;
+            this->position_colors_players_ = temp_position_colors_players_;
+            
             this->move(this->who_is_to_play_, move);
             int buff = AlphaBetaEval(depth - 1, alpha, beta, !maximizingPlayer, false);
             if (buff >= value) {
@@ -328,6 +340,12 @@ int AlphaBeta::AlphaBetaEval(int depth, double alpha, double beta, bool maximizi
         value = 100000; /* +\infty */
         /* For each possible move */
         for (ListOfPositionType move : possible_moves) {
+            /* restore to current game state */
+            this->number_of_times_seen = temp_number_of_times_seen;
+            this->who_is_to_play_ = temp_who_is_to_play_;
+            this->grid_ = temp_grid_;
+            this->position_colors_players_ = temp_position_colors_players_;
+            
             this->move(this->who_is_to_play_, move);
             int buff = AlphaBetaEval(depth - 1, alpha, beta, !maximizingPlayer, false);
             if (buff <= value) {
@@ -351,6 +369,7 @@ int AlphaBeta::AlphaBetaEval(int depth, double alpha, double beta, bool maximizi
         this->best_move_ = best_move;
     
     /* return value */
+    //std::cout << value << "\n";
     return value;
 }
 
