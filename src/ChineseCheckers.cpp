@@ -159,10 +159,12 @@ bool ChineseCheckers::move(Player player,
                            const ListOfPositionType &list_moves) {
     /* Check if the game is over */
     if (this->state_of_game() != NotFinished) {
-        std::cout << "\nGame is over!\nState of game: " << this->state_of_game() << "\n\n";
+        std::cout << "\nGame is over!\nState of game: "
+                  << this->state_of_game()
+                  << "\n\n";
         return false;
     }
-    
+
     /* Check that there actually is a move to play */
     if (list_moves.size() == 0)
         return false;
@@ -234,8 +236,8 @@ bool ChineseCheckers::move(Player player,
         this->number_of_times_seen.at(this->grid_)++;
     else
         this->number_of_times_seen.insert({this->grid_, 1});
-    
-    
+
+
     this->who_is_to_play_ = 1 - this->who_is_to_play_;
     return true;
 }
@@ -255,10 +257,10 @@ Result ChineseCheckers::state_of_game() {
                     case White:
                         could_win = true;
                         break;
-                        
+
                     case Empty:
                         lost = true;
-                        
+
                     default:
                         break;
                 }
@@ -278,10 +280,10 @@ Result ChineseCheckers::state_of_game() {
                     case Black:
                         could_win = true;
                         break;
-                        
+
                     case Empty:
                         lost = true;
-                        
+
                     default:
                         break;
                 }
@@ -296,7 +298,7 @@ Result ChineseCheckers::state_of_game() {
         if (grid.second > MAX_NUMBER_OF_CYCLES_FOR_DRAW_)
             return Draw;
     }
-    
+
     return NotFinished;
 }
 

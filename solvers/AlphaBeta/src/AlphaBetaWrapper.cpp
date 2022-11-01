@@ -113,30 +113,24 @@ struct fromPythonToColor {
     static void construct(
     PyObject* obj_ptr,
     boost::python::converter::rvalue_from_python_stage1_data* data) {
-        long value_reg = PyLong_AsLong(obj_ptr);
+        int value_reg = static_cast<int>(PyLong_AsLong(obj_ptr));
         Color value;
         switch (value_reg) {
             case 0:
                 value = Empty;
                 break;
-                
+
             case 1:
                 value = White;
                 break;
-                
+
             case 2:
                 value = Black;
                 break;
-                
+
             default:
-#warning Throw error
                 break;
         }
-//        if (value == 0) boost::python::throw_error_already_set();
-//        Color* storage = (
-//          (boost::python::converter::rvalue_from_python_storage<Color>*)
-//            data)->storage.bytes;
-//        new (storage) Color;
         Color *storage = new Color(value);
         data->convertible = storage;
     }
@@ -144,9 +138,9 @@ struct fromPythonToColor {
 
 BOOST_PYTHON_MODULE(AlphaBeta) {
     boost::python::to_python_converter<GridType, gridtype_to_list>();
-    
+
     fromPythonToColor();
-    
+
     iterable_converter()
       .from_python<std::vector<int> >()
       .from_python<std::vector<PositionType> >()
@@ -154,7 +148,7 @@ BOOST_PYTHON_MODULE(AlphaBeta) {
       .from_python<std::vector<std::vector<int> > >()
       .from_python<std::vector<Color> >()
       .from_python<std::vector<std::vector<Color> > >();
-    
+
     boost::python::class_<AlphaBeta>("Solver")
         .def("availableMoves", &AlphaBeta::availableMoves)
         .def("move", &AlphaBeta::move);

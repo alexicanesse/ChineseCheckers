@@ -25,13 +25,12 @@
 #include "ChineseCheckers.hpp"
 
 
-ListOfMoves AlphaBeta::availableMoves(Player player){
+ListOfMoves AlphaBeta::availableMoves(Player player) {
     GridType grid = this->get_grid_();
-    
+
     /* Indicates if there is an jump from (i, j) to (k, l) */
     std::vector<ListOfPositionType> possible_elementary_move(64);
 
-    
     ListOfMoves result;
 
     /* Check the case of notJump moves */
@@ -40,32 +39,44 @@ ListOfMoves AlphaBeta::availableMoves(Player player){
     for (auto pownPosition : position_colors_players_.at(player)) {
         /* We check every possible directions */
         if (    pownPosition.at(0) + 1 < 8
-            && (grid.at(pownPosition.at(0) + 1).at(pownPosition.at(1)) == Empty))
-            result.push_back({pownPosition, {pownPosition.at(0) + 1, pownPosition.at(1)}});
+            && (grid.at(pownPosition.at(0) + 1)
+                .at(pownPosition.at(1)) == Empty))
+            result.push_back({pownPosition,
+                {pownPosition.at(0) + 1, pownPosition.at(1)}});
 
         if (    pownPosition.at(0) - 1 >= 0
-            && (grid.at(pownPosition.at(0) - 1).at(pownPosition.at(1)) == Empty))
-            result.push_back({pownPosition, {pownPosition.at(0) - 1, pownPosition.at(1)}});
+            && (grid.at(pownPosition.at(0) - 1)
+                .at(pownPosition.at(1)) == Empty))
+            result.push_back({pownPosition,
+                {pownPosition.at(0) - 1, pownPosition.at(1)}});
 
         if (    pownPosition.at(1) + 1 < 8
-            && (grid.at(pownPosition.at(0)).at(pownPosition.at(1) + 1) == Empty))
-            result.push_back({pownPosition, {pownPosition.at(0), pownPosition.at(1) + 1}});
+            && (grid.at(pownPosition.at(0))
+                .at(pownPosition.at(1) + 1) == Empty))
+            result.push_back({pownPosition,
+                {pownPosition.at(0), pownPosition.at(1) + 1}});
 
         if (    pownPosition.at(1) - 1 >= 0
-            && (grid.at(pownPosition.at(0)).at(pownPosition.at(1) - 1) == Empty))
-            result.push_back({pownPosition, {pownPosition.at(0), pownPosition.at(1) - 1}});
-        
+            && (grid.at(pownPosition.at(0))
+                .at(pownPosition.at(1) - 1) == Empty))
+            result.push_back({pownPosition,
+                {pownPosition.at(0), pownPosition.at(1) - 1}});
+
         if (    pownPosition.at(0) + 1 < 8
             &&  pownPosition.at(1) - 1 >= 0
-            && (grid.at(pownPosition.at(0) + 1).at(pownPosition.at(1) - 1) == Empty))
-            result.push_back({pownPosition, {pownPosition.at(0) + 1, pownPosition.at(1) - 1}});
-        
+            && (grid.at(pownPosition.at(0) + 1)
+                .at(pownPosition.at(1) - 1) == Empty))
+            result.push_back({pownPosition,
+                {pownPosition.at(0) + 1, pownPosition.at(1) - 1}});
+
         if (    pownPosition.at(0) - 1 >= 0
             &&  pownPosition.at(1) + 1 < 8
-            && (grid.at(pownPosition.at(0) - 1).at(pownPosition.at(1) + 1) == Empty))
-            result.push_back({pownPosition, {pownPosition.at(0) - 1, pownPosition.at(1) + 1}});
+            && (grid.at(pownPosition.at(0) - 1)
+                .at(pownPosition.at(1) + 1) == Empty))
+            result.push_back({pownPosition,
+                {pownPosition.at(0) - 1, pownPosition.at(1) + 1}});
     }
-    
+
     /* Check the case of Jump moves */
     bool isPossible = true;
     for (int i = 0; i < 8; ++i) {
@@ -76,12 +87,13 @@ ListOfMoves AlphaBeta::availableMoves(Player player){
                 if (grid.at(i + k).at(j) != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
-                    for (int l = 1; l <= k; ++l){
+                    for (int l = 1; l <= k; ++l) {
                         if (grid.at(i + k + l).at(j) != Empty)
                             isPossible = false;
                     }
                     if (isPossible)
-                        possible_elementary_move.at(8*i + j).push_back({i + 2*k, j});
+                        possible_elementary_move.at(8*i + j)
+                                .push_back({i + 2*k, j});
                     break;
                 }
             }
@@ -92,12 +104,13 @@ ListOfMoves AlphaBeta::availableMoves(Player player){
                 if (grid.at(i - k).at(j)) {
                     /* Check if the jump is valid */
                     isPossible = true;
-                    for (int l = 1; l <= k; ++l){
+                    for (int l = 1; l <= k; ++l) {
                         if (grid.at(i - k - l).at(j) != Empty)
                             isPossible = false;
                     }
                     if (isPossible)
-                        possible_elementary_move.at(8*i + j).push_back({i - 2*k, j});
+                        possible_elementary_move.at(8*i + j)
+                                .push_back({i - 2*k, j});
                     break;
                 }
             }
@@ -108,12 +121,13 @@ ListOfMoves AlphaBeta::availableMoves(Player player){
                 if (grid.at(i).at(j + k) != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
-                    for (int l = 1; l <= k; ++l){
+                    for (int l = 1; l <= k; ++l) {
                         if (grid.at(i).at(j + k + l) != Empty)
                             isPossible = false;
                     }
                     if (isPossible)
-                        possible_elementary_move.at(8*i + j).push_back({i, j + 2*k});
+                        possible_elementary_move.at(8*i + j)
+                                .push_back({i, j + 2*k});
                     break;
                 }
             }
@@ -124,50 +138,53 @@ ListOfMoves AlphaBeta::availableMoves(Player player){
                 if (grid.at(i).at(j - k) != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
-                    for (int l = 1; l <= k; ++l){
+                    for (int l = 1; l <= k; ++l) {
                         if (grid.at(i).at(j - k - l) != Empty)
                             isPossible = false;
                     }
                     if (isPossible)
-                        possible_elementary_move.at(8*i + j).push_back({i, j - 2*k});
+                        possible_elementary_move.at(8*i + j)
+                                .push_back({i, j - 2*k});
                     break;
                 }
             }
-            
+
             /* Jumping on diag right */
             for (int k = 1; i + 2*k < 8 && j - 2*k >= 0; ++k) {
                 /* Check if there is a pown to jump over */
                 if (grid.at(i + k).at(j - k) != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
-                    for (int l = 1; l <= k; ++l){
+                    for (int l = 1; l <= k; ++l) {
                         if (grid.at(i + k + l).at(j - k - l) != Empty)
                             isPossible = false;
                     }
                     if (isPossible)
-                        possible_elementary_move.at(8*i + j).push_back({i + 2*k, j - 2*k});
+                        possible_elementary_move.at(8*i + j)
+                                .push_back({i + 2*k, j - 2*k});
                     break;
                 }
             }
-            
+
             /* Jumping on diag left */
             for (int k = 1; j + 2*k < 8 && i - 2*k >= 0; ++k) {
                 /* Check if there is a pown to jump over */
                 if (grid.at(i - k).at(j + k) != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
-                    for (int l = 1; l <= k; ++l){
+                    for (int l = 1; l <= k; ++l) {
                         if (grid.at(i - k - l).at(j + k + l) != Empty)
                             isPossible = false;
                     }
                     if (isPossible)
-                        possible_elementary_move.at(8*i + j).push_back({i - 2*k, j + 2*k});
+                        possible_elementary_move.at(8*i + j)
+                                .push_back({i - 2*k, j + 2*k});
                     break;
                 }
             }
         }
     }
-    
+
     /*
      * Do a BFS to list all possible jumps.
      * Each pown is a root
@@ -175,7 +192,7 @@ ListOfMoves AlphaBeta::availableMoves(Player player){
     for (auto root : position_colors_players_.at(player)) {
         std::queue<PositionType> queue;
         queue.push(root);
-        
+
         std::map<PositionType, bool> explored;
         std::map<PositionType, ListOfPositionType> paths;
         explored[root] = true;
@@ -183,10 +200,14 @@ ListOfMoves AlphaBeta::availableMoves(Player player){
         while (!queue.empty()) {
             PositionType v = queue.front();
             queue.pop();
-            
-            for (PositionType neig : possible_elementary_move.at(8*v.at(0) + v.at(1))) {
+
+            for (PositionType neig :
+                        possible_elementary_move.at(8*v.at(0) + v.at(1))) {
                 if (!explored.contains(neig)
-                    /* Checks that we are not jumping over the root (it has moved) */
+                    /*
+                     * Checks that we are not jumping over the root
+                     * (it has moved)
+                     */
                     && !((v.at(0) + neig.at(0))/2 == root.at(0)
                          && (v.at(1) + neig.at(1))/2 == root.at(1))) {
                     queue.push(neig);
@@ -196,7 +217,7 @@ ListOfMoves AlphaBeta::availableMoves(Player player){
                 }
             }
         }
-        
+
         paths.extract(root);
         /* we add to result all the paths we found from this root */
         for (auto move : paths)
