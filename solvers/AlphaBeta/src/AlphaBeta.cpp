@@ -19,6 +19,7 @@
 #include <vector>
 #include <queue>
 #include <map>
+#include <algorithm>
 
 /* Other */
 #include "Types.hpp"
@@ -26,52 +27,48 @@
 
 
 ListOfMoves AlphaBeta::availableMoves(Player player) {
-    GridType grid = this->get_grid_();
-
     /* Indicates if there is an jump from (i, j) to (k, l) */
     std::vector<ListOfPositionType> possible_elementary_move(64);
 
     ListOfMoves result;
 
     /* Check the case of notJump moves */
-    std::vector<std::vector<PositionType>> position_colors_players_
-                                        = get_position_colors_players_();
     for (auto pownPosition : position_colors_players_.at(player)) {
         /* We check every possible directions */
         if (    pownPosition.at(0) + 1 < 8
-            && (grid.at(pownPosition.at(0) + 1)
+            && (grid_.at(pownPosition.at(0) + 1)
                 .at(pownPosition.at(1)) == Empty))
             result.push_back({pownPosition,
                 {pownPosition.at(0) + 1, pownPosition.at(1)}});
 
         if (    pownPosition.at(0) - 1 >= 0
-            && (grid.at(pownPosition.at(0) - 1)
+            && (grid_.at(pownPosition.at(0) - 1)
                 .at(pownPosition.at(1)) == Empty))
             result.push_back({pownPosition,
                 {pownPosition.at(0) - 1, pownPosition.at(1)}});
 
         if (    pownPosition.at(1) + 1 < 8
-            && (grid.at(pownPosition.at(0))
+            && (grid_.at(pownPosition.at(0))
                 .at(pownPosition.at(1) + 1) == Empty))
             result.push_back({pownPosition,
                 {pownPosition.at(0), pownPosition.at(1) + 1}});
 
         if (    pownPosition.at(1) - 1 >= 0
-            && (grid.at(pownPosition.at(0))
+            && (grid_.at(pownPosition.at(0))
                 .at(pownPosition.at(1) - 1) == Empty))
             result.push_back({pownPosition,
                 {pownPosition.at(0), pownPosition.at(1) - 1}});
 
         if (    pownPosition.at(0) + 1 < 8
             &&  pownPosition.at(1) - 1 >= 0
-            && (grid.at(pownPosition.at(0) + 1)
+            && (grid_.at(pownPosition.at(0) + 1)
                 .at(pownPosition.at(1) - 1) == Empty))
             result.push_back({pownPosition,
                 {pownPosition.at(0) + 1, pownPosition.at(1) - 1}});
 
         if (    pownPosition.at(0) - 1 >= 0
             &&  pownPosition.at(1) + 1 < 8
-            && (grid.at(pownPosition.at(0) - 1)
+            && (grid_.at(pownPosition.at(0) - 1)
                 .at(pownPosition.at(1) + 1) == Empty))
             result.push_back({pownPosition,
                 {pownPosition.at(0) - 1, pownPosition.at(1) + 1}});
@@ -84,11 +81,11 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
             /* Jumping on line+ */
             for (int k = 1; i + 2*k < 8; ++k) {
                 /* Check if there is a pown to jump over */
-                if (grid.at(i + k).at(j) != Empty) {
+                if (grid_.at(i + k).at(j) != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
                     for (int l = 1; l <= k; ++l) {
-                        if (grid.at(i + k + l).at(j) != Empty)
+                        if (grid_.at(i + k + l).at(j) != Empty)
                             isPossible = false;
                     }
                     if (isPossible)
@@ -101,11 +98,11 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
             /* Jumping on line- */
             for (int k = 1; i - 2*k >= 0; ++k) {
                 /* Check if there is a pown to jump over */
-                if (grid.at(i - k).at(j)) {
+                if (grid_.at(i - k).at(j)) {
                     /* Check if the jump is valid */
                     isPossible = true;
                     for (int l = 1; l <= k; ++l) {
-                        if (grid.at(i - k - l).at(j) != Empty)
+                        if (grid_.at(i - k - l).at(j) != Empty)
                             isPossible = false;
                     }
                     if (isPossible)
@@ -118,11 +115,11 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
             /* Jumping on row+ */
             for (int k = 1; j + 2*k < 8; ++k) {
                 /* Check if there is a pown to jump over */
-                if (grid.at(i).at(j + k) != Empty) {
+                if (grid_.at(i).at(j + k) != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
                     for (int l = 1; l <= k; ++l) {
-                        if (grid.at(i).at(j + k + l) != Empty)
+                        if (grid_.at(i).at(j + k + l) != Empty)
                             isPossible = false;
                     }
                     if (isPossible)
@@ -135,11 +132,11 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
             /* Jumping on row- */
             for (int k = 1; j - 2*k >= 0; ++k) {
                 /* Check if there is a pown to jump over */
-                if (grid.at(i).at(j - k) != Empty) {
+                if (grid_.at(i).at(j - k) != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
                     for (int l = 1; l <= k; ++l) {
-                        if (grid.at(i).at(j - k - l) != Empty)
+                        if (grid_.at(i).at(j - k - l) != Empty)
                             isPossible = false;
                     }
                     if (isPossible)
@@ -152,11 +149,11 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
             /* Jumping on diag right */
             for (int k = 1; i + 2*k < 8 && j - 2*k >= 0; ++k) {
                 /* Check if there is a pown to jump over */
-                if (grid.at(i + k).at(j - k) != Empty) {
+                if (grid_.at(i + k).at(j - k) != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
                     for (int l = 1; l <= k; ++l) {
-                        if (grid.at(i + k + l).at(j - k - l) != Empty)
+                        if (grid_.at(i + k + l).at(j - k - l) != Empty)
                             isPossible = false;
                     }
                     if (isPossible)
@@ -169,11 +166,11 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
             /* Jumping on diag left */
             for (int k = 1; j + 2*k < 8 && i - 2*k >= 0; ++k) {
                 /* Check if there is a pown to jump over */
-                if (grid.at(i - k).at(j + k) != Empty) {
+                if (grid_.at(i - k).at(j + k) != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
                     for (int l = 1; l <= k; ++l) {
-                        if (grid.at(i - k - l).at(j + k + l) != Empty)
+                        if (grid_.at(i - k - l).at(j + k + l) != Empty)
                             isPossible = false;
                     }
                     if (isPossible)
@@ -225,4 +222,117 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
     }
 
     return result;
+}
+
+int AlphaBeta::evaluate(Player player) {
+    int result = 0;
+    switch (player) {
+        case 0: /* White */
+            for (PositionType pown : position_colors_players_.at(0))
+                result += 14 - pown.at(0) - pown.at(1);
+            break;
+            
+        case 1: /* black */
+            for (PositionType pown : position_colors_players_.at(1))
+                result += pown.at(0) + pown.at(1);
+            break;
+            
+        default:
+            break;
+    }
+    return result;
+}
+
+ListOfPositionType AlphaBeta::getMove(int depth, double alpha, double beta) {
+    this->maximizing_player_ = this->who_is_to_play_;
+    std::cout << "Value: " << AlphaBetaEval(depth, alpha, beta, true, true) << "\n";
+    return this->best_move_;
+}
+
+int AlphaBeta::AlphaBetaEval(int depth, double alpha, double beta, bool maximizingPlayer, bool keepMove) {
+    if (depth == 0)
+        return heuristicValue();
+    
+    /* Check if the current node is a terminating node */
+    switch (this->state_of_game()) {
+        case WhiteWon:
+            if (this->maximizing_player_ == 0)
+                return 100000;
+            else
+                return -100000;
+            break;
+
+        case BlackWon:
+            if (this->maximizing_player_ == 1)
+                return 100000;
+            else
+                return -100000;
+            break;
+            
+        case Draw:
+            return 0;
+            break;
+            
+        default: /* the game is not over */
+            break;
+    }
+    
+    /* The state is not a termination node */
+    int value = 0;
+    ListOfMoves possible_moves = this->availableMoves(this->who_is_to_play_);
+    
+    /* keeping state to restore too after applying temp moves */
+    std::map<GridType, int> temp_number_of_times_seen = this->number_of_times_seen;
+    Player temp_who_is_to_play_ = this->who_is_to_play_;
+    GridType temp_grid_ = this->grid_;
+    std::vector<std::vector<PositionType>> temp_position_colors_players_
+            = this->position_colors_players_;
+    
+    ListOfPositionType best_move;
+    if (maximizingPlayer) {
+        value = -100000; /* -\infty */
+        /* For each possible move */
+        for (ListOfPositionType move : possible_moves) {
+            this->move(this->who_is_to_play_, move);
+            int buff = AlphaBetaEval(depth - 1, alpha, beta, !maximizingPlayer, false);
+            if (buff >= value) {
+                value = buff;
+                best_move = move;
+            }
+            if (value >= beta)
+                break; /* beta cutoff */
+            alpha = std::max(alpha, (double) value);
+        }
+    } else {
+        value = 100000; /* +\infty */
+        /* For each possible move */
+        for (ListOfPositionType move : possible_moves) {
+            this->move(this->who_is_to_play_, move);
+            int buff = AlphaBetaEval(depth - 1, alpha, beta, !maximizingPlayer, false);
+            if (buff <= value) {
+                value = buff;
+                best_move = move;
+            }
+            if (value <= alpha)
+                break; /* alpha cutoff */
+            beta = std::min(beta, (double) value);
+        }
+    }
+    
+    /* restore to current game state */
+    this->number_of_times_seen = temp_number_of_times_seen;
+    this->who_is_to_play_ = temp_who_is_to_play_;
+    this->grid_ = temp_grid_;
+    this->position_colors_players_ = temp_position_colors_players_;
+    
+    /* set the best move if asked to */
+    if (keepMove)
+        this->best_move_ = best_move;
+    
+    /* return value */
+    return value;
+}
+
+int AlphaBeta::heuristicValue() {
+    return 6*evaluate(this->maximizing_player_) - evaluate(1 - this->maximizing_player_);
 }

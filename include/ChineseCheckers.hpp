@@ -33,7 +33,7 @@
 #include "Types.hpp"
 
 class ChineseCheckers {
- private:
+ protected:
     /*! A data structure containing the grid */
     GridType grid_;
     /*! The variable `position_colors_players_.at(player).at(i)` contains the position

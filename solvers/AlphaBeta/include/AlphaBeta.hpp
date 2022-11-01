@@ -22,8 +22,16 @@
 #include "ChineseCheckers.hpp"
 
 class AlphaBeta : public ChineseCheckers{
+ protected:
+    int AlphaBetaEval(int depth, double alpha, double beta, bool maximizingPlayer, bool keepMove);
+    int heuristicValue();
+    int evaluate(Player player);
+    
+    Player maximizing_player_;
+    ListOfPositionType best_move_;
  public:
     ListOfMoves availableMoves(Player player);
+    ListOfPositionType getMove(int depth, double alpha, double beta);
 };
 
 #endif /* SOLVERS_ALPHABETA_INCLUDE_ALPHABETA_HPP_ */
