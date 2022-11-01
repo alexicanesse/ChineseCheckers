@@ -234,17 +234,6 @@ bool ChineseCheckers::move(Player player,
         this->number_of_times_seen.at(this->grid_)++;
     else
         this->number_of_times_seen.insert({this->grid_, 1});
-
-//#warning DEBUG
-//    for (auto x : this->number_of_times_seen) {
-//        for (auto line : x.first) {
-//            for (auto i : line) {
-//                std::cout << i << " ";
-//            }
-//            std::cout << "\n";
-//        }
-//        std::cout << "\n" << x.second << "\n";
-//    }
     
     
     this->who_is_to_play_ = 1 - this->who_is_to_play_;

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['new_5fgame_0',['new_game',['../class_chinese_checkers.html#ae26bfd9b34e8c60e0e8195e654fa4a66',1,'ChineseCheckers']]]
+  ['on_5fresize_0',['on_resize',['../class_chinese_checkers_1_1_board_area.html#af94d436d7a035e9ef9ab16c46b425fd5',1,'ChineseCheckers::BoardArea']]]
 ];

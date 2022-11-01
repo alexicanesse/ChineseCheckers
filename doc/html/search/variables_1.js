@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['position_5fcolors_5fplayers_5f_0',['position_colors_players_',['../class_chinese_checkers.html#a8977ba0a0af034477ba21c7a2f46c412',1,'ChineseCheckers']]]
+  ['number_5fof_5ftimes_5fseen_0',['number_of_times_seen',['../class_chinese_checkers.html#a8456a167821d4052e755b985601098c3',1,'ChineseCheckers']]]
 ];
