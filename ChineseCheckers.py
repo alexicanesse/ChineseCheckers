@@ -478,9 +478,11 @@ class Board(Tk,Areas):
         self.geometry(f"{width}x{height}+{int(window_x)}+{int(window_y)}")
         self.aspect(width, height, width, height) # Keep the aspect ratio fixed when user resizes
 
-        # The scene is in 3 parts : on the left are parameters, in the center is the board, on the right is the "play" button
-        control_width = int((width -  height) / 2.6)
-        parameters_width = width -  height - control_width
+        # The scene is in 5 parts : on the left are parameters, in the center is the board, on the right is the "play" button
+        # in the bottom & top are blank spaces
+        board_side = height
+        control_width = int((width -  board_side) / 2.3)
+        parameters_width = width -  board_side - control_width
         N = 25
 
         # Initializing the parameters area
@@ -489,7 +491,7 @@ class Board(Tk,Areas):
         self.__parametersArea.pack(side=LEFT, padx=0, fill=BOTH, expand=YES)
 
         # Initializing the board
-        self.__boardArea = BoardArea(self, height, height, False, False, False)
+        self.__boardArea = BoardArea(self, board_side, board_side, False, False, False)
         self.__boardArea.addtag_all("all")
         self.__boardArea.pack(padx=0, side=LEFT, fill=BOTH)
         
@@ -504,7 +506,7 @@ class Board(Tk,Areas):
                     "pmoves_on", "pmoves_off", "pmoves_hon", "pmoves_hoff"]
         for name in names:
             exec(f"{name} = PhotoImage(file=\"icons/{name}.png\")\n" + \
-                f"scale = (parameters_width) / {name}.width()\n" + \
+                f"scale = (parameters_width / 1.1) / {name}.width()\n" + \
                 f"{name} = {name}.zoom(int(N * scale), int(N * scale))\n" + \
                 f"self.{name}_icon = {name}.subsample(N, N)")
         
@@ -656,5 +658,5 @@ class Board(Tk,Areas):
 
 if __name__ == "__main__":
     
-    fen = Board(1550, 800)
+    fen = Board(1500, 900)
     fen.mainloop()
