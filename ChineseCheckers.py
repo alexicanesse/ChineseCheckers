@@ -74,18 +74,12 @@ class Areas(Canvas):
     def from_rgb(self, rgb):
         '''translates an rgb tuple of int to a tkinter friendly color code'''
         return "#%02x%02x%02x" % rgb   
-        
-class ControlArea(Areas):
-    
-    def __init__(self, parent, width, height):
-        # initialization of the canvas
-        Canvas.__init__(self, parent, width=width, height=height, highlightthickness=0)
-        self.configure(bg=self.from_rgb((49, 46, 43)))
 
 class BoardArea(Areas):
     
-    def __init__(self, parent, width, height):
+    def __init__(self, parent, width, height, show_black_ar, show_white_ar, show_moves):
         # initialization of the canvas
+        assert(width == height)
         Canvas.__init__(self, parent, width=width, height=height, highlightthickness=0)
         self.bind("<Configure>", self.on_resize)
         self.width = width # width of the board area
@@ -93,19 +87,17 @@ class BoardArea(Areas):
         self.case_width = width/13 # width of a case (for the hitbox)
         self.case_height = height/13 # height of a case
         self.case_radius = self.case_width/5 # radius of a case
+        self.highlight_radius = int(self.case_radius / 1.5)
         self.pawn_radius = self.case_width/2.5 # radius of a pawn
         self.DARK = self.from_rgb((119, 149, 86)) # color of the board
         self.LIGHT = self.from_rgb((235, 236, 208)) # color of the cases
         self.WHITE = self.from_rgb((249, 249, 249)) # color of white pawns
         self.BLACK = self.from_rgb((87, 84, 82)) # color of black pawns
         self.HIGHLIGHT = "coral" # color of highlighted cases
+        self.show_moves = show_moves # True if we show possible moves when clicking on pawn
+        self.show_black_ar = show_black_ar # True if we indicates black movements using arrows
+        self.show_white_ar = show_white_ar # True if we indicates white movements using arrows
         self.configure(bg=self.DARK)
-        # couleurs OK
-        # TODO annuler coup
-        # TODO flèches sur son propre coup
-        # resize OK
-        # TODO Human()
-        # ControlArea() OK
         
         # drawing the board cases
         for i in range(8):
@@ -122,7 +114,8 @@ class BoardArea(Areas):
         self.wp =[] # white pawns
         self.bp =[] # black pawns
         self.hc = [] # highlighted cases
-        self.arrows = []
+        self.arrows_black = [] # stores arrows representing black movements
+        self.arrows_white = [] # stores arrows representing white movements
         for i in range(4):
             for j in range(4):
                 if i + j <= 3:
@@ -131,6 +124,7 @@ class BoardArea(Areas):
                     x,y = self._plat2canv(7 - i, 7 - j)
                     self.bp.append(Pion(self, x, y, self.BLACK))
                     
+        self.color = 'white'
         # TEST
         self.ia = IA(self,'black')
 
@@ -180,7 +174,7 @@ class BoardArea(Areas):
 
         for move in l_moves: # l_moves is the list of intermediate cases
             i, j = move
-            r = self.case_radius / 1.5
+            r = self.highlight_radius
             x, y = self._plat2canv(i, j)
             self.hc.append(self.create_oval(x - r,
                                  y - r,
@@ -189,13 +183,18 @@ class BoardArea(Areas):
                                  fill=self.HIGHLIGHT,
                                  outline=""))
     
-    def show_arrows(self, l_moves):
+    def show_arrows(self, l_moves, color):
         '''draw arrows between the cases in the l_moves cases list'''
         
         # deletes existing arrows
-        for arrow in self.arrows:
-            self.delete(arrow)
-        self.arrow = []
+        if color == 'white':
+            for arrow in self.arrows_white:
+                self.delete(arrow)
+            self.arrows_white = []
+        else:
+            for arrow in self.arrows_black:
+                self.delete(arrow)
+            self.arrows_black = []
         
         if(len(l_moves) <= 1):
             return
@@ -219,15 +218,25 @@ class BoardArea(Areas):
             else: # vertical arrow
                 y += self.case_radius # TODO dans l'autre sens
                 new_y -= self.case_radius
-                
-            self.arrows.append(self.create_line(x, 
+
+            if color == 'white':  
+                self.arrows_white.append(self.create_line(x, 
                                                   y, 
                                                   new_x, 
                                                   new_y, 
                                                   arrow=LAST, 
                                                   arrowshape='15 20 8',
-                                                  fill="SteelBlue2",
-                                                  width=6))
+                                                  fill=self.from_rgb((137, 197, 246)),
+                                                  width=8))
+            else:
+                self.arrows_black.append(self.create_line(x, 
+                                                  y, 
+                                                  new_x, 
+                                                  new_y, 
+                                                  arrow=LAST, 
+                                                  arrowshape='15 20 8',
+                                                  fill=self.from_rgb((62, 123, 175)),
+                                                  width=8))
             last = new
     
     def on_resize(self, event):
@@ -250,18 +259,23 @@ class BoardArea(Areas):
             pawn.set_xy(pawn.x * scale, pawn.y * scale)
     
     # All of the following functions in the class are TEST
-    
+
+    def can_play(self):
+        return self.joueurajouer
+
     def jouerIA(self):
         # TEST
-        if self.joueurajouer:
-            print("J:",self.coup_courant)
-            tic = time.time()
-            temp = self.ia.joueralphabeta(depth = 3)
-            toc = time.time()
-            print("IA:",temp[1],'en ',toc-tic,'s')
-            self.appliquer_coup(temp[0],temp[1])
-            self.show_arrows(temp[1])
-            self.reset_working_data()
+        assert(self.joueurajouer)
+        print("J:",self.coup_courant)
+        tic = time.time()
+        temp = self.ia.joueralphabeta(depth = 3)
+        toc = time.time()
+        print("IA:",temp[1],'en ',toc-tic,'s')
+        self.appliquer_coup(temp[0],temp[1])
+        if (self.ia.couleur == 'white' and self.show_white_ar) \
+           or (self.ia.couleur == 'black' and self.show_black_ar):
+            self.show_arrows(temp[1], self.ia.couleur)
+        self.reset_working_data()
         # de-highlight precedently highlighted cases
         for case in self.hc:
             self.delete(case)
@@ -362,10 +376,12 @@ class BoardArea(Areas):
                 # dropped the pawn on the same case as before
                 # Drawing of the reachable boxes
                 possible_moves = self.coups_possibles_a_supprimer([self.__piece_courante.case_x,
-                                                                  self.__piece_courante.case_y],
-                                                                 self.pbpn2pospion_a_supprimer(self.wp, self.bp))
+                                                                   self.__piece_courante.case_y],
+                                                                   self.pbpn2pospion_a_supprimer(self.wp, self.bp))
                 
-                self.highlight_cases(possible_moves)
+                if self.show_moves:
+                    self.highlight_cases(possible_moves)
+                    self.show_arrows([], self.color) # erases drawn arrows
                 
                 self.__piece_courante.move(event.x,event.y) 
                 self.reset_working_data()
@@ -375,6 +391,9 @@ class BoardArea(Areas):
                 self.coup_precedent = etude_coup
                 self.joueurajouer = True
                 self.coup_courant.append((ncase_x,ncase_y))
+                if (self.color == 'white' and self.show_white_ar) or\
+                   (self.color == 'black' and self.show_black_ar):
+                    self.show_arrows(self.coup_courant, self.color)
     
             else:
                 xf,yf = self._plat2canv(self.__piece_courante.case_x,self.__piece_courante.case_y)
@@ -455,31 +474,187 @@ class Board(Tk,Areas):
         window_x = (screen_width - width) / 2
         window_y = (screen_height - height) / 2
         # put the window in the center of the screen
-        print(f"screen is {screen_height}x{screen_width}, putting window at ({window_x},{window_y})")
+        print(f"screen is {screen_width}x{screen_height}, putting window at ({window_x},{window_y})")
         self.geometry(f"{width}x{height}+{int(window_x)}+{int(window_y)}")
         self.aspect(width, height, width, height) # Keep the aspect ratio fixed when user resizes
 
+        # The scene is in 3 parts : on the left are parameters, in the center is the board, on the right is the "play" button
+        control_width = int((width -  height) / 2.6)
+        parameters_width = width -  height - control_width
+        N = 25
+
+        # Initializing the parameters area
+        self.__parametersArea = Canvas(self, width=parameters_width, height=height, highlightthickness=0)
+        self.__parametersArea.configure(bg=self.from_rgb((49, 46, 43)))
+        self.__parametersArea.pack(side=LEFT, padx=0, fill=BOTH, expand=YES)
+
         # Initializing the board
-        self.__boardArea = BoardArea(self, height, height)
+        self.__boardArea = BoardArea(self, height, height, False, False, False)
         self.__boardArea.addtag_all("all")
         self.__boardArea.pack(padx=0, side=LEFT, fill=BOTH)
         
-        # Buttons and mouse events
-        self.__controlArea = ControlArea(self, width - height, height)
-        self.__controlArea.addtag_all("all")
+        # Initializing the control area
+        self.__controlArea = Canvas(self, width=control_width, height=height, highlightthickness=0)
+        self.__controlArea.configure(bg=self.from_rgb((49, 46, 43)))
         self.__controlArea.pack(side=RIGHT, padx=0, fill=BOTH, expand=YES)
+
+        # parameters images
+        names = ["ba_on", "ba_off", "ba_hon", "ba_hoff", 
+                    "wa_on", "wa_off", "wa_hon", "wa_hoff", 
+                    "pmoves_on", "pmoves_off", "pmoves_hon", "pmoves_hoff"]
+        for name in names:
+            exec(f"{name} = PhotoImage(file=\"icons/{name}.png\")\n" + \
+                f"scale = (parameters_width) / {name}.width()\n" + \
+                f"{name} = {name}.zoom(int(N * scale), int(N * scale))\n" + \
+                f"self.{name}_icon = {name}.subsample(N, N)")
         
-        self.boutonIA= Button(self.__controlArea, text = "Jouer IA")
-        self.boutonIA.pack(side=LEFT, padx=10)
-        bfont = font.Font(family='Helvetica', size=40)
-        self.boutonIA.config(command = self.__boardArea.jouerIA, bg = 'lightgrey', font = bfont)
+        # create buttons
+        self.wa_button = self.__parametersArea.create_image(parameters_width / 2,
+                                                        height / 2 - height / 8,
+                                                        image=self.wa_off_icon)
+        self.wa_button_state = "off" # can be "on", "off", "hon" or "hoff"
+        self.ba_button = self.__parametersArea.create_image(parameters_width / 2,
+                                                        height / 2,
+                                                        image=self.ba_off_icon)
+        self.ba_button_state = "off" # can be "on", "off", "hon" or "hoff"
+        self.pmoves_button = self.__parametersArea.create_image(parameters_width / 2,
+                                                        height / 2 + height / 8,
+                                                        image=self.pmoves_off_icon)
+        self.pmoves_button_state = "off" # can be "on", "off", "hon" or "hoff"
         
-        #Config des événements
-        self.__boardArea.bind("<ButtonRelease-1>", self.__boardArea.bouton1_relache)
+        # "PLAY" button
+        icon = PhotoImage(file="icons/ai_button.png")
+        icon_pressed = PhotoImage(file="icons/ai_button_pressed.png")
+        icon_grayed = PhotoImage(file="icons/ai_button_grayed.png")
+
+        scale = (control_width / (1.2)) / icon.width() # scales button
+        icon = icon.zoom(int(N * scale), int(N * scale))
+        self.play_ai_icon = icon.subsample(N, N)
+
+        scale = (control_width / (1.2)) / icon_pressed.width() # scales pressed button
+        icon_pressed = icon_pressed.zoom(int(N * scale), int(N * scale))
+        self.play_ai_icon_pressed = icon_pressed.subsample(N, N)
+
+        scale = (control_width / (1.2)) / icon_grayed.width() # scales grayed button
+        icon_grayed = icon_grayed.zoom(int(N * scale), int(N * scale))
+        self.play_ai_icon_grayed = icon_grayed.subsample(N, N)
+        
+        self.AI_button = self.__controlArea.create_image((control_width) / 2,
+                                                        (height) / 2,
+                                                        image=self.play_ai_icon_grayed)
+        self.AI_button_state = "grayed" # can be "grayed", "normal" or "pressed"
+        
+        # mouse events config
+        self.__controlArea.tag_bind(self.AI_button, "<Button-1>", self.press_jouerIA)
+        self.__controlArea.tag_bind(self.AI_button, "<ButtonRelease-1>", self.release_jouerIA)
+        self.__controlArea.bind("<Configure>", self.on_resize)
+        # arrows for white
+        self.__parametersArea.tag_bind(self.wa_button, "<Button-1>", lambda event: self.click("wa", event))
+        self.__parametersArea.tag_bind(self.wa_button, "<Enter>", lambda event: self.hover("wa", event))
+        self.__parametersArea.tag_bind(self.wa_button, "<Leave>", lambda event: self.end_hover("wa", event))
+        # arrows for black
+        self.__parametersArea.tag_bind(self.ba_button, "<Button-1>", lambda event: self.click("ba", event))
+        self.__parametersArea.tag_bind(self.ba_button, "<Enter>", lambda event: self.hover("ba", event))
+        self.__parametersArea.tag_bind(self.ba_button, "<Leave>", lambda event: self.end_hover("ba", event))
+        # show possible moves
+        self.__parametersArea.tag_bind(self.pmoves_button, "<Button-1>", lambda event: self.click("pmoves", event))
+        self.__parametersArea.tag_bind(self.pmoves_button, "<Enter>", lambda event: self.hover("pmoves", event))
+        self.__parametersArea.tag_bind(self.pmoves_button, "<Leave>", lambda event: self.end_hover("pmoves", event))
+        self.__parametersArea.bind("<Configure>", self.on_resize)
+
+        self.__boardArea.bind("<ButtonRelease-1>", self.release_pawn)
         self.__boardArea.bind("<Button-1>", self.__boardArea.bouton1_appuye)
         self.__boardArea.bind("<B1-Motion>", self.__boardArea.bouton1_deplace)
 
+    def press_jouerIA(self, event):
+        ''' changes button appearance and makes the AI play on press '''
+        if self.AI_button_state == "normal":
+            # if the button is normal (i.e not grayed), change it to pressed
+            self.__controlArea.itemconfigure(self.AI_button, image=self.play_ai_icon_pressed)
+            self.__controlArea.update_idletasks()
+            self.__boardArea.jouerIA()
+            self.AI_button_state = "pressed"
+    
+    def release_jouerIA(self, event):
+        ''' changes button appearance on release '''
+        if self.AI_button_state == "pressed":
+            # if the button is pressed, make the AI play and change the button to grayed
+            self.__controlArea.itemconfigure(self.AI_button, image=self.play_ai_icon_grayed)
+            self.__controlArea.update_idletasks()
+            self.AI_button_state = "grayed"
+    
+    def release_pawn(self, event):
+        self.__boardArea.bouton1_relache(event)
+        if self.__boardArea.can_play():
+            # if human has moved a pawn, change the button from grayed to normal
+            self.__controlArea.itemconfigure(self.AI_button, image=self.play_ai_icon)
+            self.__controlArea.update_idletasks()
+            self.AI_button_state = "normal"
+    
+    def hover(self, button_name, event):
+        ''' changes button appearance on hovering '''
+        state = eval(f"self.{button_name}_button_state")
+        if state not in ["on", "off"]: return # shouldn't reach
+
+        self.__parametersArea.itemconfigure(eval(f"self.{button_name}_button"), 
+                                            image = eval(f"self.{button_name}_h{state}_icon"))
+        self.__parametersArea.update_idletasks()
+        exec(f"self.{button_name}_button_state = \"h{state}\"")
+    
+    def end_hover(self, button_name, event):
+        ''' changes button appearance on ending hover '''
+        state = eval(f"self.{button_name}_button_state")
+        if state not in ["hon", "hoff"]: return # shouldn't reach
+        state = "on" if state == "hon" else "off"
+        
+        self.__parametersArea.itemconfigure(eval(f"self.{button_name}_button"), 
+                                            image = eval(f"self.{button_name}_{state}_icon"))
+        self.__parametersArea.update_idletasks()
+        exec(f"self.{button_name}_button_state = \"{state}\"")
+    
+    def click(self, button_name, event):
+        ''' changes button appearance on clicking '''
+        state = eval(f"self.{button_name}_button_state")
+        if state not in ["hon", "hoff"]: return # shouldn't reach
+        state = "off" if state == "hon" else "on"
+        
+        self.__parametersArea.itemconfigure(eval(f"self.{button_name}_button"), 
+                                            image = eval(f"self.{button_name}_{state}_icon"))
+        self.__parametersArea.update_idletasks()
+        exec(f"self.{button_name}_button_state = \"{state}\"")
+        if button_name == "wa":
+            self.__boardArea.show_white_ar = not self.__boardArea.show_white_ar
+            if not self.__boardArea.show_white_ar:
+                self.__boardArea.show_arrows([], "white") # removes existing arrows
+        elif button_name == "ba":
+            self.__boardArea.show_black_ar = not self.__boardArea.show_black_ar
+            if not self.__boardArea.show_black_ar:
+                self.__boardArea.show_arrows([], "black") # removes existing arrows
+        elif button_name == "pmoves":
+            self.__boardArea.show_moves = not self.__boardArea.show_moves
+            if not self.__boardArea.show_moves:
+                self.__boardArea.highlight_cases([]) # removes existing highlighted cases
+    
+    def on_resize(self, event):
+        ''' called on resize events '''
+        c_width, c_height = int(self.__controlArea['width']), int(self.__controlArea['height'])
+        p_width, p_height = int(self.__parametersArea['width']), int(self.__parametersArea['height'])
+        assert(p_height == c_height)
+        # determine the ratio
+        scale = float(event.height)/c_height
+        # resize the two canvas 
+        self.__controlArea.config(width=int(c_width * scale), height=int(c_height * scale))
+        self.__parametersArea.config(width=int(p_width * scale), height=int(p_height * scale))
+        # fixes the position of the buttons
+        new_c_width, new_c_height = int(self.__controlArea['width']), int(self.__controlArea['height'])
+        new_p_width, new_p_height = int(self.__parametersArea['width']), int(self.__parametersArea['height'])
+        self.__controlArea.move(self.AI_button, (new_c_width - c_width) / 2, (new_c_height - c_height) / 2)
+        self.__parametersArea.move(self.wa_button, (new_p_width - p_width) / 2, (new_p_height - p_height) / 2)
+        self.__parametersArea.move(self.ba_button, (new_p_width - p_width) / 2, (new_p_height - p_height) / 2)
+        self.__parametersArea.move(self.pmoves_button, (new_p_width - p_width) / 2, (new_p_height - p_height) / 2)
+
+
 if __name__ == "__main__":
     
-    fen = Board(1100, 800)
+    fen = Board(1550, 800)
     fen.mainloop()
