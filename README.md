@@ -6,14 +6,25 @@ We used some codes of an original implementation made by a member of our group. 
 
 
 ## Table of contents 
-1. [Getting Started](#getting-started)
-    1. [Prerequisites](#prerequisites)
-    2. [Installing](#installing)
-2. [Running the tests](#running-the-tests)
-3. [Built With](#built-with)
-4. [Contributing](#contributing)
-5. [License](#license)
-6. [Acknowledgments](#acknowledgments)
+- [Building status](#building-status)
+- [Getting Started](#getting-started)
+   - [Prerequisites](#prerequisites)
+   - [Installing](#installing)
+- [Running the tests](#running-the-tests)
+- [Built With](#built-with)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+
+## Building status
+| | **Architecture** | **Build** |
+|---|:---:|:---:|
+| **macOS**        | x86_64 |[![Build Status](https://ci.swift.org/job/oss-swift-package-macos/lastCompletedBuild/badge/icon)](https://ci.swift.org/job/oss-swift-package-macos)|
+| **Ubuntu 18.04** | x86_64 |[![Build Status](https://ci.swift.org/job/oss-swift-package-ubuntu-18_04/lastCompletedBuild/badge/icon)](https://ci.swift.org/job/oss-swift-package-ubuntu-18_04)|
+| **Ubuntu 22.04** | x86_64 |[![Build Status](https://ci.swift.org/job/oss-swift-package-ubuntu-22_04/lastCompletedBuild/badge/icon)](https://ci.swift.org/job/oss-swift-package-ubuntu-22_04)|
+
+
+
 
 ## Getting Started 
 
@@ -60,9 +71,8 @@ pip3 install tk cpplint
 
 #### Compiling the library
 
-Run `setup.py` in order to configure `MakeFile`. Then, run `make`.
+Run `make`.
 ```sh
-python3 setup.py
 make
 ```
 
@@ -86,11 +96,24 @@ TODO
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code
 of conduct, and the process for submitting pull requests to us.
 
+Note that while we already have certain standards in place, nothing is set 
+in stone. If you have an issue with the way code is structured, with any 
+libraries we are using, or with any processes involved with contributing, 
+please bring it up. We welcome all feedback so we can make contributing
+to this project as painless as possible.
+
 ## License
 
 This project is licensed under the [GNU General Public License v3.0](LICENSE)
 Creative Commons License - see the [LICENSE](LICENSE) file for
 details
+
+[tl;dr](https://tldrlegal.com/license/gnu-lesser-general-public-license-v3-(lgpl-3)#summary) This license is mainly applied to libraries. You may copy, 
+distribute and modify the software provided that modifications are 
+described and licensed for free under LGPL. Derivatives works 
+(including modifications or anything statically linked to the library) 
+can only be redistributed under LGPL, but applications that use the library
+don't have to be.
 
 ## Acknowledgments
 
