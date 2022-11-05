@@ -30,7 +30,7 @@
 #include <Types.hpp>
 
 /* The number of time a grid state can be seen before settling for a draw */
-#define MAX_NUMBER_OF_CYCLES_FOR_DRAW_ 2
+#define MAX_NUMBER_OF_CYCLES_FOR_DRAW_ 3
 
 MoveType ChineseCheckers::elementaryMove(PositionType original_position,
                                          PositionType arrival_position) {
@@ -200,7 +200,39 @@ bool ChineseCheckers::move(Player player,
     this->who_is_to_play_ = 1 - this->who_is_to_play_;
     return true;
 }
-#warning add the two rules
+
+void ChineseCheckers::moveWithoutVerification(Player player,
+                             const ListOfPositionType &list_moves) {
+    int n = static_cast<int>(list_moves.size());
+    this->remove_pawn(player, list_moves.at(0));
+
+    this->grid_.at(list_moves.at(n-1).at(0)).at(list_moves.at(n-1).at(1)) =
+            grid_.at(list_moves.at(0).at(0)).at(list_moves.at(0).at(1));
+    this->grid_.at(list_moves.at(0).at(0)).at(list_moves.at(0).at(1)) = Empty;
+
+    for (int i = 0; i < 10; ++i) {
+        if ((this->position_colors_players_.at(player).at(i).at(0)
+             == -1)
+            && (this->position_colors_players_.at(player).at(i).at(1)
+                == -1)) {
+            this->position_colors_players_.at(player).at(i).at(0)
+                    = list_moves.at(n-1).at(0);
+            this->position_colors_players_.at(player).at(i).at(1)
+                    = list_moves.at(n-1).at(1);
+            break;
+        }
+    }
+
+    /* indicates that is position has been seen another time */
+    if (this->number_of_times_seen.contains(this->grid_))
+        this->number_of_times_seen.at(this->grid_)++;
+    else
+        this->number_of_times_seen.insert({this->grid_, 1});
+
+
+    this->who_is_to_play_ = 1 - this->who_is_to_play_;
+}
+
 /*
  * returns true or false to indicate if
  * the current position is a winning position
@@ -245,16 +277,14 @@ Result ChineseCheckers::state_of_game() {
         return BlackWon;
 
     /* Check for a draw */
-    for (const auto &grid : this->number_of_times_seen) {
-        if (grid.second > MAX_NUMBER_OF_CYCLES_FOR_DRAW_)
-            return Draw;
-    }
+    if (this->number_of_times_seen.at(this->grid_)
+                                == MAX_NUMBER_OF_CYCLES_FOR_DRAW_)
+        return Draw;
 
     return NotFinished;
 }
 
 void ChineseCheckers::new_game() {
-#warning TODO init history
     /* Initialize the grid */
     this->grid_ = GridType(8, std::vector<Color>(8, Empty));
     this->position_colors_players_ =
@@ -274,6 +304,10 @@ void ChineseCheckers::new_game() {
         }
     }
     this->who_is_to_play_ = 0;
+
+    /* init the history */
+    this->number_of_times_seen.clear();
+    this->number_of_times_seen[this->grid_] = 1;
 }
 
 void ChineseCheckers::print_grid_() {

@@ -74,6 +74,19 @@ class ChineseCheckers {
       \sa remove_pawn(Player player, PositionType position)
     */
     void reset_pawn(Player player, PositionType position);
+    /*!
+     * This member execute a move without checking if the move is legal
+     */
+    /*!
+      \param Player indicates which player made the move.
+      \param ListOfPositionType contains the list of intermediate positions.
+                                of a move (including the starting point
+                                and the arrival point).
+      \sa elementaryMove(PositionType original_position, PositionType arrival_position), move(Player player,
+              const ListOfPositionType &list_moves).
+    */
+    void moveWithoutVerification(Player player,
+              const ListOfPositionType &list_moves);
 
  public:
     /*!

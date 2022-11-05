@@ -40,171 +40,195 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
                 if (grid_.at(pownPosition.at(0) - 1)
                     .at(pownPosition.at(1)) == Empty) {
                         result.push_back({pownPosition,
-                            {pownPosition.at(0) - 1, pownPosition.at(1)}});
+                                          {pownPosition.at(0) - 1,
+                                           pownPosition.at(1)}});
                     }
-                
+
                 switch (pownPosition.at(1)) {
                     case 7:
                         if (grid_.at(pownPosition.at(0))
                             .at(pownPosition.at(1) - 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0), pownPosition.at(1) - 1}});
+                                                  {pownPosition.at(0),
+                                                   pownPosition.at(1) - 1}});
                             }
                         break;
-                        
+
                     case 0:
                         if (grid_.at(pownPosition.at(0))
                             .at(pownPosition.at(1) + 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0), pownPosition.at(1) + 1}});
+                                                  {pownPosition.at(0),
+                                                   pownPosition.at(1) + 1}});
                             }
-                        
+
                         if (grid_.at(pownPosition.at(0) - 1)
                             .at(pownPosition.at(1) + 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0) - 1, pownPosition.at(1) + 1}});
+                                                  {pownPosition.at(0) - 1,
+                                                   pownPosition.at(1) + 1}});
                             }
                         break;
-                        
+
                     default:
                         if (grid_.at(pownPosition.at(0))
                             .at(pownPosition.at(1) + 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0), pownPosition.at(1) + 1}});
+                                                  {pownPosition.at(0),
+                                                   pownPosition.at(1) + 1}});
                             }
-                        
+
                         if (grid_.at(pownPosition.at(0))
                             .at(pownPosition.at(1) - 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0), pownPosition.at(1) - 1}});
+                                                  {pownPosition.at(0),
+                                                   pownPosition.at(1) - 1}});
                             }
-                        
+
                         if (grid_.at(pownPosition.at(0) - 1)
                             .at(pownPosition.at(1) + 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0) - 1, pownPosition.at(1) + 1}});
+                                                  {pownPosition.at(0) - 1,
+                                                   pownPosition.at(1) + 1}});
                             }
                         break;
                 }
                 break;
-                
+
             case 0:
                 if (grid_.at(pownPosition.at(0) + 1)
                     .at(pownPosition.at(1)) == Empty) {
                         result.push_back({pownPosition,
-                            {pownPosition.at(0) + 1, pownPosition.at(1)}});
+                                          {pownPosition.at(0) + 1,
+                                           pownPosition.at(1)}});
                     }
-                
+
                 switch (pownPosition.at(1)) {
                     case 7:
                         if (grid_.at(pownPosition.at(0))
                             .at(pownPosition.at(1) - 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0), pownPosition.at(1) - 1}});
+                                                  {pownPosition.at(0),
+                                                   pownPosition.at(1) - 1}});
                             }
-                        
+
                         if (grid_.at(pownPosition.at(0) + 1)
                             .at(pownPosition.at(1) - 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0) + 1, pownPosition.at(1) - 1}});
+                                                  {pownPosition.at(0) + 1,
+                                                   pownPosition.at(1) - 1}});
                             }
                         break;
-                        
+
                     case 0:
                         if (grid_.at(pownPosition.at(0))
                             .at(pownPosition.at(1) + 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0), pownPosition.at(1) + 1}});
+                                                  {pownPosition.at(0),
+                                                   pownPosition.at(1) + 1}});
                             }
                         break;
-                        
+
                     default:
                         if (grid_.at(pownPosition.at(0))
                             .at(pownPosition.at(1) + 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0), pownPosition.at(1) + 1}});
+                                                  {pownPosition.at(0),
+                                                   pownPosition.at(1) + 1}});
                             }
-                        
+
                         if (grid_.at(pownPosition.at(0))
                             .at(pownPosition.at(1) - 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0), pownPosition.at(1) - 1}});
+                                                  {pownPosition.at(0),
+                                                   pownPosition.at(1) - 1}});
                             }
-                        
+
                         if (grid_.at(pownPosition.at(0) + 1)
                             .at(pownPosition.at(1) - 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0) + 1, pownPosition.at(1) - 1}});
+                                                  {pownPosition.at(0) + 1,
+                                                   pownPosition.at(1) - 1}});
                             }
                         break;
                 }
                 break;
-                
+
             default:
                 if (grid_.at(pownPosition.at(0) + 1)
                     .at(pownPosition.at(1)) == Empty) {
                         result.push_back({pownPosition,
-                            {pownPosition.at(0) + 1, pownPosition.at(1)}});
+                                          {pownPosition.at(0) + 1,
+                                           pownPosition.at(1)}});
                     }
-                
+
                 if (grid_.at(pownPosition.at(0) - 1)
                     .at(pownPosition.at(1)) == Empty) {
                         result.push_back({pownPosition,
-                            {pownPosition.at(0) - 1, pownPosition.at(1)}});
+                                          {pownPosition.at(0) - 1,
+                                           pownPosition.at(1)}});
                     }
-                
+
                 switch (pownPosition.at(1)) {
                     case 7:
                         if (grid_.at(pownPosition.at(0))
                             .at(pownPosition.at(1) - 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0), pownPosition.at(1) - 1}});
+                                                  {pownPosition.at(0),
+                                                   pownPosition.at(1) - 1}});
                             }
-                        
+
                         if (grid_.at(pownPosition.at(0) + 1)
                             .at(pownPosition.at(1) - 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0) + 1, pownPosition.at(1) - 1}});
+                                                  {pownPosition.at(0) + 1,
+                                                   pownPosition.at(1) - 1}});
                             }
                         break;
-                        
+
                     case 0:
                         if (grid_.at(pownPosition.at(0))
                             .at(pownPosition.at(1) + 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0), pownPosition.at(1) + 1}});
+                                                  {pownPosition.at(0),
+                                                   pownPosition.at(1) + 1}});
                             }
-                        
+
                         if (grid_.at(pownPosition.at(0) - 1)
                             .at(pownPosition.at(1) + 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0) - 1, pownPosition.at(1) + 1}});
+                                                  {pownPosition.at(0) - 1,
+                                                   pownPosition.at(1) + 1}});
                             }
                         break;
-                        
+
                     default:
                         if (grid_.at(pownPosition.at(0))
                             .at(pownPosition.at(1) + 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0), pownPosition.at(1) + 1}});
+                                                  {pownPosition.at(0),
+                                                   pownPosition.at(1) + 1}});
                             }
-                        
+
                         if (grid_.at(pownPosition.at(0))
                             .at(pownPosition.at(1) - 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0), pownPosition.at(1) - 1}});
+                                                  {pownPosition.at(0),
+                                                   pownPosition.at(1) - 1}});
                             }
-                        
+
                         if (grid_.at(pownPosition.at(0) + 1)
                             .at(pownPosition.at(1) - 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0) + 1, pownPosition.at(1) - 1}});
+                                                  {pownPosition.at(0) + 1,
+                                                   pownPosition.at(1) - 1}});
                             }
-                        
+
                         if (grid_.at(pownPosition.at(0) - 1)
                             .at(pownPosition.at(1) + 1) == Empty) {
                                 result.push_back({pownPosition,
-                                    {pownPosition.at(0) - 1, pownPosition.at(1) + 1}});
+                                                  {pownPosition.at(0) - 1,
+                                                   pownPosition.at(1) + 1}});
                             }
                         break;
                 }
@@ -336,7 +360,8 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
      * Do a BFS to list all possible jumps.
      * Each pown is a root
      */
-    std::queue<PositionType> queue; /* When another root is chosen, the queue is already empty */
+    std::queue<PositionType> queue;
+    /* When another root is chosen, the queue is already empty */
     for (auto root : position_colors_players_.at(player)) {
         queue.push(root);
 
@@ -381,12 +406,12 @@ int AlphaBeta::evaluate(Player player) {
             for (PositionType pown : position_colors_players_.at(0))
                 result += 14 - pown.at(0) - pown.at(1);
             break;
-            
+
         case 1: /* black */
             for (PositionType pown : position_colors_players_.at(1))
                 result += pown.at(0) + pown.at(1);
             break;
-            
+
         default:
             break;
     }
@@ -396,13 +421,17 @@ int AlphaBeta::evaluate(Player player) {
 ListOfPositionType AlphaBeta::getMove(int depth, double alpha, double beta) {
     this->maximizing_player_ = this->who_is_to_play_;
     AlphaBetaEval(depth, alpha, beta, false, true);
-    
+
     this->value_of_states_.clear();
-    
+
     return this->best_move_;
 }
 
-int AlphaBeta::AlphaBetaEval(const int depth, double alpha, double beta, const bool maximizingPlayer, const bool keepMove) {
+int AlphaBeta::AlphaBetaEval(const int depth,
+                             double alpha,
+                             double beta,
+                             const bool maximizingPlayer,
+                             const bool keepMove) {
     /* Check if the current node is a terminating node */
     switch (this->state_of_game()) {
         case WhiteWon:
@@ -418,29 +447,30 @@ int AlphaBeta::AlphaBetaEval(const int depth, double alpha, double beta, const b
             else
                 return 100000;
             break;
-            
+
         case Draw:
             return 0;
             break;
-            
+
         default: /* the game is not over */
             break;
     }
-    
+
     if (depth == 0)
         return heuristicValue();
-    
+
     /* The state is not a termination node */
     int value = 0;
     ListOfMoves possible_moves = this->availableMoves(this->who_is_to_play_);
-    
+
     /* keeping state to restore to after applying temp moves */
-    std::map<GridType, int> temp_number_of_times_seen = this->number_of_times_seen;
+    std::map<GridType, int> temp_number_of_times_seen =
+            this->number_of_times_seen;
     Player temp_who_is_to_play_ = this->who_is_to_play_;
     GridType temp_grid_ = this->grid_;
     std::vector<std::vector<PositionType>> temp_position_colors_players_
             = this->position_colors_players_;
-    
+
     ListOfPositionType best_move;
     if (maximizingPlayer) {
         value = -100000; /* -\infty */
@@ -450,16 +480,20 @@ int AlphaBeta::AlphaBetaEval(const int depth, double alpha, double beta, const b
             this->who_is_to_play_ = temp_who_is_to_play_;
             this->grid_ = temp_grid_;
             this->position_colors_players_ = temp_position_colors_players_;
-            
-            this->move(this->who_is_to_play_, move);
-            int buff = AlphaBetaEval(depth - 1, alpha, beta, !maximizingPlayer, false);
+
+            this->moveWithoutVerification(this->who_is_to_play_, move);
+            int buff = AlphaBetaEval(depth - 1,
+                                     alpha,
+                                     beta,
+                                     !maximizingPlayer,
+                                     false);
             if (buff >= value) {
                 value = buff;
                 best_move = move;
                 if (value >= beta)
                     break; /* beta cutoff */
             }
-            alpha = std::max(alpha, (double) value);
+            alpha = std::max(alpha, static_cast<double>(value));
         }
     } else {
         value = 100000; /* +\infty */
@@ -470,33 +504,38 @@ int AlphaBeta::AlphaBetaEval(const int depth, double alpha, double beta, const b
             this->who_is_to_play_ = temp_who_is_to_play_;
             this->grid_ = temp_grid_;
             this->position_colors_players_ = temp_position_colors_players_;
-            
-            this->move(this->who_is_to_play_, move);
-            int buff = AlphaBetaEval(depth - 1, alpha, beta, !maximizingPlayer, false);
+
+            this->moveWithoutVerification(this->who_is_to_play_, move);
+            int buff = AlphaBetaEval(depth - 1,
+                                     alpha,
+                                     beta,
+                                     !maximizingPlayer,
+                                     false);
             if (buff <= value) {
                 value = buff;
                 best_move = move;
                 if (value <= alpha)
                     break; /* alpha cutoff */
             }
-            beta = std::min(beta, (double) value);
+            beta = std::min(beta, static_cast<double>(value));
         }
     }
-    
+
     /* restore to current game state */
     this->number_of_times_seen = temp_number_of_times_seen;
     this->who_is_to_play_ = temp_who_is_to_play_;
     this->grid_ = temp_grid_;
     this->position_colors_players_ = temp_position_colors_players_;
-    
+
     /* set the best move if asked to */
     if (keepMove)
         this->best_move_ = best_move;
-    
+
     /* return value */
     return value;
 }
 
 int AlphaBeta::heuristicValue() {
-    return 6*evaluate(this->maximizing_player_) - evaluate(1 - this->maximizing_player_);
+    return 6*evaluate(this->maximizing_player_)
+                    - evaluate(1 - this->maximizing_player_);
 }

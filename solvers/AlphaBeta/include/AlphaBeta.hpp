@@ -16,6 +16,8 @@
 #define SOLVERS_ALPHABETA_INCLUDE_ALPHABETA_HPP_
 
 /* C++ libraries */
+#include <utility>
+#include <map>
 
 /* Other */
 #include "Types.hpp"
@@ -23,10 +25,14 @@
 
 class AlphaBeta : public ChineseCheckers{
  protected:
-    int AlphaBetaEval(const int depth, double alpha, double beta, const bool maximizingPlayer, const bool keepMove);
+    int AlphaBetaEval(const int depth,
+                      double alpha,
+                      double beta,
+                      const bool maximizingPlayer,
+                      const bool keepMove);
     int heuristicValue();
     int evaluate(Player player);
-    
+
     Player maximizing_player_;
     ListOfPositionType best_move_;
     std::map<GridType, std::pair<int, int>> value_of_states_;
