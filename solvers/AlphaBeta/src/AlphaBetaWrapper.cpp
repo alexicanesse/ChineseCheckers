@@ -179,7 +179,7 @@ BOOST_PYTHON_MODULE(AlphaBeta) {
         .value("BlackWon", BlackWon);
     
     boost::python::class_<AlphaBeta>("Solver")
-        .def("availableMoves", &AlphaBeta::availableMoves)
+//        .def("availableMoves", &AlphaBeta::availableMoves)
         .def("getMove", &AlphaBeta::getMove)
         .def("state_of_game", &AlphaBeta::state_of_game)
         .def("print_grid_", &AlphaBeta::print_grid_)

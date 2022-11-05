@@ -23,12 +23,13 @@
 
 class AlphaBeta : public ChineseCheckers{
  protected:
-    int AlphaBetaEval(int depth, double alpha, double beta, bool maximizingPlayer, bool keepMove);
+    int AlphaBetaEval(const int depth, double alpha, double beta, const bool maximizingPlayer, const bool keepMove);
     int heuristicValue();
     int evaluate(Player player);
     
     Player maximizing_player_;
     ListOfPositionType best_move_;
+    std::map<GridType, std::pair<int, int>> value_of_states_;
  public:
     ListOfMoves availableMoves(Player player);
     ListOfPositionType getMove(int depth, double alpha, double beta);

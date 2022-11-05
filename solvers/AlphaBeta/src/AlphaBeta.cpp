@@ -21,9 +21,6 @@
 #include <map>
 #include <algorithm>
 
-#warning JUST FOR TESTS
-#include <boost/thread.hpp>
-
 /* Other */
 #include "Types.hpp"
 #include "ChineseCheckers.hpp"
@@ -38,43 +35,181 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
     /* Check the case of notJump moves */
     for (auto pownPosition : position_colors_players_.at(player)) {
         /* We check every possible directions */
-        if (    pownPosition.at(0) + 1 < 8
-            && (grid_.at(pownPosition.at(0) + 1)
-                .at(pownPosition.at(1)) == Empty))
-            result.push_back({pownPosition,
-                {pownPosition.at(0) + 1, pownPosition.at(1)}});
-
-        if (    pownPosition.at(0) - 1 >= 0
-            && (grid_.at(pownPosition.at(0) - 1)
-                .at(pownPosition.at(1)) == Empty))
-            result.push_back({pownPosition,
-                {pownPosition.at(0) - 1, pownPosition.at(1)}});
-
-        if (    pownPosition.at(1) + 1 < 8
-            && (grid_.at(pownPosition.at(0))
-                .at(pownPosition.at(1) + 1) == Empty))
-            result.push_back({pownPosition,
-                {pownPosition.at(0), pownPosition.at(1) + 1}});
-
-        if (    pownPosition.at(1) - 1 >= 0
-            && (grid_.at(pownPosition.at(0))
-                .at(pownPosition.at(1) - 1) == Empty))
-            result.push_back({pownPosition,
-                {pownPosition.at(0), pownPosition.at(1) - 1}});
-
-        if (    pownPosition.at(0) + 1 < 8
-            &&  pownPosition.at(1) - 1 >= 0
-            && (grid_.at(pownPosition.at(0) + 1)
-                .at(pownPosition.at(1) - 1) == Empty))
-            result.push_back({pownPosition,
-                {pownPosition.at(0) + 1, pownPosition.at(1) - 1}});
-
-        if (    pownPosition.at(0) - 1 >= 0
-            &&  pownPosition.at(1) + 1 < 8
-            && (grid_.at(pownPosition.at(0) - 1)
-                .at(pownPosition.at(1) + 1) == Empty))
-            result.push_back({pownPosition,
-                {pownPosition.at(0) - 1, pownPosition.at(1) + 1}});
+        switch (pownPosition.at(0)) {
+            case 7:
+                if (grid_.at(pownPosition.at(0) - 1)
+                    .at(pownPosition.at(1)) == Empty) {
+                        result.push_back({pownPosition,
+                            {pownPosition.at(0) - 1, pownPosition.at(1)}});
+                    }
+                
+                switch (pownPosition.at(1)) {
+                    case 7:
+                        if (grid_.at(pownPosition.at(0))
+                            .at(pownPosition.at(1) - 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0), pownPosition.at(1) - 1}});
+                            }
+                        break;
+                        
+                    case 0:
+                        if (grid_.at(pownPosition.at(0))
+                            .at(pownPosition.at(1) + 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0), pownPosition.at(1) + 1}});
+                            }
+                        
+                        if (grid_.at(pownPosition.at(0) - 1)
+                            .at(pownPosition.at(1) + 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0) - 1, pownPosition.at(1) + 1}});
+                            }
+                        break;
+                        
+                    default:
+                        if (grid_.at(pownPosition.at(0))
+                            .at(pownPosition.at(1) + 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0), pownPosition.at(1) + 1}});
+                            }
+                        
+                        if (grid_.at(pownPosition.at(0))
+                            .at(pownPosition.at(1) - 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0), pownPosition.at(1) - 1}});
+                            }
+                        
+                        if (grid_.at(pownPosition.at(0) - 1)
+                            .at(pownPosition.at(1) + 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0) - 1, pownPosition.at(1) + 1}});
+                            }
+                        break;
+                }
+                break;
+                
+            case 0:
+                if (grid_.at(pownPosition.at(0) + 1)
+                    .at(pownPosition.at(1)) == Empty) {
+                        result.push_back({pownPosition,
+                            {pownPosition.at(0) + 1, pownPosition.at(1)}});
+                    }
+                
+                switch (pownPosition.at(1)) {
+                    case 7:
+                        if (grid_.at(pownPosition.at(0))
+                            .at(pownPosition.at(1) - 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0), pownPosition.at(1) - 1}});
+                            }
+                        
+                        if (grid_.at(pownPosition.at(0) + 1)
+                            .at(pownPosition.at(1) - 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0) + 1, pownPosition.at(1) - 1}});
+                            }
+                        break;
+                        
+                    case 0:
+                        if (grid_.at(pownPosition.at(0))
+                            .at(pownPosition.at(1) + 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0), pownPosition.at(1) + 1}});
+                            }
+                        break;
+                        
+                    default:
+                        if (grid_.at(pownPosition.at(0))
+                            .at(pownPosition.at(1) + 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0), pownPosition.at(1) + 1}});
+                            }
+                        
+                        if (grid_.at(pownPosition.at(0))
+                            .at(pownPosition.at(1) - 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0), pownPosition.at(1) - 1}});
+                            }
+                        
+                        if (grid_.at(pownPosition.at(0) + 1)
+                            .at(pownPosition.at(1) - 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0) + 1, pownPosition.at(1) - 1}});
+                            }
+                        break;
+                }
+                break;
+                
+            default:
+                if (grid_.at(pownPosition.at(0) + 1)
+                    .at(pownPosition.at(1)) == Empty) {
+                        result.push_back({pownPosition,
+                            {pownPosition.at(0) + 1, pownPosition.at(1)}});
+                    }
+                
+                if (grid_.at(pownPosition.at(0) - 1)
+                    .at(pownPosition.at(1)) == Empty) {
+                        result.push_back({pownPosition,
+                            {pownPosition.at(0) - 1, pownPosition.at(1)}});
+                    }
+                
+                switch (pownPosition.at(1)) {
+                    case 7:
+                        if (grid_.at(pownPosition.at(0))
+                            .at(pownPosition.at(1) - 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0), pownPosition.at(1) - 1}});
+                            }
+                        
+                        if (grid_.at(pownPosition.at(0) + 1)
+                            .at(pownPosition.at(1) - 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0) + 1, pownPosition.at(1) - 1}});
+                            }
+                        break;
+                        
+                    case 0:
+                        if (grid_.at(pownPosition.at(0))
+                            .at(pownPosition.at(1) + 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0), pownPosition.at(1) + 1}});
+                            }
+                        
+                        if (grid_.at(pownPosition.at(0) - 1)
+                            .at(pownPosition.at(1) + 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0) - 1, pownPosition.at(1) + 1}});
+                            }
+                        break;
+                        
+                    default:
+                        if (grid_.at(pownPosition.at(0))
+                            .at(pownPosition.at(1) + 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0), pownPosition.at(1) + 1}});
+                            }
+                        
+                        if (grid_.at(pownPosition.at(0))
+                            .at(pownPosition.at(1) - 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0), pownPosition.at(1) - 1}});
+                            }
+                        
+                        if (grid_.at(pownPosition.at(0) + 1)
+                            .at(pownPosition.at(1) - 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0) + 1, pownPosition.at(1) - 1}});
+                            }
+                        
+                        if (grid_.at(pownPosition.at(0) - 1)
+                            .at(pownPosition.at(1) + 1) == Empty) {
+                                result.push_back({pownPosition,
+                                    {pownPosition.at(0) - 1, pownPosition.at(1) + 1}});
+                            }
+                        break;
+                }
+                break;
+        }
     }
 
     /* Check the case of Jump moves */
@@ -82,103 +217,115 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             /* Jumping on line+ */
-            for (int k = 1; i + 2*k < 8; ++k) {
+            for (int k = 1; i + (k << 1) < 8; ++k) {
                 /* Check if there is a pown to jump over */
                 if (grid_.at(i + k).at(j) != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
                     for (int l = 1; l <= k; ++l) {
-                        if (grid_.at(i + k + l).at(j) != Empty)
+                        if (grid_.at(i + k + l).at(j) != Empty) {
                             isPossible = false;
+                            break;
+                        }
                     }
                     if (isPossible)
-                        possible_elementary_move.at(8*i + j)
-                                .push_back({i + 2*k, j});
+                        possible_elementary_move.at((i << 3) | j)
+                                .push_back({i + (k << 1), j});
                     break;
                 }
             }
 
             /* Jumping on line- */
-            for (int k = 1; i - 2*k >= 0; ++k) {
+            for (int k = 1; i >= (k << 1); ++k) {
                 /* Check if there is a pown to jump over */
                 if (grid_.at(i - k).at(j)) {
                     /* Check if the jump is valid */
                     isPossible = true;
                     for (int l = 1; l <= k; ++l) {
-                        if (grid_.at(i - k - l).at(j) != Empty)
+                        if (grid_.at(i - k - l).at(j) != Empty) {
                             isPossible = false;
+                            break;
+                        }
                     }
                     if (isPossible)
-                        possible_elementary_move.at(8*i + j)
-                                .push_back({i - 2*k, j});
+                        possible_elementary_move.at((i << 3) | j)
+                                .push_back({i - (k << 1), j});
                     break;
                 }
             }
 
             /* Jumping on row+ */
-            for (int k = 1; j + 2*k < 8; ++k) {
+            for (int k = 1; j + (k << 1) < 8; ++k) {
                 /* Check if there is a pown to jump over */
                 if (grid_.at(i).at(j + k) != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
                     for (int l = 1; l <= k; ++l) {
-                        if (grid_.at(i).at(j + k + l) != Empty)
+                        if (grid_.at(i).at(j + k + l) != Empty) {
                             isPossible = false;
+                            break;
+                        }
                     }
                     if (isPossible)
-                        possible_elementary_move.at(8*i + j)
-                                .push_back({i, j + 2*k});
+                        possible_elementary_move.at((i << 3) | j)
+                                .push_back({i, j + (k << 1)});
                     break;
                 }
             }
 
             /* Jumping on row- */
-            for (int k = 1; j - 2*k >= 0; ++k) {
+            for (int k = 1; j >= (k << 1); ++k) {
                 /* Check if there is a pown to jump over */
                 if (grid_.at(i).at(j - k) != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
                     for (int l = 1; l <= k; ++l) {
-                        if (grid_.at(i).at(j - k - l) != Empty)
+                        if (grid_.at(i).at(j - k - l) != Empty) {
                             isPossible = false;
+                            break;
+                        }
                     }
                     if (isPossible)
-                        possible_elementary_move.at(8*i + j)
-                                .push_back({i, j - 2*k});
+                        possible_elementary_move.at((i << 3) | j)
+                                .push_back({i, j - (k << 1)});
                     break;
                 }
             }
 
             /* Jumping on diag right */
-            for (int k = 1; i + 2*k < 8 && j - 2*k >= 0; ++k) {
+            for (int k = 1; i + (k << 1) < 8 && j >= (k << 1); ++k) {
                 /* Check if there is a pown to jump over */
                 if (grid_.at(i + k).at(j - k) != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
                     for (int l = 1; l <= k; ++l) {
-                        if (grid_.at(i + k + l).at(j - k - l) != Empty)
+                        if (grid_.at(i + k + l).at(j - k - l) != Empty) {
                             isPossible = false;
+                            break;
+                        }
                     }
                     if (isPossible)
-                        possible_elementary_move.at(8*i + j)
-                                .push_back({i + 2*k, j - 2*k});
+                        possible_elementary_move.at((i << 3) | j)
+                                .push_back({i + (k << 1), j - (k << 1)});
                     break;
                 }
             }
 
             /* Jumping on diag left */
-            for (int k = 1; j + 2*k < 8 && i - 2*k >= 0; ++k) {
+            for (int k = 1; j + (k << 1) < 8 && i >= (k << 1); ++k) {
                 /* Check if there is a pown to jump over */
                 if (grid_.at(i - k).at(j + k) != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
                     for (int l = 1; l <= k; ++l) {
-                        if (grid_.at(i - k - l).at(j + k + l) != Empty)
+                        if (grid_.at(i - k - l).at(j + k + l) != Empty) {
                             isPossible = false;
+                            break;
+                        }
                     }
                     if (isPossible)
-                        possible_elementary_move.at(8*i + j)
-                                .push_back({i - 2*k, j + 2*k});
+                        possible_elementary_move.at((i << 3) | j)
+                                .push_back({i - (k << 1), j + (k << 1)});
                     break;
                 }
             }
@@ -189,8 +336,8 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
      * Do a BFS to list all possible jumps.
      * Each pown is a root
      */
+    std::queue<PositionType> queue; /* When another root is chosen, the queue is already empty */
     for (auto root : position_colors_players_.at(player)) {
-        std::queue<PositionType> queue;
         queue.push(root);
 
         std::map<PositionType, bool> explored;
@@ -249,10 +396,13 @@ int AlphaBeta::evaluate(Player player) {
 ListOfPositionType AlphaBeta::getMove(int depth, double alpha, double beta) {
     this->maximizing_player_ = this->who_is_to_play_;
     AlphaBetaEval(depth, alpha, beta, false, true);
+    
+    this->value_of_states_.clear();
+    
     return this->best_move_;
 }
 
-int AlphaBeta::AlphaBetaEval(int depth, double alpha, double beta, bool maximizingPlayer, bool keepMove) {
+int AlphaBeta::AlphaBetaEval(const int depth, double alpha, double beta, const bool maximizingPlayer, const bool keepMove) {
     /* Check if the current node is a terminating node */
     switch (this->state_of_game()) {
         case WhiteWon:
@@ -270,10 +420,7 @@ int AlphaBeta::AlphaBetaEval(int depth, double alpha, double beta, bool maximizi
             break;
             
         case Draw:
-            if (this->maximizing_player_ == 1)
-                return 50000;
-            else
-                return -50000;
+            return 0;
             break;
             
         default: /* the game is not over */
@@ -287,27 +434,6 @@ int AlphaBeta::AlphaBetaEval(int depth, double alpha, double beta, bool maximizi
     int value = 0;
     ListOfMoves possible_moves = this->availableMoves(this->who_is_to_play_);
     
-    /* Order the moves according to a heuristic */
-    if (this->who_is_to_play_ == 1) {
-        std::sort(possible_moves.begin(), possible_moves.end(),
-            [](ListOfPositionType a, ListOfPositionType b) {
-                return (a.at(a.size() - 1).at(0) + a.at(a.size() - 1).at(1))
-                            - (a.at(0).at(0) + a.at(0).at(1))
-                        <
-                       (b.at(b.size() - 1).at(0) + b.at(b.size() - 1).at(1))
-                            - (b.at(0).at(0) + b.at(0).at(1));
-            });
-    } else {
-        std::sort(possible_moves.begin(), possible_moves.end(),
-            [](ListOfPositionType a, ListOfPositionType b) {
-            return ((a.at(0).at(0) + a.at(0).at(1))
-                            - (a.at(a.size() - 1).at(0) + a.at(a.size() - 1).at(1))
-                        <
-                        (b.at(0).at(0) + b.at(0).at(1))
-                            - (b.at(b.size() - 1).at(0) + b.at(b.size() - 1).at(1)));
-            });
-    }
-    
     /* keeping state to restore to after applying temp moves */
     std::map<GridType, int> temp_number_of_times_seen = this->number_of_times_seen;
     Player temp_who_is_to_play_ = this->who_is_to_play_;
@@ -318,7 +444,6 @@ int AlphaBeta::AlphaBetaEval(int depth, double alpha, double beta, bool maximizi
     ListOfPositionType best_move;
     if (maximizingPlayer) {
         value = -100000; /* -\infty */
-        /* For each possible move */
         for (ListOfPositionType move : possible_moves) {
             /* restore to current game state */
             this->number_of_times_seen = temp_number_of_times_seen;
@@ -331,9 +456,9 @@ int AlphaBeta::AlphaBetaEval(int depth, double alpha, double beta, bool maximizi
             if (buff >= value) {
                 value = buff;
                 best_move = move;
+                if (value >= beta)
+                    break; /* beta cutoff */
             }
-            if (value >= beta)
-                break; /* beta cutoff */
             alpha = std::max(alpha, (double) value);
         }
     } else {
@@ -351,9 +476,9 @@ int AlphaBeta::AlphaBetaEval(int depth, double alpha, double beta, bool maximizi
             if (buff <= value) {
                 value = buff;
                 best_move = move;
+                if (value <= alpha)
+                    break; /* alpha cutoff */
             }
-            if (value <= alpha)
-                break; /* alpha cutoff */
             beta = std::min(beta, (double) value);
         }
     }
@@ -369,7 +494,6 @@ int AlphaBeta::AlphaBetaEval(int depth, double alpha, double beta, bool maximizi
         this->best_move_ = best_move;
     
     /* return value */
-    //std::cout << value << "\n";
     return value;
 }
 

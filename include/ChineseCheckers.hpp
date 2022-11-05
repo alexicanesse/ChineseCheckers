@@ -40,9 +40,13 @@ class ChineseCheckers {
      *  (of type `PositionType`) of the player `player` */
     std::vector<std::vector<PositionType>> position_colors_players_;
     /*! Indicate which is the next player to play */
-    Player who_is_to_play_;
+    Player who_is_to_play_ = 0;
     /*! Indicates the number of times a position has been seen */
     std::map<GridType, int> number_of_times_seen;
+    /*! Keeps the positions  of the winning zone */
+    const std::vector<std::pair<int, int>> winning_positions_ = {
+        {0, 0}, {0, 1}, {0, 2}, {0, 3}, {1, 0},
+        {1, 1}, {1, 2}, {2, 0}, {2, 1}, {3, 0}};
     /*! A member returning the type of an elementary move
      * (not a succession of jumps).
      */

@@ -17,7 +17,7 @@
 
 /* C++ libraries */
 #include <vector>
-/* The following pragma are used to removed depraction warning from boost
+/* The following pragma are used to removed deprecation warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
  */
 #pragma GCC diagnostic push
@@ -29,9 +29,8 @@
 /* Other */
 #include <Types.hpp>
 
-/* The number of time a grid state can be seen before setling for a draw */
+/* The number of time a grid state can be seen before settling for a draw */
 #define MAX_NUMBER_OF_CYCLES_FOR_DRAW_ 2
-
 
 MoveType ChineseCheckers::elementaryMove(PositionType original_position,
                                          PositionType arrival_position) {
@@ -50,7 +49,7 @@ MoveType ChineseCheckers::elementaryMove(PositionType original_position,
     }
 
     /*
-     * Wathever happens, if the arrival_position is already occupied,
+     * Whatever happens, if the arrival_position is already occupied,
      * then the move is not valid
      */
     if ((this->grid_.at(arrival_position[0]).at(arrival_position[1]))
@@ -61,6 +60,7 @@ MoveType ChineseCheckers::elementaryMove(PositionType original_position,
     int b = original_position[1];
     int c = arrival_position[0];
     int d = arrival_position[1];
+
     bool rep;
 
     /* Checks if the direction is legal */
@@ -140,7 +140,7 @@ bool ChineseCheckers::move(Player player,
     }
 
     /* Check that there actually is a move to play */
-    if (list_moves.size() == 0)
+    if (list_moves.empty())
         return false;
 
     /* Check that the right player is playing */
@@ -209,21 +209,17 @@ Result ChineseCheckers::state_of_game() {
     /* Check if player 0 won */
     bool lost = false;
     bool could_win = false;
-    for (int i = 0; i < 4 && !lost; ++i) {
-        for (int j = 0; j < 4 && !lost; ++j) {
-            if (i + j < 4) {
-                switch (this->grid_.at(7-i).at(7-j)) {
-                    case White:
-                        could_win = true;
-                        break;
+    for (auto position : this->winning_positions_) {
+        switch (this->grid_.at(7-position.first).at(7-position.second)) {
+            case White:
+                could_win = true;
+                break;
 
-                    case Empty:
-                        lost = true;
+            case Empty:
+                lost = true;
 
-                    default:
-                        break;
-                }
-            }
+            default:
+                break;
         }
     }
     if ((!lost) && could_win)
@@ -232,28 +228,24 @@ Result ChineseCheckers::state_of_game() {
     /* Check if Player 1 won */
     lost = false;
     could_win = false;
-    for (int i = 0; i < 4 && !lost; ++i) {
-        for (int j = 0; j < 4 && !lost; ++j) {
-            if (i + j < 4) {
-                switch (this->grid_.at(i).at(j)) {
-                    case Black:
-                        could_win = true;
-                        break;
+    for (auto position : this->winning_positions_) {
+        switch (this->grid_.at(position.first).at(position.second)) {
+            case Black:
+                could_win = true;
+                break;
 
-                    case Empty:
-                        lost = true;
+            case Empty:
+                lost = true;
 
-                    default:
-                        break;
-                }
-            }
+            default:
+                break;
         }
     }
     if ((!lost) && could_win)
         return BlackWon;
 
     /* Check for a draw */
-    for (auto grid : this->number_of_times_seen) {
+    for (const auto &grid : this->number_of_times_seen) {
         if (grid.second > MAX_NUMBER_OF_CYCLES_FOR_DRAW_)
             return Draw;
     }
@@ -297,7 +289,7 @@ GridType ChineseCheckers::get_grid_() {
 }
 
 void ChineseCheckers::print_position_colors_players_() {
-    for (std::vector<PositionType> pawns_positions :
+    for (const std::vector<PositionType> &pawns_positions :
                         this->position_colors_players_) {
         for (PositionType position : pawns_positions)
             std::cout << "("

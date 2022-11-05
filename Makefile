@@ -35,8 +35,6 @@ DIRECTORIES = ./objects ./bin ./bin/solvers
 
 ####Main library
 all: $(DIRECTORIES) $(OUT)
-	@echo "${BLUE}Updating the documentation${RESET}"
-	@doxygen > /dev/null
 	@echo "${BLUE}Checking if the C++ code respect Google's conventions${RESET}"
 	@cpplint ./src/* ./include/*
 
@@ -52,16 +50,21 @@ $(OUT): $(OFILES)
 	@echo "${PURPLE}Building CXX object" $@ "${RESET}"
 	@$(CXX)  -o $@ -c $< $(CXXFLAGS)
 	
-	
+####Documentation
+doc:
+	@echo "${BLUE}Updating the documentation${RESET}"
+	@doxygen > /dev/null
+
 ####Solvers
 
 #AlphaBeta
 AlphaBeta: $(DIRECTORIES) ./bin/solvers/AlphaBeta.so
+	@echo "${BLUE}Checking if the C++ code respect Google's conventions${RESET}"
 	@cpplint ./solvers/AlphaBeta/src/* ./solvers/AlphaBeta/include/*
 
 ./bin/solvers/%.so: ./objects/%.o ./objects/%Wrapper.o
 	@echo "${BLUE}Linking CXX objects${RESET}"
-	@$(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS) -shared
+	@$(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS) -pthread -shared
 	
 ./objects/%.o: ./solvers/AlphaBeta/src/%.cpp ./solvers/AlphaBeta/src/*Wrapper.cpp
 	@echo "${PURPLE}Building CXX object" $@ "${RESET}"

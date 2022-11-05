@@ -13,7 +13,7 @@
  */
 
 /* C++ Libraries */
-/* The following pragma are used to removed depraction warning from boost
+/* The following pragma are used to removed deprecation warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
  */
 #pragma GCC diagnostic push
@@ -29,7 +29,7 @@
 /// @brief Type that allows for registration of conversions from
 ///        python iterable types.
 struct iterable_converter {
-  /// @note Registers converter from a python interable type to the
+  /// @note Registers converter from a python iterable type to the
   ///       provided type.
   template <typename Container>
   iterable_converter&
@@ -86,8 +86,8 @@ struct iterable_converter {
 
 struct gridtype_to_list {
     static PyObject* convert(GridType const& grid) {
-        boost::python::list *result = new boost::python::list;
-        for (std::vector<Color> x : grid) {
+        auto *result = new boost::python::list;
+        for (const std::vector<Color> &x : grid) {
             boost::python::list row;
             for (Color value : x)
                 row.append(static_cast<int>(value));
@@ -100,8 +100,8 @@ struct gridtype_to_list {
 struct vector_of_vector_of_positiontype_to_list {
     static PyObject* convert(std::vector<std::vector<PositionType>>
                              const& position_colors_players_) {
-        boost::python::list *result = new boost::python::list;
-        for (std::vector<PositionType> x : position_colors_players_) {
+        auto *result = new boost::python::list;
+        for (const std::vector<PositionType> &x : position_colors_players_) {
             boost::python::list row;
             for (PositionType value : x) {
                 boost::python::list position;
