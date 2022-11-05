@@ -13,6 +13,7 @@ We used some codes of an original implementation made by a member of our group. 
 - [Running the tests](#running-the-tests)
 - [Built With](#built-with)
 - [Contributing](#contributing)
+- [Code of conduct](#code-of-conduct)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 
@@ -101,6 +102,12 @@ in stone. If you have an issue with the way code is structured, with any
 libraries we are using, or with any processes involved with contributing, 
 please bring it up. We welcome all feedback so we can make contributing
 to this project as painless as possible.
+
+## Code of conduct 
+
+We have adopted the code of conduct defined by the Contributor Covenant. This document is 
+used across many open source communities, and we think it articulates our values well.
+For more, see the [Code of Conduct](code_of_conduct.md).
 
 ## License
 
