@@ -35,7 +35,7 @@ class AlphaBeta : public ChineseCheckers{
 
     Player maximizing_player_;
     ListOfPositionType best_move_;
-    std::map<GridType, std::pair<int, int>> value_of_states_;
+
  public:
     ListOfMoves availableMoves(Player player);
     ListOfPositionType getMove(int depth, double alpha, double beta);

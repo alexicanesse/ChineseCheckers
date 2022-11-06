@@ -27,208 +27,208 @@
 
 
 ListOfMoves AlphaBeta::availableMoves(Player player) {
-    /* Indicates if there is an jump from (i, j) to (k, l) */
+    /* Indicates if there is a jump from (i, j) to (k, l) */
     std::vector<ListOfPositionType> possible_elementary_move(64);
 
     ListOfMoves result;
 
     /* Check the case of notJump moves */
-    for (auto pownPosition : position_colors_players_.at(player)) {
+    for (const auto &pownPosition : position_colors_players_[player]) {
         /* We check every possible directions */
-        switch (pownPosition.at(0)) {
+        switch (pownPosition[0]) {
             case 7:
-                if (grid_.at(pownPosition.at(0) - 1)
-                    .at(pownPosition.at(1)) == Empty) {
+                if (grid_[pownPosition[0] - 1]
+                    [pownPosition[1]] == Empty) {
                         result.push_back({pownPosition,
-                                          {pownPosition.at(0) - 1,
-                                           pownPosition.at(1)}});
+                                          {pownPosition[0] - 1,
+                                           pownPosition[1]}});
                     }
 
-                switch (pownPosition.at(1)) {
+                switch (pownPosition[1]) {
                     case 7:
-                        if (grid_.at(pownPosition.at(0))
-                            .at(pownPosition.at(1) - 1) == Empty) {
+                        if (grid_[pownPosition[0]]
+                            [pownPosition[1] - 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0),
-                                                   pownPosition.at(1) - 1}});
+                                                  {pownPosition[0],
+                                                   pownPosition[1] - 1}});
                             }
                         break;
 
                     case 0:
-                        if (grid_.at(pownPosition.at(0))
-                            .at(pownPosition.at(1) + 1) == Empty) {
+                        if (grid_[pownPosition[0]]
+                            [pownPosition[1] + 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0),
-                                                   pownPosition.at(1) + 1}});
+                                                  {pownPosition[0],
+                                                   pownPosition[1] + 1}});
                             }
 
-                        if (grid_.at(pownPosition.at(0) - 1)
-                            .at(pownPosition.at(1) + 1) == Empty) {
+                        if (grid_[pownPosition[0] - 1]
+                            [pownPosition[1] + 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0) - 1,
-                                                   pownPosition.at(1) + 1}});
+                                                  {pownPosition[0] - 1,
+                                                   pownPosition[1] + 1}});
                             }
                         break;
 
                     default:
-                        if (grid_.at(pownPosition.at(0))
-                            .at(pownPosition.at(1) + 1) == Empty) {
+                        if (grid_[pownPosition[0]]
+                            [pownPosition[1] + 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0),
-                                                   pownPosition.at(1) + 1}});
+                                                  {pownPosition[0],
+                                                   pownPosition[1] + 1}});
                             }
 
-                        if (grid_.at(pownPosition.at(0))
-                            .at(pownPosition.at(1) - 1) == Empty) {
+                        if (grid_[pownPosition[0]]
+                            [pownPosition[1] - 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0),
-                                                   pownPosition.at(1) - 1}});
+                                                  {pownPosition[0],
+                                                   pownPosition[1] - 1}});
                             }
 
-                        if (grid_.at(pownPosition.at(0) - 1)
-                            .at(pownPosition.at(1) + 1) == Empty) {
+                        if (grid_[pownPosition[0] - 1]
+                            [pownPosition[1] + 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0) - 1,
-                                                   pownPosition.at(1) + 1}});
+                                                  {pownPosition[0] - 1,
+                                                   pownPosition[1] + 1}});
                             }
                         break;
                 }
                 break;
 
             case 0:
-                if (grid_.at(pownPosition.at(0) + 1)
-                    .at(pownPosition.at(1)) == Empty) {
+                if (grid_[pownPosition[0] + 1]
+                    [pownPosition[1]] == Empty) {
                         result.push_back({pownPosition,
-                                          {pownPosition.at(0) + 1,
-                                           pownPosition.at(1)}});
+                                          {pownPosition[0] + 1,
+                                           pownPosition[1]}});
                     }
 
-                switch (pownPosition.at(1)) {
+                switch (pownPosition[1]) {
                     case 7:
-                        if (grid_.at(pownPosition.at(0))
-                            .at(pownPosition.at(1) - 1) == Empty) {
+                        if (grid_[pownPosition[0]]
+                            [pownPosition[1] - 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0),
-                                                   pownPosition.at(1) - 1}});
+                                                  {pownPosition[0],
+                                                   pownPosition[1] - 1}});
                             }
 
-                        if (grid_.at(pownPosition.at(0) + 1)
-                            .at(pownPosition.at(1) - 1) == Empty) {
+                        if (grid_[pownPosition[0] + 1]
+                            [pownPosition[1] - 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0) + 1,
-                                                   pownPosition.at(1) - 1}});
+                                                  {pownPosition[0] + 1,
+                                                   pownPosition[1] - 1}});
                             }
                         break;
 
                     case 0:
-                        if (grid_.at(pownPosition.at(0))
-                            .at(pownPosition.at(1) + 1) == Empty) {
+                        if (grid_[pownPosition[0]]
+                            [pownPosition[1] + 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0),
-                                                   pownPosition.at(1) + 1}});
+                                                  {pownPosition[0],
+                                                   pownPosition[1] + 1}});
                             }
                         break;
 
                     default:
-                        if (grid_.at(pownPosition.at(0))
-                            .at(pownPosition.at(1) + 1) == Empty) {
+                        if (grid_[pownPosition[0]]
+                            [pownPosition[1] + 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0),
-                                                   pownPosition.at(1) + 1}});
+                                                  {pownPosition[0],
+                                                   pownPosition[1] + 1}});
                             }
 
-                        if (grid_.at(pownPosition.at(0))
-                            .at(pownPosition.at(1) - 1) == Empty) {
+                        if (grid_[pownPosition[0]]
+                            [pownPosition[1] - 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0),
-                                                   pownPosition.at(1) - 1}});
+                                                  {pownPosition[0],
+                                                   pownPosition[1] - 1}});
                             }
 
-                        if (grid_.at(pownPosition.at(0) + 1)
-                            .at(pownPosition.at(1) - 1) == Empty) {
+                        if (grid_[pownPosition[0] + 1]
+                            [pownPosition[1] - 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0) + 1,
-                                                   pownPosition.at(1) - 1}});
+                                                  {pownPosition[0] + 1,
+                                                   pownPosition[1] - 1}});
                             }
                         break;
                 }
                 break;
 
             default:
-                if (grid_.at(pownPosition.at(0) + 1)
-                    .at(pownPosition.at(1)) == Empty) {
+                if (grid_[pownPosition[0] + 1]
+                    [pownPosition[1]] == Empty) {
                         result.push_back({pownPosition,
-                                          {pownPosition.at(0) + 1,
-                                           pownPosition.at(1)}});
+                                          {pownPosition[0] + 1,
+                                           pownPosition[1]}});
                     }
 
-                if (grid_.at(pownPosition.at(0) - 1)
-                    .at(pownPosition.at(1)) == Empty) {
+                if (grid_[pownPosition[0] - 1]
+                    [pownPosition[1]] == Empty) {
                         result.push_back({pownPosition,
-                                          {pownPosition.at(0) - 1,
-                                           pownPosition.at(1)}});
+                                          {pownPosition[0] - 1,
+                                           pownPosition[1]}});
                     }
 
-                switch (pownPosition.at(1)) {
+                switch (pownPosition[1]) {
                     case 7:
-                        if (grid_.at(pownPosition.at(0))
-                            .at(pownPosition.at(1) - 1) == Empty) {
+                        if (grid_[pownPosition[0]]
+                            [pownPosition[1] - 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0),
-                                                   pownPosition.at(1) - 1}});
+                                                  {pownPosition[0],
+                                                   pownPosition[1] - 1}});
                             }
 
-                        if (grid_.at(pownPosition.at(0) + 1)
-                            .at(pownPosition.at(1) - 1) == Empty) {
+                        if (grid_[pownPosition[0] + 1]
+                            [pownPosition[1] - 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0) + 1,
-                                                   pownPosition.at(1) - 1}});
+                                                  {pownPosition[0] + 1,
+                                                   pownPosition[1] - 1}});
                             }
                         break;
 
                     case 0:
-                        if (grid_.at(pownPosition.at(0))
-                            .at(pownPosition.at(1) + 1) == Empty) {
+                        if (grid_[pownPosition[0]]
+                            [pownPosition[1] + 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0),
-                                                   pownPosition.at(1) + 1}});
+                                                  {pownPosition[0],
+                                                   pownPosition[1] + 1}});
                             }
 
-                        if (grid_.at(pownPosition.at(0) - 1)
-                            .at(pownPosition.at(1) + 1) == Empty) {
+                        if (grid_[pownPosition[0] - 1]
+                            [pownPosition[1] + 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0) - 1,
-                                                   pownPosition.at(1) + 1}});
+                                                  {pownPosition[0] - 1,
+                                                   pownPosition[1] + 1}});
                             }
                         break;
 
                     default:
-                        if (grid_.at(pownPosition.at(0))
-                            .at(pownPosition.at(1) + 1) == Empty) {
+                        if (grid_[pownPosition[0]]
+                            [pownPosition[1] + 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0),
-                                                   pownPosition.at(1) + 1}});
+                                                  {pownPosition[0],
+                                                   pownPosition[1] + 1}});
                             }
 
-                        if (grid_.at(pownPosition.at(0))
-                            .at(pownPosition.at(1) - 1) == Empty) {
+                        if (grid_[pownPosition[0]]
+                            [pownPosition[1] - 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0),
-                                                   pownPosition.at(1) - 1}});
+                                                  {pownPosition[0],
+                                                   pownPosition[1] - 1}});
                             }
 
-                        if (grid_.at(pownPosition.at(0) + 1)
-                            .at(pownPosition.at(1) - 1) == Empty) {
+                        if (grid_[pownPosition[0] + 1]
+                            [pownPosition[1] - 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0) + 1,
-                                                   pownPosition.at(1) - 1}});
+                                                  {pownPosition[0] + 1,
+                                                   pownPosition[1] - 1}});
                             }
 
-                        if (grid_.at(pownPosition.at(0) - 1)
-                            .at(pownPosition.at(1) + 1) == Empty) {
+                        if (grid_[pownPosition[0] - 1]
+                            [pownPosition[1] + 1] == Empty) {
                                 result.push_back({pownPosition,
-                                                  {pownPosition.at(0) - 1,
-                                                   pownPosition.at(1) + 1}});
+                                                  {pownPosition[0] - 1,
+                                                   pownPosition[1] + 1}});
                             }
                         break;
                 }
@@ -243,17 +243,17 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
             /* Jumping on line+ */
             for (int k = 1; i + (k << 1) < 8; ++k) {
                 /* Check if there is a pown to jump over */
-                if (grid_.at(i + k).at(j) != Empty) {
+                if (grid_[i + k][j] != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
                     for (int l = 1; l <= k; ++l) {
-                        if (grid_.at(i + k + l).at(j) != Empty) {
+                        if (grid_[i + k + l][j] != Empty) {
                             isPossible = false;
                             break;
                         }
                     }
                     if (isPossible)
-                        possible_elementary_move.at((i << 3) | j)
+                        possible_elementary_move[(i << 3) | j]
                                 .push_back({i + (k << 1), j});
                     break;
                 }
@@ -262,17 +262,17 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
             /* Jumping on line- */
             for (int k = 1; i >= (k << 1); ++k) {
                 /* Check if there is a pown to jump over */
-                if (grid_.at(i - k).at(j)) {
+                if (grid_[i - k][j]) {
                     /* Check if the jump is valid */
                     isPossible = true;
                     for (int l = 1; l <= k; ++l) {
-                        if (grid_.at(i - k - l).at(j) != Empty) {
+                        if (grid_[i - k - l][j] != Empty) {
                             isPossible = false;
                             break;
                         }
                     }
                     if (isPossible)
-                        possible_elementary_move.at((i << 3) | j)
+                        possible_elementary_move[(i << 3) | j]
                                 .push_back({i - (k << 1), j});
                     break;
                 }
@@ -281,17 +281,17 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
             /* Jumping on row+ */
             for (int k = 1; j + (k << 1) < 8; ++k) {
                 /* Check if there is a pown to jump over */
-                if (grid_.at(i).at(j + k) != Empty) {
+                if (grid_[i][j + k] != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
                     for (int l = 1; l <= k; ++l) {
-                        if (grid_.at(i).at(j + k + l) != Empty) {
+                        if (grid_[i][j + k + l] != Empty) {
                             isPossible = false;
                             break;
                         }
                     }
                     if (isPossible)
-                        possible_elementary_move.at((i << 3) | j)
+                        possible_elementary_move[(i << 3) | j]
                                 .push_back({i, j + (k << 1)});
                     break;
                 }
@@ -300,17 +300,17 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
             /* Jumping on row- */
             for (int k = 1; j >= (k << 1); ++k) {
                 /* Check if there is a pown to jump over */
-                if (grid_.at(i).at(j - k) != Empty) {
+                if (grid_[i][j - k] != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
                     for (int l = 1; l <= k; ++l) {
-                        if (grid_.at(i).at(j - k - l) != Empty) {
+                        if (grid_[i][j - k - l] != Empty) {
                             isPossible = false;
                             break;
                         }
                     }
                     if (isPossible)
-                        possible_elementary_move.at((i << 3) | j)
+                        possible_elementary_move[(i << 3) | j]
                                 .push_back({i, j - (k << 1)});
                     break;
                 }
@@ -319,17 +319,17 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
             /* Jumping on diag right */
             for (int k = 1; i + (k << 1) < 8 && j >= (k << 1); ++k) {
                 /* Check if there is a pown to jump over */
-                if (grid_.at(i + k).at(j - k) != Empty) {
+                if (grid_[i + k][j - k] != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
                     for (int l = 1; l <= k; ++l) {
-                        if (grid_.at(i + k + l).at(j - k - l) != Empty) {
+                        if (grid_[i + k + l][j - k - l] != Empty) {
                             isPossible = false;
                             break;
                         }
                     }
                     if (isPossible)
-                        possible_elementary_move.at((i << 3) | j)
+                        possible_elementary_move[(i << 3) | j]
                                 .push_back({i + (k << 1), j - (k << 1)});
                     break;
                 }
@@ -338,17 +338,17 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
             /* Jumping on diag left */
             for (int k = 1; j + (k << 1) < 8 && i >= (k << 1); ++k) {
                 /* Check if there is a pown to jump over */
-                if (grid_.at(i - k).at(j + k) != Empty) {
+                if (grid_[i - k][j + k] != Empty) {
                     /* Check if the jump is valid */
                     isPossible = true;
                     for (int l = 1; l <= k; ++l) {
-                        if (grid_.at(i - k - l).at(j + k + l) != Empty) {
+                        if (grid_[i - k - l][j + k + l] != Empty) {
                             isPossible = false;
                             break;
                         }
                     }
                     if (isPossible)
-                        possible_elementary_move.at((i << 3) | j)
+                        possible_elementary_move[(i << 3) | j]
                                 .push_back({i - (k << 1), j + (k << 1)});
                     break;
                 }
@@ -362,7 +362,7 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
      */
     std::queue<PositionType> queue;
     /* When another root is chosen, the queue is already empty */
-    for (auto root : position_colors_players_.at(player)) {
+    for (auto root : position_colors_players_[player]) {
         queue.push(root);
 
         std::map<PositionType, bool> explored;
@@ -374,25 +374,25 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
             queue.pop();
 
             for (PositionType neig :
-                        possible_elementary_move.at(8*v.at(0) + v.at(1))) {
+                        possible_elementary_move[(v[0] << 3) | v[1]]) {
                 if (!explored.contains(neig)
                     /*
                      * Checks that we are not jumping over the root
                      * (it has moved)
                      */
-                    && !((v.at(0) + neig.at(0))/2 == root.at(0)
-                         && (v.at(1) + neig.at(1))/2 == root.at(1))) {
+                    && !((v[0] + neig[0])/2 == root[0]
+                         && (v[1] + neig[1])/2 == root[1])) {
                     queue.push(neig);
                     explored[neig] = true;
-                    paths[neig] = paths.at(v);
-                    paths.at(neig).push_back(neig);
+                    paths[neig] = paths[v];
+                    paths[neig].push_back(neig);
                 }
             }
         }
 
         paths.extract(root);
         /* we add to result all the paths we found from this root */
-        for (auto move : paths)
+        for (const auto &move : paths)
             result.push_back(move.second);
     }
 
@@ -403,13 +403,13 @@ int AlphaBeta::evaluate(Player player) {
     int result = 0;
     switch (player) {
         case 0: /* White */
-            for (PositionType pown : position_colors_players_.at(0))
-                result += 14 - pown.at(0) - pown.at(1);
+            for (const PositionType &pown : position_colors_players_[0])
+                result += 14 - pown[0] - pown[1];
             break;
 
         case 1: /* black */
-            for (PositionType pown : position_colors_players_.at(1))
-                result += pown.at(0) + pown.at(1);
+            for (const PositionType &pown : position_colors_players_[1])
+                result += pown[0] + pown[1];
             break;
 
         default:
@@ -421,9 +421,6 @@ int AlphaBeta::evaluate(Player player) {
 ListOfPositionType AlphaBeta::getMove(int depth, double alpha, double beta) {
     this->maximizing_player_ = this->who_is_to_play_;
     AlphaBetaEval(depth, alpha, beta, false, true);
-
-    this->value_of_states_.clear();
-
     return this->best_move_;
 }
 
@@ -474,7 +471,7 @@ int AlphaBeta::AlphaBetaEval(const int depth,
     ListOfPositionType best_move;
     if (maximizingPlayer) {
         value = -100000; /* -\infty */
-        for (ListOfPositionType move : possible_moves) {
+        for (const ListOfPositionType &move : possible_moves) {
             /* restore to current game state */
             this->number_of_times_seen = temp_number_of_times_seen;
             this->who_is_to_play_ = temp_who_is_to_play_;
@@ -498,7 +495,7 @@ int AlphaBeta::AlphaBetaEval(const int depth,
     } else {
         value = 100000; /* +\infty */
         /* For each possible move */
-        for (ListOfPositionType move : possible_moves) {
+        for (const ListOfPositionType &move : possible_moves) {
             /* restore to current game state */
             this->number_of_times_seen = temp_number_of_times_seen;
             this->who_is_to_play_ = temp_who_is_to_play_;

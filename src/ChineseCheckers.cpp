@@ -38,11 +38,11 @@ MoveType ChineseCheckers::elementaryMove(PositionType original_position,
     // Check if the move is in the grid
     if (!(0<= arrival_position[0]
           && arrival_position[0] <= 7
-          && 0<= arrival_position[1]
+          && 0 <= arrival_position[1]
           && arrival_position[1] <= 7
-          && 0<= original_position[0]
+          && 0 <= original_position[0]
           && original_position[0] <= 7
-          && 0<= original_position[1]
+          && 0 <= original_position[1]
           && original_position[1] <= 7)
         ) {
         return(Illegal);
@@ -52,7 +52,7 @@ MoveType ChineseCheckers::elementaryMove(PositionType original_position,
      * Whatever happens, if the arrival_position is already occupied,
      * then the move is not valid
      */
-    if ((this->grid_.at(arrival_position[0]).at(arrival_position[1]))
+    if ((this->grid_[arrival_position[0]][arrival_position[1]])
         != Empty)
         return Illegal;
 
@@ -67,18 +67,18 @@ MoveType ChineseCheckers::elementaryMove(PositionType original_position,
     if (((c - a) * (d - b) == 0) || ((d - b) / (c - a) == -1)) {
         rep = (abs(a-c+b-d) <= 1) && (abs(a-c) +abs(b-d) <= 2);
         for (int i = 0; i < 2; ++i) {
-            for (auto x : this->position_colors_players_.at(i)) {
-                if ((x.at(0) != a) || (x.at(1) != b)) {
-                    if (   x.at(0) == (a + c)/2
-                        && x.at(1) == (b + d)/2 ) {
+            for (const auto &x : this->position_colors_players_[i]) {
+                if ((x[0] != a) || (x[1] != b)) {
+                    if (   x[0] == (a + c)/2
+                        && x[1] == (b + d)/2 ) {
                         rep = true;
-                    } else if (((x.at(0) - a) * (d - b)
-                                == (x.at(1) - b) * (c - a))
-                            && ((x.at(0) - a) * (c - a)
-                                + (x.at(1)-b) * (d - b)
+                    } else if (((x[0] - a) * (d - b)
+                                == (x[1] - b) * (c - a))
+                            && ((x[0] - a) * (c - a)
+                                + (x[1]-b) * (d - b)
                                                     >= 0)
-                            && ((x.at(0) - c) * (a - c)
-                                + (x.at(1) - d)*(b - d)
+                            && ((x[0] - c) * (a - c)
+                                + (x[1] - d)*(b - d)
                                                     >= 0)
                                ) {
                         return Illegal;
@@ -105,12 +105,12 @@ ChineseCheckers::ChineseCheckers() {
 
 void ChineseCheckers::remove_pawn(Player player, PositionType position) {
     for (int i = 0; i < 10; ++i) {
-        if (this->position_colors_players_.at(player).at(i).at(0)
-                                                    == position.at(0)
-            && this->position_colors_players_.at(player).at(i).at(1)
-                                                    == position.at(1)) {
-            this->position_colors_players_.at(player).at(i).at(0) = -1;
-            this->position_colors_players_.at(player).at(i).at(1) = -1;
+        if (this->position_colors_players_[player][i][0]
+                                                    == position[0]
+            && this->position_colors_players_[player][i][1]
+                                                    == position[1]) {
+            this->position_colors_players_[player][i][0] = -1;
+            this->position_colors_players_[player][i][1] = -1;
             return;
         }
     }
@@ -118,12 +118,12 @@ void ChineseCheckers::remove_pawn(Player player, PositionType position) {
 
 void ChineseCheckers::reset_pawn(Player player, PositionType position) {
     for (int i = 0; i < 10; ++i) {
-        if (this->position_colors_players_.at(player).at(i).at(0) == -1
-           && this->position_colors_players_.at(player).at(i).at(1) == -1) {
-            this->position_colors_players_.at(player).at(i).at(0)
-                                                    = position.at(0);
-            this->position_colors_players_.at(player).at(i).at(1)
-                                                    = position.at(1);
+        if (this->position_colors_players_[player][i][0] == -1
+           && this->position_colors_players_[player][i][1] == -1) {
+            this->position_colors_players_[player][i][0]
+                                                    = position[0];
+            this->position_colors_players_[player][i][1]
+                                                    = position[1];
             return;
         }
     }
@@ -144,7 +144,7 @@ bool ChineseCheckers::move(Player player,
         return false;
 
     /* Check that the right player is playing */
-    if (this->grid_.at(list_moves.at(0).at(0)).at(list_moves.at(0).at(1))
+    if (this->grid_[list_moves[0][0]][list_moves[0][1]]
                                                             != player + 1)
         return false;
 
@@ -154,45 +154,45 @@ bool ChineseCheckers::move(Player player,
 
     /* Check that every moves are legals */
     int n = static_cast<int>(list_moves.size());
-    this->remove_pawn(player, list_moves.at(0));
+    this->remove_pawn(player, list_moves[0]);
     MoveType fst_move = elementaryMove(list_moves[0], list_moves[1]);
     if (fst_move == Illegal) {
-        this->reset_pawn(player, list_moves.at(0));
+        this->reset_pawn(player, list_moves[0]);
         return false;
     } else if (fst_move == notJump) {
         if (n != 2) {
-            this->reset_pawn(player, list_moves.at(0));
+            this->reset_pawn(player, list_moves[0]);
             return false;
         }
     } else {
         for (int i=1; i < n - 1; ++i)
-            if (elementaryMove(list_moves.at(i), list_moves.at(i+1)) != Jump) {
-                this->reset_pawn(player, list_moves.at(0));
+            if (elementaryMove(list_moves[i], list_moves[i+1]) != Jump) {
+                this->reset_pawn(player, list_moves[0]);
                 return false;
             }
     }
 
     /* Now that we know that the move is legal, we just have to apply it */
-    this->grid_.at(list_moves.at(n-1).at(0)).at(list_moves.at(n-1).at(1)) =
-    grid_.at(list_moves.at(0).at(0)).at(list_moves.at(0).at(1));
-    this->grid_.at(list_moves.at(0).at(0)).at(list_moves.at(0).at(1)) = Empty;
+    this->grid_[list_moves[n-1][0]][list_moves[n-1][1]] =
+        grid_[list_moves[0][0]][list_moves[0][1]];
+    this->grid_[list_moves[0][0]][list_moves[0][1]] = Empty;
 
     for (int i = 0; i < 10; ++i) {
-        if ((this->position_colors_players_.at(player).at(i).at(0)
+        if ((this->position_colors_players_[player][i][0]
                                             == -1)
-           && (this->position_colors_players_.at(player).at(i).at(1)
+           && (this->position_colors_players_[player][i][1]
                                             == -1)) {
-            this->position_colors_players_.at(player).at(i).at(0)
-                                                = list_moves.at(n-1).at(0);
-            this->position_colors_players_.at(player).at(i).at(1)
-                                                = list_moves.at(n-1).at(1);
+            this->position_colors_players_[player][i][0]
+                                                = list_moves[n-1][0];
+            this->position_colors_players_[player][i][1]
+                                                = list_moves[n-1][1];
             break;
         }
     }
 
     /* indicates that is position has been seen another time */
     if (this->number_of_times_seen.contains(this->grid_))
-        this->number_of_times_seen.at(this->grid_)++;
+        this->number_of_times_seen[this->grid_]++;
     else
         this->number_of_times_seen.insert({this->grid_, 1});
 
@@ -204,28 +204,28 @@ bool ChineseCheckers::move(Player player,
 void ChineseCheckers::moveWithoutVerification(Player player,
                              const ListOfPositionType &list_moves) {
     int n = static_cast<int>(list_moves.size());
-    this->remove_pawn(player, list_moves.at(0));
+    this->remove_pawn(player, list_moves[0]);
 
-    this->grid_.at(list_moves.at(n-1).at(0)).at(list_moves.at(n-1).at(1)) =
-            grid_.at(list_moves.at(0).at(0)).at(list_moves.at(0).at(1));
-    this->grid_.at(list_moves.at(0).at(0)).at(list_moves.at(0).at(1)) = Empty;
+    this->grid_[list_moves[n-1][0]][list_moves[n-1][1]] =
+            grid_[list_moves[0][0]][list_moves[0][1]];
+    this->grid_[list_moves[0][0]][list_moves[0][1]] = Empty;
 
     for (int i = 0; i < 10; ++i) {
-        if ((this->position_colors_players_.at(player).at(i).at(0)
+        if ((this->position_colors_players_[player][i][0]
              == -1)
-            && (this->position_colors_players_.at(player).at(i).at(1)
+            && (this->position_colors_players_[player][i][1]
                 == -1)) {
-            this->position_colors_players_.at(player).at(i).at(0)
-                    = list_moves.at(n-1).at(0);
-            this->position_colors_players_.at(player).at(i).at(1)
-                    = list_moves.at(n-1).at(1);
+            this->position_colors_players_[player][i][0]
+                    = list_moves[n-1][0];
+            this->position_colors_players_[player][i][1]
+                    = list_moves[n-1][1];
             break;
         }
     }
 
     /* indicates that is position has been seen another time */
     if (this->number_of_times_seen.contains(this->grid_))
-        this->number_of_times_seen.at(this->grid_)++;
+        this->number_of_times_seen[this->grid_]++;
     else
         this->number_of_times_seen.insert({this->grid_, 1});
 
@@ -241,8 +241,8 @@ Result ChineseCheckers::state_of_game() {
     /* Check if player 0 won */
     bool lost = false;
     bool could_win = false;
-    for (auto position : this->winning_positions_) {
-        switch (this->grid_.at(7-position.first).at(7-position.second)) {
+    for (const auto &position : this->winning_positions_) {
+        switch (this->grid_[7-position.first][7-position.second]) {
             case White:
                 could_win = true;
                 break;
@@ -260,8 +260,8 @@ Result ChineseCheckers::state_of_game() {
     /* Check if Player 1 won */
     lost = false;
     could_win = false;
-    for (auto position : this->winning_positions_) {
-        switch (this->grid_.at(position.first).at(position.second)) {
+    for (const auto &position : this->winning_positions_) {
+        switch (this->grid_[position.first][position.second]) {
             case Black:
                 could_win = true;
                 break;
@@ -277,7 +277,7 @@ Result ChineseCheckers::state_of_game() {
         return BlackWon;
 
     /* Check for a draw */
-    if (this->number_of_times_seen.at(this->grid_)
+    if (this->number_of_times_seen[this->grid_]
                                 == MAX_NUMBER_OF_CYCLES_FOR_DRAW_)
         return Draw;
 
@@ -293,13 +293,13 @@ void ChineseCheckers::new_game() {
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             if (i + j < 4) {
-                this->grid_.at(i).at(j) = White;
-                this->grid_.at(7-i).at(7-j) = Black;
+                this->grid_[i][j] = White;
+                this->grid_[7-i][7-j] = Black;
 
                 PositionType pos_temp = {i, j};
-                this->position_colors_players_.at(0).push_back(pos_temp);
+                this->position_colors_players_[0].push_back(pos_temp);
                 pos_temp = {7-i, 7-j};
-                this->position_colors_players_.at(1).push_back(pos_temp);
+                this->position_colors_players_[1].push_back(pos_temp);
             }
         }
     }
@@ -313,7 +313,7 @@ void ChineseCheckers::new_game() {
 void ChineseCheckers::print_grid_() {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j)
-            std::cout << this->grid_.at(i).at(j) << " ";
+            std::cout << this->grid_[i][j] << " ";
         std::cout << "\n";
     }
 }
@@ -327,9 +327,9 @@ void ChineseCheckers::print_position_colors_players_() {
                         this->position_colors_players_) {
         for (PositionType position : pawns_positions)
             std::cout << "("
-                      << position.at(0)
+                      << position[0]
                       << ", "
-                      << position.at(1)
+                      << position[1]
                       << ") ";
         std::cout << std::endl;
     }
