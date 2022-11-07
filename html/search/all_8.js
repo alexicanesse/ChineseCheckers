@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['ia_0',['IA',['../class_chinese_checkers___a_i_1_1_i_a.html',1,'ChineseCheckers_AI']]],
+  ['illegal_0',['Illegal',['../_types_8hpp.html#ab152e38addc9865a033ed991583c1395aa6346545ee7955ddc811109b07ea08b0',1,'Types.hpp']]],
   ['iterable_5fconverter_1',['iterable_converter',['../structiterable__converter.html',1,'']]]
 ];

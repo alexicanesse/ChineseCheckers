@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['frompythontocolor_0',['fromPythonToColor',['../structfrom_python_to_color.html',1,'']]]
+  ['gridtype_5fto_5flist_0',['gridtype_to_list',['../structgridtype__to__list.html',1,'']]]
 ];

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['new_5fgame_0',['new_game',['../class_chinese_checkers.html#ae26bfd9b34e8c60e0e8195e654fa4a66',1,'ChineseCheckers']]]
+  ['move_0',['move',['../class_chinese_checkers.html#a30b0208c019ac1348374ac9c34eb7f7a',1,'ChineseCheckers']]],
+  ['movewithoutverification_1',['moveWithoutVerification',['../class_chinese_checkers.html#a7f972b072fa6a0caeeebd60ada9e63e6',1,'ChineseCheckers']]]
 ];

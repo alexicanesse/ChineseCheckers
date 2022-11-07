@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['number_5fof_5ftimes_5fseen_0',['number_of_times_seen',['../class_chinese_checkers.html#a8456a167821d4052e755b985601098c3',1,'ChineseCheckers']]]
+  ['grid_5f_0',['grid_',['../class_chinese_checkers.html#a680f263ed13c76a154eae56521302c97',1,'ChineseCheckers']]]
 ];

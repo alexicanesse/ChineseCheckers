@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['result_0',['Result',['../_types_8hpp.html#a28287671eaf7406afd604bd055ba4066',1,'Types.hpp']]]
+  ['movetype_0',['MoveType',['../_types_8hpp.html#ab152e38addc9865a033ed991583c1395',1,'Types.hpp']]]
 ];
