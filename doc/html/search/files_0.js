@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['chinesecheckers_2ecpp_0',['ChineseCheckers.cpp',['../_chinese_checkers_8cpp.html',1,'']]],
-  ['chinesecheckers_2ehpp_1',['ChineseCheckers.hpp',['../_chinese_checkers_8hpp.html',1,'']]],
-  ['chinesecheckerswrapper_2ehpp_2',['ChineseCheckersWrapper.hpp',['../_chinese_checkers_wrapper_8hpp.html',1,'']]]
+  ['alphabeta_2ecpp_0',['AlphaBeta.cpp',['../_alpha_beta_8cpp.html',1,'']]],
+  ['alphabeta_2ehpp_1',['AlphaBeta.hpp',['../_alpha_beta_8hpp.html',1,'']]],
+  ['alphabetawrapper_2ecpp_2',['AlphaBetaWrapper.cpp',['../_alpha_beta_wrapper_8cpp.html',1,'']]]
 ];

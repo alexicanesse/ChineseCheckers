@@ -28,7 +28,7 @@ enum Color {Empty, White, Black};
  */
 enum Result { NotFinished, Draw, WhiteWon, BlackWon};
 
-/*! \enum Movetype
+/*! \enum MoveType
     \brief Used to denote the move types (Illegal, Jump and notJump).
 */
 enum MoveType { Illegal, Jump, notJump};

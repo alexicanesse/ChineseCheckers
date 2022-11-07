@@ -47,18 +47,28 @@ class ChineseCheckers {
     const std::vector<std::pair<int, int>> winning_positions_ = {
         {0, 0}, {0, 1}, {0, 2}, {0, 3}, {1, 0},
         {1, 1}, {1, 2}, {2, 0}, {2, 1}, {3, 0}};
-    /*! A member returning the type of an elementary move
+    /*!
+      \brief
+     * A member returning the type of an elementary move
      * (not a succession of jumps).
      */
+#warning TODO include Maë s detail
     /*!
       \param original_position The position.
       \param arrival_position The arrival position.
-      \return The type of elementary move (`Illegal`, `Jump` or `notJump`).
+      \retval Illegal if the elementary move realized was of illegal.
+      \retval Jump if the elementary move realized was a jump.
+      \retval notJump if the elementary move realized was not a jump.
       \sa move(Player player, const ListOfPositionType &list_moves).
     */
+#warning TODO Benchmark Mae s implementation
     MoveType elementaryMove(PositionType original_position,
                             PositionType arrival_position);
-    /*! A member setting the position of a pawn to (-1, -1)
+    /*! \brief
+     * A member used to indicate that a pawn should not be considered until further notice.
+     * \details
+     * To indicates that the pawn should currently not be considered anymore,
+     * its position is set to (-1, -1).
      */
     /*!
       \param player The player to which belongs the pawn.
@@ -74,12 +84,16 @@ class ChineseCheckers {
       \sa remove_pawn(Player player, PositionType position)
     */
     void reset_pawn(Player player, PositionType position);
-    /*!
-     * This member execute a move without checking if the move is legal
+    /*! \brief
+     * This member execute a move without checking if the move is legal.
+     * \details
+     * This function is not made to be used by the end user. It has been engineered to
+     * be used by solvers. It bypasses usual verifications and hence allows illegal moves to be
+     * played. This function should be used with great care.
      */
     /*!
-      \param Player indicates which player made the move.
-      \param ListOfPositionType contains the list of intermediate positions.
+      \param player indicates which player made the move.
+      \param list_moves contains the list of intermediate positions.
                                 of a move (including the starting point
                                 and the arrival point).
       \sa elementaryMove(PositionType original_position, PositionType arrival_position), move(Player player,
@@ -89,54 +103,57 @@ class ChineseCheckers {
               const ListOfPositionType &list_moves);
 
  public:
-    /*!
+    /*! \brief
      * This member checks if a move is legal and executes it if it is legal.
      */
     /*!
-      \param Player indicates which player made the move.
-      \param ListOfPositionType contains the list of intermediate positions.
+      \param player indicates which player made the move.
+      \param list_moves contains the list of intermediate positions.
                                 of a move (including the starting point
                                 and the arrival point).
-      \return The `bool true` if and only if the move was indeed legal.
+      \retval true if the move was legal.
+      \retval false if the move was not legal.
       \sa elementaryMove(PositionType original_position, PositionType arrival_position).
     */
     bool move(Player player,
               const ListOfPositionType &list_moves);
-    /*!
-     * Indicates if someone won the game.
+    /*! \brief
+     * Indicates the current state of the game (ie, not finished, black won, white won or draw).
      */
     /*!
-      \return The the current state of the game
+      \retval notFinished if the game is not finished.
+      \retval whiteWon if white won the game.
+      \retval blackWon if black won the game.
+      \retval draw if a draw happened.
       \sa new_game().
     */
     Result state_of_game();
-    /*!
+    /*! \brief
      * Creates a new game.
-     * \sa new_game().
      */
     void new_game();
-    /*!
-     * Prints the grid.
+    /*! \brief
+     * Prints \ref grid_.
      */
     void print_grid_();
-    /*!
-     * Returns the grid.
+    /*! \brief
+     * Returns \ref grid_.
      */
     GridType get_grid_();
-    /*!
-     * Prints position_colors_players_
+    /*! \brief
+     * Prints \ref position_colors_players_.
      */
     void print_position_colors_players_();
-    /*!
-     * Returns the position_colors_players_;
+    /*! \brief
+     * Returns the \ref position_colors_players_.
      */
     std::vector<std::vector<PositionType>> get_position_colors_players_();
-    /*!
-     * Prints who_is_to_play_.
+    /*! \brief
+     * Prints \ref who_is_to_play_.
      */
     void print_who_is_to_play_();
-    /*!
-     * Returns who_is_to_play_.
+    /*! \brief
+     * Returns \ref who_is_to_play_.
      */
     Player get_who_is_to_play_();
     ChineseCheckers();
@@ -144,15 +161,39 @@ class ChineseCheckers {
 
 class Addon : public ChineseCheckers{
  private:
+    /*! \brief
+    * Contains the history of the moves played.
+    */
     std::vector<MoveType> history_;
 
  public:
-    /* list of all available moves */
+    /*! \brief
+     * List of all available moves.
+     */
     std::vector<std::vector<PositionType>> available_moves();
-    /* list of available moves from a given position */
+    /*! \brief
+     * List of available moves from a given position.
+     */
+    /*!
+     \param player Indicates the person who is playing.
+     \param position Indicates the current position
+                        considered by the player.
+     \return available_moves A vector of positions available.
+    */
     std::vector<PositionType> available_moves(Player player,
                                               PositionType position);
+    /*!
+      \brief
+     * Allows to cancel a certain number of moves.
+     */
+    /*!
+     \param number_of_moves_to_cancel The number of moves the
+                player wants to cancel.
+    */
     void cancel_moves(int number_of_moves_to_cancel);
+    /*! \brief
+     * Gives the history of the moves played.
+     */
     std::vector<std::pair<Player, GridType>> get_history();
     Addon();
 };

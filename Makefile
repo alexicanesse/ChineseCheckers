@@ -13,6 +13,7 @@ else
 	RESET        := ""
 endif
 
+#TODO use real variables instead of wildcards for filenames
 
 #Tools to check what the OS is
 UNAME := $(shell uname)
@@ -20,7 +21,7 @@ UNAME := $(shell uname)
 PYTHON_SUB_VERSION = $(word 2, $(wordlist 2,4,$(subst ., ,$(shell python3 --version 2>&1))))
 
 OUT=./bin/ChineseCheckers.so
-CXXFLAGS=-Wno-unused-result -Wsign-compare -Wunreachable-code -fno-common -fwrapv -dynamic -O3 -I./include -I$(shell python3 -c "from sysconfig import get_paths as gp; print(gp()[\"include\"])") --std=c++20
+CXXFLAGS=-pg -Wno-unused-result -Wsign-compare -Wunreachable-code -fno-common -fwrapv -dynamic -O3 -I./include -I$(shell python3 -c "from sysconfig import get_paths as gp; print(gp()[\"include\"])") --std=c++20
 LDFLAGS=-lboost_python3$(PYTHON_SUB_VERSION)
 
 ifneq ($(UNAME), Darwin)
@@ -51,6 +52,7 @@ $(OUT): $(OFILES)
 	@$(CXX)  -o $@ -c $< $(CXXFLAGS)
 	
 ####Documentation
+.PHONY: doc
 doc:
 	@echo "${BLUE}Updating the documentation${RESET}"
 	@doxygen > /dev/null

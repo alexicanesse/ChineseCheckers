@@ -86,12 +86,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afa6d6e154a0c300995c7af79c529fc36"><td class="memTemplParams" colspan="2">template&lt;typename Container &gt; </td></tr>
 <tr class="memitem:afa6d6e154a0c300995c7af79c529fc36"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structiterable__converter.html">iterable_converter</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structiterable__converter.html#afa6d6e154a0c300995c7af79c529fc36">from_python</a> ()</td></tr>
 <tr class="separator:afa6d6e154a0c300995c7af79c529fc36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa6d6e154a0c300995c7af79c529fc36"><td class="memTemplParams" colspan="2">template&lt;typename Container &gt; </td></tr>
+<tr class="memitem:afa6d6e154a0c300995c7af79c529fc36"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structiterable__converter.html">iterable_converter</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structiterable__converter.html#afa6d6e154a0c300995c7af79c529fc36">from_python</a> ()</td></tr>
+<tr class="separator:afa6d6e154a0c300995c7af79c529fc36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:affb03a0bdddc544af42b01406dcedd58"><td class="memItemLeft" align="right" valign="top"><a id="affb03a0bdddc544af42b01406dcedd58" name="affb03a0bdddc544af42b01406dcedd58"></a>
-static void *&#160;</td><td class="memItemRight" valign="bottom"><b>convertible</b> (PyObject *object)</td></tr>
-<tr class="memdesc:affb03a0bdddc544af42b01406dcedd58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if PyObject is iterable. <br /></td></tr>
+<tr class="memitem:affb03a0bdddc544af42b01406dcedd58"><td class="memItemLeft" align="right" valign="top">static void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiterable__converter.html#affb03a0bdddc544af42b01406dcedd58">convertible</a> (PyObject *object)</td></tr>
+<tr class="memdesc:affb03a0bdddc544af42b01406dcedd58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if PyObject is iterable.  <a href="structiterable__converter.html#affb03a0bdddc544af42b01406dcedd58">More...</a><br /></td></tr>
+<tr class="separator:affb03a0bdddc544af42b01406dcedd58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a914b0b410e2302aabe0e19ad37c8fb98"><td class="memTemplParams" colspan="2">template&lt;typename Container &gt; </td></tr>
+<tr class="memitem:a914b0b410e2302aabe0e19ad37c8fb98"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structiterable__converter.html#a914b0b410e2302aabe0e19ad37c8fb98">construct</a> (PyObject *object, boost::python::converter::rvalue_from_python_stage1_data *data)</td></tr>
+<tr class="memdesc:a914b0b410e2302aabe0e19ad37c8fb98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert iterable PyObject to C++ container type.  <a href="structiterable__converter.html#a914b0b410e2302aabe0e19ad37c8fb98">More...</a><br /></td></tr>
+<tr class="separator:a914b0b410e2302aabe0e19ad37c8fb98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affb03a0bdddc544af42b01406dcedd58"><td class="memItemLeft" align="right" valign="top">static void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiterable__converter.html#affb03a0bdddc544af42b01406dcedd58">convertible</a> (PyObject *object)</td></tr>
+<tr class="memdesc:affb03a0bdddc544af42b01406dcedd58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if PyObject is iterable.  <a href="structiterable__converter.html#affb03a0bdddc544af42b01406dcedd58">More...</a><br /></td></tr>
 <tr class="separator:affb03a0bdddc544af42b01406dcedd58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a914b0b410e2302aabe0e19ad37c8fb98"><td class="memTemplParams" colspan="2">template&lt;typename Container &gt; </td></tr>
 <tr class="memitem:a914b0b410e2302aabe0e19ad37c8fb98"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structiterable__converter.html#a914b0b410e2302aabe0e19ad37c8fb98">construct</a> (PyObject *object, boost::python::converter::rvalue_from_python_stage1_data *data)</td></tr>
@@ -102,7 +111,7 @@ static void *&#160;</td><td class="memItemRight" valign="bottom"><b>convertible<
 <div class="textblock"><p >Type that allows for registration of conversions from python iterable types. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a914b0b410e2302aabe0e19ad37c8fb98" name="a914b0b410e2302aabe0e19ad37c8fb98"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a914b0b410e2302aabe0e19ad37c8fb98">&#9670;&#160;</a></span>construct()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a914b0b410e2302aabe0e19ad37c8fb98">&#9670;&#160;</a></span>construct() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -146,8 +155,109 @@ template&lt;typename Container &gt; </div>
 
 </div>
 </div>
+<a id="a914b0b410e2302aabe0e19ad37c8fb98" name="a914b0b410e2302aabe0e19ad37c8fb98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a914b0b410e2302aabe0e19ad37c8fb98">&#9670;&#160;</a></span>construct() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Container &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void iterable_converter::construct </td>
+          <td>(</td>
+          <td class="paramtype">PyObject *&#160;</td>
+          <td class="paramname"><em>object</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">boost::python::converter::rvalue_from_python_stage1_data *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Convert iterable PyObject to C++ container type. </p>
+<p >Container Concept requirements:</p>
+<ul>
+<li>Container::value_type is CopyConstructable.</li>
+<li>Container can be constructed and populated with two iterators. I.e. Container(begin, end) </li>
+</ul>
+
+</div>
+</div>
+<a id="affb03a0bdddc544af42b01406dcedd58" name="affb03a0bdddc544af42b01406dcedd58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affb03a0bdddc544af42b01406dcedd58">&#9670;&#160;</a></span>convertible() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void * iterable_converter::convertible </td>
+          <td>(</td>
+          <td class="paramtype">PyObject *&#160;</td>
+          <td class="paramname"><em>object</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check if PyObject is iterable. </p>
+
+</div>
+</div>
+<a id="affb03a0bdddc544af42b01406dcedd58" name="affb03a0bdddc544af42b01406dcedd58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affb03a0bdddc544af42b01406dcedd58">&#9670;&#160;</a></span>convertible() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void * iterable_converter::convertible </td>
+          <td>(</td>
+          <td class="paramtype">PyObject *&#160;</td>
+          <td class="paramname"><em>object</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check if PyObject is iterable. </p>
+
+</div>
+</div>
 <a id="afa6d6e154a0c300995c7af79c529fc36" name="afa6d6e154a0c300995c7af79c529fc36"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa6d6e154a0c300995c7af79c529fc36">&#9670;&#160;</a></span>from_python()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afa6d6e154a0c300995c7af79c529fc36">&#9670;&#160;</a></span>from_python() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -174,8 +284,37 @@ template&lt;typename Container &gt; </div>
 
 </div>
 </div>
-<hr/>The documentation for this struct was generated from the following file:<ul>
-<li>src/ChineseCheckersWrapper.cpp</li>
+<a id="afa6d6e154a0c300995c7af79c529fc36" name="afa6d6e154a0c300995c7af79c529fc36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa6d6e154a0c300995c7af79c529fc36">&#9670;&#160;</a></span>from_python() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Container &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structiterable__converter.html">iterable_converter</a> &amp; iterable_converter::from_python </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section note"><dt>Note</dt><dd>Registers converter from a python iterable type to the provided type. </dd></dl>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following files:<ul>
+<li>solvers/AlphaBeta/src/<a class="el" href="_alpha_beta_wrapper_8cpp.html">AlphaBetaWrapper.cpp</a></li>
+<li>src/<a class="el" href="_chinese_checkers_wrapper_8cpp.html">ChineseCheckersWrapper.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

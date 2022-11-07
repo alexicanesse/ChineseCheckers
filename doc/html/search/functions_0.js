@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['_5fcanv2plat_0',['_canv2plat',['../class_chinese_checkers_1_1_board_area.html#ac961a65900f65e94b696ddffd9dcaff6',1,'ChineseCheckers.BoardArea._canv2plat()'],['../class_chinese_checkers__with__lib_1_1_board_area.html#aa53a52662da573e15444a61299d4a786',1,'ChineseCheckers_with_lib.BoardArea._canv2plat()'],['../class_chinesecheckers_using_lib_1_1_board_area.html#af9f731b3b380837a10d27fc25e8b6cae',1,'ChinesecheckersUsingLib.BoardArea._canv2plat()']]],
-  ['_5fplat2canv_1',['_plat2canv',['../class_chinese_checkers_1_1_board_area.html#a35c47c4be97355aff229d620cdad2a77',1,'ChineseCheckers.BoardArea._plat2canv()'],['../class_chinese_checkers__with__lib_1_1_board_area.html#a5776fe6036a975dcabb42b3da5fe8cd4',1,'ChineseCheckers_with_lib.BoardArea._plat2canv()'],['../class_chinesecheckers_using_lib_1_1_board_area.html#a703353763bf335e68b173f09068e0dcf',1,'ChinesecheckersUsingLib.BoardArea._plat2canv()']]]
+  ['addon_0',['Addon',['../class_addon.html#add577dd85348ecd0e139dcfea0a1af02',1,'Addon']]],
+  ['alphabetaeval_1',['AlphaBetaEval',['../class_alpha_beta.html#a52b70faaa7a2502742d7e6d8b879591c',1,'AlphaBeta']]],
+  ['available_5fmoves_2',['available_moves',['../class_addon.html#aca8a5ed2327c1fb5db6361239a230a2b',1,'Addon::available_moves()'],['../class_addon.html#a1f07b8fd4e4e6c3a8cfaab360e1afdb3',1,'Addon::available_moves(Player player, PositionType position)']]],
+  ['availablemoves_3',['availableMoves',['../class_alpha_beta.html#ae4aa6b795fc9e0b89f060caa0c1fb782',1,'AlphaBeta']]]
 ];

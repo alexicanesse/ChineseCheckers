@@ -1,4 +1,8 @@
 var searchData=
 [
-  ['elementarymove_0',['elementaryMove',['../class_chinese_checkers.html#a64b4bc66e20170f44e6f30eb6a022c3e',1,'ChineseCheckers']]]
+  ['cancel_5fmoves_0',['cancel_moves',['../class_addon.html#a098c9491b27a1c810a6be897e419f799',1,'Addon']]],
+  ['chinesecheckers_1',['ChineseCheckers',['../class_chinese_checkers.html#a18089528ddbdb10b6e0f12495c1923ca',1,'ChineseCheckers']]],
+  ['construct_2',['construct',['../structiterable__converter.html#a914b0b410e2302aabe0e19ad37c8fb98',1,'iterable_converter::construct()'],['../structfrom_python_to_color.html#acb95fb96cddff10e855925624f1cb079',1,'fromPythonToColor::construct()'],['../structiterable__converter.html#a914b0b410e2302aabe0e19ad37c8fb98',1,'iterable_converter::construct()']]],
+  ['convert_3',['convert',['../structgridtype__to__list.html#a15a7a38db99c22c91f64333b247e8bd1',1,'gridtype_to_list::convert()'],['../struct_list_of_position_type__to__list.html#aca12e0f5ed951f03ee527863a87465da',1,'ListOfPositionType_to_list::convert()'],['../struct_result__to__int.html#a18d9add1c46319f36c6caff9d9d88b7c',1,'Result_to_int::convert()'],['../structgridtype__to__list.html#a15a7a38db99c22c91f64333b247e8bd1',1,'gridtype_to_list::convert()'],['../structvector__of__vector__of__positiontype__to__list.html#a20fde20f0dd152d86ff280fc8047cac3',1,'vector_of_vector_of_positiontype_to_list::convert()']]],
+  ['convertible_4',['convertible',['../structiterable__converter.html#affb03a0bdddc544af42b01406dcedd58',1,'iterable_converter::convertible()'],['../structfrom_python_to_color.html#ad6951bf3b3d23c4d3f48317d72646dc7',1,'fromPythonToColor::convertible()'],['../structiterable__converter.html#affb03a0bdddc544af42b01406dcedd58',1,'iterable_converter::convertible()']]]
 ];
