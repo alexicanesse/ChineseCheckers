@@ -4,6 +4,7 @@ import numpy as np
 import math
 from ChineseCheckers_Players import *
 import bin.ChineseCheckers as cc
+import bin.solvers.AlphaBeta as ab
 
 import time #TEST
 
@@ -79,6 +80,11 @@ class Areas(Canvas):
 class BoardArea(Areas):
     
     def __init__(self, parent, width, height, show_black_ar, show_white_ar, show_moves, playerW = Human(), playerB = Human()):
+        
+        #temporary data to use c++ olvers and test cod without changing the rest of the code
+        self.playerW = ab.Solver()
+        
+        
         # initialization of the canvas
         assert(width == height)
         Canvas.__init__(self, parent, width=width, height=height, highlightthickness=0)
@@ -102,6 +108,7 @@ class BoardArea(Areas):
         
         self.playerW = playerW
         self.playerB = playerB
+        
         # drawing the board cases
         for i in range(8):
             for j in range(8):
@@ -140,6 +147,9 @@ class BoardArea(Areas):
         self.coup_precedent = ""
         self.coup_courant = []
         
+        #temporary data 
+        self.color = "white"
+        
     def bouton1_appuye(self,event):
         # TEST
         if self.whoistoplay.getHumanity():
@@ -168,12 +178,11 @@ class BoardArea(Areas):
             etude_coup = self.coup_legal(self.__piece_courante.case_x,self.__piece_courante.case_y,ncase_x,ncase_y)
             if ncase_x == self.pospioninit[0] and ncase_y == self.pospioninit[1]:
                 # dropped the pawn on the same case as before
-                # Drawing of the reachable boxes
-                possible_moves = self.coups_possibles_a_supprimer([self.__piece_courante.case_x,
-                                                                   self.__piece_courante.case_y],
-                                                                   self.pbpn2pospion_a_supprimer(self.wp, self.bp))
                 
-                if self.show_moves:
+                if self.show_moves: # Drawing of the reachable boxes
+                    possible_moves = self.coups_possibles_a_supprimer([self.__piece_courante.case_x,
+                                                                       self.__piece_courante.case_y],
+                                                                       self.pbpn2pospion_a_supprimer(self.wp, self.bp))
                     self.highlight_cases(possible_moves)
                     self.show_arrows([], self.color) # erases drawn arrows
                 
@@ -200,6 +209,15 @@ class BoardArea(Areas):
         self.pospioninit = (-1,-1)
         self.coup_precedent = ""
         self.coup_courant = []
+    
+    def swap_whoistoplay(self):
+        if self.whoistoplay == self.playerW:
+            self.whoistoplay = self.playerB
+            self.movablePaws = self.bp
+        else:
+            self.whoistoplay = self.playerW
+            self.movablePaws = self.wp
+            
                         
     def  _plat2canv(self,i,j):
         '''converts the coordinates of the board to pixels'''
@@ -327,8 +345,36 @@ class BoardArea(Areas):
 
     def jouerIA(self):
         # TEST
+        print("who is to play",self.board.get_who_is_to_play_(),"Humanity")
+        if self.whoistoplay.getHumanity():# A human is playing
+            if self.whoistoplay == self.playerW:
+                self.joueurajouer = self.board.move(0,self.coup_courant)
+                print("Joueur W",self.joueurajouer,self.coup_courant)
+            else:
+                self.joueurajouer = self.board.move(1,self.coup_courant)
+                print("Joueur B",self.joueurajouer,self.coup_courant)
+        else: # An AI is playing
+            tic = time.time()
+            move = self.whoistoplay.getMove(3, -100000, 100000)
+            toc = time.time()
+            if self.whoistoplay == self.playerW:
+                self.joueurajouer = self.board.move(0,self.coup_courant)
+                print("AI W",self.joueurajouer,self.coup_courant,toc-tic)
+            else:
+                self.joueurajouer = self.board.move(1,self.coup_courant)
+                print("AI B",self.joueurajouer,self.coup_courant,toc-tic)
+            
+            
+        if self.joueurajouer:
+            self.reset_working_data()
+            self.swap_whoistoplay()
+        
+        for case in self.hc:
+            self.delete(case)
+        self.hc = []
+        
+        """
         assert(self.joueurajouer)
-        print("J:",self.coup_courant)
         tic = time.time()
         temp = self.ia.joueralphabeta(depth = 3)
         toc = time.time()
@@ -342,6 +388,7 @@ class BoardArea(Areas):
         for case in self.hc:
             self.delete(case)
         self.hc = []
+        """
             
     def coups_possibles_a_supprimer(self,p,pospions):#TODO mettre dans Human()
         rep = []

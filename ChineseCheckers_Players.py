@@ -20,6 +20,7 @@ class Human(Player):
 class AI_python(Player):
     # TEST for the whole class
     def __init__(self,canevas,couleur):
+        super().init(False)
         self.couleur = couleur
         self._canevas = canevas
         self.pions = canevas.bp if couleur == "black" else canevas.wp
