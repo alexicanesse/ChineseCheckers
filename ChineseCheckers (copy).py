@@ -2,7 +2,8 @@ from tkinter import *
 import tkinter.font as font
 import numpy as np
 import math
-from ChineseCheckers_AI import *
+from ChineseCheckers_Players import *
+import bin.ChineseCheckers as cc
 
 import time #TEST
 
@@ -77,7 +78,7 @@ class Areas(Canvas):
 
 class BoardArea(Areas):
     
-    def __init__(self, parent, width, height, show_black_ar, show_white_ar, show_moves):
+    def __init__(self, parent, width, height, show_black_ar, show_white_ar, show_moves, playerW = Human(), playerB = Human()):
         # initialization of the canvas
         assert(width == height)
         Canvas.__init__(self, parent, width=width, height=height, highlightthickness=0)
@@ -99,6 +100,8 @@ class BoardArea(Areas):
         self.show_white_ar = show_white_ar # True if we indicates white movements using arrows
         self.configure(bg=self.DARK)
         
+        self.playerW = playerW
+        self.playerB = playerB
         # drawing the board cases
         for i in range(8):
             for j in range(8):
@@ -124,17 +127,73 @@ class BoardArea(Areas):
                     x,y = self._plat2canv(7 - i, 7 - j)
                     self.bp.append(Pion(self, x, y, self.BLACK))
                     
-        self.color = 'white'
-        # TEST
-        self.ia = IA(self,'black')
 
-        #working data pour tester les coups du joueur # TODO traduire
+        #initiating a Game
+        self.whoistoplay = playerW# Allow us to check if a player
+        self.movablePaws = self.wp if playerW.getHumanity() else []
+        self.board= cc.Game()
+
+        #working data 
         self.__piece_courante = ""
         self.joueurajouer = False
         self.pospioninit = (-1,-1)
         self.coup_precedent = ""
         self.coup_courant = []
+        
+    def bouton1_appuye(self,event):
+        # TEST
+        if self.whoistoplay.getHumanity():
+            eventi,eventj = self._canv2plat(event.x,event.y)
+            for p in self.movablePaws:
+                if p.is_in_case(eventi,eventj):
+                        self.__piece_courante = p
+                        break
+            if self.__piece_courante != "":
+                self.__piece_courante.redraw()
+                if self.pospioninit == (-1,-1):
+                    self.pospioninit = self.__piece_courante.case_x,self.__piece_courante.case_y
+                    self.coup_courant = [(eventi,eventj)]
                 
+    def bouton1_deplace(self,event):
+        # TEST
+        if self.__piece_courante != "":
+            dx = event.x - self.__piece_courante.x
+            dy = event.y - self.__piece_courante.y
+            self.__piece_courante.move_on_ui(dx,dy)
+
+    def bouton1_relache(self,event):
+        # TEST
+        if self.__piece_courante != "" :
+            ncase_x,ncase_y = self._canv2plat(event.x,event.y)
+            etude_coup = self.coup_legal(self.__piece_courante.case_x,self.__piece_courante.case_y,ncase_x,ncase_y)
+            if ncase_x == self.pospioninit[0] and ncase_y == self.pospioninit[1]:
+                # dropped the pawn on the same case as before
+                # Drawing of the reachable boxes
+                possible_moves = self.coups_possibles_a_supprimer([self.__piece_courante.case_x,
+                                                                   self.__piece_courante.case_y],
+                                                                   self.pbpn2pospion_a_supprimer(self.wp, self.bp))
+                
+                if self.show_moves:
+                    self.highlight_cases(possible_moves)
+                    self.show_arrows([], self.color) # erases drawn arrows
+                
+                self.__piece_courante.move(event.x,event.y) 
+                self.reset_working_data()
+            elif etude_coup != 'ilegal' and (self.coup_precedent =="" or (self.coup_precedent == "saut" and etude_coup == "saut")):
+                # wants to play a legal move
+                self.__piece_courante.move(event.x,event.y)
+                self.coup_precedent = etude_coup
+                self.joueurajouer = True
+                self.coup_courant.append((ncase_x,ncase_y))
+                if (self.color == 'white' and self.show_white_ar) or\
+                   (self.color == 'black' and self.show_black_ar):
+                    self.show_arrows(self.coup_courant, self.color)
+    
+            else:
+                xf,yf = self._plat2canv(self.__piece_courante.case_x,self.__piece_courante.case_y)
+                self.__piece_courante.move_on_ui(xf-self.__piece_courante.x,yf-self.__piece_courante.y)         
+            
+            
     def reset_working_data(self):
         self.__piece_courante = ""
         self.joueurajouer = False
@@ -157,7 +216,9 @@ class BoardArea(Areas):
         i = round((X - Y / np.sqrt(3)) / self.case_width)
         j = round((-X - Y / np.sqrt(3)) / self.case_height)
         return(i,j)
-    
+
+    #All of the following functions are graphical functions
+ 
     def show_coordinates(self):
         '''show empty cases with their coordinates'''
         lfont = font.Font(family='Helvetica', size=20)
@@ -259,6 +320,7 @@ class BoardArea(Areas):
             pawn.set_xy(pawn.x * scale, pawn.y * scale)
     
     # All of the following functions in the class are TEST
+  
 
     def can_play(self):
         return self.joueurajouer
@@ -281,28 +343,6 @@ class BoardArea(Areas):
             self.delete(case)
         self.hc = []
             
-    def bouton1_appuye(self,event):
-        # TEST
-        eventi,eventj = self._canv2plat(event.x,event.y)
-        for p in self.wp:
-            if p.is_in_case(eventi,eventj):
-                if not self.joueurajouer:
-                    self.__piece_courante = p
-                    break
-        if self.__piece_courante != "":
-            self.__piece_courante.redraw()
-            if self.pospioninit == (-1,-1):
-                self.pospioninit = self.__piece_courante.case_x,self.__piece_courante.case_y
-                self.coup_courant = [(eventi,eventj)]
- 
-    def bouton1_deplace(self,event):
-        # TEST
-        if self.__piece_courante != "":
-            dx = event.x - self.__piece_courante.x
-            dy = event.y - self.__piece_courante.y
-            self.__piece_courante.move_on_ui(dx,dy)
-    
-
     def coups_possibles_a_supprimer(self,p,pospions):#TODO mettre dans Human()
         rep = []
         nb_non_sauts = 0
@@ -366,39 +406,7 @@ class BoardArea(Areas):
         for a,b in pn:
             pospion[a,b] = True
         return(pospion)
-    
-    def bouton1_relache(self,event):
-        # TEST
-        if self.__piece_courante != "" :
-            ncase_x,ncase_y = self._canv2plat(event.x,event.y)
-            etude_coup = self.coup_legal(self.__piece_courante.case_x,self.__piece_courante.case_y,ncase_x,ncase_y)
-            if ncase_x == self.pospioninit[0] and ncase_y == self.pospioninit[1]:
-                # dropped the pawn on the same case as before
-                # Drawing of the reachable boxes
-                possible_moves = self.coups_possibles_a_supprimer([self.__piece_courante.case_x,
-                                                                   self.__piece_courante.case_y],
-                                                                   self.pbpn2pospion_a_supprimer(self.wp, self.bp))
-                
-                if self.show_moves:
-                    self.highlight_cases(possible_moves)
-                    self.show_arrows([], self.color) # erases drawn arrows
-                
-                self.__piece_courante.move(event.x,event.y) 
-                self.reset_working_data()
-            elif etude_coup != 'ilegal' and (self.coup_precedent =="" or (self.coup_precedent == "saut" and etude_coup == "saut")):
-                # wants to play a legal move
-                self.__piece_courante.move(event.x,event.y)
-                self.coup_precedent = etude_coup
-                self.joueurajouer = True
-                self.coup_courant.append((ncase_x,ncase_y))
-                if (self.color == 'white' and self.show_white_ar) or\
-                   (self.color == 'black' and self.show_black_ar):
-                    self.show_arrows(self.coup_courant, self.color)
-    
-            else:
-                xf,yf = self._plat2canv(self.__piece_courante.case_x,self.__piece_courante.case_y)
-                self.__piece_courante.move_on_ui(xf-self.__piece_courante.x,yf-self.__piece_courante.y)         
-        
+       
     def piece_dans_case(self,i,j):
         for p in self.wp:
             if p.is_in_case(i,j) :
