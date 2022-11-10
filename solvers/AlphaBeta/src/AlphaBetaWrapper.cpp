@@ -160,7 +160,6 @@ struct fromPythonToColor {
 
 BOOST_PYTHON_MODULE(AlphaBeta) {
     boost::python::to_python_converter<GridType, gridtype_to_list>();
-//    boost::python::to_python_converter<Result, Result_to_int>();
     boost::python::to_python_converter<ListOfPositionType,
                                             ListOfPositionType_to_list>();
     fromPythonToColor();
@@ -183,7 +182,8 @@ BOOST_PYTHON_MODULE(AlphaBeta) {
         .def("getMove", &AlphaBeta::getMove)
         .def("state_of_game", &AlphaBeta::state_of_game)
         .def("print_grid_", &AlphaBeta::print_grid_)
-        .def("move", &AlphaBeta::move);
+        .def("move", &AlphaBeta::move)
+        .def("isHuman", &AlphaBeta::isHuman);
 }
 
 

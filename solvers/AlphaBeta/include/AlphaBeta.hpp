@@ -39,6 +39,7 @@ class AlphaBeta : public ChineseCheckers{
  public:
     ListOfMoves availableMoves(Player player);
     ListOfPositionType getMove(int depth, double alpha, double beta);
+    bool isHuman() {return false; }
 };
 
 #endif /* SOLVERS_ALPHABETA_INCLUDE_ALPHABETA_HPP_ */
