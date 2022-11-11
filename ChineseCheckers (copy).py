@@ -366,6 +366,10 @@ class BoardArea(Areas):
                 self.apply_move_without_check(self.coup_courant)
             self.playerW.applyMove(intwhoistoplay,self.coup_courant)
             self.playerB.applyMove(intwhoistoplay,self.coup_courant)
+            if intwhoistoplay == 0 and self.show_white_ar:
+                self.show_arrows(self.coup_courant, "white")
+            elif intwhoistoplay == 1 and self.show_black_ar: 
+                self.show_arrows(self.coup_courant, "black")
             self.reset_working_data()
             self.swap_whoistoplay()
 
