@@ -133,7 +133,7 @@ class BoardArea(Areas):
 
 
         #temporary data to use c++ olvers and test cod without changing the rest of the code
-        self.playerW = Ai_cpp(depth = 3)
+        self.playerW = AI_cpp(depth = 3)
         
         
         
@@ -347,29 +347,22 @@ class BoardArea(Areas):
 
     def jouerIA(self):
         # TEST
-        print("who is to play",self.board.get_who_is_to_play_(),"Humanity")
+
+        intwhoistoplay = 0 if self.whoistoplay == self.playerW else 1
         if self.whoistoplay.getHumanity():# A human is playing
-            if self.whoistoplay == self.playerW:
-                self.joueurajouer = self.board.move(0,self.coup_courant)
-                print("Joueur W",self.joueurajouer,self.coup_courant)
-            else:
-                self.joueurajouer = self.board.move(1,self.coup_courant)
-                print("Joueur B",self.joueurajouer,self.coup_courant)
+            self.self.joueurajouer = self.board.move(intwhoistoplay,self.coup_courant)
+            print( "Player White" if intwhoistoplay == 0 else"PLayer Black",self.coup_courant)
         else: # An AI is playing
             tic = time.time()
             self.coup_courant = self.whoistoplay.getMove()
             toc = time.time()
-            if self.whoistoplay == self.playerW:
-                self.joueurajouer = self.board.move(0,self.coup_courant)
-                print("AI W",self.joueurajouer,self.coup_courant,toc-tic)
-            else:
-                self.joueurajouer = self.board.move(1,self.coup_courant)
-                print("AI B",self.joueurajouer,self.coup_courant,toc-tic)
+            self.joueurajouer = self.board.move(intwhoistoplay,self.coup_courant)
+            print("AI White" if intwhoistoplay == 0 else "AI Black",self.joueurajouer,self.coup_courant,toc-tic)
             
             
         if self.joueurajouer:
-            self.playerW.applyMove(self.coup_courant)
-            self.playerB.applyMove(self.coup_courant)
+            self.playerW.applyMove(intwhoistoplay,self.coup_courant)
+            self.playerB.applyMove(intwhoistoplay,self.coup_courant)
             self.reset_working_data()
             self.swap_whoistoplay()
         

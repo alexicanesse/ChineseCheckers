@@ -12,7 +12,7 @@ class Player():
     def getHumanity(self):
         return(self.__isHuman)
     
-    def applyMove(self,move):
+    def applyMove(self,intwhoistoplay,move):
         pass
     
     def getMove(self):
@@ -24,18 +24,17 @@ class Human(Player):
     def __init__(self):
         super().__init__(True)
 
-class Ai_cpp(Player):
+class AI_cpp(Player):
     def __init__(self,depth = 3):
         super().__init__(False)
         self.__solver = ab.Solver()
         self.depth = depth
         
-    
-    def applyMove(self,move):
-        self.__solver.move(move)
+    def applyMove(self,intwhoistoplay,move):
+        self.__solver.move(intwhoistoplay,move)
     
     def getMove(self):
-        return(self.__solver.getMove())
+        return(self.__solver.getMove(self.depth,-100000,100000))
         
         
     
