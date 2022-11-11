@@ -116,7 +116,7 @@ struct vector_of_vector_of_positiontype_to_list {
 };
 
 
-BOOST_PYTHON_MODULE(ChineseCheckers) {
+BOOST_PYTHON_MODULE(libChineseCheckers) {
     boost::python::to_python_converter<GridType, gridtype_to_list>();
     boost::python::to_python_converter<std::vector<std::vector<PositionType>>,
                                     vector_of_vector_of_positiontype_to_list>();

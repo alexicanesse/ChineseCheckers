@@ -30,8 +30,9 @@ else
 	CXXFLAGS += -undefined dynamic_lookup
 endif
 
-CXXFILES = $(wildcard ./src/*.cpp)
+CXXFILES = ./src/ChineseCheckers.cpp ./src/ChineseCheckersWrapper.cpp
 OFILES = $(patsubst ./src/%.cpp, ./objects/%.o, $(CXXFILES))
+
 DIRECTORIES = ./objects ./bin ./bin/solvers
 
 ####Main library
@@ -44,8 +45,10 @@ $(DIRECTORIES) :
 	@mkdir $@
 
 $(OUT): $(OFILES)
-	@echo "${BLUE}Linking CXX objects${RESET}"
+	@echo "${BLUE}Linking the library${RESET}"
 	@$(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS) -shared
+
+
 
 ./objects/%.o: ./src/%.cpp | $(DIRECTORIES)
 	@echo "${PURPLE}Building CXX object" $@ "${RESET}"
@@ -59,16 +62,21 @@ doc:
 
 ####Solvers
 
+OUTALPHABETA = ./bin/solvers/AlphaBeta.so
+
+CXXFILESALPHABETA = ./solvers/AlphaBeta/src/AlphaBeta.cpp ./solvers/AlphaBeta/src/AlphaBetaWrapper.cpp
+OFILESALPHABETA =  $(patsubst ./solvers/AlphaBeta/src/%.cpp, ./objects/%.o, $(CXXFILESALPHABETA))
+
 #AlphaBeta
-AlphaBeta: $(DIRECTORIES) ./bin/solvers/AlphaBeta.so
+AlphaBeta: $(DIRECTORIES) $(OUTALPHABETA)
 	@echo "${BLUE}Checking if the C++ code respect Google's conventions${RESET}"
 	@cpplint ./solvers/AlphaBeta/src/* ./solvers/AlphaBeta/include/*
 
-./bin/solvers/%.so: ./objects/%.o ./objects/%Wrapper.o
-	@echo "${BLUE}Linking CXX objects${RESET}"
-	@$(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS) -pthread -shared
+./bin/solvers/AlphaBeta.so: $(OFILESALPHABETA)
+	@echo "${BLUE}Linking AlphaBeta solver${RESET}"
+	@$(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS) -pthread -shared -Lbin -lChineseCheckers
 	
-./objects/%.o: ./solvers/AlphaBeta/src/%.cpp ./solvers/AlphaBeta/src/*Wrapper.cpp
+./objects/%.o: ./solvers/AlphaBeta/src/%.cpp | $(DIRECTORIES)
 	@echo "${PURPLE}Building CXX object" $@ "${RESET}"
 	@$(CXX)  -o $@ -c $< $(CXXFLAGS) -I./solvers/AlphaBeta/include/
 	
