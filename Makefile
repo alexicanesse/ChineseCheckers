@@ -74,7 +74,7 @@ AlphaBeta: $(DIRECTORIES) $(OUTALPHABETA)
 
 ./bin/solvers/AlphaBeta.so: $(OFILESALPHABETA)
 	@echo "${BLUE}Linking AlphaBeta solver${RESET}"
-	@$(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS) -pthread -shared -Lbin -lChineseCheckers
+	@$(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS) -pthread -shared -Wl,-rpath,./bin -Lbin -lChineseCheckers
 	
 ./objects/%.o: ./solvers/AlphaBeta/src/%.cpp | $(DIRECTORIES)
 	@echo "${PURPLE}Building CXX object" $@ "${RESET}"
