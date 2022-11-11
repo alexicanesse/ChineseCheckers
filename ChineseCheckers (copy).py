@@ -3,8 +3,8 @@ import tkinter.font as font
 import numpy as np
 import math
 from ChineseCheckers_Players import *
-import bin.ChineseCheckers as cc
-import bin.solvers.AlphaBeta as ab
+import bin.libChineseCheckers as cc
+
 
 import time #TEST
 
@@ -80,11 +80,6 @@ class Areas(Canvas):
 class BoardArea(Areas):
     
     def __init__(self, parent, width, height, show_black_ar, show_white_ar, show_moves, playerW = Human(), playerB = Human()):
-        
-        #temporary data to use c++ olvers and test cod without changing the rest of the code
-        self.playerW = ab.Solver()
-        
-        
         # initialization of the canvas
         assert(width == height)
         Canvas.__init__(self, parent, width=width, height=height, highlightthickness=0)
@@ -105,7 +100,6 @@ class BoardArea(Areas):
         self.show_black_ar = show_black_ar # True if we indicates black movements using arrows
         self.show_white_ar = show_white_ar # True if we indicates white movements using arrows
         self.configure(bg=self.DARK)
-        
         self.playerW = playerW
         self.playerB = playerB
         
@@ -135,9 +129,17 @@ class BoardArea(Areas):
                     self.bp.append(Pion(self, x, y, self.BLACK))
                     
 
+
+
+
+        #temporary data to use c++ olvers and test cod without changing the rest of the code
+        self.playerW = Ai_cpp(depth = 3)
+        
+        
+        
         #initiating a Game
-        self.whoistoplay = playerW# Allow us to check if a player
-        self.movablePaws = self.wp if playerW.getHumanity() else []
+        self.whoistoplay = self.playerW# Allow us to check if a player
+        self.movablePaws = self.wp if self.playerW.getHumanity() else []
         self.board= cc.Game()
 
         #working data 
@@ -355,7 +357,7 @@ class BoardArea(Areas):
                 print("Joueur B",self.joueurajouer,self.coup_courant)
         else: # An AI is playing
             tic = time.time()
-            move = self.whoistoplay.getMove(3, -100000, 100000)
+            self.coup_courant = self.whoistoplay.getMove()
             toc = time.time()
             if self.whoistoplay == self.playerW:
                 self.joueurajouer = self.board.move(0,self.coup_courant)
@@ -366,6 +368,8 @@ class BoardArea(Areas):
             
             
         if self.joueurajouer:
+            self.playerW.applyMove(self.coup_courant)
+            self.playerB.applyMove(self.coup_courant)
             self.reset_working_data()
             self.swap_whoistoplay()
         
@@ -598,8 +602,8 @@ class Board(Tk,Areas):
         
         self.AI_button = self.__controlArea.create_image((control_width) / 2,
                                                         (height) / 2,
-                                                        image=self.play_ai_icon_grayed)
-        self.AI_button_state = "grayed" # can be "grayed", "normal" or "pressed"
+                                                        image=self.play_ai_icon)
+        self.AI_button_state = "normal" # can be "grayed", "normal" or "pressed"
         
         # mouse events config
         self.__controlArea.tag_bind(self.AI_button, "<Button-1>", self.press_jouerIA)

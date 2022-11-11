@@ -2,7 +2,7 @@
 
 import numpy as np
 import random as random
-
+import bin.solvers.AlphaBeta as ab
 
 
 class Player():
@@ -11,11 +11,35 @@ class Player():
     
     def getHumanity(self):
         return(self.__isHuman)
+    
+    def applyMove(self,move):
+        pass
+    
+    def getMove(self):
+        return([])
+    
+    
 
 class Human(Player):
     def __init__(self):
         super().__init__(True)
+
+class Ai_cpp(Player):
+    def __init__(self,depth = 3):
+        super().__init__(False)
+        self.__solver = ab.Solver()
+        self.depth = depth
+        
     
+    def applyMove(self,move):
+        self.__solver.move(move)
+    
+    def getMove(self):
+        return(self.__solver.getMove())
+        
+        
+    
+
 
 class AI_python(Player):
     # TEST for the whole class
