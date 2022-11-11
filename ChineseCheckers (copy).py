@@ -102,6 +102,7 @@ class BoardArea(Areas):
         self.configure(bg=self.DARK)
         self.playerW = playerW
         self.playerB = playerB
+        self.parent = parent
         
         # drawing the board cases
         for i in range(8):
@@ -133,7 +134,8 @@ class BoardArea(Areas):
 
 
         #temporary data to use c++ olvers and test cod without changing the rest of the code
-        self.playerW = AI_cpp(depth = 3)
+        #self.playerW = AI_cpp(depth = 3)
+        self.playerB = AI_cpp(depth = 3)
         
         
         
@@ -347,11 +349,10 @@ class BoardArea(Areas):
 
     def jouerIA(self):
         # TEST
-
         intwhoistoplay = 0 if self.whoistoplay == self.playerW else 1
         if self.whoistoplay.getHumanity():# A human is playing
-            self.self.joueurajouer = self.board.move(intwhoistoplay,self.coup_courant)
-            print( "Player White" if intwhoistoplay == 0 else"PLayer Black",self.coup_courant)
+            self.joueurajouer = self.board.move(intwhoistoplay,self.coup_courant)
+            print( "Player White" if intwhoistoplay == 0 else"PLayer Black",self.joueurajouer,self.coup_courant)
         else: # An AI is playing
             tic = time.time()
             self.coup_courant = self.whoistoplay.getMove()
@@ -361,10 +362,16 @@ class BoardArea(Areas):
             
             
         if self.joueurajouer:
+            if not self.whoistoplay.getHumanity():
+                self.apply_move_without_check(self.coup_courant)
             self.playerW.applyMove(intwhoistoplay,self.coup_courant)
             self.playerB.applyMove(intwhoistoplay,self.coup_courant)
             self.reset_working_data()
             self.swap_whoistoplay()
+
+            
+        else:
+            print("Move considered as illegal")
         
         for case in self.hc:
             self.delete(case)
@@ -476,6 +483,22 @@ class BoardArea(Areas):
                 else:
                     print('L\'IA a joué un coup jugé comme illégal pour faire le saut ',(a,b),(c,d))
                     break
+
+    def apply_move_without_check(self,move):
+        for p in self.wp:
+            if p.case_x == move[0][0] and p.case_y == move[0][1]:
+                pp = p
+                break
+        for p in self.bp:
+            if p.case_x == move[0][0] and p.case_y == move[0][1]:
+                pp = p
+                break
+            
+        x,y = self._plat2canv(move[-1][0],move[-1][1])
+        _ = pp.move(x,y)
+        pp.redraw()
+
+
                     
     def coup_legal(self,a,b,c,d):
         if (0<= a <= 7) and (0<= b <= 7) and (0<= c <= 7) and (0<= d <= 7):
@@ -629,13 +652,14 @@ class Board(Tk,Areas):
             self.__boardArea.jouerIA()
             self.AI_button_state = "pressed"
     
+        
     def release_jouerIA(self, event):
         ''' changes button appearance on release '''
         if self.AI_button_state == "pressed":
             # if the button is pressed, make the AI play and change the button to grayed
-            self.__controlArea.itemconfigure(self.AI_button, image=self.play_ai_icon_grayed)
+            self.__controlArea.itemconfigure(self.AI_button, image=self.play_ai_icon)
             self.__controlArea.update_idletasks()
-            self.AI_button_state = "grayed"
+            self.AI_button_state = "normal"
     
     def release_pawn(self, event):
         self.__boardArea.bouton1_relache(event)
@@ -643,6 +667,7 @@ class Board(Tk,Areas):
             # if human has moved a pawn, change the button from grayed to normal
             self.__controlArea.itemconfigure(self.AI_button, image=self.play_ai_icon)
             self.__controlArea.update_idletasks()
+            self.__controlArea.itemconfigure(self.AI_button, image=self.play_ai_icon)
             self.AI_button_state = "normal"
     
     def hover(self, button_name, event):
