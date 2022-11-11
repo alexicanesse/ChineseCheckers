@@ -20,7 +20,7 @@ UNAME := $(shell uname)
 
 PYTHON_SUB_VERSION = $(word 2, $(wordlist 2,4,$(subst ., ,$(shell python3 --version 2>&1))))
 
-OUT=./bin/ChineseCheckers.so
+OUT=./bin/libChineseCheckers.so
 CXXFLAGS= -Wno-unused-result -Wsign-compare -Wunreachable-code -fno-common -fwrapv -dynamic -O3 -I./include -I$(shell python3 -c "from sysconfig import get_paths as gp; print(gp()[\"include\"])") --std=c++20
 LDFLAGS=-lboost_python3$(PYTHON_SUB_VERSION)
 
