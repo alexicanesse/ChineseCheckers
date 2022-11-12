@@ -1,5 +1,6 @@
 [![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/6677/badge)](https://bestpractices.coreinfrastructure.org/projects/6677)
-
+[![Documentation](https://img.shields.io/badge/Documentation-githubpages-blue)](https://alexicanesse.github.io/ChineseCheckers/index.html)
+[![License](https://img.shields.io/badge/License-GPL--3.0%20license-ff69b4)](https://github.com/alexicanesse/ChineseCheckers/blob/main/LICENSE)
 # Chinese Checkers
 
 This is a python library to use a fast implementation of the chinese checkers in C++, a graphic interface in Python and various solvers. The version of the game is limited to the case where there are two players and two colors. We might extend it to the complete game latter on.
@@ -20,11 +21,11 @@ We used some codes of an original implementation made by a member of our group. 
 - [Acknowledgments](#acknowledgments)
 
 ## Building status
-| | **Architecture** | **Build** |
-|---|:---:|:---:|
-| **macOS**        | x86_64 |[![Build Status](https://ci.swift.org/job/oss-swift-package-macos/lastCompletedBuild/badge/icon)](https://ci.swift.org/job/oss-swift-package-macos)|
-| **Ubuntu 18.04** | x86_64 |[![Build Status](https://ci.swift.org/job/oss-swift-package-ubuntu-18_04/lastCompletedBuild/badge/icon)](https://ci.swift.org/job/oss-swift-package-ubuntu-18_04)|
-| **Ubuntu 22.04** | x86_64 |[![Build Status](https://ci.swift.org/job/oss-swift-package-ubuntu-22_04/lastCompletedBuild/badge/icon)](https://ci.swift.org/job/oss-swift-package-ubuntu-22_04)|
+| | **Architecture** |     **Build**     |
+|---|:---:|:-----------------:|
+| **macOS**        | x86_64 | ![Build Status](https://img.shields.io/badge/build-passing-success) |
+| **Ubuntu 18.04** | x86_64 | ![Build Status](https://img.shields.io/badge/build-failing-critical) |
+| **Ubuntu 22.04** | x86_64 | ![Build Status](https://img.shields.io/badge/build-passing-success) |
 
 
 
