@@ -31,11 +31,150 @@ class ChineseCheckersTest : public::testing::Test {
  * Each test suit correspond to a method. */
 
 /*
+ * Tests for new_game
+ */
+TEST(newGame, GridIsCorrecltyInitialized) {
+    /* Arrange */
+    ChineseCheckers cc;
+    GridType expectedValue
+            {{White , White, White, White, Empty, Empty, Empty, Empty},
+             {White , White, White, Empty, Empty, Empty, Empty, Empty},
+             {White , White, Empty, Empty, Empty, Empty, Empty, Empty},
+             {White , Empty, Empty, Empty, Empty, Empty, Empty, Empty},
+             {Empty , Empty, Empty, Empty, Empty, Empty, Empty, Black},
+             {Empty , Empty, Empty, Empty, Empty, Empty, Black, Black},
+             {Empty , Empty, Empty, Empty, Empty, Black, Black, Black},
+             {Empty , Empty, Empty, Empty, Black, Black, Black, Black}};
+
+    /* Act */
+    cc.move(0, {{0, 2}, {0, 4}});
+    cc.new_game();
+    GridType obtainedValue = cc.get_grid_();
+
+    /* Assert */
+    EXPECT_EQ(expectedValue, obtainedValue);
+}
+
+TEST(newGame, PositionColorsPlayersIsCorrecltyInitialized) {
+    /* Arrange */
+    ChineseCheckers cc;
+    std::vector<std::vector<PositionType>>
+            expectedValues {
+            {{7, 7}, {7, 6}, {7, 5}, {7, 4}, {6, 7},
+                    {6, 6}, {6, 5}, {5, 7}, {5, 6}, {4, 7}},
+            {{0, 0}, {0, 1}, {0, 2}, {0, 3}, {1, 0},
+                    {1, 1}, {1, 2}, {2, 0}, {2, 1}, {3, 0}}
+    };
+    /* Act */
+    cc.move(0, {{0, 2}, {0, 4}});
+    cc.new_game();
+    std::vector<std::vector<PositionType>> obtainedValues
+            = cc.get_position_colors_players_();
+    /* we sort the vectors to be able to compare them */
+    sort(obtainedValues.begin(), obtainedValues.end());
+    sort(expectedValues.begin(), expectedValues.end());
+
+    /* Assert */
+    EXPECT_EQ(expectedValues, obtainedValues);
+}
+
+
+
+/*
+ * Tests for get_grid_
+ */
+
+TEST(GetGrid, IsCorrecltyInitialized) {
+    /* Arrange */
+    ChineseCheckers cc;
+    GridType obtainedValue = cc.get_grid_();
+    GridType expectedValue
+            {{White , White, White, White, Empty, Empty, Empty, Empty},
+             {White , White, White, Empty, Empty, Empty, Empty, Empty},
+             {White , White, Empty, Empty, Empty, Empty, Empty, Empty},
+             {White , Empty, Empty, Empty, Empty, Empty, Empty, Empty},
+             {Empty , Empty, Empty, Empty, Empty, Empty, Empty, Black},
+             {Empty , Empty, Empty, Empty, Empty, Empty, Black, Black},
+             {Empty , Empty, Empty, Empty, Empty, Black, Black, Black},
+             {Empty , Empty, Empty, Empty, Black, Black, Black, Black}};
+
+    /* Act */
+
+    /* Assert */
+    EXPECT_EQ(expectedValue, obtainedValue);
+}
+
+TEST(GetGrid, IsCorrecltyChangedAfterAMove) {
+    /* Arrange */
+    ChineseCheckers cc;
+    GridType expectedValue
+            {{White , White, Empty, White, White, Empty, Empty, Empty},
+             {White , White, White, Empty, Empty, Empty, Empty, Empty},
+             {White , White, Empty, Empty, Empty, Empty, Empty, Empty},
+             {White , Empty, Empty, Empty, Empty, Empty, Empty, Empty},
+             {Empty , Empty, Empty, Empty, Empty, Empty, Empty, Black},
+             {Empty , Empty, Empty, Empty, Empty, Empty, Black, Black},
+             {Empty , Empty, Empty, Empty, Empty, Black, Black, Black},
+             {Empty , Empty, Empty, Empty, Black, Black, Black, Black}};
+
+    /* Act */
+    cc.move(0, {{0, 2}, {0, 4}});
+    GridType obtainedValue = cc.get_grid_();
+
+    /* Assert */
+    EXPECT_EQ(expectedValue, obtainedValue);
+}
+
+TEST(GetGrid, IsCorrecltyChangedAfterTwoMoves) {
+    /* Arrange */
+    ChineseCheckers cc;
+    GridType expectedValue
+            {{White , White, Empty, White, White, Empty, Empty, Empty},
+             {White , White, White, Empty, Empty, Empty, Empty, Empty},
+             {White , White, Empty, Empty, Empty, Empty, Empty, Empty},
+             {White , Empty, Empty, Empty, Empty, Empty, Empty, Black},
+             {Empty , Empty, Empty, Empty, Empty, Empty, Empty, Empty},
+             {Empty , Empty, Empty, Empty, Empty, Empty, Black, Black},
+             {Empty , Empty, Empty, Empty, Empty, Black, Black, Black},
+             {Empty , Empty, Empty, Empty, Black, Black, Black, Black}};
+
+    /* Act */
+    cc.move(0, {{0, 2}, {0, 4}});
+    cc.move(1, {{4, 7}, {3, 7}});
+    GridType obtainedValue = cc.get_grid_();
+
+
+    /* Assert */
+    EXPECT_EQ(expectedValue, obtainedValue);
+}
+
+TEST(GetGrid, IsCorrecltyChangedAfterIllegalMove) {
+    /* Arrange */
+    ChineseCheckers cc;
+    GridType expectedValue
+            {{White , White, White, White, Empty, Empty, Empty, Empty},
+             {White , White, White, Empty, Empty, Empty, Empty, Empty},
+             {White , White, Empty, Empty, Empty, Empty, Empty, Empty},
+             {White , Empty, Empty, Empty, Empty, Empty, Empty, Empty},
+             {Empty , Empty, Empty, Empty, Empty, Empty, Empty, Black},
+             {Empty , Empty, Empty, Empty, Empty, Empty, Black, Black},
+             {Empty , Empty, Empty, Empty, Empty, Black, Black, Black},
+             {Empty , Empty, Empty, Empty, Black, Black, Black, Black}};
+
+    /* Act */
+    cc.move(1, {{0, 2}, {0, 4}});
+    GridType obtainedValue = cc.get_grid_();
+
+    /* Assert */
+    EXPECT_EQ(expectedValue, obtainedValue);
+}
+
+
+/*
  * Tests for get_position_colors_players_
  */
 
-TEST(GetPositionColorPlayers,
-     get_position_colors_players_IsCorrecltyInitialized) {
+TEST(GetPositionColorPlayers, IsCorrecltyInitialized) {
     /* Arrange */
     ChineseCheckers cc;
     std::vector<std::vector<PositionType>> obtainedValues
@@ -56,8 +195,7 @@ TEST(GetPositionColorPlayers,
     EXPECT_EQ(expectedValues, obtainedValues);
 }
 
-TEST(GetPositionColorPlayers,
-     get_position_colors_players_IsCorrecltyChangedAfterAMove) {
+TEST(GetPositionColorPlayers, IsCorrecltyChangedAfterAMove) {
     /* Arrange */
     ChineseCheckers cc;
     std::vector<std::vector<PositionType>>
@@ -79,8 +217,7 @@ TEST(GetPositionColorPlayers,
     EXPECT_EQ(expectedValues, obtainedValues);
 }
 
-TEST(GetPositionColorPlayers,
-     get_position_colors_players_IsCorrecltyChangedAfterTwoMoves) {
+TEST(GetPositionColorPlayers, IsCorrecltyChangedAfterTwoMoves) {
     /* Arrange */
     ChineseCheckers cc;
     std::vector<std::vector<PositionType>>
@@ -103,8 +240,7 @@ TEST(GetPositionColorPlayers,
     EXPECT_EQ(expectedValues, obtainedValues);
 }
 
-TEST(GetPositionColorPlayers,
-     get_position_colors_players_IsCorrecltyChangedAfterIllegalMove) {
+TEST(GetPositionColorPlayers, IsCorrecltyChangedAfterIllegalMove) {
     /* Arrange */
     ChineseCheckers cc;
     std::vector<std::vector<PositionType>>
@@ -132,7 +268,7 @@ TEST(GetPositionColorPlayers,
  * Tests for get_who_is_to_play_()
  */
 
-TEST(GetWhoIsToPlay, get_who_is_to_play_IsSetToZero) {
+TEST(GetWhoIsToPlay, IsSetToZero) {
     /* Arrange */
     ChineseCheckers cc;
 
@@ -142,7 +278,7 @@ TEST(GetWhoIsToPlay, get_who_is_to_play_IsSetToZero) {
     EXPECT_EQ(cc.get_who_is_to_play_(), 0);
 }
 
-TEST(GetWhoIsToPlay, get_who_is_to_play_IsSetToOneAfterAMove) {
+TEST(GetWhoIsToPlay, IsSetToOneAfterAMove) {
     /* Arrange */
     ChineseCheckers cc;
 
@@ -153,7 +289,7 @@ TEST(GetWhoIsToPlay, get_who_is_to_play_IsSetToOneAfterAMove) {
     EXPECT_EQ(cc.get_who_is_to_play_(), 1);
 }
 
-TEST(GetWhoIsToPlay, get_who_is_to_play_IsSetToTwoAfterTwoMoves) {
+TEST(GetWhoIsToPlay, IsSetToTwoAfterTwoMoves) {
     /* Arrange */
     ChineseCheckers cc;
 
@@ -165,7 +301,7 @@ TEST(GetWhoIsToPlay, get_who_is_to_play_IsSetToTwoAfterTwoMoves) {
     EXPECT_EQ(cc.get_who_is_to_play_(), 1);
 }
 
-TEST(GetWhoIsToPlay, get_who_is_to_play_DoesntChangeWhenMoveIsIllegal) {
+TEST(GetWhoIsToPlay, DoesntChangeWhenMoveIsIllegal) {
     /* Arrange */
     ChineseCheckers cc;
 
