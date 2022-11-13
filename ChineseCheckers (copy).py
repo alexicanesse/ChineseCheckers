@@ -134,7 +134,8 @@ class BoardArea(Areas):
 
 
         #temporary data to use c++ olvers and test cod without changing the rest of the code
-        self.playerW = AI_cpp(depth = 3)
+        self.playerW =AI_cpp(depth = 3)
+        #self.playerW = AI_cpp(depth = 3)
         self.playerB = AI_cpp(depth = 3)
         
         
