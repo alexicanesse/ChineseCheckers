@@ -52,7 +52,6 @@ class ChineseCheckers {
      * A member returning the type of an elementary move
      * (not a succession of jumps).
      */
-#warning TODO include Maë s detail
     /*!
       \param original_position The position.
       \param arrival_position The arrival position.
@@ -61,7 +60,6 @@ class ChineseCheckers {
       \retval notJump if the elementary move realized was not a jump.
       \sa move(Player player, const ListOfPositionType &list_moves).
     */
-#warning TODO Benchmark Mae s implementation
     MoveType elementaryMove(PositionType original_position,
                             PositionType arrival_position);
     /*! \brief
