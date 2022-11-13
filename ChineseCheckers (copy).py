@@ -380,23 +380,7 @@ class BoardArea(Areas):
         for case in self.hc:
             self.delete(case)
         self.hc = []
-        
-        """
-        assert(self.joueurajouer)
-        tic = time.time()
-        temp = self.ia.joueralphabeta(depth = 3)
-        toc = time.time()
-        print("IA:",temp[1],'en ',toc-tic,'s')
-        self.appliquer_coup(temp[0],temp[1])
-        if (self.ia.couleur == 'white' and self.show_white_ar) \
-           or (self.ia.couleur == 'black' and self.show_black_ar):
-            self.show_arrows(temp[1], self.ia.couleur)
-        self.reset_working_data()
-        # de-highlight precedently highlighted cases
-        for case in self.hc:
-            self.delete(case)
-        self.hc = []
-        """
+
             
     def coups_possibles_a_supprimer(self,p,pospions):#TODO mettre dans Human()
         rep = []
