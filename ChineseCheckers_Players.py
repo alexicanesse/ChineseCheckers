@@ -3,12 +3,14 @@
 import numpy as np
 import random as random
 import bin.solvers.AlphaBeta as ab
+from typing import final
 
 
 class Player():
     def __init__(self,Humanity):
         self.__isHuman = Humanity
     
+    @final
     def getHumanity(self):
         return(self.__isHuman)
     
@@ -43,7 +45,7 @@ class AI_cpp(Player):
 class AI_python(Player):
     # TEST for the whole class
     def __init__(self,canevas,couleur):
-        super().init(False)
+        super().__init__(False)
         self.couleur = couleur
         self._canevas = canevas
         self.pions = canevas.bp if couleur == "black" else canevas.wp
