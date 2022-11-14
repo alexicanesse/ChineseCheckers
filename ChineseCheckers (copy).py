@@ -11,7 +11,7 @@ import time #TEST
 
 class Pion:
     
-    def __init__(self, canvas, x, y, color = "white"):
+    def __init__(self, canvas, x : float, y : float, color = "white"):
         self._color = color
         self._canvas = canvas
         self._item = canvas.create_oval(x - self._canvas.pawn_radius,
@@ -33,7 +33,7 @@ class Pion:
         c = "b" if self._color =="white" else "n"
         return(f"P{c}{self.case_x}{self.case_y}")
 
-    def set_xy(self, x, y):
+    def set_xy(self, x : float, y : float):
         self.x = x
         self.y = y
     
@@ -48,20 +48,20 @@ class Pion:
                                          outline="black",
                                          width=2)
         
-    def move_on_ui(self, dx, dy): 
+    def move_on_ui(self, dx : float, dy : float): 
         ''' moves the pawn on the UI '''
         self._canvas.move(self._item, dx, dy)
         self.x += dx
         self.y += dy
 
         
-    def is_in_case(self, i, j):
+    def is_in_case(self, i : int, j : int):
         return((i == self.case_x) and (j == self.case_y))
     
     def get_color(self):
         return(self._color)
     
-    def move(self,x,y):
+    def move(self,x : float,y : float):
         ''' moves the pawn '''
         ncase_x, ncase_y = self._canvas._canv2plat(x, y)
         xf, yf = self._canvas._plat2canv(ncase_x, ncase_y)
@@ -79,7 +79,7 @@ class Areas(Canvas):
 
 class BoardArea(Areas):
     
-    def __init__(self, parent, width, height, show_black_ar, show_white_ar, show_moves, playerW = Human(), playerB = Human()):
+    def __init__(self, parent, width : int, height : int, show_black_ar : bool, show_white_ar : bool, show_moves : bool, playerW = Human(), playerB = Human()):
         # initialization of the canvas
         assert(width == height)
         Canvas.__init__(self, parent, width=width, height=height, highlightthickness=0)
@@ -134,9 +134,8 @@ class BoardArea(Areas):
 
 
         #temporary data to use c++ olvers and test cod without changing the rest of the code
-        self.playerW =AI_cpp(depth = 3)
-        #self.playerW = AI_cpp(depth = 3)
-        self.playerB = AI_cpp(depth = 3)
+        self.playerW =AI_cpp(depth = 1)
+        self.playerB = AI_cpp(depth = 1)
         
         
         
@@ -180,19 +179,19 @@ class BoardArea(Areas):
         # TEST
         if self.__piece_courante != "" :
             ncase_x,ncase_y = self._canv2plat(event.x,event.y)
-            etude_coup = self.coup_legal(self.__piece_courante.case_x,self.__piece_courante.case_y,ncase_x,ncase_y)
+            etude_coup = self.elementaryMove(self.__piece_courante.case_x,self.__piece_courante.case_y,ncase_x,ncase_y)
             if ncase_x == self.pospioninit[0] and ncase_y == self.pospioninit[1]:
                 # dropped the pawn on the same case as before
                 
                 if self.show_moves: # Drawing of the reachable boxes
-                    possible_moves = self.coups_possibles_a_supprimer([self.__piece_courante.case_x,
+                    possible_moves = self.possible_moves([self.__piece_courante.case_x,
                                                                        self.__piece_courante.case_y],
-                                                                       self.pbpn2pospion_a_supprimer(self.wp, self.bp))
+                                                                       self.__pbpn2pospion(self.wp, self.bp))
                     self.highlight_cases(possible_moves)
                     self.show_arrows([], self.color) # erases drawn arrows
                 
                 self.__piece_courante.move(event.x,event.y) 
-                self.reset_working_data()
+                self.__reset_working_data()
             elif etude_coup != 'ilegal' and (self.coup_precedent =="" or (self.coup_precedent == "saut" and etude_coup == "saut")):
                 # wants to play a legal move
                 self.__piece_courante.move(event.x,event.y)
@@ -208,14 +207,14 @@ class BoardArea(Areas):
                 self.__piece_courante.move_on_ui(xf-self.__piece_courante.x,yf-self.__piece_courante.y)         
             
             
-    def reset_working_data(self):
+    def __reset_working_data(self):
         self.__piece_courante = ""
         self.joueurajouer = False
         self.pospioninit = (-1,-1)
         self.coup_precedent = ""
         self.coup_courant = []
     
-    def swap_whoistoplay(self):
+    def __swap_whoistoplay(self):
         if self.whoistoplay == self.playerW:
             self.whoistoplay = self.playerB
             self.movablePaws = self.bp
@@ -224,14 +223,14 @@ class BoardArea(Areas):
             self.movablePaws = self.wp
             
                         
-    def  _plat2canv(self,i,j):
+    def  _plat2canv(self,i : int,j : int):
         '''converts the coordinates of the board to pixels'''
         
         x = (i * self.case_width - j * self.case_height) / 2 + self.height / 2
         y = (-i * self.case_width - j * self.case_height) * np.sqrt(3) / 2 + self.height-self.case_height / 2
         return(x,y)
     
-    def _canv2plat(self,x,y):
+    def _canv2plat(self,x : float,y : float):
         '''the inverse function'''
         
         X = x - self.height / 2
@@ -250,7 +249,7 @@ class BoardArea(Areas):
                 x, y = self._plat2canv(i, j)
                 self.create_text(x, y, text=f"{i},{j}", fill="red", font=lfont)
     
-    def highlight_cases(self, l_moves):
+    def highlight_cases(self, l_moves : list):
         '''highlights the cases in the l_moves cases list'''
         
         for oval in self.hc:
@@ -267,7 +266,7 @@ class BoardArea(Areas):
                                  fill=self.HIGHLIGHT,
                                  outline=""))
     
-    def show_arrows(self, l_moves, color):
+    def show_arrows(self, l_moves : list, color : str):
         '''draw arrows between the cases in the l_moves cases list'''
         
         # deletes existing arrows
@@ -371,8 +370,8 @@ class BoardArea(Areas):
                 self.show_arrows(self.coup_courant, "white")
             elif intwhoistoplay == 1 and self.show_black_ar: 
                 self.show_arrows(self.coup_courant, "black")
-            self.reset_working_data()
-            self.swap_whoistoplay()
+            self.__reset_working_data()
+            self.__swap_whoistoplay()
 
             
         else:
@@ -383,7 +382,7 @@ class BoardArea(Areas):
         self.hc = []
 
             
-    def coups_possibles_a_supprimer(self,p,pospions):#TODO mettre dans Human()
+    def possible_moves(self,p : list,pospions):
         rep = []
         nb_non_sauts = 0
         for a,b in [(1,0),(0,1),(-1,0),(0,-1),(1,-1),(-1,1)]:
@@ -432,7 +431,7 @@ class BoardArea(Areas):
         pospions[p[0],p[1]] = True
         return(rep)
     
-    def pbpn2pospion_a_supprimer(self,wp,bp):
+    def __pbpn2pospion(self,wp : list,bp : list):
         pospion = np.empty((8,8), dtype = 'bool')
         pospion.fill(False)
         pb, pn = [], []
@@ -446,34 +445,10 @@ class BoardArea(Areas):
         for a,b in pn:
             pospion[a,b] = True
         return(pospion)
-       
-    def piece_dans_case(self,i,j):
-        for p in self.wp:
-            if p.is_in_case(i,j) :
-                return(True)
-        for p in self.bp:
-            if p.is_in_case(i,j) :
-                return(True)
-        return(False)
     
-    def appliquer_coup(self,p,l):
-        if p.case_x == l[0][0] and p.case_y == l[0][1]:
-            for i in range(1,len(l)):
-                a,b =l[i-1]
-                c,d = l[i]
-                
-                test = self.coup_legal(a,b,c,d)
-                if test != "ilegal":
-                    x,y = self._plat2canv(c,d)
-                    _ = p.move(x,y)
-                    p.redraw()
-                    if test == "non saut":
-                        break
-                else:
-                    print('L\'IA a joué un coup jugé comme illégal pour faire le saut ',(a,b),(c,d))
-                    break
 
-    def apply_move_without_check(self,move):
+    def apply_move_without_check(self,move : list):
+        ''' Apply move on screen'''
         for p in self.wp:
             if p.case_x == move[0][0] and p.case_y == move[0][1]:
                 pp = p
@@ -489,7 +464,8 @@ class BoardArea(Areas):
 
 
                     
-    def coup_legal(self,a,b,c,d):
+    def elementaryMove(self,a : int,b : int,c : int,d : int):
+        ''' Check legality of an elementary move'''
         if (0<= a <= 7) and (0<= b <= 7) and (0<= c <= 7) and (0<= d <= 7):
             if ((c-a)*(d-b) == 0) or ((d-b)/(c-a)==-1):
                 rep = (abs(a-c+b-d) <= 1) and (abs(a-c) +abs(b-d) <= 2)
@@ -521,7 +497,35 @@ class BoardArea(Areas):
                 return('ilegal')
         else:
             return('ilegal')
-    # TODO ajouter classe Human() pour regrouper les fonctions permettant de jouer manuellement
+
+        #Unused
+    def piece_dans_case(self,i : int,j : int):
+        for p in self.wp:
+            if p.is_in_case(i,j) :
+                return(True)
+        for p in self.bp:
+            if p.is_in_case(i,j) :
+                return(True)
+        return(False)
+    
+    # Unused
+    def appliquer_coup(self,p,l):
+        if p.case_x == l[0][0] and p.case_y == l[0][1]:
+            for i in range(1,len(l)):
+                a,b =l[i-1]
+                c,d = l[i]
+                
+                test = self.elementaryMove(a,b,c,d)
+                if test != "ilegal":
+                    x,y = self._plat2canv(c,d)
+                    _ = p.move(x,y)
+                    p.redraw()
+                    if test == "non saut":
+                        break
+                else:
+                    print('L\'IA a joué un coup jugé comme illégal pour faire le saut ',(a,b),(c,d))
+                    break
+
 
 
 class Board(Tk,Areas):
