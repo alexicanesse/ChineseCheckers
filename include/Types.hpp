@@ -15,8 +15,10 @@
 #ifndef INCLUDE_TYPES_HPP_
 #define INCLUDE_TYPES_HPP_
 
-
 #include <vector>
+
+/* The number of time a grid state can be seen before settling for a draw */
+#define MAX_NUMBER_OF_CYCLES_FOR_DRAW_ 3
 
 /*! \enum Color
     \brief Used to denote the colors.

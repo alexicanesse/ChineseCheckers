@@ -29,8 +29,6 @@
 /* Other */
 #include <Types.hpp>
 
-/* The number of time a grid state can be seen before settling for a draw */
-#define MAX_NUMBER_OF_CYCLES_FOR_DRAW_ 3
 
 MoveType ChineseCheckers::elementaryMove(PositionType original_position,
                                          PositionType arrival_position) {
