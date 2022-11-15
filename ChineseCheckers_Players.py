@@ -7,14 +7,14 @@ from typing import final
 
 
 class Player():
-    def __init__(self,Humanity):
+    def __init__(self,Humanity : bool):
         self.__isHuman = Humanity
     
     @final
     def getHumanity(self):
         return(self.__isHuman)
     
-    def applyMove(self,intwhoistoplay,move):
+    def applyMove(self,intwhoistoplay : int,move : list):
         pass
     
     def getMove(self):
@@ -32,7 +32,7 @@ class AI_cpp(Player):
         self.__solver = ab.Solver()
         self.depth = depth
         
-    def applyMove(self,intwhoistoplay,move):
+    def applyMove(self,intwhoistoplay : int,move : list):
         self.__solver.move(intwhoistoplay,move)
     
     def getMove(self):
@@ -44,7 +44,7 @@ class AI_cpp(Player):
 
 class AI_python(Player):
     # TEST for the whole class
-    def __init__(self,canevas,couleur):
+    def __init__(self,canevas,couleur : str):
         super().__init__(False)
         self.couleur = couleur
         self._canevas = canevas
