@@ -404,12 +404,13 @@ int AlphaBeta::evaluate(Player player) {
     switch (player) {
         case 0: /* White */
             for (const PositionType &pown : position_colors_players_[0])
-                result += 14 - pown[0] - pown[1];
+                result += (7 - pown[0])*(7 - pown[0])
+                        + (7 - pown[1])*(7 - pown[1]);
             break;
 
         case 1: /* black */
             for (const PositionType &pown : position_colors_players_[1])
-                result += pown[0] + pown[1];
+                result += pown[0]*pown[0] + pown[1]*pown[1];
             break;
 
         default:
@@ -417,7 +418,7 @@ int AlphaBeta::evaluate(Player player) {
     }
     return result;
 }
-
+#warning use inf
 ListOfPositionType AlphaBeta::getMove(int depth, double alpha, double beta) {
     this->maximizing_player_ = this->who_is_to_play_;
     AlphaBetaEval(depth, alpha, beta, false, true);
@@ -459,70 +460,109 @@ int AlphaBeta::AlphaBetaEval(const int depth,
     /* The state is not a termination node */
     int value = 0;
     ListOfMoves possible_moves = this->availableMoves(this->who_is_to_play_);
+#warning rename moveType
+/*    if (keepMove) {
+        auto compFunc = [this](ListOfPositionType a,
+                ListOfPositionType b) {
+            double valueA = 0;
+            double valueB = 0;
+            switch (maximizing_player_) {
+                case 0:
+                    valueA = (7 - a.back()[0])*(7 - a.back()[0])
+                              + (7 - a.back()[1])*(7 - a.back()[1]);
+                    valueA -= (7 - a.front()[0])*(7 - a.front()[0])
+                              + (7 - a.front()[1])*(7 - a.front()[1]);
 
-    /* keeping state to restore to after applying temp moves */
-    std::map<GridType, int> temp_number_of_times_seen =
-            this->number_of_times_seen;
-    Player temp_who_is_to_play_ = this->who_is_to_play_;
-    GridType temp_grid_ = this->grid_;
-    std::vector<std::vector<PositionType>> temp_position_colors_players_
-            = this->position_colors_players_;
+                    valueB = (7 - b.back()[0])*(7 - b.back()[0])
+                             + (7 - b.back()[1])*(7 - b.back()[1]);
+                    valueB -= (7 - b.front()[0])*(7 - b.front()[0])
+                              + (7 - b.front()[1])*(7 - b.front()[1]);
+                    break;
+            }
+
+            return valueA < valueB;
+        };
+
+        std::sort(possible_moves.begin(), possible_moves.end(), compFunc);
+    }*/
+
 
     ListOfPositionType best_move;
     if (maximizingPlayer) {
         value = -100000; /* -\infty */
         for (const ListOfPositionType &move : possible_moves) {
-            /* restore to current game state */
-            this->number_of_times_seen = temp_number_of_times_seen;
-            this->who_is_to_play_ = temp_who_is_to_play_;
-            this->grid_ = temp_grid_;
-            this->position_colors_players_ = temp_position_colors_players_;
-
             this->moveWithoutVerification(this->who_is_to_play_, move);
             int buff = AlphaBetaEval(depth - 1,
                                      alpha,
                                      beta,
                                      !maximizingPlayer,
                                      false);
+
+            --this->number_of_times_seen.at(this->grid_);
+            this->who_is_to_play_ = 1 - this->who_is_to_play_;
+            this->grid_[move.back()[0]][move.back()[1]] = Empty;
+            this->grid_[move.front()[0]][move.front()[1]]
+                    = (Color) (this->who_is_to_play_ + 1);
+            for (int i = 0; i < 10; ++i) {
+                if (this->position_colors_players_[this->who_is_to_play_][i][0]
+                == move.back()[0]
+                && this->position_colors_players_[this->who_is_to_play_][i][1]
+                        == move.back()[1]) {
+                    this->position_colors_players_[this->who_is_to_play_][i][0]
+                    = move.front()[0];
+                    this->position_colors_players_[this->who_is_to_play_][i][1]
+                    = move.front()[1];
+                    break;
+                }
+            }
+
+
+            alpha = std::max(alpha, static_cast<double>(buff));
             if (buff >= value) {
                 value = buff;
                 best_move = move;
                 if (value >= beta)
                     break; /* beta cutoff */
             }
-            alpha = std::max(alpha, static_cast<double>(value));
         }
     } else {
         value = 100000; /* +\infty */
         /* For each possible move */
         for (const ListOfPositionType &move : possible_moves) {
-            /* restore to current game state */
-            this->number_of_times_seen = temp_number_of_times_seen;
-            this->who_is_to_play_ = temp_who_is_to_play_;
-            this->grid_ = temp_grid_;
-            this->position_colors_players_ = temp_position_colors_players_;
-
             this->moveWithoutVerification(this->who_is_to_play_, move);
             int buff = AlphaBetaEval(depth - 1,
                                      alpha,
                                      beta,
                                      !maximizingPlayer,
                                      false);
+
+            --this->number_of_times_seen.at(this->grid_);
+            this->who_is_to_play_ = 1 - this->who_is_to_play_;
+            this->grid_[move.back()[0]][move.back()[1]] = Empty;
+            this->grid_[move.front()[0]][move.front()[1]]
+                    = (Color) (this->who_is_to_play_ + 1);
+            for (int i = 0; i < 10; ++i) {
+                if (this->position_colors_players_[this->who_is_to_play_][i][0]
+                == move.back()[0]
+                && this->position_colors_players_[this->who_is_to_play_][i][1]
+                        == move.back()[1]) {
+                    this->position_colors_players_[this->who_is_to_play_][i][0]
+                    = move.front()[0];
+                    this->position_colors_players_[this->who_is_to_play_][i][1]
+                    = move.front()[1];
+                }
+            }
+
+            beta = std::min(beta, static_cast<double>(buff));
             if (buff <= value) {
                 value = buff;
                 best_move = move;
                 if (value <= alpha)
                     break; /* alpha cutoff */
             }
-            beta = std::min(beta, static_cast<double>(value));
         }
     }
 
-    /* restore to current game state */
-    this->number_of_times_seen = temp_number_of_times_seen;
-    this->who_is_to_play_ = temp_who_is_to_play_;
-    this->grid_ = temp_grid_;
-    this->position_colors_players_ = temp_position_colors_players_;
 
     /* set the best move if asked to */
     if (keepMove)
