@@ -85,7 +85,7 @@ $(OUTALPHABETA): $(OFILESALPHABETA)
 	
 ./objects/%.o: ./solvers/AlphaBeta/src/%.cpp | $(DIRECTORIES)
 	@echo "${PURPLE}Building CXX object" $@ "${RESET}"
-	@$(CXX) -o $@ -c $< $(CXXFLAGS) -I./solvers/AlphaBeta/include/
+	@$(CXX) -o $@ -c $< $(CXXFLAGS) -I./solvers/AlphaBeta/include/ -I./include/
 	
 
 
