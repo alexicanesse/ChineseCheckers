@@ -24,7 +24,7 @@ class Board(Tk,Areas):
         assert(width >= height) # we want the window to be wider than tall to fit buttons on the right
         
         # Initializing the scene
-        self.title("ACABette")
+        self.title("Chinese Checkers")
         screen_height = self.winfo_screenheight()
         screen_width = self.winfo_screenwidth()
         window_x = (screen_width - width) / 2
@@ -55,8 +55,10 @@ class Board(Tk,Areas):
         self.__parametersArea.pack(side=LEFT, padx=0, fill=BOTH, expand=YES)
 
         # Initializing the board
-        init_states = [True, True, False]
-        self.__boardArea = BoardArea(self, board_side, board_side, init_states, "Human", "Human")
+        init_states = [True,True,True, True, False]
+        self.solverWisAI = init_states[0]
+        self.solverBisAi = init_states[1]
+        self.__boardArea = BoardArea(self, board_side, board_side, init_states, "C++ AI" if self.solverWisAI else "Human", "C++ AI" if self.solverBisAi else "Human")
         self.__boardArea.addtag_all("all")
         self.__boardArea.pack(padx=0, side=LEFT, fill=BOTH)
         
@@ -70,7 +72,7 @@ class Board(Tk,Areas):
         self.BUTTONS_WIDTH = parameters_width / 1.1
         self.BUTTONS_HEIGHT = height / 25
 
-        texts = ["Show arrows for\nwhite player moves",
+        texts = ["Player White is AI","Player Black is AI","Show arrows for\nwhite player moves",
                 "Show arrows for\nblack player moves",
                 "Show possible moves\nwhen clicking on a pawn"]
         N_buttons = len(texts)
@@ -204,15 +206,19 @@ class Board(Tk,Areas):
         assert(old_state == "hoff" or old_state == "hon") # the button must be highlighted
 
         self.parameters_buttons[i]["state"] = "hoff" if old_state == "hon" else "hon"
-        if i == 0: # show white arrows button
+        if i == 0:
+            self.solverWisAI = not(self.solverWisAI)
+        elif i == 1:
+            self.solverBisAI = not(self.solverBisAi )
+        elif i == 0: # show white arrows button
             self.__boardArea.set_parameter("show_white_ar", not self.__boardArea.show_white_ar)
             if not self.__boardArea.show_white_ar:
                 self.__boardArea.show_arrows([], "white") # removes existing arrows
-        if i == 1: # show black arrows button
+        elif i == 1: # show black arrows button
             self.__boardArea.set_parameter("show_black_ar", not self.__boardArea.show_black_ar)
             if not self.__boardArea.show_black_ar:
                 self.__boardArea.show_arrows([], "black") # removes existing arrows
-        if i == 2: # show moves button
+        elif i == 2: # show moves button
             self.__boardArea.set_parameter("show_moves", not self.__boardArea.show_moves)
             if not self.__boardArea.show_moves:
                 self.__boardArea.highlight_cases([]) # removes existing highlighted cases
