@@ -8,6 +8,9 @@ class Board(Tk,Areas):
     def __init__(self, width, height):
 
         # TODO :
+        # [DONE] fix cross centering when resizing
+        # [DONE] fix black pawn position when resized
+        # [DONE] fix plot2canv bizarre behavior when resizing
         # [DONE] activate arrows by default
         # [DONE] fix arrow color 
         # add player choice in the UI
@@ -35,8 +38,6 @@ class Board(Tk,Areas):
         print(f"screen is {screen_width}x{screen_height}, putting window at ({window_x},{window_y})")
         self.geometry(f"{width}x{height}+{int(window_x)}+{int(window_y)}")
         self.aspect(width, height, width, height) # Keep the aspect ratio fixed when user resizes
-        MIN_WIDTH = 1300 
-        self.minsize(MIN_WIDTH, MIN_WIDTH * int(height/width))
 
         # constants for the sizes of buttons and canvas
         self.AI_BUTTON_RATIO = 1.1
@@ -56,7 +57,7 @@ class Board(Tk,Areas):
 
         # Initializing the board
         init_states = [True, True, False]
-        self.__boardArea = BoardArea(self, board_side, board_side, init_states, "Human", "Human")
+        self.__boardArea = BoardArea(self, board_side, init_states, "C++ AI", "Human")
         self.__boardArea.addtag_all("all")
         self.__boardArea.pack(padx=0, side=LEFT, fill=BOTH)
         
@@ -75,8 +76,7 @@ class Board(Tk,Areas):
                 "Show possible moves\nwhen clicking on a pawn"]
         N_buttons = len(texts)
         start = - 2 * N_buttons + 1 / 2
-        self.RECT_THICKNESS_RATIO = 350
-        w = height / self.RECT_THICKNESS_RATIO # width of rectangle lines
+        w = height / 350 # width of rectangle lines
         for i in range(N_buttons):
             new_button = self.__parametersArea.create_rectangle(
                                                 (parameters_width - self.BUTTONS_WIDTH) // 2,
@@ -115,6 +115,8 @@ class Board(Tk,Areas):
                                         "hitbox": new_hitbox,
                                         "cross": new_cross
                                     })
+        self.CROSS_OFFSET = int(self.__parametersArea.coords(self.parameters_buttons[0]["cross"])[0] \
+                            - (parameters_width - self.BUTTONS_WIDTH) // 2 - w // 2)
         
         
         # "PLAY" button
@@ -284,10 +286,9 @@ class Board(Tk,Areas):
                 self.__parametersArea.moveto(self.parameters_buttons[i]["hitbox"],
                                             (parameters_width - self.BUTTONS_WIDTH) // 2,
                                             (event.height + (4 * i + start) * self.BUTTONS_HEIGHT) // 2)
-                offset = (self.BUTTONS_HEIGHT // 2 - int(self.BUTTONS_HEIGHT / (2 * math.sqrt(2)))) // 2
                 self.__parametersArea.moveto(self.parameters_buttons[i]["cross"],
-                                            (parameters_width - self.BUTTONS_WIDTH) // 2 + offset,
-                                            (event.height + (4 * i + start) * self.BUTTONS_HEIGHT) // 2 + offset)
+                                            (parameters_width - self.BUTTONS_WIDTH) // 2 + self.CROSS_OFFSET,
+                                            (event.height + (4 * i + start) * self.BUTTONS_HEIGHT) // 2 + self.CROSS_OFFSET)
             self.__parametersArea.update_idletasks()
             self.__controlArea.update_idletasks()
 
