@@ -42,6 +42,10 @@ OUTUNITESTS = ./bin/unittests.out
 CXXFILESUNITTESTS = ./src/ChineseCheckers_unittest.cpp
 OFILESUNITTESTS = $(patsubst ./src/%.cpp, ./objects/%.o, $(CXXFILESUNITTESTS))
 
+OUTBENCHMARKS = ./bin/benchmarks.out
+CXXFILESBENCHMARKS = ./src/ChineseCheckers_benchmark.cpp
+OFILESBENCHMARKS = $(patsubst ./src/%.cpp, ./objects/%.o, $(CXXFILESBENCHMARKS))
+
 DIRECTORIES = ./objects ./bin ./bin/solvers
 
 ####Main library
@@ -85,7 +89,7 @@ $(OUTALPHABETA): $(OFILESALPHABETA)
 	
 ./objects/%.o: ./solvers/AlphaBeta/src/%.cpp | $(DIRECTORIES)
 	@echo "${PURPLE}Building CXX object" $@ "${RESET}"
-	@$(CXX) -o $@ -c $< $(CXXFLAGS) -I./solvers/AlphaBeta/include/
+	@$(CXX) -o $@ -c $< $(CXXFLAGS) -I./solvers/AlphaBeta/include/ -I./include/
 	
 
 
@@ -101,6 +105,24 @@ $(OUTUNITESTS): $(OFILESUNITTESTS)
 $(OFILESUNITTESTS): $(CXXFILESUNITTESTS)
 	@echo "${PURPLE}Building CXX object" $@ "${RESET}"
 	@$(CXX) -o $@ -c $< $(CXXFLAGS) -I./include/
+
+
+####Benchmarks
+.PHONY: benchmarks
+benchmarks: $(OUT) $(OUTBENCHMARKS)
+	@echo "${DARKBLUE}Running benchmarks${RESET}"
+	@./bin/benchmarks.out --benchmark_repetitions=10 --benchmark_report_aggregates_only=false
+
+$(OUTBENCHMARKS): $(OFILESBENCHMARKS)
+	@echo "${BLUE}Linking banchmarks${RESET}"
+	@$(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS) -pthread -Wl,-rpath,./bin -Lbin -lChineseCheckers -lbenchmark $(shell python3-config --embed --ldflags)
+
+$(OFILESBENCHMARKS): $(CXXFILESBENCHMARKS)
+	@echo "${PURPLE}Building CXX object" $@ "${RESET}"
+	@$(CXX) -o $@ -c $< $(CXXFLAGS) -I./include/
+
+
+
 
 
 ####Cleaning
