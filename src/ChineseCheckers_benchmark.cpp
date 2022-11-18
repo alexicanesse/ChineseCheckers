@@ -23,7 +23,7 @@
 #include <Types.hpp>
 
 
-static void BM_SomeFunction(benchmark::State& state) {
+static void BM_SomeFunction(benchmark::State &state) {
     // Perform setup here
     std::vector<int> test(10000, 0);
 

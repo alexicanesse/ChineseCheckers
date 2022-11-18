@@ -22,7 +22,7 @@ UNAME := $(shell uname)
 PYTHON_SUB_VERSION = $(word 2, $(wordlist 2,4,$(subst ., ,$(shell python3 --version 2>&1))))
 
 CXXFLAGS= -Wno-unused-result -Wsign-compare -Wunreachable-code -fno-common -fwrapv -dynamic -O3 -I./include -I$(shell python3 -c "from sysconfig import get_paths as gp; print(gp()[\"include\"])") --std=c++20
-LDFLAGS=-lboost_python310
+LDFLAGS=-lboost_python3$(PYTHON_SUB_VERSION)
 
 ifneq ($(UNAME), Darwin)
     CXXFLAGS += -lpython3 -fPIC
@@ -50,8 +50,8 @@ DIRECTORIES = ./objects ./bin ./bin/solvers
 
 ####Main library
 all: $(DIRECTORIES) $(OUT) AlphaBeta unittests
-	@echo "${BLUE}Checking if the C++ code respects Google's conventions${RESET}"
-	@cpplint ./src/* ./include/* > /dev/null
+	@echo "${BLUE}Checking if the C++ library code respects Google's conventions${RESET}"
+	@cpplint $(CXXFILES) ./include/* > /dev/null
 	@echo "${DARKBLUE}Running unit tests${RESET}"
 	@./bin/unittests.out
 
@@ -97,6 +97,8 @@ $(OUTALPHABETA): $(OFILESALPHABETA)
 ####Unit tests
 .PHONY: unittests
 unittests: $(OUT) $(OUTUNITESTS)
+	@echo "${BLUE}Checking if the C++ lunit tests code respects Google's conventions${RESET}"
+	@cpplint $(CXXFILESUNITTESTS) ./include/* > /dev/null
 
 $(OUTUNITESTS): $(OFILESUNITTESTS)
 	@echo "${BLUE}Linking unit tests${RESET}"
@@ -111,7 +113,7 @@ $(OFILESUNITTESTS): $(CXXFILESUNITTESTS)
 .PHONY: benchmarks
 benchmarks: $(OUT) $(OUTBENCHMARKS)
 	@echo "${DARKBLUE}Running benchmarks${RESET}"
-	@./bin/benchmarks.out --benchmark_repetitions=10 --benchmark_report_aggregates_only=false
+	@./bin/benchmarks.out --benchmark_repetitions=10 --benchmark_report_aggregates_only=true
 
 $(OUTBENCHMARKS): $(OFILESBENCHMARKS)
 	@echo "${BLUE}Linking banchmarks${RESET}"
