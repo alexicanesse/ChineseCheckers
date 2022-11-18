@@ -3,6 +3,96 @@ import math
 from ChineseCheckers_Areas import *
 from ChineseCheckers_Board import *
 
+class Checkboxes(Areas):
+    # for the parameter checkboxes on the left
+    def __init__(self, parent : Canvas, width : int, height : int, x : int, y : int, text, board, state = "off"): # /7 for thickness
+        assert(state == "on" or state == "off")
+        w = height / 14
+        self.parent = parent
+        self.box = parent.create_rectangle(x, y, x + height, y + height, fill="", width=w, outline=self.get_color("white"))
+        self.cross = self.create_cross(parent, x + height // 2, y + height // 2, height // 4, 
+                                        w, self.get_color("white") if state == "on" else "")
+        self.text = parent.create_text(x + 3 * height // 2, y - height // 4, text=text,
+                                        fill=self.get_color("white"), font=self.get_font(16), justify=LEFT, anchor="nw")
+        self.hitbox = parent.create_rectangle(x, y, x + width, y + height, fill="", outline="")
+        
+        self.state = state # can be hoff, hon, off, on
+        self.width = width
+        self.height = height
+        self.board = board
+        self.cross_offset = int(self.parent.coords(self.cross)[0] - x) - w // 2
+        
+    
+    def create_cross(self, canvas : Canvas, x : int, y : int, side : int, w : int, color):
+        '''draws a cross centered in x, y, with thickness w'''
+        offset = math.sqrt(2) * side
+        points = (x - offset, y - offset, x, y, \
+                x + offset, y - offset, x, y, \
+                x + offset, y + offset, x, y, \
+                x - offset, y + offset, x, y)
+        return canvas.create_polygon(points, width=w, outline=color, fill="")
+
+    
+    def moveto(self, x, y):
+        '''moves the button on the ui'''
+        self.parent.moveto(self.box, x, y)
+        self.parent.moveto(self.text, x + 3 * self.height // 2, y - self.height // 4)
+        self.parent.moveto(self.hitbox, x, y)
+        self.parent.moveto(self.cross, x + self.cross_offset, y + self.cross_offset)
+    
+    def bind(self, event, i):
+        if event == "<Button-1>":
+            self.parent.tag_bind(self.hitbox, "<Button-1>", lambda event : self.click_param(i, event))
+        elif event == "<Enter>":
+            self.parent.tag_bind(self.hitbox, "<Enter>", lambda event : self.set_state("h" + self.state))
+        elif event == "<Leave>":
+            self.parent.tag_bind(self.hitbox, "<Leave>", lambda event : self.set_state(self.state[1:]))
+        else:
+            print(f"Unknown event {event}")
+
+    
+    def click_param(self, i, event):
+        old_state = self.state
+        assert(old_state == "hoff" or old_state == "hon") # the button must be highlighted to be clicked
+
+        self.set_state("hoff" if old_state == "hon" else "hon")
+        if i == 0: # show white arrows button
+            self.board.set_parameter("show_white_ar", not self.board.show_white_ar)
+            if not self.board.show_white_ar:
+                self.board.show_arrows([], "white") # removes existing arrows
+        elif i == 1: # show black arrows button
+            self.board.set_parameter("show_black_ar", not self.board.show_black_ar)
+            if not self.board.show_black_ar:
+                self.board.show_arrows([], "black") # removes existing arrows
+        elif i == 2: # show moves button
+            self.board.set_parameter("show_moves", not self.board.show_moves)
+            if not self.board.show_moves:
+                self.board.highlight_cases([]) # removes existing highlighted cases
+
+    
+    def set_state(self, state):
+        '''change state & modify the appearance of the button to match its new state'''
+        if self.state == state:
+            return
+        if state[0] == self.state[0]: # color does not change
+            if state == "hoff" or state == "off":
+                color = ""
+            elif state == "hon":
+                color = self.get_color("dark")
+            else:
+                color = self.get_color("white")
+            self.parent.itemconfigure(self.cross, outline=color)
+        else:
+            color = self.get_color("white") if state[0] != "h" else self.get_color("dark")
+            if state[-2:] == "on": # make the cross visible
+                self.parent.itemconfigure(self.cross, outline=color)
+            self.parent.itemconfigure(self.box, outline=color)
+            self.parent.itemconfigure(self.text, fill=color)
+
+        self.state = state
+        self.parent.update_idletasks()
+
+
 class Board(Tk,Areas):
 
     def __init__(self, width, height):
@@ -13,6 +103,7 @@ class Board(Tk,Areas):
         # [DONE] fix plot2canv bizarre behavior when resizing
         # [DONE] activate arrows by default
         # [DONE] fix arrow color 
+        # gray buttons to choose players during game
         # add player choice in the UI
         # re do "Play AI" button
         # [DONE] split this file into several
@@ -22,6 +113,7 @@ class Board(Tk,Areas):
         # fix a bug where cancelling a move (human side) doesn't gray out the "Play AI" button
         # clean code
         # cancel current move as human
+        # change player when playing ?
 
         Tk.__init__(self)
         assert(width >= height) # we want the window to be wider than tall to fit buttons on the right
@@ -56,10 +148,8 @@ class Board(Tk,Areas):
         self.__parametersArea.pack(side=LEFT, padx=0, fill=BOTH, expand=YES)
 
         # Initializing the board
-        init_states = [True,True,True, True, False]
-        self.solverWisAI = init_states[0]
-        self.solverBisAi = init_states[1]
-        self.__boardArea = BoardArea(self, board_side, board_side, init_states, "C++ AI" if self.solverWisAI else "Human", "C++ AI" if self.solverBisAi else "Human")
+        init_states = [True, True,False]
+        self.__boardArea = BoardArea(self, board_side, init_states, "C++ AI", "Human")
         self.__boardArea.addtag_all("all")
         self.__boardArea.pack(padx=0, side=LEFT, fill=BOTH)
         
@@ -69,56 +159,26 @@ class Board(Tk,Areas):
         self.__controlArea.pack(side=LEFT, padx=0, fill=BOTH, expand=YES)
         
         # create buttons
-        self.parameters_buttons = [] # will store the parameters buttons
+        self.p_buttons = [] # will store the parameters buttons
         self.BUTTONS_WIDTH = parameters_width / 1.1
         self.BUTTONS_HEIGHT = height / 25
 
-        texts = ["Player White is AI","Player Black is AI","Show arrows for\nwhite player moves",
+        texts = ["Show arrows for\nwhite player moves",
                 "Show arrows for\nblack player moves",
                 "Show possible moves\nwhen clicking on a pawn"]
         N_buttons = len(texts)
+        assert(N_buttons == len(init_states))
         start = - 2 * N_buttons + 1 / 2
-        w = height / 350 # width of rectangle lines
         for i in range(N_buttons):
-            new_button = self.__parametersArea.create_rectangle(
-                                                (parameters_width - self.BUTTONS_WIDTH) // 2,
-                                                (height + (4 * i + start) * self.BUTTONS_HEIGHT) // 2,
-                                                (parameters_width - self.BUTTONS_WIDTH + 2 * self.BUTTONS_HEIGHT) // 2,
-                                                (height + (4 * i + start + 2) * self.BUTTONS_HEIGHT) // 2,
-                                                fill="",
-                                                width=w,
-                                                outline=self.get_color("white"))
-            new_cross = self.create_cross(self.__parametersArea,
-                                                (parameters_width - self.BUTTONS_WIDTH + self.BUTTONS_HEIGHT) // 2,
-                                                (height + (4 * i + start + 1) * self.BUTTONS_HEIGHT) // 2,
-                                                self.BUTTONS_HEIGHT // 4,
-                                                w,
-                                                self.get_color("white") if init_states[i] else "")
-            new_text = self.__parametersArea.create_text(
-                                                (parameters_width - self.BUTTONS_WIDTH + 3 * self.BUTTONS_HEIGHT) // 2,
-                                                (height + (4 * i + start - 0.7) * self.BUTTONS_HEIGHT) // 2,
-                                                text=texts[i],
-                                                fill=self.get_color("white"),
-                                                font=self.get_font(16),
-                                                justify=LEFT,
-                                                anchor="nw")
-            new_hitbox = self.__parametersArea.create_rectangle(
-                                                (parameters_width - self.BUTTONS_WIDTH) // 2,
-                                                (height + (4 * i + start) * self.BUTTONS_HEIGHT) // 2,
-                                                (parameters_width + self.BUTTONS_WIDTH) // 2,
-                                                (height + (4 * i + start + 2) * self.BUTTONS_HEIGHT) // 2,
-                                                fill="", # make the hitbox invisible
-                                                outline="")
-            # first coordinate : the button. Second : its state. Third : its associated text. Fourth : hitbox
-            self.parameters_buttons.append({
-                                        "button": new_button,
-                                        "state": "on" if init_states[i] else "off", # can be "on", "off", "hon" or "hoff"
-                                        "text": new_text,
-                                        "hitbox": new_hitbox,
-                                        "cross": new_cross
-                                    })
-        self.CROSS_OFFSET = int(self.__parametersArea.coords(self.parameters_buttons[0]["cross"])[0] \
-                            - (parameters_width - self.BUTTONS_WIDTH) // 2 - w // 2)
+            self.p_buttons.append(Checkboxes(self.__parametersArea,
+                                            self.BUTTONS_WIDTH,
+                                            self.BUTTONS_HEIGHT,
+                                            (parameters_width - self.BUTTONS_WIDTH) // 2,
+                                            (height + (4 * i + start) * self.BUTTONS_HEIGHT) // 2,
+                                            texts[i],
+                                            self.__boardArea))
+        self.p_buttons[0].set_state("on")
+        self.p_buttons[1].set_state("on")
         
         
         # "PLAY" button
@@ -145,26 +205,14 @@ class Board(Tk,Areas):
         self.__controlArea.tag_bind(self.AI_button, "<ButtonRelease-1>", self.release_jouerIA)
 
         for i in range(N_buttons):
-            self.__parametersArea.tag_bind(self.parameters_buttons[i]["hitbox"], "<Button-1>",
-                                        self.get_click_f(i))
-            self.__parametersArea.tag_bind(self.parameters_buttons[i]["hitbox"], "<Enter>",
-                                        self.get_enter_f(i))
-            self.__parametersArea.tag_bind(self.parameters_buttons[i]["hitbox"], "<Leave>",
-                                        self.get_leave_f(i))
+            self.p_buttons[i].bind("<Button-1>", i)
+            self.p_buttons[i].bind("<Enter>", i)
+            self.p_buttons[i].bind("<Leave>", i)
                                         
         self.__boardArea.bind("<ButtonRelease-1>", self.release_pawn)
         self.__boardArea.bind("<Button-1>", self.__boardArea.pawn_pressed)
         self.__boardArea.bind("<B1-Motion>", self.__boardArea.pawn_moved)
         self.bind("<Configure>", self.on_resize)
-    
-    def get_click_f(self, i): # returns the function that will be called when clicking on button i 
-        return lambda event: self.click_param(i, event)
-
-    def get_enter_f(self, i):
-        return lambda event: self.hover_param(i, event)
-
-    def get_leave_f(self, i):
-        return lambda event: self.end_hover_param(i, event)
 
     def scale_img(self, img, scale):
         N = 25
@@ -175,16 +223,6 @@ class Board(Tk,Areas):
         points = (x1+r, y1, x1+r, y1, x2-r, y1, x2-r, y1, x2, y1, x2, y1+r, x2, y1+r, x2, y2-r, x2, \
             y2-r, x2, y2, x2-r, y2, x2-r, y2, x1+r, y2, x1+r, y2, x1, y2, x1, y2-r, x1, y2-r, x1, y1+r, x1, y1+r, x1, y1)
         return canvas.create_polygon(points, width=w, outline=c, fill="", smooth=True)
-    
-    def create_cross(self, canvas, x, y, s, w, c):
-        
-        offset = math.sqrt(2) * s
-        points = (x - offset, y - offset, x, y, \
-                x + offset, y - offset, x, y, \
-                x + offset, y + offset, x, y, \
-                x - offset, y + offset, x, y)
-        return canvas.create_polygon(points, width=w, outline=c, fill="")
-
 
     def press_jouerIA(self, event):
         ''' changes button appearance and makes the AI play on press '''
@@ -203,60 +241,8 @@ class Board(Tk,Areas):
             self.__controlArea.update_idletasks()
             self.AI_button_state = "grayed"
     
-    def click_param(self, i, event):
-        old_state = self.parameters_buttons[i]["state"]
-        assert(old_state == "hoff" or old_state == "hon") # the button must be highlighted
-
-        self.parameters_buttons[i]["state"] = "hoff" if old_state == "hon" else "hon"
-        if i == 0:
-            self.solverWisAI = not(self.solverWisAI)
-        elif i == 1:
-            self.solverBisAI = not(self.solverBisAi )
-        elif i == 0: # show white arrows button
-            self.__boardArea.set_parameter("show_white_ar", not self.__boardArea.show_white_ar)
-            if not self.__boardArea.show_white_ar:
-                self.__boardArea.show_arrows([], "white") # removes existing arrows
-        elif i == 1: # show black arrows button
-            self.__boardArea.set_parameter("show_black_ar", not self.__boardArea.show_black_ar)
-            if not self.__boardArea.show_black_ar:
-                self.__boardArea.show_arrows([], "black") # removes existing arrows
-        elif i == 2: # show moves button
-            self.__boardArea.set_parameter("show_moves", not self.__boardArea.show_moves)
-            if not self.__boardArea.show_moves:
-                self.__boardArea.highlight_cases([]) # removes existing highlighted cases
-
-        if old_state == "hoff": # button now activated : show the cross
-            self.__parametersArea.itemconfigure(self.parameters_buttons[i]["cross"], outline=self.get_color("dark"))
-        else: # button now deactivated : hide the cross
-            self.__parametersArea.itemconfigure(self.parameters_buttons[i]["cross"], outline="")
-        self.__parametersArea.update_idletasks()
-        
-    
-    def hover_param(self, i, event):
-        old_state = self.parameters_buttons[i]["state"]
-        assert(old_state == "off" or old_state == "on") # the button must be highlighted
-
-        self.parameters_buttons[i]["state"] = "hoff" if old_state == "off" else "hon"
-
-        # change color of buttons
-        self.__parametersArea.itemconfigure(self.parameters_buttons[i]["button"], outline=self.get_color("dark"))
-        self.__parametersArea.itemconfigure(self.parameters_buttons[i]["text"], fill=self.get_color("dark"))
-        if old_state == "on": # change the color of the cross
-            self.__parametersArea.itemconfigure(self.parameters_buttons[i]["cross"], outline=self.get_color("dark"))
-    
-    def end_hover_param(self, i, event):
-        old_state = self.parameters_buttons[i]["state"]
-        assert(old_state == "hoff" or old_state == "hon") # the button must be highlighted
-
-        self.parameters_buttons[i]["state"] = "off" if old_state == "hoff" else "on"
-
-        # change color of buttons
-        self.__parametersArea.itemconfigure(self.parameters_buttons[i]["button"], outline=self.get_color("white"))
-        self.__parametersArea.itemconfigure(self.parameters_buttons[i]["text"], fill=self.get_color("white"))
-        if old_state == "hon": # change the color of the cross
-            self.__parametersArea.itemconfigure(self.parameters_buttons[i]["cross"], outline=self.get_color("white"))
-    
     def release_pawn(self, event):
+        '''wrapper function to update the status of the Play AI button when pawn in released'''
         self.__boardArea.pawn_released(event)
         if self.__boardArea.can_play():
             # if human has moved a pawn, change the button from grayed to normal
@@ -280,21 +266,12 @@ class Board(Tk,Areas):
             self.__controlArea.moveto(self.AI_button, (control_width - w) // 2, (event.height - h) // 2)
 
             parameters_width = event.width - control_width - event.height
-            N_buttons = len(self.parameters_buttons)
+            N_buttons = len(self.p_buttons)
             start = - 2 * N_buttons + 1 / 2
             for i in range(N_buttons):
-                self.__parametersArea.moveto(self.parameters_buttons[i]["button"],
-                                            (parameters_width - self.BUTTONS_WIDTH) // 2,
-                                            (event.height + (4 * i + start) * self.BUTTONS_HEIGHT) // 2)
-                self.__parametersArea.moveto(self.parameters_buttons[i]["text"],
-                                                (parameters_width - self.BUTTONS_WIDTH + 3 * self.BUTTONS_HEIGHT) // 2,
-                                                (event.height + (4 * i + start - 0.7) * self.BUTTONS_HEIGHT) // 2)
-                self.__parametersArea.moveto(self.parameters_buttons[i]["hitbox"],
-                                            (parameters_width - self.BUTTONS_WIDTH) // 2,
-                                            (event.height + (4 * i + start) * self.BUTTONS_HEIGHT) // 2)
-                self.__parametersArea.moveto(self.parameters_buttons[i]["cross"],
-                                            (parameters_width - self.BUTTONS_WIDTH) // 2 + self.CROSS_OFFSET,
-                                            (event.height + (4 * i + start) * self.BUTTONS_HEIGHT) // 2 + self.CROSS_OFFSET)
+                self.p_buttons[i].moveto((parameters_width - self.BUTTONS_WIDTH) // 2,
+                                                 (event.height + (4 * i + start) * self.BUTTONS_HEIGHT) // 2)
+                                                 
             self.__parametersArea.update_idletasks()
             self.__controlArea.update_idletasks()
 
