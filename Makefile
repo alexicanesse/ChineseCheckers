@@ -25,7 +25,7 @@ CXXFLAGS= -Wno-unused-result -Wsign-compare -Wunreachable-code -fno-common -fwra
 LDFLAGS=-lboost_python3$(PYTHON_SUB_VERSION)
 
 ifneq ($(UNAME), Darwin)
-    CXXFLAGS += -lpython3 -fPIC
+    CXXFLAGS += -lpython3.$(PYTHON_SUB_VERSION) -fPIC
 else
 	LDFLAGS += -undefined dynamic_lookup -Wl,-no_fixup_chains
 endif
