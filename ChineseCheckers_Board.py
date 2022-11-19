@@ -70,17 +70,14 @@ class Pion:
 
 class BoardArea(Areas):
     
-    def __init__(self, parent, width : int, height : int, init_states, playerW : str, playerB : str):
+    def __init__(self, parent, side : int, init_states : list[bool], playerW : str, playerB : str):
         # initialization of the canvas
-        assert(width == height)
-        Canvas.__init__(self, parent, width=width, height=height, highlightthickness=0)
-        self.width = width # width of the board area
-        self.height = height # height of the board area
-        self.case_width = width // 13 # width of a case (for the hitbox)
-        self.case_height = height // 13 # height of a case
-        self.case_radius = self.case_width // 5 # radius of a case
+        Canvas.__init__(self, parent, width=side, height=side, highlightthickness=0)
+        self.side = side # side of the board area
+        self.case_radius_hit = side // (1 + 7 * math.sqrt(3)) # radius of a case (for the hitbox)
+        self.case_radius = self.case_radius_hit // 5 # radius of a case
         self.highlight_radius = int(self.case_radius // 1.5)
-        self.pawn_radius = self.case_width // 2.5 # radius of a pawn
+        self.pawn_radius = self.case_radius_hit // 2.5 # radius of a pawn
         self.show_white_ar = init_states[0] # True if we indicates white movements using arrows
         self.show_black_ar = init_states[1] # True if we indicates black movements using arrows
         self.show_moves = init_states[2] # True if we show possible moves when clicking on pawn
@@ -129,7 +126,7 @@ class BoardArea(Areas):
         #initiating a Game
         self.whoistoplay = self.playerW # Allow us to check if a player
         self.movablePaws = self.wp if self.playerW.getHumanity() else []
-        self.board= cc.Game()
+        self.board = cc.Game()
 
         #working data 
         self.__piece_courante = ""
@@ -139,7 +136,6 @@ class BoardArea(Areas):
         self.coup_courant = []
         
     def pawn_pressed(self,event):
-        # TEST
         if self.whoistoplay.getHumanity():
             eventi,eventj = self._canv2plat(event.x,event.y)
             for p in self.movablePaws:
@@ -153,7 +149,6 @@ class BoardArea(Areas):
                     self.coup_courant = [(eventi,eventj)]
                 
     def pawn_moved(self,event):
-        # TEST
         if self.__piece_courante != "":
             dx = event.x - self.__piece_courante.x
             dy = event.y - self.__piece_courante.y
@@ -184,7 +179,6 @@ class BoardArea(Areas):
                 self.coup_courant.append((ncase_x,ncase_y))
                 if (color_playing == 'white' and self.show_white_ar) or\
                    (color_playing == 'black' and self.show_black_ar):
-                    print(f"Drawing arrow color {color_playing}")
                     self.show_arrows(self.coup_courant, color_playing)
     
             else:
@@ -208,21 +202,23 @@ class BoardArea(Areas):
             self.movablePaws = self.wp
             
                         
-    def  _plat2canv(self,i : int,j : int):
+    def _plat2canv(self,i : int,j : int):
         '''converts the coordinates of the board to pixels'''
-        
-        x = (i * self.case_width - j * self.case_height) / 2 + self.height / 2
-        y = (-i * self.case_width - j * self.case_height) * np.sqrt(3) / 2 + self.height-self.case_height / 2
-        return(x,y)
+        r, s = self.case_radius_hit, self.side
+        x = (i - j) * r / 2 + s / 2
+        y = (i + j) * (r - s) / 14 + s - r / 2
+
+        return (x, y)
     
     def _canv2plat(self,x : float,y : float):
         '''the inverse function'''
-        
-        X = x - self.height / 2
-        Y = y + self.case_height / 2 - self.height
-        i = round((X - Y / np.sqrt(3)) / self.case_width)
-        j = round((-X - Y / np.sqrt(3)) / self.case_height)
-        return(i,j)
+        r, s = self.case_radius_hit, self.side        
+        x -= s / 2
+        y += r / 2 - s
+        A, B = 7 / (r - s), 1 / r
+        i = round(A * y + B * x)
+        j = round(A * y - B * x)
+        return(i, j)
     
     def set_parameter(self, s, v):
         '''modify an UI parameter'''
@@ -244,6 +240,14 @@ class BoardArea(Areas):
             for j in range(8):
                 x, y = self._plat2canv(i, j)
                 self.create_text(x, y, text=f"{i},{j}", fill="red", font=lfont)
+                t = 2
+                self.create_oval(x - t, y - t, x + t, y + t, fill="green") # mark the center of the cases
+                self.create_oval(x - self.case_radius_hit,
+                                 y - self.case_radius_hit,
+                                 x + self.case_radius_hit,
+                                 y + self.case_radius_hit,
+                                 fill = "",
+                                 outline=self.get_color("black"))
     
     def highlight_cases(self, l_moves : list):
         '''highlights the cases in the l_moves cases list'''
@@ -304,8 +308,8 @@ class BoardArea(Areas):
                                                   new_x, 
                                                   new_y, 
                                                   arrow=LAST, 
-                                                  arrowshape='15 20 8',
-                                                  fill=self.from_rgb((137, 197, 246)),
+                                                  arrowshape='15 15 8', # length, width, arc
+                                                  fill=self.get_color("white arrows"),
                                                   width=8))
             else:
                 self.arrows_black.append(self.create_line(x, 
@@ -314,27 +318,27 @@ class BoardArea(Areas):
                                                   new_y, 
                                                   arrow=LAST, 
                                                   arrowshape='15 20 8',
-                                                  fill=self.from_rgb((62, 123, 175)),
+                                                  fill=self.get_color("black arrows"),
                                                   width=8))
             last = new
     
     def on_resize(self, event):
         ''' called on resize events for resizing boardArea '''
         # determine the ratio
-        scale = float(event.height)/self.height
-        self.width = event.height
-        self.height = event.height      
+        scale = float(event.height)/self.side
+        self.side = event.height   
         # resize the canvas 
-        self.config(width=self.width, height=self.height)
+        self.config(width=self.side, height=self.side)
         # rescale all the objects tagged with the "all" tag
         self.scale("all", 0, 0, scale, scale)  
         
         # update values
-        self.case_width = self.width/13 # width of a case (for the hitbox)
-        self.case_height = self.height/13 # height of a case
-        self.case_radius = self.case_width/5 # radius of a case
-        self.pawn_radius = self.case_width/2.5 # radius of a pawn
+        self.case_radius_hit = self.side // (1 + 7 * math.sqrt(3)) # width of a case (for the hitbox)
+        self.case_radius = self.case_radius_hit //5 # radius of a case
+        self.pawn_radius = self.case_radius_hit / 2.5 # radius of a pawn
         for pawn in self.wp:
+            pawn.set_xy(pawn.x * scale, pawn.y * scale)
+        for pawn in self.bp:
             pawn.set_xy(pawn.x * scale, pawn.y * scale)
     
     # All of the following functions in the class are TEST
