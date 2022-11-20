@@ -70,7 +70,7 @@ class Pion:
 
 class BoardArea(Areas):
     
-    def __init__(self, parent, side : int, init_states : list[bool], playerW : str, playerB : str):
+    def __init__(self, parent, side : int, init_states : list[bool]):
         # initialization of the canvas
         Canvas.__init__(self, parent, width=side, height=side, highlightthickness=0)
         self.side = side # side of the board area
@@ -81,7 +81,7 @@ class BoardArea(Areas):
         self.show_white_ar = init_states[0] # True if we indicates white movements using arrows
         self.show_black_ar = init_states[1] # True if we indicates black movements using arrows
         self.show_moves = init_states[2] # True if we show possible moves when clicking on pawn
-        self.configure(bg=self.get_color("dark"))
+        self.configure(bg=self.get_color("darkgreen"))
         
         # drawing the board cases
         for i in range(8):
@@ -91,7 +91,7 @@ class BoardArea(Areas):
                                  posy - self.case_radius,
                                  posx + self.case_radius,
                                  posy + self.case_radius,
-                                 fill = self.get_color("light"),
+                                 fill = self.get_color("cases"),
                                  outline="")
       
         # adding pieces
@@ -110,22 +110,11 @@ class BoardArea(Areas):
 
 
         #temporary data to use c++ solvers and test code without changing the rest of the code
-        if playerW == "Human":
-            self.playerW = Human()
-        elif playerW == "C++ AI":
-            self.playerW = AI_cpp(depth = 3)
-        else:
-            print(f"Unknown player type {playerW}")
-        if playerB == "Human":
-            self.playerB = Human()
-        elif playerB == "C++ AI":
-            self.playerB = AI_cpp(depth = 3)
-        else:
-            print(f"Unknown player type {playerB}")     
+        self.playerB = None
+        self.playerW = None  
         
         #initiating a Game
-        self.whoistoplay = self.playerW # Allow us to check if a player
-        self.movablePaws = self.wp if self.playerW.getHumanity() else []
+        self.whoistoplay = None # Allow us to check if a player
         self.board = cc.Game()
 
         #working data 
@@ -134,9 +123,27 @@ class BoardArea(Areas):
         self.pospioninit = (-1,-1)
         self.coup_precedent = ""
         self.coup_courant = []
+
+    def set_players(self, playerW : str, playerB : str):
+        if playerW == "Human":
+            self.playerW = Human()
+        elif playerW == "C++ AI":
+            self.playerW = AI_cpp(depth = 3)
+        else:
+            print(f"Unknown player type {playerW}")
+
+        if playerB == "Human":
+            self.playerB = Human()
+        elif playerB == "C++ AI":
+            self.playerB = AI_cpp(depth = 3)
+        else:
+            print(f"Unknown player type {playerB}")  
+
+        self.movablePaws = self.wp if self.playerW.getHumanity() else [] 
+        self.whoistoplay = self.playerW
         
     def pawn_pressed(self,event):
-        if self.whoistoplay.getHumanity():
+        if self.whoistoplay != None and self.whoistoplay.getHumanity():
             eventi,eventj = self._canv2plat(event.x,event.y)
             for p in self.movablePaws:
                 if p.is_in_case(eventi,eventj):
@@ -229,13 +236,13 @@ class BoardArea(Areas):
         elif s == "show_white_ar":
             self.show_white_ar = v
         else:
-            print(f"Unknown parameter {s}")
+            print(f"Unknown UI parameter {s}")
 
     #All of the following functions are graphical functions
  
     def show_coordinates(self):
         '''show empty cases with their coordinates'''
-        lfont = font.Font(family='Helvetica', size=20)
+        lfont = self.get_font(20)
         for i in range(8):
             for j in range(8):
                 x, y = self._plat2canv(i, j)
@@ -248,6 +255,22 @@ class BoardArea(Areas):
                                  y + self.case_radius_hit,
                                  fill = "",
                                  outline=self.get_color("black"))
+    
+    def show_hitboxes(self):
+        '''show empty cases with their coordinates'''
+        self.img = PhotoImage(width=self.side, height=self.side)
+        N = self.side
+        for x in range(N):
+            print(x)
+            for y in range(N):
+                i, j = self._canv2plat(x, y)
+                c_x, c_y = self._plat2canv(i, j)
+                c_x, c_y = int(max(c_x, 0)), int(max(c_y, 0))
+                c_x, c_y = min(c_x, self.side), min(c_y, self.side)
+                r = int(c_x / self.side * 255)
+                g = int(c_y / self.side * 255)
+                self.img.put(f"{self.from_rgb((r, g, 150))}", (x, y))
+        self.create_image(self.side // 2, self.side // 2, image=self.img)
     
     def highlight_cases(self, l_moves : list):
         '''highlights the cases in the l_moves cases list'''
