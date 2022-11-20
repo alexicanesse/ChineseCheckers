@@ -17,8 +17,8 @@ class Board(Tk,Areas):
         # [DONE] add player choice in the UI
         # [MOSTLY DONE] re do "Play AI" button
         # [DONE] split this file into several
-        # ends of games
-        # relaunch game
+        # [MOSTLY DONE] ends of games
+        # [DONE] relaunch game
         # allow user to specify depth for AI
 
         # fix a bug where cancelling a move (human side) doesn't gray out the "Play AI" button
@@ -55,12 +55,23 @@ class Board(Tk,Areas):
         self.__parametersArea = Canvas(self, width=parameters_width, height=height, highlightthickness=0)
         self.__parametersArea.configure(bg=self.get_color("background"))
         self.__parametersArea.pack(side=LEFT, padx=0, fill=BOTH, expand=YES)
+        
+        #default players
+        default_selectedW = 1
+        default_depthW = 3
+        default_selectedB = 0
+        default_depthB = 3
+        
+        default_playerW = Human() if default_selectedW == 1 else AI_cpp(depth = default_depthW)
+        default_playerB = Human() if default_selectedB == 1 else AI_cpp(depth = default_depthB)
 
         # Initializing the board
         init_states = [True, True,False]
-        self.__boardArea = BoardArea(self, board_side, init_states)
+        self.__boardArea = BoardArea(self, board_side, init_states,default_playerW,default_playerB)
         self.__boardArea.addtag_all("all")
         self.__boardArea.pack(padx=0, side=LEFT, fill=BOTH)
+        
+
         
         # Initializing the control area
         self.__controlArea = Canvas(self, width=control_width, height=height, highlightthickness=0)
@@ -86,8 +97,8 @@ class Board(Tk,Areas):
                                             (height + (4 * i + start) * self.BUTTONS_HEIGHT) // 2,
                                             texts[i],
                                             self.__boardArea))
-        self.p_buttons[0].set_state("gon")
-        self.p_buttons[1].set_state("gon")
+        self.p_buttons[0].set_state("on")
+        self.p_buttons[1].set_state("on")
     
         # create player choice
         self.ITEM_WIDTH = parameters_width / 3.2
@@ -115,8 +126,8 @@ class Board(Tk,Areas):
                                                                     y + menu_height, 
                                                                     fill=self.get_color("black"), 
                                                                     outline="black"))
-        self.playerW_menu = ChoiceMenu(self.__parametersArea, self.ITEM_WIDTH, self.ITEM_HEIGHT, x, y, choices)
-        self.playerB_menu = ChoiceMenu(self.__parametersArea, self.ITEM_WIDTH, self.ITEM_HEIGHT, self.ITEM_WIDTH + 2 * x, y, choices)
+        self.playerW_menu = ChoiceMenu(self.__parametersArea, self.ITEM_WIDTH, self.ITEM_HEIGHT, x, y, choices,default_selectedW)
+        self.playerB_menu = ChoiceMenu(self.__parametersArea, self.ITEM_WIDTH, self.ITEM_HEIGHT, self.ITEM_WIDTH + 2 * x, y, choices,default_selectedB)
         
         # "GO" button
         self.GO_WIDTH = control_width // 2
@@ -126,7 +137,7 @@ class Board(Tk,Areas):
                                         self.GO_HEIGHT,
                                         (control_width - self.GO_WIDTH) // 2,
                                         height // 3 - self.GO_HEIGHT // 2,
-                                        "Launch game",
+                                        "New game",
                                         "normal")
         
         # "Next turn" button
@@ -138,7 +149,7 @@ class Board(Tk,Areas):
                                         (control_width - self.TURN_WIDTH) // 2,
                                         2 * height // 3 - self.TURN_HEIGHT // 2,
                                         "Next turn",
-                                        "grayed")
+                                        "normal")
         
         # mouse events config
         self.__controlArea.tag_bind(self.nextturn_b.hitbox, "<Button-1>", self.press_NextTurn)
@@ -158,26 +169,35 @@ class Board(Tk,Areas):
         if self.nextturn_b.get_state() != "grayed":
             self.__boardArea.jouerIA()
 
+    def game_is_over(self,type_of_end : int):#triggered when game is over
+        print("Game's over !",type_of_end)
+    
     def press_Go(self, event):
-        ''' begins game '''
+        ''' begins a new game '''
 
         if self.go_button.get_state() == "grayed":
             return
 
-        playerB = self.playerB_menu.get_selected()
-        playerW = self.playerW_menu.get_selected()
-        if playerB != "" and playerW != "": # if human has chosen both
-
+        choice_playerB = self.playerB_menu.get_selected()
+        choice_playerW = self.playerW_menu.get_selected()
+        if choice_playerB != "" and choice_playerW != "": # if human has chosen both
+            """
             self.go_button.set_state("grayed") # disable go button and menus
             self.__parametersArea.itemconfigure(self.deco_elts[0], fill=self.get_color("gray"))
             self.playerB_menu.disable()
             self.playerW_menu.disable()
-
+            
             for b in self.p_buttons: # enable checkboxes
                 b.set_state(b.get_state()[1:])
+            """
             self.nextturn_b.set_state("normal") # enable next turn button
 
-            self.__boardArea.set_players(playerW, playerB)
+            playerW = AI_cpp() if choice_playerW == "C++ AI" else Human()
+            playerB = AI_cpp() if choice_playerB == "C++ AI" else Human()
+            self.__boardArea.reset(playerW,playerB)
+        else:
+            print("No choice of players has been made")
+            
     
     def release_pawn(self, event):
         '''wrapper function to update the status of the Play AI button when pawn in released'''

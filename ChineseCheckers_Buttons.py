@@ -1,5 +1,6 @@
 from tkinter import *
 import math
+import numpy as np
 from ChineseCheckers_Areas import *
 
 class ClassicButton(Areas):
@@ -64,7 +65,7 @@ class ClassicButton(Areas):
 
 class Checkboxes(Areas):
     # for the parameter checkboxes on the left
-    def __init__(self, parent : Canvas, width : int, height : int, x : int, y : int, text, board, state = "goff"):
+    def __init__(self, parent : Canvas, width : int, height : int, x : int, y : int, text, board, state = "off"):
         assert(state[0] != "h") # a button is not highlighted by default
         w = height / 14
         self.parent = parent
@@ -206,14 +207,14 @@ class ChoiceButton(Areas):
 
 class ChoiceMenu(Areas):
     # for the player choices on the left
-    def __init__(self, parent : Canvas, width : int, height : int, x : int, y : int, labels : list[str]):
+    def __init__(self, parent : Canvas, width : int, height : int, x : int, y : int, labels : list[str],selected = -1):# no choice is selected by default
         self.choice_buttons = []
 
         N_choices = len(labels)
         for i in range(N_choices):
-            self.choice_buttons.append(ChoiceButton(parent, width, height, x, y + i * height, labels[i], "nsel", i))
+            self.choice_buttons.append(ChoiceButton(parent, width, height, x, y + i * height, labels[i], "sel" if i == selected else "nsel", i))
         
-        self.selected = -1 # no choice is selected by default
+        self.selected = selected # no choice is selected by default
         self.height = height
         
         for i in range(N_choices):
@@ -266,3 +267,5 @@ class ChoiceMenu(Areas):
         if self.selected != -1:
             self.choice_buttons[self.selected].set_state(self.parent, "nsel") # de-select button
         self.selected = i
+        
+

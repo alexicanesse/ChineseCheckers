@@ -70,7 +70,7 @@ class Pion:
 
 class BoardArea(Areas):
     
-    def __init__(self, parent, side : int, init_states : list[bool]):
+    def __init__(self, parent, side : int, init_states : list[bool],playerW = Human(), playerB = Human()):
         # initialization of the canvas
         Canvas.__init__(self, parent, width=side, height=side, highlightthickness=0)
         self.side = side # side of the board area
@@ -82,6 +82,7 @@ class BoardArea(Areas):
         self.show_black_ar = init_states[1] # True if we indicates black movements using arrows
         self.show_moves = init_states[2] # True if we show possible moves when clicking on pawn
         self.configure(bg=self.get_color("darkgreen"))
+        self.parent = parent
         
         # drawing the board cases
         for i in range(8):
@@ -108,14 +109,13 @@ class BoardArea(Areas):
                     x,y = self._plat2canv(7 - i, 7 - j)
                     self.bp.append(Pion(self, x, y, self.get_color("black")))
 
-
-        #temporary data to use c++ solvers and test code without changing the rest of the code
-        self.playerB = None
-        self.playerW = None  
-        
         #initiating a Game
-        self.whoistoplay = None # Allow us to check if a player
+        
+        self.playerB = playerB
+        self.playerW = playerW  
+        self.whoistoplay = self.playerW 
         self.board = cc.Game()
+        self.game_is_on = True
 
         #working data 
         self.__piece_courante = ""
@@ -123,7 +123,29 @@ class BoardArea(Areas):
         self.pospioninit = (-1,-1)
         self.coup_precedent = ""
         self.coup_courant = []
+        self.movablePaws = self.wp if self.playerW.getHumanity() else [] 
 
+    def reset(self,playerW : Player,playerB : Player):
+        self.playerW = playerW
+        self.playerB = playerB
+        self.whoistoplay = self.playerW
+        self.__reset_working_data()
+        count = 0
+        for i in range(4):
+            for j in range(4):
+                if i + j <= 3:
+                    x,y = self._plat2canv(i, j)
+                    self.wp[count].move(x,y)
+                    x,y = self._plat2canv(7 - i, 7 - j)
+                    self.bp[count].move(x,y)
+                    count += 1
+        self.highlight_cases([])
+        self.show_arrows([], "black")
+        self.show_arrows([], "white")
+        self.board.new_game()
+        self.game_is_on = True
+        
+    #unused
     def set_players(self, playerW : str, playerB : str):
         if playerW == "Human":
             self.playerW = Human()
@@ -371,7 +393,8 @@ class BoardArea(Areas):
         return self.joueurajouer
 
     def jouerIA(self):
-        # TEST
+        if not self.game_is_on:
+            return
         intwhoistoplay = 0 if self.whoistoplay == self.playerW else 1
         if self.whoistoplay.getHumanity():# A human is playing
             self.joueurajouer = self.board.move(intwhoistoplay,self.coup_courant)
@@ -394,16 +417,26 @@ class BoardArea(Areas):
             elif intwhoistoplay == 1 and self.show_black_ar: 
                 self.show_arrows(self.coup_courant, "black")
             self.__reset_working_data()
-            self.__swap_whoistoplay()
-
+            #check if the game is over
+            type_end_of_game =self.board.state_of_game()
+            if type_end_of_game !=0:
+                self.parent.game_is_over(type_end_of_game)
+                self.game_is_on = False
             
+            if self.whoistoplay.getHumanity():
+                self.__swap_whoistoplay()
+                if  not self.whoistoplay.getHumanity():
+                    self.jouerIA()
+            else:
+                self.__swap_whoistoplay()
         else:
             print("Move considered as illegal")
+        
         
         for case in self.hc:
             self.delete(case)
         self.hc = []
-
+        
             
     def possible_moves(self,p : list,pospions):
         rep = []
