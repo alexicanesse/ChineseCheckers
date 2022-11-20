@@ -15,7 +15,7 @@ class Board(Tk,Areas):
         # [DONE] fix arrow color 
         # [DONE] gray buttons to choose players during game
         # [DONE] add player choice in the UI
-        # re do "Play AI" button
+        # [MOSTLY DONE] re do "Play AI" button
         # [DONE] split this file into several
         # ends of games
         # relaunch game
@@ -77,7 +77,7 @@ class Board(Tk,Areas):
                 "Show possible moves\nwhen clicking on a pawn"]
         N_buttons = len(texts)
         assert(N_buttons == len(init_states))
-        start = - N_buttons
+        start = + N_buttons / 2
         for i in range(N_buttons):
             self.p_buttons.append(Checkboxes(self.__parametersArea,
                                             self.BUTTONS_WIDTH,
@@ -95,7 +95,7 @@ class Board(Tk,Areas):
         choices = ["C++ AI", "Human"]
         menu_height = len(choices) * self.ITEM_HEIGHT
         x = (parameters_width - 2 * self.ITEM_WIDTH) // 3
-        y = (height - self.ITEM_HEIGHT) // 10
+        y = (height - self.ITEM_HEIGHT) // 4
         self.deco_elts = []
         self.DECO_WIDTH = 2 * x // 5
         self.deco_elts.append(self.__parametersArea.create_text(parameters_width // 2,
@@ -119,14 +119,14 @@ class Board(Tk,Areas):
         self.playerB_menu = ChoiceMenu(self.__parametersArea, self.ITEM_WIDTH, self.ITEM_HEIGHT, self.ITEM_WIDTH + 2 * x, y, choices)
         
         # "GO" button
-        self.GO_WIDTH = parameters_width // 6
+        self.GO_WIDTH = control_width // 2
         self.GO_HEIGHT = self.ITEM_HEIGHT
-        self.go_button = ClassicButton(self.__parametersArea, 
+        self.go_button = ClassicButton(self.__controlArea, 
                                         self.GO_WIDTH,
                                         self.GO_HEIGHT,
-                                        (parameters_width - self.GO_WIDTH) // 2,
-                                        y + menu_height + self.GO_HEIGHT,
-                                        "Go",
+                                        (control_width - self.GO_WIDTH) // 2,
+                                        height // 3 - self.GO_HEIGHT // 2,
+                                        "Launch game",
                                         "normal")
         
         # "Next turn" button
@@ -136,13 +136,13 @@ class Board(Tk,Areas):
                                         self.TURN_WIDTH,
                                         self.TURN_HEIGHT,
                                         (control_width - self.TURN_WIDTH) // 2,
-                                        (height - self.TURN_HEIGHT) // 2,
+                                        2 * height // 3 - self.TURN_HEIGHT // 2,
                                         "Next turn",
                                         "grayed")
         
         # mouse events config
         self.__controlArea.tag_bind(self.nextturn_b.hitbox, "<Button-1>", self.press_NextTurn)
-        self.__parametersArea.tag_bind(self.go_button.hitbox, "<Button-1>", self.press_Go)
+        self.__controlArea.tag_bind(self.go_button.hitbox, "<Button-1>", self.press_Go)
 
         for i in range(N_buttons):
             self.p_buttons[i].bind(i)
@@ -196,12 +196,12 @@ class Board(Tk,Areas):
             control_width = (event.width - event.height) / self.CONTROL_RATIO
             parameters_width = event.width - control_width - event.height
             N_buttons = len(self.p_buttons)
-            start = - N_buttons
+            start = + N_buttons / 2
             for i in range(N_buttons):
                 self.p_buttons[i].moveto((parameters_width - self.BUTTONS_WIDTH) // 2,
                                                  (event.height + (4 * i + start) * self.BUTTONS_HEIGHT) // 2)
             x = (parameters_width - 2 * self.ITEM_WIDTH) // 3
-            y = (event.height - self.ITEM_HEIGHT) // 10
+            y = (event.height - self.ITEM_HEIGHT) // 4
             self.playerB_menu.moveto(x, y)
             self.playerW_menu.moveto(2 * x + self.ITEM_WIDTH, y)
 
@@ -214,8 +214,8 @@ class Board(Tk,Areas):
             self.__parametersArea.moveto(self.deco_elts[2], 2 * x + 2 * self.ITEM_WIDTH + self.DECO_WIDTH, y) 
 
             # fix buttons positions
-            self.go_button.moveto((parameters_width - self.GO_WIDTH) // 2, y + menu_height + self.GO_HEIGHT) 
-            self.nextturn_b.moveto((control_width - self.TURN_WIDTH) // 2, (event.height - self.TURN_HEIGHT) // 2)
+            self.go_button.moveto((control_width - self.GO_WIDTH) // 2, event.height // 3 - self.GO_HEIGHT // 2) 
+            self.nextturn_b.moveto((control_width - self.TURN_WIDTH) // 2, 2 * event.height // 3 - self.TURN_HEIGHT // 2)
                                                  
             self.__parametersArea.update_idletasks()
             self.__controlArea.update_idletasks()
