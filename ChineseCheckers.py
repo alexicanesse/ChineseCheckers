@@ -15,7 +15,7 @@ class Board(Tk,Areas):
         # [DONE] fix arrow color 
         # [DONE] gray buttons to choose players during game
         # [DONE] add player choice in the UI
-        # [MOSTLY DONE] re do "Play AI" button
+        # [DONE] re do "Play AI" button
         # [DONE] split this file into several
         # [MOSTLY DONE] ends of games
         # [DONE] relaunch game
