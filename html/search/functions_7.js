@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['move_0',['move',['../class_chinese_checkers.html#a30b0208c019ac1348374ac9c34eb7f7a',1,'ChineseCheckers']]],
-  ['movewithoutverification_1',['moveWithoutVerification',['../class_chinese_checkers.html#a7f972b072fa6a0caeeebd60ada9e63e6',1,'ChineseCheckers']]]
+  ['ishuman_0',['isHuman',['../class_alpha_beta.html#a02add2f65f9b637e3131d1db1565c490',1,'AlphaBeta']]]
 ];

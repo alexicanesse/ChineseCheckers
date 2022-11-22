@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ChineseCheckers: Chinese Checkers</title>
+<title>ChineseCheckers: ChineseCheckers</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,13 +70,16 @@ $(function() {
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Chinese Checkers </div></div>
+  <div class="headertitle"><div class="title"><a class="el" href="class_chinese_checkers.html">ChineseCheckers</a> </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p ><a class="anchor" id="md_README"></a> This is a python library to use a fast implementation of the chinese checkers in C++, a graphic interface in Python and various solvers. The version of the game is limited to the case where there are two players and two colors. We might extend it to the complete game latter on.</p>
+<div class="textblock"><p ><a class="anchor" id="md_README"></a> <a href="https://bestpractices.coreinfrastructure.org/projects/6677"><img src="https://bestpractices.coreinfrastructure.org/projects/6677/badge" alt="OpenSSF Best Practices" class="inline"/></a> <a href="https://alexicanesse.github.io/ChineseCheckers/index.html"><img src="https://img.shields.io/badge/Documentation-githubpages-blue" alt="Documentation" class="inline"/></a> <a href="https://github.com/alexicanesse/ChineseCheckers/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0%20license-ff69b4" alt="License" class="inline"/></a> </p>
+<h1><a class="anchor" id="autotoc_md21"></a>
+Chinese Checkers</h1>
+<p >This is a python library to use a fast implementation of the chinese checkers in C++, a graphic interface in Python and various solvers. The version of the game is limited to the case where there are two players and two colors. We might extend it to the complete game latter on.</p>
 <p >We used some codes of an original implementation made by a member of our group. Here is the link to the code base <a href="https://github.com/Cyvernes/Chinese-Checkers">ChineseCheckers</a>.</p>
-<h1><a class="anchor" id="autotoc_md13"></a>
-Table of contents</h1>
+<h2><a class="anchor" id="autotoc_md22"></a>
+Table of contents</h2>
 <ul>
 <li>Building status</li>
 <li>Getting Started<ul>
@@ -91,74 +94,74 @@ Table of contents</h1>
 <li>License</li>
 <li>Acknowledgments</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md14"></a>
-Building status</h1>
+<h2><a class="anchor" id="autotoc_md23"></a>
+Building status</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone"></th><th class="markdownTableHeadCenter"><b>Architecture</b>   </th><th class="markdownTableHeadCenter"><b>Build</b>    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b>macOS</b>   </td><td class="markdownTableBodyCenter">x86_64   </td><td class="markdownTableBodyCenter"><a href="https://ci.swift.org/job/oss-swift-package-macos"><img src="https://ci.swift.org/job/oss-swift-package-macos/lastCompletedBuild/badge/icon" alt="Build Status" class="inline"/></a>    </td></tr>
+<td class="markdownTableBodyNone"><b>macOS</b>   </td><td class="markdownTableBodyCenter">x86_64   </td><td class="markdownTableBodyCenter"><img src="https://img.shields.io/badge/build-passing-success" alt="Build Status" class="inline"/>    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b>Ubuntu 18.04</b>   </td><td class="markdownTableBodyCenter">x86_64   </td><td class="markdownTableBodyCenter"><a href="https://ci.swift.org/job/oss-swift-package-ubuntu-18_04"><img src="https://ci.swift.org/job/oss-swift-package-ubuntu-18_04/lastCompletedBuild/badge/icon" alt="Build Status" class="inline"/></a>    </td></tr>
+<td class="markdownTableBodyNone"><b>Ubuntu 18.04</b>   </td><td class="markdownTableBodyCenter">x86_64   </td><td class="markdownTableBodyCenter"><img src="https://img.shields.io/badge/build-failing-critical" alt="Build Status" class="inline"/>    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b>Ubuntu 22.04</b>   </td><td class="markdownTableBodyCenter">x86_64   </td><td class="markdownTableBodyCenter"><a href="https://ci.swift.org/job/oss-swift-package-ubuntu-22_04"><img src="https://ci.swift.org/job/oss-swift-package-ubuntu-22_04/lastCompletedBuild/badge/icon" alt="Build Status" class="inline"/></a>   </td></tr>
+<td class="markdownTableBodyNone"><b>Ubuntu 22.04</b>   </td><td class="markdownTableBodyCenter">x86_64   </td><td class="markdownTableBodyCenter"><img src="https://img.shields.io/badge/build-passing-success" alt="Build Status" class="inline"/>   </td></tr>
 </table>
-<h1><a class="anchor" id="autotoc_md15"></a>
-Getting Started</h1>
+<h2><a class="anchor" id="autotoc_md24"></a>
+Getting Started</h2>
 <p >These instructions will give you a copy of the project up and running on your local machine for development and testing purposes.</p>
-<h2><a class="anchor" id="autotoc_md16"></a>
-Prerequisites</h2>
+<h3><a class="anchor" id="autotoc_md25"></a>
+Prerequisites</h3>
 <p >Requirements for the software and other tools to build, test and push</p><ul>
 <li><a href="https://www.boost.org/">Boost</a></li>
 <li><a href="https://www.boost.org/doc/libs/1_72_0/libs/python/doc/html/index.html">Boost.Python</a></li>
 <li><a href="https://docs.python.org/3/library/tkinter.html">Tkinter</a></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md17"></a>
-Installing</h2>
-<h3><a class="anchor" id="autotoc_md18"></a>
-Installing prerequisites</h3>
+<h3><a class="anchor" id="autotoc_md26"></a>
+Installing</h3>
+<h4><a class="anchor" id="autotoc_md27"></a>
+Installing prerequisites</h4>
 <p >On Ubuntu</p>
 <div class="fragment"><div class="line">sudo apt update</div>
-<div class="line">sudo apt install libboost-all-dev libboost-python-dev doxygen</div>
+<div class="line">sudo apt install libboost-all-dev libboost-python-dev doxygen libgtest-dev libbenchmark-dev</div>
 <div class="line"> </div>
 <div class="line">pip3 install --upgrade pip</div>
 <div class="line">pip3 install tk cpplint</div>
-</div><!-- fragment --><p >On macOS </p><div class="fragment"><div class="line">brew install boost boost-python3 doxygen</div>
+</div><!-- fragment --><p >On macOS </p><div class="fragment"><div class="line">brew install boost boost-python3 doxygen googletest google-benchmark</div>
 <div class="line"> </div>
 <div class="line">pip3 install --upgrade pip</div>
 <div class="line">pip3 install python-tk cpplint</div>
-</div><!-- fragment --><p >On ArchLinux </p><div class="fragment"><div class="line">sudo pacman -S boost doxygen</div>
+</div><!-- fragment --><p >On ArchLinux </p><div class="fragment"><div class="line">sudo pacman -S boost doxygen </div>
 <div class="line"> </div>
 <div class="line">pip3 install --upgrade pip</div>
 <div class="line">pip3 install tk cpplint</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md19"></a>
-Compiling the library</h3>
+</div><!-- fragment --><h4><a class="anchor" id="autotoc_md28"></a>
+Compiling the library</h4>
 <p >Run <code>make</code>. </p><div class="fragment"><div class="line">make</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md20"></a>
-Documentation</h1>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md29"></a>
+Documentation</h2>
 <p >The full documentation is accessible at <a href="https://alexicanesse.github.io/ChineseCheckers/index.html">Documentation</a>.</p>
-<h1><a class="anchor" id="autotoc_md21"></a>
-Running the tests</h1>
+<h2><a class="anchor" id="autotoc_md30"></a>
+Running the tests</h2>
 <p >TODO</p>
-<h1><a class="anchor" id="autotoc_md22"></a>
-Built With</h1>
+<h2><a class="anchor" id="autotoc_md31"></a>
+Built With</h2>
 <ul>
 <li><a href="https://www.contributor-covenant.org/">Google C++ Style Guide</a> - Used for clean C++ code.</li>
 <li><a href="https://google.github.io/styleguide/pyguide.html">Google Python Style Guide</a> - Used for clean Python code.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md23"></a>
-Contributing</h1>
-<p >Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests to us.</p>
+<h2><a class="anchor" id="autotoc_md32"></a>
+Contributing</h2>
+<p >Please read <a class="el" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html">CONTRIBUTING.md</a> for details on our code of conduct, and the process for submitting pull requests to us.</p>
 <p >Note that while we already have certain standards in place, nothing is set in stone. If you have an issue with the way code is structured, with any libraries we are using, or with any processes involved with contributing, please bring it up. We welcome all feedback so we can make contributing to this project as painless as possible.</p>
-<h1><a class="anchor" id="autotoc_md24"></a>
-Code of conduct</h1>
+<h2><a class="anchor" id="autotoc_md33"></a>
+Code of conduct</h2>
 <p >We have adopted the code of conduct defined by the Contributor Covenant. This document is used across many open source communities, and we think it articulates our values well. For more, see the <a class="el" href="md_code_of_conduct.html">Code of Conduct</a>.</p>
-<h1><a class="anchor" id="autotoc_md25"></a>
-License</h1>
+<h2><a class="anchor" id="autotoc_md34"></a>
+License</h2>
 <p >This project is licensed under the [GNU General Public License v3.0](LICENSE) Creative Commons License - see the [LICENSE](LICENSE) file for details</p>
 <p ><a href="https://tldrlegal.com/license/gnu-lesser-general-public-license-v3-(lgpl-3)#summary">tl;dr</a> This license is mainly applied to libraries. You may copy, distribute and modify the software provided that modifications are described and licensed for free under LGPL. Derivatives works (including modifications or anything statically linked to the library) can only be redistributed under LGPL, but applications that use the library don't have to be.</p>
-<h1><a class="anchor" id="autotoc_md26"></a>
-Acknowledgments</h1>
+<h2><a class="anchor" id="autotoc_md35"></a>
+Acknowledgments</h2>
 <p >TODO </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
