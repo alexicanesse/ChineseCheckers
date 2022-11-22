@@ -20,11 +20,16 @@ class Board(Tk,Areas):
         # [MOSTLY DONE] ends of games
         # [DONE] relaunch game
         # allow user to specify depth for AI
-
+        
+        # when disabling then enabling "show arrows" checkbox, show arrows that were previously shown before disabling
+        # fix classicbuttons colors when pressed
         # fix a bug where cancelling a move (human side) doesn't gray out the "Play AI" button
         # clean code
         # cancel current move as human
         # change player when playing ?
+        # gray buttons when "new game" hasn't been pressed at all
+        # make in-depth tests of "new game" button
+        # fix moments when buttons become grayed
 
         Tk.__init__(self)
         assert(width >= height) # we want the window to be wider than tall to fit buttons on the right
