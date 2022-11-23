@@ -178,7 +178,7 @@ BOOST_PYTHON_MODULE(AlphaBeta) {
         .value("WhiteWon", WhiteWon)
         .value("BlackWon", BlackWon);
 
-    boost::python::class_<AlphaBeta>("Solver")
+    boost::python::class_<AlphaBeta>("Solver", boost::python::init<>())
         .def("getMove", &AlphaBeta::getMove)
         .def("state_of_game", &AlphaBeta::state_of_game)
         .def("print_grid_", &AlphaBeta::print_grid_)

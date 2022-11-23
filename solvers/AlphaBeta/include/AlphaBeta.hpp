@@ -18,6 +18,7 @@
 /* C++ libraries */
 #include <utility>
 #include <map>
+#include <vector>
 
 /* Other */
 #include "Types.hpp"
@@ -31,6 +32,15 @@ class AlphaBeta : public ChineseCheckers{
                       const bool maximizingPlayer,
                       const bool keepMove);
     int heuristicValue();
+
+    /* this is meant to be seen from black perspective: white should
+ * use symmetries to use this matrix. */
+    std::vector<std::vector<double> > player_to_win_value_;
+
+    /* this is meant to be seen from black perspective: white should
+ * use symmetries to use this matrix. */
+    std::vector<std::vector<double> > player_to_loose_value_;
+
     int evaluate(Player player);
 
     Player maximizing_player_;
@@ -40,6 +50,7 @@ class AlphaBeta : public ChineseCheckers{
     ListOfMoves availableMoves(Player player);
     ListOfPositionType getMove(int depth, double alpha, double beta);
     bool isHuman() {return false; }
+    AlphaBeta();
 };
 
 #endif /* SOLVERS_ALPHABETA_INCLUDE_ALPHABETA_HPP_ */

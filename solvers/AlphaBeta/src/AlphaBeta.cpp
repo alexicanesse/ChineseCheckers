@@ -25,6 +25,34 @@
 #include "Types.hpp"
 #include "ChineseCheckers.hpp"
 
+AlphaBeta::AlphaBeta() {
+    /* this is meant to be seen from black perspective: white should
+* use symmetries to use this matrix. */
+    this->player_to_win_value_ = std::vector< std::vector<double> >({
+                { 0,  1,  4,  9, 16, 25, 36, 49},
+                { 1,  2,  5, 10, 17, 26, 37, 50},
+                { 4,  5,  8, 13, 20, 29, 40, 53},
+                { 9, 10, 13, 18, 25, 34, 45, 58},
+                {16, 17, 20, 25, 32, 41, 52, 65},
+                {25, 26, 29, 34, 41, 50, 62, 74},
+                {36, 37, 40, 45, 52, 62, 72, 85},
+                {49, 50, 53, 58, 65, 74, 85, 98}
+        });
+
+    /* this is meant to be seen from black perspective: white should
+ * use symmetries to use this matrix. */
+    this->player_to_loose_value_ = std::vector< std::vector<double> >({
+              { 0,  1,  4,  9, 16, 25, 36, 49},
+              { 1,  2,  5, 10, 17, 26, 37, 50},
+              { 4,  5,  8, 13, 20, 29, 40, 53},
+              { 9, 10, 13, 18, 25, 34, 45, 58},
+              {16, 17, 20, 25, 32, 41, 52, 65},
+              {25, 26, 29, 34, 41, 50, 62, 74},
+              {36, 37, 40, 45, 52, 62, 72, 85},
+              {49, 50, 53, 58, 65, 74, 85, 98}
+        });
+};
+
 
 ListOfMoves AlphaBeta::availableMoves(Player player) {
     /* Indicates if there is a jump from (i, j) to (k, l) */
@@ -402,15 +430,24 @@ ListOfMoves AlphaBeta::availableMoves(Player player) {
 int AlphaBeta::evaluate(Player player) {
     int result = 0;
     switch (player) {
-        case 0: /* White */
-            for (const PositionType &pown : position_colors_players_[0])
-                result += (7 - pown[0])*(7 - pown[0])
-                        + (7 - pown[1])*(7 - pown[1]);
+        case 0:  /* White */
+            if (player == this->maximizing_player_) {
+                for (const PositionType &pown: position_colors_players_[0])
+                    result += this->player_to_win_value_[7 - pown[0]][7 - pown[1]];
+            } else {
+                for (const PositionType &pown: position_colors_players_[0])
+                    result += this->player_to_loose_value_[7 - pown[0]][7 - pown[1]];
+            }
             break;
 
-        case 1: /* black */
-            for (const PositionType &pown : position_colors_players_[1])
-                result += pown[0]*pown[0] + pown[1]*pown[1];
+        case 1:  /* black */
+            if (player == this->maximizing_player_) {
+                for (const PositionType &pown: position_colors_players_[0])
+                    result += this->player_to_win_value_[pown[0]][pown[1]];
+            } else {
+                for (const PositionType &pown: position_colors_players_[0])
+                    result += this->player_to_loose_value_[pown[0]][pown[1]];
+            }
             break;
 
         default:
@@ -461,7 +498,7 @@ int AlphaBeta::AlphaBetaEval(const int depth,
     int value = 0;
     ListOfMoves possible_moves = this->availableMoves(this->who_is_to_play_);
 #warning rename moveType
-/*    if (keepMove) {
+    if (keepMove) {
         auto compFunc = [this](ListOfPositionType a,
                 ListOfPositionType b) {
             double valueA = 0;
@@ -484,7 +521,7 @@ int AlphaBeta::AlphaBetaEval(const int depth,
         };
 
         std::sort(possible_moves.begin(), possible_moves.end(), compFunc);
-    }*/
+    }
 
 
     ListOfPositionType best_move;
