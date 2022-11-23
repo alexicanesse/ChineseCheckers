@@ -28,7 +28,7 @@
 AlphaBeta::AlphaBeta() {
     /* this is meant to be seen from black perspective: white should
 * use symmetries to use this matrix. */
-/*    this->player_to_win_value_ = std::vector< std::vector<double> >({
+    this->player_to_win_value_ = std::vector< std::vector<double> >({
                 { 0,  1,  4,  9, 16, 25, 36, 49},
                 { 1,  2,  5, 10, 17, 26, 37, 50},
                 { 4,  5,  8, 13, 20, 29, 40, 53},
@@ -37,22 +37,11 @@ AlphaBeta::AlphaBeta() {
                 {25, 26, 29, 34, 41, 50, 62, 74},
                 {36, 37, 40, 45, 52, 62, 72, 85},
                 {49, 50, 53, 58, 65, 74, 85, 98}
-        });*/
-
-    this->player_to_win_value_ = std::vector< std::vector<double> >({
-            { 0,  1,  2,  5, 8, 13, 18, 25},
-            { 1,  4,  9, 10, 17, 20, 29, 32},
-            { 2,  9, 16, 25, 26, 37, 30, 41},
-            { 5, 10, 25, 36, 49, 40, 45, 50},
-            { 8, 17, 26, 49, 50, 53, 52, 62},
-            {13, 20, 37, 40, 53, 58, 65, 72},
-            {18, 29, 34, 45, 52, 65, 74, 85},
-            {25, 32, 41, 50, 62, 72, 85, 98}
-    });
+        });
 
     /* this is meant to be seen from black perspective: white should
  * use symmetries to use this matrix. */
-/*    this->player_to_loose_value_ = std::vector< std::vector<double> >({
+    this->player_to_loose_value_ = std::vector< std::vector<double> >({
                 { 0,  1,  4,  9, 16, 25, 36, 49},
                 { 1,  2,  5, 10, 17, 26, 37, 50},
                 { 4,  5,  8, 13, 20, 29, 40, 53},
@@ -61,18 +50,8 @@ AlphaBeta::AlphaBeta() {
                 {25, 26, 29, 34, 41, 50, 62, 74},
                 {36, 37, 40, 45, 52, 62, 72, 85},
                 {49, 50, 53, 58, 65, 74, 85, 98}
-        });*/
-    this->player_to_loose_value_ = std::vector< std::vector<double> >({
-              { 0,  1,  2,  5, 8, 13, 18, 25},
-              { 1,  4,  9, 10, 17, 20, 29, 32},
-              { 2,  9, 16, 25, 26, 37, 30, 41},
-              { 5, 10, 25, 36, 49, 40, 45, 50},
-              { 8, 17, 26, 49, 50, 53, 52, 62},
-              {13, 20, 37, 40, 53, 58, 65, 72},
-              {18, 29, 34, 45, 52, 65, 74, 85},
-              {25, 32, 41, 50, 62, 72, 85, 98}
-      });
-};
+        });
+}
 
 
 ListOfMoves AlphaBeta::availableMoves(Player player) {
@@ -452,29 +431,29 @@ int AlphaBeta::evaluate(Player player) {
     int result = 0;
     switch (player) {
         case 0:  /* White */
-/*            if (player == this->maximizing_player_) {
+            if (player == this->maximizing_player_) {
                 for (const PositionType &pown: position_colors_players_[0])
                     result += this->player_to_win_value_[7 - pown[0]][7 - pown[1]];
             } else {
                 for (const PositionType &pown: position_colors_players_[0])
                     result += this->player_to_loose_value_[7 - pown[0]][7 - pown[1]];
-            }*/
-            for (const PositionType &pown : position_colors_players_[0])
+            }
+/*            for (const PositionType &pown : position_colors_players_[0])
                 result += (7 - pown[0])*(7 - pown[0])
-                          + (7 - pown[1])*(7 - pown[1]);
+                          + (7 - pown[1])*(7 - pown[1]);*/
             break;
 
         case 1:  /* black */
-/*            if (player == this->maximizing_player_) {
+            if (player == this->maximizing_player_) {
                 for (const PositionType &pown: position_colors_players_[1])
                     result += this->player_to_win_value_[pown[0]][pown[1]];
             } else {
                 for (const PositionType &pown: position_colors_players_[1])
                     result += this->player_to_loose_value_[pown[0]][pown[1]];
-            }*/
-            for (const PositionType &pown : position_colors_players_[1])
+            }
+/*            for (const PositionType &pown : position_colors_players_[1])
                 result += pown[0]*pown[0] + pown[1]*pown[1];
-            break;
+            break;*/
 
         default:
             break;
@@ -510,7 +489,10 @@ int AlphaBeta::AlphaBetaEval(const int depth,
             break;
 
         case Draw:
-            return 0;
+            if (this->maximizing_player_ == 1 - this->who_is_to_play_)
+                return 50000;
+            else
+                return -50000;
             break;
 
         default: /* the game is not over */
