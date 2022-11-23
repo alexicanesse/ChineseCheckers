@@ -128,7 +128,7 @@ BOOST_PYTHON_MODULE(libChineseCheckers) {
       .from_python<std::vector<std::vector<int> > >()
       .from_python<std::vector<std::vector<Color> > >();
 
-    boost::python::class_<ChineseCheckers>("Game")
+    boost::python::class_<ChineseCheckers>("Game", boost::python::init<>())
         .def("move", &ChineseCheckers::move)
         .def("state_of_game", &ChineseCheckers::state_of_game)
         .def("new_game", &ChineseCheckers::new_game)
