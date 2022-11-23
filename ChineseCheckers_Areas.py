@@ -5,9 +5,13 @@ class Areas(Canvas):
 
     def get_color(self, s):
         ''' all colors '''
-        if s == "dark": # color of the board
+        if s == "darkgreen": # color of the board
             return self.from_rgb((119, 149, 86))
-        if s == "light": # color of the cases
+        if s == "hovered": # color of the hovered buttons
+            return self.from_rgb((149, 187, 74))
+        if s == "pressed": # color of the pressed buttons
+            return self.from_rgb((139, 173, 71))
+        if s == "cases": # color of the cases
             return self.from_rgb((235, 236, 208))
         if s == "white": # color of white pawns
             return self.from_rgb((249, 249, 249))
@@ -21,6 +25,8 @@ class Areas(Canvas):
             return self.from_rgb((62, 123, 175))
         if s == "background": # color of window background
             return self.from_rgb((49, 46, 43))
+        if s == "gray": # color of grayed buttons
+            return self.from_rgb((139, 139, 139))
         print(f"Unknown color {s}")
     
     def get_font(self, size):
