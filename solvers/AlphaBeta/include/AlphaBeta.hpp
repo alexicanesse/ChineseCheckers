@@ -15,10 +15,14 @@
 #ifndef SOLVERS_ALPHABETA_INCLUDE_ALPHABETA_HPP_
 #define SOLVERS_ALPHABETA_INCLUDE_ALPHABETA_HPP_
 
+/* C Libraries */
+#include <stdint.h>
+
 /* C++ libraries */
 #include <utility>
 #include <map>
 #include <vector>
+#include <unordered_map>
 
 /* Other */
 #include "Types.hpp"
@@ -33,6 +37,11 @@ class AlphaBeta : public ChineseCheckers{
                       const bool keepMove);
     int heuristicValue();
 
+    /* functions used for the transposition tables */
+    /* FNV-1a hash function */
+    uint64_t fnv1a(uint64_t h, Color x);
+    uint64_t hashMatrix(const GridType &matrix);
+
     /* this is meant to be seen from black perspective: white should
  * use symmetries to use this matrix. */
     std::vector<std::vector<double> > player_to_win_value_;
@@ -46,11 +55,14 @@ class AlphaBeta : public ChineseCheckers{
     Player maximizing_player_;
     ListOfPositionType best_move_;
 
+    /* transposition table to store the results of previous searches */
+    std::unordered_map<unsigned long long, std::pair<int, int>> transTable;
+
  public:
-    ListOfMoves availableMoves(Player player);
+    ListOfMoves availableMoves(Player player, bool full);
     ListOfPositionType getMove(int depth, double alpha, double beta);
     bool isHuman() {return false; }
     AlphaBeta();
 };
 
-#endif /* SOLVERS_ALPHABETA_INCLUDE_ALPHABETA_HPP_ */
+#endif  // SOLVERS_ALPHABETA_INCLUDE_ALPHABETA_HPP_
