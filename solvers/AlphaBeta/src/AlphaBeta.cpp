@@ -58,7 +58,7 @@ AlphaBeta::AlphaBeta() {
         });
 }
 
-ListOfMoves AlphaBeta::availableMoves(Player player, bool full) {
+ListOfMoves AlphaBeta::availableMoves(const Player &player, const bool &full) {
     /* Indicates if there is a jump from (i, j) to (k, l) */
     std::vector<ListOfPositionType> possible_elementary_move(64);
 
@@ -269,125 +269,6 @@ ListOfMoves AlphaBeta::availableMoves(Player player, bool full) {
     }
 
     /* Check the case of Jump moves */
-/*    bool isPossible = true;
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
-            *//* Jumping on line+ *//*
-            for (int k = 1; i + (k << 1) < 8; ++k) {
-                *//* Check if there is a pown to jump over *//*
-                if (grid_[i + k][j] != Empty) {
-                    *//* Check if the jump is valid *//*
-                    isPossible = true;
-                    for (int l = 1; l <= k; ++l) {
-                        if (grid_[i + k + l][j] != Empty) {
-                            isPossible = false;
-                            break;
-                        }
-                    }
-                    if (isPossible)
-                        possible_elementary_move[(i << 3) | j]
-                                .push_back({i + (k << 1), j});
-                    break;
-                }
-            }
-
-            *//* Jumping on line- *//*
-            for (int k = 1; i >= (k << 1); ++k) {
-                *//* Check if there is a pown to jump over *//*
-                if (grid_[i - k][j]) {
-                    *//* Check if the jump is valid *//*
-                    isPossible = true;
-                    for (int l = 1; l <= k; ++l) {
-                        if (grid_[i - k - l][j] != Empty) {
-                            isPossible = false;
-                            break;
-                        }
-                    }
-                    if (isPossible)
-                        possible_elementary_move[(i << 3) | j]
-                                .push_back({i - (k << 1), j});
-                    break;
-                }
-            }
-
-            *//* Jumping on row+ *//*
-            for (int k = 1; j + (k << 1) < 8; ++k) {
-                *//* Check if there is a pown to jump over *//*
-                if (grid_[i][j + k] != Empty) {
-                    *//* Check if the jump is valid *//*
-                    isPossible = true;
-                    for (int l = 1; l <= k; ++l) {
-                        if (grid_[i][j + k + l] != Empty) {
-                            isPossible = false;
-                            break;
-                        }
-                    }
-                    if (isPossible)
-                        possible_elementary_move[(i << 3) | j]
-                                .push_back({i, j + (k << 1)});
-                    break;
-                }
-            }
-
-            *//* Jumping on row- *//*
-            for (int k = 1; j >= (k << 1); ++k) {
-                *//* Check if there is a pown to jump over *//*
-                if (grid_[i][j - k] != Empty) {
-                    *//* Check if the jump is valid *//*
-                    isPossible = true;
-                    for (int l = 1; l <= k; ++l) {
-                        if (grid_[i][j - k - l] != Empty) {
-                            isPossible = false;
-                            break;
-                        }
-                    }
-                    if (isPossible)
-                        possible_elementary_move[(i << 3) | j]
-                                .push_back({i, j - (k << 1)});
-                    break;
-                }
-            }
-
-            *//* Jumping on diag right *//*
-            for (int k = 1; i + (k << 1) < 8 && j >= (k << 1); ++k) {
-                *//* Check if there is a pown to jump over *//*
-                if (grid_[i + k][j - k] != Empty) {
-                    *//* Check if the jump is valid *//*
-                    isPossible = true;
-                    for (int l = 1; l <= k; ++l) {
-                        if (grid_[i + k + l][j - k - l] != Empty) {
-                            isPossible = false;
-                            break;
-                        }
-                    }
-                    if (isPossible)
-                        possible_elementary_move[(i << 3) | j]
-                                .push_back({i + (k << 1), j - (k << 1)});
-                    break;
-                }
-            }
-
-            *//* Jumping on diag left *//*
-            for (int k = 1; j + (k << 1) < 8 && i >= (k << 1); ++k) {
-                *//* Check if there is a pown to jump over *//*
-                if (grid_[i - k][j + k] != Empty) {
-                    *//* Check if the jump is valid *//*
-                    isPossible = true;
-                    for (int l = 1; l <= k; ++l) {
-                        if (grid_[i - k - l][j + k + l] != Empty) {
-                            isPossible = false;
-                            break;
-                        }
-                    }
-                    if (isPossible)
-                        possible_elementary_move[(i << 3) | j]
-                                .push_back({i - (k << 1), j + (k << 1)});
-                    break;
-                }
-            }
-        }
-    }*/
-
     /*
      * Do a BFS to list all possible jumps.
      * Each pown is a root
@@ -395,17 +276,22 @@ ListOfMoves AlphaBeta::availableMoves(Player player, bool full) {
     std::queue<PositionType> queue;
     int i = -1;
     int j = -1;
+    int k = 0;
+    int l = 0;
     bool isPossible = true;
+    PositionType v;
+    std::map<PositionType, bool> explored;
+    std::map<PositionType, ListOfPositionType> paths;
     /* When another root is chosen, the queue is already empty */
     for (auto root : position_colors_players_[player]) {
         queue.push(root);
 
-        std::map<PositionType, bool> explored;
-        std::map<PositionType, ListOfPositionType> paths;
+        explored.clear();
+        paths.clear();
         explored[root] = true;
         paths[root] = {root};
         while (!queue.empty()) {
-            PositionType v = queue.front();
+            v = queue.front();
             queue.pop();
 
 
@@ -414,12 +300,12 @@ ListOfMoves AlphaBeta::availableMoves(Player player, bool full) {
                 j = v[1];
 
                 /* Jumping on line+ */
-                for (int k = 1; i + (k << 1) < 8; ++k) {
+                for (k = 1; i + (k << 1) < 8; ++k) {
                     /* Check if there is a pown to jump over */
                     if (grid_[i + k][j] != Empty) {
                         /* Check if the jump is valid */
                         isPossible = true;
-                        for (int l = 1; l <= k; ++l) {
+                        for (l = 1; l <= k; ++l) {
                             if (grid_[i + k + l][j] != Empty) {
                                 isPossible = false;
                                 break;
@@ -433,12 +319,12 @@ ListOfMoves AlphaBeta::availableMoves(Player player, bool full) {
                 }
 
                 /* Jumping on line- */
-                for (int k = 1; i >= (k << 1); ++k) {
+                for (k = 1; i >= (k << 1); ++k) {
                     /* Check if there is a pown to jump over */
                     if (grid_[i - k][j]) {
                         /* Check if the jump is valid */
                         isPossible = true;
-                        for (int l = 1; l <= k; ++l) {
+                        for (l = 1; l <= k; ++l) {
                             if (grid_[i - k - l][j] != Empty) {
                                 isPossible = false;
                                 break;
@@ -452,12 +338,12 @@ ListOfMoves AlphaBeta::availableMoves(Player player, bool full) {
                 }
 
                 /* Jumping on row+ */
-                for (int k = 1; j + (k << 1) < 8; ++k) {
+                for (k = 1; j + (k << 1) < 8; ++k) {
                     /* Check if there is a pown to jump over */
                     if (grid_[i][j + k] != Empty) {
                         /* Check if the jump is valid */
                         isPossible = true;
-                        for (int l = 1; l <= k; ++l) {
+                        for (l = 1; l <= k; ++l) {
                             if (grid_[i][j + k + l] != Empty) {
                                 isPossible = false;
                                 break;
@@ -471,12 +357,12 @@ ListOfMoves AlphaBeta::availableMoves(Player player, bool full) {
                 }
 
                 /* Jumping on row- */
-                for (int k = 1; j >= (k << 1); ++k) {
+                for (k = 1; j >= (k << 1); ++k) {
                     /* Check if there is a pown to jump over */
                     if (grid_[i][j - k] != Empty) {
                         /* Check if the jump is valid */
                         isPossible = true;
-                        for (int l = 1; l <= k; ++l) {
+                        for (l = 1; l <= k; ++l) {
                             if (grid_[i][j - k - l] != Empty) {
                                 isPossible = false;
                                 break;
@@ -490,12 +376,12 @@ ListOfMoves AlphaBeta::availableMoves(Player player, bool full) {
                 }
 
                 /* Jumping on diag right */
-                for (int k = 1; i + (k << 1) < 8 && j >= (k << 1); ++k) {
+                for (k = 1; i + (k << 1) < 8 && j >= (k << 1); ++k) {
                     /* Check if there is a pown to jump over */
                     if (grid_[i + k][j - k] != Empty) {
                         /* Check if the jump is valid */
                         isPossible = true;
-                        for (int l = 1; l <= k; ++l) {
+                        for (l = 1; l <= k; ++l) {
                             if (grid_[i + k + l][j - k - l] != Empty) {
                                 isPossible = false;
                                 break;
@@ -509,12 +395,12 @@ ListOfMoves AlphaBeta::availableMoves(Player player, bool full) {
                 }
 
                 /* Jumping on diag left */
-                for (int k = 1; j + (k << 1) < 8 && i >= (k << 1); ++k) {
+                for (k = 1; j + (k << 1) < 8 && i >= (k << 1); ++k) {
                     /* Check if there is a pown to jump over */
                     if (grid_[i - k][j + k] != Empty) {
                         /* Check if the jump is valid */
                         isPossible = true;
-                        for (int l = 1; l <= k; ++l) {
+                        for (l = 1; l <= k; ++l) {
                             if (grid_[i - k - l][j + k + l] != Empty) {
                                 isPossible = false;
                                 break;
@@ -562,32 +448,16 @@ ListOfMoves AlphaBeta::availableMoves(Player player, bool full) {
     return result;
 }
 
-int AlphaBeta::evaluate(Player player) {
+int AlphaBeta::evaluate(const Player &player) {
     int result = 0;
     switch (player) {
         case 0:  /* White */
-/*            if (player == this->maximizing_player_) {
-                for (const PositionType &pown : position_colors_players_[0])
-                    result += this->player_to_win_value_
-                            [7 - pown[0]][7 - pown[1]];
-            } else {
-                for (const PositionType &pown : position_colors_players_[0])
-                    result += this->player_to_loose_value_
-                            [7 - pown[0]][7 - pown[1]];
-            }*/
             for (const PositionType &pown : position_colors_players_[0])
                 result += (7 - pown[0])*(7 - pown[0])
                           + (7 - pown[1])*(7 - pown[1]);
             break;
 
         case 1:  /* black */
-/*            if (player == this->maximizing_player_) {
-                for (const PositionType &pown: position_colors_players_[1])
-                    result += this->player_to_win_value_[pown[0]][pown[1]];
-            } else {
-                for (const PositionType &pown: position_colors_players_[1])
-                    result += this->player_to_loose_value_[pown[0]][pown[1]];
-            }*/
             for (const PositionType &pown : position_colors_players_[1])
                 result += pown[0]*pown[0] + pown[1]*pown[1];
             break;
@@ -599,30 +469,30 @@ int AlphaBeta::evaluate(Player player) {
 }
 
 #warning use inf
-ListOfPositionType AlphaBeta::getMove(int depth, double alpha, double beta) {
+ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, const double &beta) {
     this->maximizing_player_ = this->who_is_to_play_;
     AlphaBetaEval(depth, alpha, beta, false, true);
     return this->best_move_;
 }
 
-int AlphaBeta::AlphaBetaEval(const int depth,
+int AlphaBeta::AlphaBetaEval(const int &depth,
                              double alpha,
                              double beta,
-                             const bool maximizingPlayer,
-                             const bool keepMove) {
+                             const bool &maximizingPlayer,
+                             const bool &keepMove) {
     /* check if the current position has been searched before */
     /* compute the hash value of the current board position */
-    unsigned long long hash = hashMatrix(this->grid_);
+    unsigned long long hash = hashMatrix(this->grid_, this->who_is_to_play_);
     auto it = transTable.find(hash);
     if (it != transTable.end() && it->second.second >= depth) {
         /* retrieve the value from the transposition table */
-        int value = it->second.first;
+        double value = it->second.first;
         /* return the value if it falls within the alpha-beta bounds */
         if (value >= beta && value <= alpha) return value;
         /* update beta if value is lower */
-        if (value < beta && !maximizingPlayer) beta = value;
+        beta = std::min(value, beta);
         /* update alpha if value is higher */
-        if (value > alpha && maximizingPlayer) alpha = value;
+        alpha = std::max(value, alpha);
     }
 
 
@@ -662,41 +532,49 @@ int AlphaBeta::AlphaBetaEval(const int depth,
     ListOfMoves possible_moves =
             this->availableMoves(this->who_is_to_play_, keepMove);
 
-#warning rename moveType
-    if (keepMove) {
-        auto compFunc = [this](ListOfPositionType a,
-                ListOfPositionType b) {
-            double valueA = 0;
-            double valueB = 0;
-            switch (maximizing_player_) {
-                case 0:
-                    valueA += this->player_to_win_value_
-                            [7 - a.back()[0]][7 - a.back()[1]];
-                    valueB += this->player_to_win_value_
-                            [7 - b.back()[0]][7 - b.back()[1]];
+    /* Sort according to the value of the move in order to increase the number of cut-offs */
+    auto compMove = [this](const ListOfPositionType &a, const ListOfPositionType &b){
+        double valueA = 0;
+        double valueB = 0;
+        switch (maximizing_player_) {
+            case 0:
+                valueA += this->player_to_win_value_
+                          [7 - a.back()[0]][7 - a.back()[1]]
+                          - this->player_to_win_value_
+                          [7 - a.front()[0]][7 - a.front()[1]];
+                valueB += this->player_to_win_value_
+                          [7 - b.back()[0]][7 - b.back()[1]]
+                          - this->player_to_win_value_
+                          [7 - b.front()[0]][7 - b.front()[1]];
 
-                    break;
+                break;
 
-                case 1:
-                    valueA += this->player_to_win_value_
-                            [a.back()[0]][a.back()[1]];
-                    valueB += this->player_to_win_value_
-                            [b.back()[0]][b.back()[1]];
-                    break;
-            }
+            case 1:
+                valueA += this->player_to_loose_value_
+                          [a.back()[0]][a.back()[1]]
+                          - this->player_to_loose_value_
+                          [a.front()[0]][a.front()[1]];
+                valueB += this->player_to_loose_value_
+                          [b.back()[0]][b.back()[1]]
+                          - this->player_to_loose_value_
+                          [b.front()[0]][b.front()[1]];
+                break;
+        }
 
-            return valueA < valueB;
-        };
+        return valueA < valueB;
+    };
 
-        std::sort(possible_moves.begin(), possible_moves.end(), compFunc);
-    }
-
-
+    std::sort(possible_moves.begin(), possible_moves.end(), compMove);
 
     ListOfPositionType best_move;
+    int i;
     if (maximizingPlayer) {
         value = -100000; /* -\infty */
+
         for (const ListOfPositionType &move : possible_moves) {
+            if (value >= beta)
+                continue; /* beta cutoff */
+
             this->moveWithoutVerification(this->who_is_to_play_, move);
             int buff = AlphaBetaEval(depth - 1,
                                      alpha,
@@ -710,9 +588,9 @@ int AlphaBeta::AlphaBetaEval(const int depth,
             this->grid_[move.back()[0]][move.back()[1]] = Empty;
             this->grid_[move.front()[0]][move.front()[1]]
                     = (Color) (this->who_is_to_play_ + 1);
-            for (int i = 0; i < 10; ++i) {
+            for (i = 0; i < 10; ++i) {
                 if (this->position_colors_players_[this->who_is_to_play_][i][0]
-                == move.back()[0]
+                    == move.back()[0]
                 && this->position_colors_players_[this->who_is_to_play_][i][1]
                         == move.back()[1]) {
                     this->position_colors_players_[this->who_is_to_play_][i][0]
@@ -725,17 +603,22 @@ int AlphaBeta::AlphaBetaEval(const int depth,
 
 
             alpha = std::max(alpha, static_cast<double>(buff));
+
             if (buff >= value) {
                 value = buff;
                 best_move = move;
                 if (value >= beta)
-                    break; /* beta cutoff */
+                    continue; /* beta cutoff */
             }
         }
     } else {
         value = 100000; /* +\infty */
         /* For each possible move */
+
         for (const ListOfPositionType &move : possible_moves) {
+            if (value <= alpha)
+                continue; /* alpha cutoff */
+
             this->moveWithoutVerification(this->who_is_to_play_, move);
             int buff = AlphaBetaEval(depth - 1,
                                      alpha,
@@ -748,7 +631,7 @@ int AlphaBeta::AlphaBetaEval(const int depth,
             this->grid_[move.back()[0]][move.back()[1]] = Empty;
             this->grid_[move.front()[0]][move.front()[1]]
                     = (Color) (this->who_is_to_play_ + 1);
-            for (int i = 0; i < 10; ++i) {
+            for (i = 0; i < 10; ++i) {
                 if (this->position_colors_players_[this->who_is_to_play_][i][0]
                 == move.back()[0]
                 && this->position_colors_players_[this->who_is_to_play_][i][1]
@@ -765,7 +648,7 @@ int AlphaBeta::AlphaBetaEval(const int depth,
                 value = buff;
                 best_move = move;
                 if (value <= alpha)
-                    break; /* alpha cutoff */
+                    continue; /* alpha cutoff */
             }
         }
     }
@@ -788,13 +671,13 @@ int AlphaBeta::heuristicValue() {
 }
 
 /* FNV-1a hash function */
-uint64_t AlphaBeta::fnv1a(uint64_t h, Color x) {
+inline uint64_t AlphaBeta::fnv1a(uint64_t h, const Color &x) {
     h ^= (uint64_t) x;
     h *= 0x100000001b3;
     return h;
 }
 
-uint64_t AlphaBeta::hashMatrix(const GridType &matrix) {
+inline uint64_t AlphaBeta::hashMatrix(const GridType &matrix, const int &player) {
     uint64_t hash = 0xcbf29ce484222325; /* FNV-1a seed value */
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
@@ -802,5 +685,5 @@ uint64_t AlphaBeta::hashMatrix(const GridType &matrix) {
             hash = fnv1a(hash, matrix[i][j]);
         }
     }
-    return hash;
+    return fnv1a(hash, static_cast<Color>(player));;
 }
