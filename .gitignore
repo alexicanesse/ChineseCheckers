@@ -367,3 +367,4 @@ cython_debug/
 # Project specific
 objects/
 test.py
+bin/
