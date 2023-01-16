@@ -17,6 +17,8 @@
 
 /* C Libraries */
 #include <stdint.h>
+#include <stdio.h>
+#include <string.h>
 
 /* C++ Libraries */
 #include <vector>
@@ -61,210 +63,28 @@ AlphaBeta::AlphaBeta() {
 ListOfMoves AlphaBeta::availableMoves(const Player &player, const bool &full) {
     /* Indicates if there is a jump from (i, j) to (k, l) */
     std::vector<ListOfPositionType> possible_elementary_move(64);
+    std::vector<std::vector<int>> valid_lines = {{-1,  0},
+                                                 {-1,  1},
+                                                 {0 , -1},
+                                                 {0 ,  1},
+                                                 {1 , -1},
+                                                 {1 ,  0}};
 
     ListOfMoves result;
-
     /* Check the case of notJump moves */
     for (const auto &pownPosition : position_colors_players_[player]) {
-        /* We check every possible directions */
-        switch (pownPosition[0]) {
-            case 7:
-                if (grid_[pownPosition[0] - 1]
-                    [pownPosition[1]] == Empty) {
+        for(const std::vector<int> &direction : valid_lines) {
+            if (   pownPosition[0] + direction[0] >= 0
+                && pownPosition[1] + direction[1] >= 0
+                && pownPosition[0] + direction[0]  < 8
+                && pownPosition[1] + direction[1]  < 8) {
+                if (grid_[pownPosition[0] + direction[0]]
+                         [pownPosition[1] + direction[1]] == Empty) {
                     result.push_back({pownPosition,
-                                      {pownPosition[0] - 1,
-                                       pownPosition[1]}});
+                                      {pownPosition[0] + direction[0],
+                                       pownPosition[1] + direction[1]}});
                 }
-
-                switch (pownPosition[1]) {
-                    case 7:
-                        if (grid_[pownPosition[0]]
-                            [pownPosition[1] - 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0],
-                                               pownPosition[1] - 1}});
-                        }
-                        break;
-
-                    case 0:
-                        if (grid_[pownPosition[0]]
-                            [pownPosition[1] + 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0],
-                                               pownPosition[1] + 1}});
-                        }
-
-                        if (grid_[pownPosition[0] - 1]
-                            [pownPosition[1] + 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0] - 1,
-                                               pownPosition[1] + 1}});
-                        }
-                        break;
-
-                    default:
-                        if (grid_[pownPosition[0]]
-                            [pownPosition[1] + 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0],
-                                               pownPosition[1] + 1}});
-                        }
-
-                        if (grid_[pownPosition[0]]
-                            [pownPosition[1] - 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0],
-                                               pownPosition[1] - 1}});
-                        }
-
-                        if (grid_[pownPosition[0] - 1]
-                            [pownPosition[1] + 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0] - 1,
-                                               pownPosition[1] + 1}});
-                        }
-                        break;
-                }
-                break;
-
-            case 0:
-                if (grid_[pownPosition[0] + 1]
-                    [pownPosition[1]] == Empty) {
-                    result.push_back({pownPosition,
-                                      {pownPosition[0] + 1,
-                                       pownPosition[1]}});
-                }
-
-                switch (pownPosition[1]) {
-                    case 7:
-                        if (grid_[pownPosition[0]]
-                            [pownPosition[1] - 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0],
-                                               pownPosition[1] - 1}});
-                        }
-
-                        if (grid_[pownPosition[0] + 1]
-                            [pownPosition[1] - 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0] + 1,
-                                               pownPosition[1] - 1}});
-                        }
-                        break;
-
-                    case 0:
-                        if (grid_[pownPosition[0]]
-                            [pownPosition[1] + 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0],
-                                               pownPosition[1] + 1}});
-                        }
-                        break;
-
-                    default:
-                        if (grid_[pownPosition[0]]
-                            [pownPosition[1] + 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0],
-                                               pownPosition[1] + 1}});
-                        }
-
-                        if (grid_[pownPosition[0]]
-                            [pownPosition[1] - 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0],
-                                               pownPosition[1] - 1}});
-                        }
-
-                        if (grid_[pownPosition[0] + 1]
-                            [pownPosition[1] - 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0] + 1,
-                                               pownPosition[1] - 1}});
-                        }
-                        break;
-                }
-                break;
-
-            default:
-                if (grid_[pownPosition[0] + 1]
-                    [pownPosition[1]] == Empty) {
-                    result.push_back({pownPosition,
-                                      {pownPosition[0] + 1,
-                                       pownPosition[1]}});
-                }
-
-                if (grid_[pownPosition[0] - 1]
-                    [pownPosition[1]] == Empty) {
-                    result.push_back({pownPosition,
-                                      {pownPosition[0] - 1,
-                                       pownPosition[1]}});
-                }
-
-                switch (pownPosition[1]) {
-                    case 7:
-                        if (grid_[pownPosition[0]]
-                            [pownPosition[1] - 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0],
-                                               pownPosition[1] - 1}});
-                        }
-
-                        if (grid_[pownPosition[0] + 1]
-                            [pownPosition[1] - 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0] + 1,
-                                               pownPosition[1] - 1}});
-                        }
-                        break;
-
-                    case 0:
-                        if (grid_[pownPosition[0]]
-                            [pownPosition[1] + 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0],
-                                               pownPosition[1] + 1}});
-                        }
-
-                        if (grid_[pownPosition[0] - 1]
-                            [pownPosition[1] + 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0] - 1,
-                                               pownPosition[1] + 1}});
-                        }
-                        break;
-
-                    default:
-                        if (grid_[pownPosition[0]]
-                            [pownPosition[1] + 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0],
-                                               pownPosition[1] + 1}});
-                        }
-
-                        if (grid_[pownPosition[0]]
-                            [pownPosition[1] - 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0],
-                                               pownPosition[1] - 1}});
-                        }
-
-                        if (grid_[pownPosition[0] + 1]
-                            [pownPosition[1] - 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0] + 1,
-                                               pownPosition[1] - 1}});
-                        }
-
-                        if (grid_[pownPosition[0] - 1]
-                            [pownPosition[1] + 1] == Empty) {
-                            result.push_back({pownPosition,
-                                              {pownPosition[0] - 1,
-                                               pownPosition[1] + 1}});
-                        }
-                        break;
-                }
-                break;
+            }
         }
     }
 
@@ -274,142 +94,50 @@ ListOfMoves AlphaBeta::availableMoves(const Player &player, const bool &full) {
      * Each pown is a root
      */
     std::queue<PositionType> queue;
+    std::unordered_map<uint64_t, bool> explored;
+    std::unordered_map<uint64_t, ListOfPositionType> paths;
     int i = -1;
     int j = -1;
-    int k = 0;
-    int l = 0;
     bool isPossible = true;
-    PositionType v;
-    std::map<PositionType, bool> explored;
-    std::map<PositionType, ListOfPositionType> paths;
     /* When another root is chosen, the queue is already empty */
     for (auto root : position_colors_players_[player]) {
         queue.push(root);
 
         explored.clear();
         paths.clear();
-        explored[root] = true;
-        paths[root] = {root};
+        explored[hashPosition(root)] = true;
+        paths[hashPosition(root)] = {root};
         while (!queue.empty()) {
-            v = queue.front();
+            PositionType v = queue.front();
             queue.pop();
 
 
             if (possible_elementary_move[(v[0] << 3) | v[1]].empty()) {
                 i = v[0];
                 j = v[1];
-
-                /* Jumping on line+ */
-                for (k = 1; i + (k << 1) < 8; ++k) {
-                    /* Check if there is a pown to jump over */
-                    if (grid_[i + k][j] != Empty) {
-                        /* Check if the jump is valid */
-                        isPossible = true;
-                        for (l = 1; l <= k; ++l) {
-                            if (grid_[i + k + l][j] != Empty) {
-                                isPossible = false;
-                                break;
+                for(const std::vector<int> &direction : valid_lines) {
+                    for (int k = 1;    i + direction[0]*(k << 1) < 8
+                                    && j + direction[1]*(k << 1) < 8
+                                    && i + direction[0]*(k << 1) >= 0
+                                    && j + direction[1]*(k << 1) >= 0; ++k){
+                        /* Check if there is a pown to jump over */
+                        if (grid_[i + direction[0]*k]
+                                 [j + direction[1]*k] != Empty) {
+                            /* Check if the jump is valid */
+                            isPossible = true;
+                            for (int l = 1; l <= k; ++l) {
+                                if (grid_[i + direction[0]*(k + l)]
+                                         [j + direction[1]*(k + l)] != Empty) {
+                                    isPossible = false;
+                                    break;
+                                }
                             }
+                            if (isPossible)
+                                possible_elementary_move[(i << 3) | j]
+                                        .push_back({i + direction[0]*(k << 1),
+                                                    j + direction[1]*(k << 1)});
+                            break;
                         }
-                        if (isPossible)
-                            possible_elementary_move[(i << 3) | j]
-                                    .push_back({i + (k << 1), j});
-                        break;
-                    }
-                }
-
-                /* Jumping on line- */
-                for (k = 1; i >= (k << 1); ++k) {
-                    /* Check if there is a pown to jump over */
-                    if (grid_[i - k][j]) {
-                        /* Check if the jump is valid */
-                        isPossible = true;
-                        for (l = 1; l <= k; ++l) {
-                            if (grid_[i - k - l][j] != Empty) {
-                                isPossible = false;
-                                break;
-                            }
-                        }
-                        if (isPossible)
-                            possible_elementary_move[(i << 3) | j]
-                                    .push_back({i - (k << 1), j});
-                        break;
-                    }
-                }
-
-                /* Jumping on row+ */
-                for (k = 1; j + (k << 1) < 8; ++k) {
-                    /* Check if there is a pown to jump over */
-                    if (grid_[i][j + k] != Empty) {
-                        /* Check if the jump is valid */
-                        isPossible = true;
-                        for (l = 1; l <= k; ++l) {
-                            if (grid_[i][j + k + l] != Empty) {
-                                isPossible = false;
-                                break;
-                            }
-                        }
-                        if (isPossible)
-                            possible_elementary_move[(i << 3) | j]
-                                    .push_back({i, j + (k << 1)});
-                        break;
-                    }
-                }
-
-                /* Jumping on row- */
-                for (k = 1; j >= (k << 1); ++k) {
-                    /* Check if there is a pown to jump over */
-                    if (grid_[i][j - k] != Empty) {
-                        /* Check if the jump is valid */
-                        isPossible = true;
-                        for (l = 1; l <= k; ++l) {
-                            if (grid_[i][j - k - l] != Empty) {
-                                isPossible = false;
-                                break;
-                            }
-                        }
-                        if (isPossible)
-                            possible_elementary_move[(i << 3) | j]
-                                    .push_back({i, j - (k << 1)});
-                        break;
-                    }
-                }
-
-                /* Jumping on diag right */
-                for (k = 1; i + (k << 1) < 8 && j >= (k << 1); ++k) {
-                    /* Check if there is a pown to jump over */
-                    if (grid_[i + k][j - k] != Empty) {
-                        /* Check if the jump is valid */
-                        isPossible = true;
-                        for (l = 1; l <= k; ++l) {
-                            if (grid_[i + k + l][j - k - l] != Empty) {
-                                isPossible = false;
-                                break;
-                            }
-                        }
-                        if (isPossible)
-                            possible_elementary_move[(i << 3) | j]
-                                    .push_back({i + (k << 1), j - (k << 1)});
-                        break;
-                    }
-                }
-
-                /* Jumping on diag left */
-                for (k = 1; j + (k << 1) < 8 && i >= (k << 1); ++k) {
-                    /* Check if there is a pown to jump over */
-                    if (grid_[i - k][j + k] != Empty) {
-                        /* Check if the jump is valid */
-                        isPossible = true;
-                        for (l = 1; l <= k; ++l) {
-                            if (grid_[i - k - l][j + k + l] != Empty) {
-                                isPossible = false;
-                                break;
-                            }
-                        }
-                        if (isPossible)
-                            possible_elementary_move[(i << 3) | j]
-                                    .push_back({i - (k << 1), j + (k << 1)});
-                        break;
                     }
                 }
             }
@@ -417,7 +145,7 @@ ListOfMoves AlphaBeta::availableMoves(const Player &player, const bool &full) {
 
             for (PositionType neig :
                     possible_elementary_move[(v[0] << 3) | v[1]]) {
-                if (!explored.contains(neig)
+                if (!explored.contains(hashPosition(neig))
                     /*
                      * Checks that we are not jumping over the root
                      * (it has moved)
@@ -425,11 +153,11 @@ ListOfMoves AlphaBeta::availableMoves(const Player &player, const bool &full) {
                     && !((v[0] + neig[0])/2 == root[0]
                          && (v[1] + neig[1])/2 == root[1])) {
                     queue.push(neig);
-                    explored[neig] = true;
+                    explored[hashPosition(neig)] = true;
 
                     if (full) {
-                        paths[neig] = paths[v];
-                        paths[neig].push_back(neig);
+                        paths[hashPosition(neig)] = paths[hashPosition(v)];
+                        paths[hashPosition(neig)].push_back(neig);
                     } else {
                         result.push_back({root, neig});
                     }
@@ -438,7 +166,7 @@ ListOfMoves AlphaBeta::availableMoves(const Player &player, const bool &full) {
         }
 
         if (full) {
-            paths.extract(root);
+            paths.extract(hashPosition(root));
             /* we add to result all the paths we found from this root */
             for (const auto &move : paths)
                 result.push_back(move.second);
@@ -471,6 +199,7 @@ int AlphaBeta::evaluate(const Player &player) {
 #warning use inf
 ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, const double &beta) {
     this->maximizing_player_ = this->who_is_to_play_;
+    //this->transTable.clear();
     AlphaBetaEval(depth, alpha, beta, false, true);
     return this->best_move_;
 }
@@ -480,22 +209,6 @@ int AlphaBeta::AlphaBetaEval(const int &depth,
                              double beta,
                              const bool &maximizingPlayer,
                              const bool &keepMove) {
-    /* check if the current position has been searched before */
-    /* compute the hash value of the current board position */
-    unsigned long long hash = hashMatrix(this->grid_, this->who_is_to_play_);
-    auto it = transTable.find(hash);
-    if (it != transTable.end() && it->second.second >= depth) {
-        /* retrieve the value from the transposition table */
-        double value = it->second.first;
-        /* return the value if it falls within the alpha-beta bounds */
-        if (value >= beta && value <= alpha) return value;
-        /* update beta if value is lower */
-        beta = std::min(value, beta);
-        /* update alpha if value is higher */
-        alpha = std::max(value, alpha);
-    }
-
-
     /* Check if the current node is a terminating node */
     switch (this->state_of_game()) {
         case WhiteWon:
@@ -523,14 +236,27 @@ int AlphaBeta::AlphaBetaEval(const int &depth,
             break;
     }
 
+    /* check if the current position has been searched before */
+    /* compute the hash value of the current board position */
+    unsigned long long hash = hashMatrix(this->grid_, this->who_is_to_play_);
+    auto it = transTable.find(hash);
+    if (it != transTable.end() && it->second.second >= depth) {
+        /* retrieve the value from the transposition table */
+        double value = it->second.first;
+
+        /* update beta if value is lower */
+        beta = std::min(value, beta);
+        /* update alpha if value is higher */
+        alpha = std::max(value, alpha);
+
+        if (!keepMove) return value;
+    }
+
     if (depth == 0)
         return heuristicValue();
 
     /* The state is not a termination node */
     double value = 0;
-
-    ListOfMoves possible_moves =
-            this->availableMoves(this->who_is_to_play_, keepMove);
 
     /* Sort according to the value of the move in order to increase the number of cut-offs */
     auto compMove = [this](const ListOfPositionType &a, const ListOfPositionType &b){
@@ -560,99 +286,48 @@ int AlphaBeta::AlphaBetaEval(const int &depth,
                           [b.front()[0]][b.front()[1]];
                 break;
         }
-
         return valueA < valueB;
     };
 
+    ListOfMoves possible_moves = this->availableMoves(this->who_is_to_play_, keepMove);
     std::sort(possible_moves.begin(), possible_moves.end(), compMove);
+    // possible_moves.resize(possible_moves.size()/2);
+
 
     ListOfPositionType best_move;
-    int i;
-    if (maximizingPlayer) {
-        value = -100000; /* -\infty */
+    if (maximizingPlayer)
+        value = -100000;
+    else
+        value =  100000;
 
-        for (const ListOfPositionType &move : possible_moves) {
-            if (value >= beta)
-                continue; /* beta cutoff */
+    for (const ListOfPositionType &move : possible_moves) {
+        this->moveWithoutVerification(this->who_is_to_play_, move);
+        int buff = AlphaBetaEval(depth - 1,
+                                 alpha,
+                                 beta,
+                                 !maximizingPlayer,
+                                 false);
 
-            this->moveWithoutVerification(this->who_is_to_play_, move);
-            int buff = AlphaBetaEval(depth - 1,
-                                     alpha,
-                                     beta,
-                                     !maximizingPlayer,
-                                     false);
+        this->reverseMove(move);
 
-            --this->number_of_times_seen.at(this->grid_);
-
-            this->who_is_to_play_ = 1 - this->who_is_to_play_;
-            this->grid_[move.back()[0]][move.back()[1]] = Empty;
-            this->grid_[move.front()[0]][move.front()[1]]
-                    = (Color) (this->who_is_to_play_ + 1);
-            for (i = 0; i < 10; ++i) {
-                if (this->position_colors_players_[this->who_is_to_play_][i][0]
-                    == move.back()[0]
-                && this->position_colors_players_[this->who_is_to_play_][i][1]
-                        == move.back()[1]) {
-                    this->position_colors_players_[this->who_is_to_play_][i][0]
-                    = move.front()[0];
-                    this->position_colors_players_[this->who_is_to_play_][i][1]
-                    = move.front()[1];
-                    break;
-                }
-            }
-
-
+        if (maximizingPlayer) {
             alpha = std::max(alpha, static_cast<double>(buff));
-
             if (buff >= value) {
                 value = buff;
                 best_move = move;
                 if (value >= beta)
-                    continue; /* beta cutoff */
+                    break; /* beta cutoff */
             }
-        }
-    } else {
-        value = 100000; /* +\infty */
-        /* For each possible move */
-
-        for (const ListOfPositionType &move : possible_moves) {
-            if (value <= alpha)
-                continue; /* alpha cutoff */
-
-            this->moveWithoutVerification(this->who_is_to_play_, move);
-            int buff = AlphaBetaEval(depth - 1,
-                                     alpha,
-                                     beta,
-                                     !maximizingPlayer,
-                                     false);
-
-            --this->number_of_times_seen.at(this->grid_);
-            this->who_is_to_play_ = 1 - this->who_is_to_play_;
-            this->grid_[move.back()[0]][move.back()[1]] = Empty;
-            this->grid_[move.front()[0]][move.front()[1]]
-                    = (Color) (this->who_is_to_play_ + 1);
-            for (i = 0; i < 10; ++i) {
-                if (this->position_colors_players_[this->who_is_to_play_][i][0]
-                == move.back()[0]
-                && this->position_colors_players_[this->who_is_to_play_][i][1]
-                        == move.back()[1]) {
-                    this->position_colors_players_[this->who_is_to_play_][i][0]
-                    = move.front()[0];
-                    this->position_colors_players_[this->who_is_to_play_][i][1]
-                    = move.front()[1];
-                }
-            }
-
+        } else {
             beta = std::min(beta, static_cast<double>(buff));
             if (buff <= value) {
                 value = buff;
                 best_move = move;
                 if (value <= alpha)
-                    continue; /* alpha cutoff */
+                    break; /* alpha cutoff */
             }
         }
     }
-
 
     /* set the best move if asked to */
     if (keepMove)
@@ -670,8 +345,35 @@ int AlphaBeta::heuristicValue() {
                     - evaluate(1 - this->maximizing_player_);
 }
 
+void AlphaBeta::reverseMove(const ListOfPositionType &move){
+    --this->number_of_times_seen.at(this->grid_);
+
+    this->who_is_to_play_ = 1 - this->who_is_to_play_;
+    this->grid_[move.back()[0]][move.back()[1]] = Empty;
+    this->grid_[move.front()[0]][move.front()[1]]
+            = (Color) (this->who_is_to_play_ + 1);
+    for (int i = 0; i < 10; ++i) {
+        if (this->position_colors_players_[this->who_is_to_play_][i][0]
+            == move.back()[0]
+            && this->position_colors_players_[this->who_is_to_play_][i][1]
+               == move.back()[1]) {
+            this->position_colors_players_[this->who_is_to_play_][i][0]
+                    = move.front()[0];
+            this->position_colors_players_[this->who_is_to_play_][i][1]
+                    = move.front()[1];
+            break;
+        }
+    }
+}
+
 /* FNV-1a hash function */
-inline uint64_t AlphaBeta::fnv1a(uint64_t h, const Color &x) {
+inline uint64_t AlphaBeta::fnv1a(uint64_t h, const int &x) {
+    h ^= (uint64_t) x;
+    h *= 0x100000001b3;
+    return h;
+}
+
+inline uint64_t AlphaBeta::fnv1aColor(uint64_t h, const Color &x) {
     h ^= (uint64_t) x;
     h *= 0x100000001b3;
     return h;
@@ -682,8 +384,28 @@ inline uint64_t AlphaBeta::hashMatrix(const GridType &matrix, const int &player)
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             /* combine the hash values of the individual elements */
-            hash = fnv1a(hash, matrix[i][j]);
+            hash = fnv1aColor(hash, matrix[i][j]);
         }
     }
-    return fnv1a(hash, static_cast<Color>(player));;
+    return fnv1a(hash, player);;
+}
+
+inline uint64_t AlphaBeta::hashMove(const ListOfPositionType &move) {
+    uint64_t hash = 0xcbf29ce484222325; /* FNV-1a seed value */
+    hash = fnv1a(hash, move[0][0]);
+    hash = fnv1a(hash, move[0][1]);
+    hash = fnv1a(hash, move.back()[0]);
+    hash = fnv1a(hash, move.back()[1]);
+    return hash;
+}
+
+inline uint64_t AlphaBeta::hashPosition(const PositionType &move) {
+    uint64_t hash = 0xcbf29ce484222325; /* FNV-1a seed value */
+    hash = fnv1a(hash, move[0]);
+    hash = fnv1a(hash, move[1]);
+    return hash;
+}
+
+Player AlphaBeta::get_maximizing_player_() const {
+    return this->maximizing_player_;
 }

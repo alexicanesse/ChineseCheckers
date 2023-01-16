@@ -29,21 +29,23 @@
 /* Other */
 #include <Types.hpp>
 
+template <typename T> int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+}
 
 MoveType ChineseCheckers::elementaryMove(PositionType original_position,
                                          PositionType arrival_position) {
-    // Goal: to decide which move was realized
-    // Check if the move is in the grid
-    if (!(0<= arrival_position[0]
-          && arrival_position[0] <= 7
-          && 0 <= arrival_position[1]
-          && arrival_position[1] <= 7
-          && 0 <= original_position[0]
-          && original_position[0] <= 7
-          && 0 <= original_position[1]
-          && original_position[1] <= 7)
+    /* Check if the move is in the grid */
+    if (!(   arrival_position[0]  >= 0
+          && arrival_position[0]   < 8
+          && arrival_position[1]  >= 0
+          && arrival_position[1]   < 8
+          && original_position[0] >= 0
+          && original_position[0]  < 8
+          && original_position[1] >= 0
+          && original_position[1]  < 8)
         ) {
-        return(Illegal);
+        return Illegal;
     }
 
     /*
@@ -62,39 +64,33 @@ MoveType ChineseCheckers::elementaryMove(PositionType original_position,
     bool rep;
 
     /* Checks if the direction is legal */
-    if (((c - a) * (d - b) == 0) || ((d - b) / (c - a) == -1)) {
-        rep = (abs(a-c+b-d) <= 1) && (abs(a-c) +abs(b-d) <= 2);
-        for (int i = 0; i < 2; ++i) {
-            for (const auto &x : this->position_colors_players_[i]) {
-                if ((x[0] != a) || (x[1] != b)) {
-                    if (   x[0] == (a + c)/2
-                        && x[1] == (b + d)/2 ) {
-                        rep = true;
-                    } else if (((x[0] - a) * (d - b)
-                                == (x[1] - b) * (c - a))
-                            && ((x[0] - a) * (c - a)
-                                + (x[1]-b) * (d - b)
-                                                    >= 0)
-                            && ((x[0] - c) * (a - c)
-                                + (x[1] - d)*(b - d)
-                                                    >= 0)
-                               ) {
-                        return Illegal;
-                    }
-                }
-            }
-        }
-        if (rep) {
-            if ((abs(a-c+b-d) <= 1) && (abs(a-c) +abs(b-d) <= 2))
-                return(notJump);
-            else
-                return(Jump);
-        } else {
-            return Illegal;
-        }
-    } else {
+    if ((c - a) && (d - b) && (c + d != a + b))
         return Illegal;
+
+    if ((abs(a-c+b-d) <= 1) && (abs(a-c) + abs(b-d) <= 2))
+        return notJump;
+
+    std::vector<int> direction = {sgn(c - a), sgn(d - b)};
+
+    int mid;
+    if (direction[0])
+        mid = direction[0]*(c - a)/2;
+    else
+        mid = direction[1]*(d - b)/2;
+
+    /* Check if there is a pown to jump over */
+    if(this->grid_[a + direction[0]*mid][b + direction[1]*mid] == Empty)
+        return Illegal;
+
+    /* Check that there aren't any powns in the way */
+    for (int k = 1; k < mid; ++k) {
+        if (grid_[a + direction[0]*k][b + direction[1]*(k)] != Empty)
+            return Illegal;
+
+        if (grid_[c - direction[0]*k][d - direction[1]*(k)] != Empty)
+            return Illegal;
     }
+    return Jump;
 }
 
 ChineseCheckers::ChineseCheckers() {
@@ -142,8 +138,7 @@ bool ChineseCheckers::move(Player player,
         return false;
 
     /* Check that the right player is playing */
-    if (this->grid_[list_moves[0][0]][list_moves[0][1]]
-                                                            != player + 1)
+    if (this->grid_[list_moves[0][0]][list_moves[0][1]] != player + 1)
         return false;
 
     if (player != this->who_is_to_play_)
@@ -188,7 +183,7 @@ bool ChineseCheckers::move(Player player,
         }
     }
 
-    /* indicates that is position has been seen another time */
+    /* indicates that this position has been seen another time */
     if (this->number_of_times_seen.contains(this->grid_))
         this->number_of_times_seen[this->grid_]++;
     else
@@ -201,22 +196,19 @@ bool ChineseCheckers::move(Player player,
 
 void ChineseCheckers::moveWithoutVerification(Player player,
                              const ListOfPositionType &list_moves) {
-    int n = static_cast<int>(list_moves.size());
-    this->remove_pawn(player, list_moves[0]);
-
-    this->grid_[list_moves[n-1][0]][list_moves[n-1][1]] =
-            grid_[list_moves[0][0]][list_moves[0][1]];
-    this->grid_[list_moves[0][0]][list_moves[0][1]] = Empty;
+    this->grid_[list_moves.back()[0]][list_moves.back()[1]] =
+            grid_[list_moves.front()[0]][list_moves.front()[1]];
+    this->grid_[list_moves.front()[0]][list_moves.front()[1]] = Empty;
 
     for (int i = 0; i < 10; ++i) {
         if ((this->position_colors_players_[player][i][0]
-             == -1)
+             == list_moves.front()[0])
             && (this->position_colors_players_[player][i][1]
-                == -1)) {
+                == list_moves.front()[1])) {
             this->position_colors_players_[player][i][0]
-                    = list_moves[n-1][0];
+                    = list_moves.back()[0];
             this->position_colors_players_[player][i][1]
-                    = list_moves[n-1][1];
+                    = list_moves.back()[1];
             break;
         }
     }
@@ -252,6 +244,7 @@ Result ChineseCheckers::state_of_game() {
                 break;
         }
     }
+
     if ((!lost) && could_win)
         return WhiteWon;
 
@@ -271,6 +264,7 @@ Result ChineseCheckers::state_of_game() {
                 break;
         }
     }
+
     if ((!lost) && could_win)
         return BlackWon;
 
@@ -278,7 +272,6 @@ Result ChineseCheckers::state_of_game() {
     if (this->number_of_times_seen[this->grid_]
                                 == MAX_NUMBER_OF_CYCLES_FOR_DRAW_)
         return Draw;
-
     return NotFinished;
 }
 
@@ -316,7 +309,7 @@ void ChineseCheckers::print_grid_() {
     }
 }
 
-GridType ChineseCheckers::get_grid_() {
+GridType ChineseCheckers::get_grid_() const {
     return this->grid_;
 }
 
@@ -334,7 +327,7 @@ void ChineseCheckers::print_position_colors_players_() {
 }
 
 std::vector<std::vector<PositionType>>
-            ChineseCheckers::get_position_colors_players_() {
+            ChineseCheckers::get_position_colors_players_() const {
     return this->position_colors_players_;
 }
 
@@ -342,6 +335,10 @@ void ChineseCheckers::print_who_is_to_play_() {
     std::cout << this->who_is_to_play_ << "\n";
 }
 
-Player ChineseCheckers::get_who_is_to_play_() {
+Player ChineseCheckers::get_who_is_to_play_() const {
     return this->who_is_to_play_;
+}
+
+std::map<GridType, int> ChineseCheckers::get_number_of_times_seen() const {
+    return this->number_of_times_seen;
 }

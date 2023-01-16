@@ -30,17 +30,15 @@
 
 class AlphaBeta : public ChineseCheckers{
  protected:
-    int AlphaBetaEval(const int &depth,
-                      double alpha,
-                      double beta,
-                      const bool &maximizingPlayer,
-                      const bool &keepMove);
     int heuristicValue();
 
     /* functions used for the transposition tables */
     /* FNV-1a hash function */
-    inline uint64_t fnv1a(uint64_t h, const Color &x);
+    inline uint64_t fnv1aColor(uint64_t h, const Color &x);
+    inline uint64_t fnv1a(uint64_t h, const int &x);
     inline uint64_t hashMatrix(const GridType &matrix, const int &player);
+    inline uint64_t hashMove(const ListOfPositionType &move);
+    inline uint64_t hashPosition(const PositionType &move);
 
     /* this is meant to be seen from black perspective: white should
      * use symmetries to use this matrix. */
@@ -52,6 +50,8 @@ class AlphaBeta : public ChineseCheckers{
 
     int evaluate(const Player &player);
 
+    void reverseMove(const ListOfPositionType &move);
+
     Player maximizing_player_;
     ListOfPositionType best_move_;
 
@@ -59,10 +59,18 @@ class AlphaBeta : public ChineseCheckers{
     std::unordered_map<unsigned long long, std::pair<int, int>> transTable;
 
  public:
+    int AlphaBetaEval(const int &depth,
+                      double alpha,
+                      double beta,
+                      const bool &maximizingPlayer,
+                      const bool &keepMove);
+
     ListOfMoves availableMoves(const Player &player, const bool &full);
     ListOfPositionType getMove(const int &depth, const double &alpha, const double &beta);
     bool isHuman() {return false; }
     AlphaBeta();
+
+    Player get_maximizing_player_() const;
 };
 
 #endif  // SOLVERS_ALPHABETA_INCLUDE_ALPHABETA_HPP_
