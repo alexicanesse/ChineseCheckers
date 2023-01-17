@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.25)
+cmake_minimum_required (VERSION 3.20)
 
 
 
@@ -48,9 +48,12 @@ target_include_directories(AlphaBeta_benchmarks PRIVATE ./solvers/AlphaBeta/incl
 ###############################################################################
 ## dependencies ###############################################################
 ###############################################################################
+find_package(PythonLibs REQUIRED)
 
-find_package(Boost COMPONENTS python311 REQUIRED)
-find_package(PythonLibs 3.11 REQUIRED)
+string(REPLACE "." ";" VERSION_LIST ${PYTHONLIBS_VERSION_STRING})
+list(GET VERSION_LIST 0 PYTHONLIBS_VERSION_MAJOR)
+list(GET VERSION_LIST 1 PYTHONLIBS_VERSION_MINOR)
+find_package(Boost COMPONENTS python${PYTHONLIBS_VERSION_MAJOR}${PYTHONLIBS_VERSION_MINOR} REQUIRED)
 find_package(benchmark REQUIRED)
 
 target_link_libraries(libChineseCheckers PUBLIC ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
