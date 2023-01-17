@@ -31,7 +31,7 @@
 
 /* Other */
 #include "Types.hpp"
-
+#warning Rename
 class ChineseCheckers {
  protected:
     /*! A data structure containing the grid */
@@ -137,7 +137,7 @@ class ChineseCheckers {
     /*! \brief
      * Returns \ref grid_.
      */
-    GridType get_grid_();
+    GridType get_grid_() const;
     /*! \brief
      * Prints \ref position_colors_players_.
      */
@@ -145,7 +145,7 @@ class ChineseCheckers {
     /*! \brief
      * Returns the \ref position_colors_players_.
      */
-    std::vector<std::vector<PositionType>> get_position_colors_players_();
+    std::vector<std::vector<PositionType>> get_position_colors_players_() const;
     /*! \brief
      * Prints \ref who_is_to_play_.
      */
@@ -153,7 +153,9 @@ class ChineseCheckers {
     /*! \brief
      * Returns \ref who_is_to_play_.
      */
-    Player get_who_is_to_play_();
+    Player get_who_is_to_play_() const;
+
+    std::map<GridType, int> get_number_of_times_seen() const;
     ChineseCheckers();
 };
 
