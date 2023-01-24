@@ -2,7 +2,7 @@
 
 import numpy as np
 import random as random
-import bin.solvers.AlphaBeta as ab
+import bin.AlphaBeta as ab
 from typing import final
 
 

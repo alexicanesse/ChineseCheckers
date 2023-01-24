@@ -30,6 +30,9 @@ class Board(Tk,Areas):
         # gray buttons when "new game" hasn't been pressed at all
         # make in-depth tests of "new game" button
         # fix moments when buttons become grayed
+        # show possible moves when clicking on a pawn even if it is AI
+        # bug where u can drag black pawns even if black player is not human
+        # diverse bugs with new_game function
 
         Tk.__init__(self)
         assert(width >= height) # we want the window to be wider than tall to fit buttons on the right
@@ -146,7 +149,7 @@ class Board(Tk,Areas):
                                         "normal")
         
         # "Next turn" button
-        self.TURN_WIDTH = control_width // 2.5
+        self.TURN_WIDTH = control_width // 2.2
         self.TURN_HEIGHT = height // 12
         self.nextturn_b = ClassicButton(self.__controlArea, 
                                         self.TURN_WIDTH,
@@ -249,5 +252,5 @@ class Board(Tk,Areas):
 
 if __name__ == "__main__":
     
-    fen = Board(1600, 900)
+    fen = Board(1700, 900)
     fen.mainloop()
