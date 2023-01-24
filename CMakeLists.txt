@@ -21,6 +21,7 @@ set(CXXFILESALPHABETA ./solvers/AlphaBeta/src/AlphaBeta.cpp ./solvers/AlphaBeta/
 set(CXXFILESUNITTESTS ./src/ChineseCheckers_unittest.cpp)
 set(CXXFILESBENCHMARKS ./src/ChineseCheckers_benchmark.cpp)
 set(CXXFILESALPHABETABENCHMARKS ./solvers/AlphaBeta/src/AlphaBeta_benchmark.cpp)
+set(CXXFILESTOURNAMENT ./src/tournament.cpp)
 
 
 ###############################################################################
@@ -41,14 +42,17 @@ add_executable(benchmarks
 add_executable(AlphaBeta_benchmarks
                 ${CXXFILESALPHABETABENCHMARKS})
 
+add_executable(Tournament ${CXXFILESTOURNAMENT})
+
 include_directories("./include")
 target_include_directories(AlphaBeta PRIVATE ./solvers/AlphaBeta/include/)
+target_include_directories(Tournament PRIVATE ./solvers/AlphaBeta/include/)
 target_include_directories(AlphaBeta_benchmarks PRIVATE ./solvers/AlphaBeta/include/)
 
 ###############################################################################
 ## dependencies ###############################################################
 ###############################################################################
-find_package(PythonLibs REQUIRED)
+find_package(PythonLibs 3.6 REQUIRED)
 
 string(REPLACE "." ";" VERSION_LIST ${PYTHONLIBS_VERSION_STRING})
 list(GET VERSION_LIST 0 PYTHONLIBS_VERSION_MAJOR)
@@ -60,6 +64,7 @@ target_link_libraries(libChineseCheckers PUBLIC ${Boost_LIBRARIES} ${PYTHON_LIBR
 target_link_libraries(AlphaBeta PUBLIC libChineseCheckers ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 target_link_libraries(benchmarks PUBLIC libChineseCheckers benchmark::benchmark)
 target_link_libraries(AlphaBeta_benchmarks PUBLIC AlphaBeta libChineseCheckers benchmark::benchmark)
+target_link_libraries(Tournament PUBLIC AlphaBeta)
 
 target_include_directories(libChineseCheckers PUBLIC ${PYTHON_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
 target_include_directories(AlphaBeta PUBLIC ${PYTHON_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})

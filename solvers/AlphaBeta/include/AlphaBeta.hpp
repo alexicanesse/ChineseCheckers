@@ -69,8 +69,12 @@ class AlphaBeta : public ChineseCheckers{
     ListOfPositionType getMove(const int &depth, const double &alpha, const double &beta);
     bool isHuman() {return false; }
     AlphaBeta();
+    AlphaBeta(const std::vector< std::vector<double> > &player_to_win_value_,
+                         const std::vector< std::vector<double> > &player_to_loose_value_);
 
     Player get_maximizing_player_() const;
+    std::vector<std::vector<double> > get_player_to_loose_value_();
+    std::vector<std::vector<double> > get_player_to_win_value_();
 };
 
 #endif  // SOLVERS_ALPHABETA_INCLUDE_ALPHABETA_HPP_

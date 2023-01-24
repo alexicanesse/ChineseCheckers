@@ -60,6 +60,12 @@ AlphaBeta::AlphaBeta() {
         });
 }
 
+AlphaBeta::AlphaBeta(const std::vector< std::vector<double> > &player_to_win_value_,
+                     const std::vector< std::vector<double> > &player_to_loose_value_) {
+    this->player_to_win_value_ = player_to_win_value_;
+    this->player_to_loose_value_ = player_to_loose_value_;
+}
+
 ListOfMoves AlphaBeta::availableMoves(const Player &player, const bool &full) {
     /* Indicates if there is a jump from (i, j) to (k, l) */
     std::vector<ListOfPositionType> possible_elementary_move(64);
@@ -180,14 +186,23 @@ int AlphaBeta::evaluate(const Player &player) {
     int result = 0;
     switch (player) {
         case 0:  /* White */
-            for (const PositionType &pown : position_colors_players_[0])
-                result += (7 - pown[0])*(7 - pown[0])
-                          + (7 - pown[1])*(7 - pown[1]);
+            if (this->maximizing_player_) {
+                for (const PositionType &pown: position_colors_players_[0])
+                    result += this->player_to_loose_value_[7 - pown[0]][7 - pown[1]];
+            } else {
+                for (const PositionType &pown: position_colors_players_[0])
+                    result += this->player_to_win_value_[7 - pown[0]][7 - pown[1]];
+            }
             break;
 
         case 1:  /* black */
-            for (const PositionType &pown : position_colors_players_[1])
-                result += pown[0]*pown[0] + pown[1]*pown[1];
+            if (this->maximizing_player_) {
+                for (const PositionType &pown: position_colors_players_[1])
+                    result += this->player_to_loose_value_[pown[0]][pown[1]];
+            } else {
+                for (const PositionType &pown: position_colors_players_[1])
+                    result += this->player_to_win_value_[pown[0]][pown[1]];
+            }
             break;
 
         default:
@@ -291,7 +306,7 @@ int AlphaBeta::AlphaBetaEval(const int &depth,
 
     ListOfMoves possible_moves = this->availableMoves(this->who_is_to_play_, keepMove);
     std::sort(possible_moves.begin(), possible_moves.end(), compMove);
-    // possible_moves.resize(possible_moves.size()/2);
+    //possible_moves.resize(10);
 
 
     ListOfPositionType best_move;
@@ -408,4 +423,12 @@ inline uint64_t AlphaBeta::hashPosition(const PositionType &move) {
 
 Player AlphaBeta::get_maximizing_player_() const {
     return this->maximizing_player_;
+}
+
+std::vector<std::vector<double> > AlphaBeta::get_player_to_loose_value_() {
+    return this->player_to_loose_value_;
+}
+
+std::vector<std::vector<double> > AlphaBeta::get_player_to_win_value_() {
+    return this->player_to_win_value_;
 }
