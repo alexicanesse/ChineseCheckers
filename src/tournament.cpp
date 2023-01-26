@@ -36,8 +36,8 @@ Result playGame(AlphaBeta &player0, AlphaBeta &player1, const int &depth) {
         player0.move(0, move);
         player1.move(0, move);
 
-        // player0.print_grid_();
-        // std::cout << "\n";
+        player0.print_grid_();
+        std::cout << "\n";
 
         if(player0.state_of_game() != NotFinished)
             return player0.state_of_game();
@@ -46,23 +46,35 @@ Result playGame(AlphaBeta &player0, AlphaBeta &player1, const int &depth) {
         player0.move(1, move);
         player1.move(1, move);
 
-        // player0.print_grid_();
-        // std::cout << "\n";
+        player0.print_grid_();
+        std::cout << "\n";
     }
 
     return player0.state_of_game();
 }
 
-int main() {
-    AlphaBeta player0;
+void print_matrix(const std::vector< std::vector<double> > &matrix) {
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j)
+            std::cout << matrix[i][j] << " ";
+        std::cout << "\n";
+    }
+}
 
-    auto matrix = player0.get_player_to_win_value_();
+int main() {
+    
+    std::vector< std::vector<double> > matrix(8, std::vector<double>(8));
+    print_matrix(matrix);
 
     for (int i = 0; i < 8; ++i)
         for(int j = 0; j < 8; ++j)
             if (i + j < 3) matrix[i][j] = -42*(i + j);
 
-    AlphaBeta player1(matrix, matrix);
-    std::cout << playGame(player0, player1, 3) << "\n";
+    
+    print_matrix(matrix);
+    // AlphaBeta player0;
+    // auto matrix = player0.get_player_to_win_value_();
+    // AlphaBeta player1(matrix, matrix);
+    // std::cout << playGame(player0, player1, 3) << "\n";
     return 0;
 }
