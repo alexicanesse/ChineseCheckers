@@ -30,13 +30,13 @@
 
 class AlphaBeta : public ChineseCheckers{
  protected:
-    int heuristicValue();
+    double heuristicValue();
 
     /* functions used for the transposition tables */
     /* FNV-1a hash function */
     inline uint64_t fnv1aColor(uint64_t h, const Color &x);
     inline uint64_t fnv1a(uint64_t h, const int &x);
-    inline uint64_t hashMatrix(const GridType &matrix, const int &player);
+    uint64_t hashMatrix(const GridType &matrix, const int &player);
     inline uint64_t hashMove(const ListOfPositionType &move);
     inline uint64_t hashPosition(const PositionType &move);
 
@@ -48,7 +48,7 @@ class AlphaBeta : public ChineseCheckers{
      * use symmetries to use this matrix. */
     std::vector<std::vector<double> > player_to_loose_value_;
 
-    int evaluate(const Player &player);
+    double evaluate(const Player &player);
 
     void reverseMove(const ListOfPositionType &move);
 
@@ -59,7 +59,7 @@ class AlphaBeta : public ChineseCheckers{
     std::unordered_map<unsigned long long, std::pair<int, int>> transTable;
 
  public:
-    int AlphaBetaEval(const int &depth,
+    double AlphaBetaEval(const int &depth,
                       double alpha,
                       double beta,
                       const bool &maximizingPlayer,

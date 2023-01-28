@@ -182,8 +182,8 @@ ListOfMoves AlphaBeta::availableMoves(const Player &player, const bool &full) {
     return result;
 }
 
-int AlphaBeta::evaluate(const Player &player) {
-    int result = 0;
+double AlphaBeta::evaluate(const Player &player) {
+    double result = 0;
     switch (player) {
         case 0:  /* White */
             if (this->maximizing_player_) {
@@ -220,7 +220,7 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
     return this->best_move_;
 }
 
-int AlphaBeta::AlphaBetaEval(const int &depth,
+double AlphaBeta::AlphaBetaEval(const int &depth,
                              double alpha,
                              double beta,
                              const bool &maximizingPlayer,
@@ -355,8 +355,8 @@ int AlphaBeta::AlphaBetaEval(const int &depth,
     return value;
 }
 
-int AlphaBeta::heuristicValue() {
-    return 6*evaluate(this->maximizing_player_)
+double AlphaBeta::heuristicValue() {
+    return evaluate(this->maximizing_player_)
                     - evaluate(1 - this->maximizing_player_);
 }
 
@@ -394,7 +394,7 @@ inline uint64_t AlphaBeta::fnv1aColor(uint64_t h, const Color &x) {
     return h;
 }
 
-inline uint64_t AlphaBeta::hashMatrix(const GridType &matrix, const int &player) {
+uint64_t AlphaBeta::hashMatrix(const GridType &matrix, const int &player) {
     uint64_t hash = 0xcbf29ce484222325; /* FNV-1a seed value */
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
