@@ -75,6 +75,8 @@ class AlphaBeta : public ChineseCheckers{
     Player get_maximizing_player_() const;
     std::vector<std::vector<double> > get_player_to_loose_value_();
     std::vector<std::vector<double> > get_player_to_win_value_();
+    void set_player_to_loose_value_(std::vector< std::vector<double> > &player_to_loose_value_);
+    void set_player_to_win_value_(  std::vector< std::vector<double> > &player_to_win_value_  );
 };
 
 #endif  // SOLVERS_ALPHABETA_INCLUDE_ALPHABETA_HPP_

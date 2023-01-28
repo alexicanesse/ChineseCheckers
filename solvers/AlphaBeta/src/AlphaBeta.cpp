@@ -214,7 +214,8 @@ int AlphaBeta::evaluate(const Player &player) {
 #warning use inf
 ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, const double &beta) {
     this->maximizing_player_ = this->who_is_to_play_;
-    //this->transTable.clear();
+
+    //std::cout << AlphaBetaEval(depth, alpha, beta, false, true) << "\n";
     AlphaBetaEval(depth, alpha, beta, false, true);
     return this->best_move_;
 }
@@ -329,7 +330,6 @@ int AlphaBeta::AlphaBetaEval(const int &depth,
             alpha = std::max(alpha, static_cast<double>(buff));
             if (buff >= value) {
                 value = buff;
-                best_move = move;
                 if (value >= beta)
                     break; /* beta cutoff */
             }
@@ -337,7 +337,7 @@ int AlphaBeta::AlphaBetaEval(const int &depth,
             beta = std::min(beta, static_cast<double>(buff));
             if (buff <= value) {
                 value = buff;
-                best_move = move;
+                if (keepMove) best_move = move;
                 if (value <= alpha)
                     break; /* alpha cutoff */
             }
@@ -431,4 +431,14 @@ std::vector<std::vector<double> > AlphaBeta::get_player_to_loose_value_() {
 
 std::vector<std::vector<double> > AlphaBeta::get_player_to_win_value_() {
     return this->player_to_win_value_;
+}
+
+void AlphaBeta::set_player_to_loose_value_(
+        std::vector< std::vector<double> > &player_to_loose_value_) {
+    this->player_to_loose_value_ = player_to_loose_value_;
+}
+
+void AlphaBeta::set_player_to_win_value_(
+        std::vector< std::vector<double> > &player_to_win_value_  ) {
+    this->player_to_win_value_ = player_to_win_value_;
 }
