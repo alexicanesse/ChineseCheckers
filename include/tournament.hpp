@@ -52,4 +52,22 @@ class SolversIndividuals {
     void print_info();
 };
 
+class GamePlayer {
+    private:
+    AlphaBeta white_player;
+    AlphaBeta black_player;
+    int depth;
+
+    public:
+    GamePlayer();
+    GamePlayer(int & depth_);
+    GamePlayer(SolversIndividuals & solver1, SolversIndividuals & solver2);
+    GamePlayer(SolversIndividuals & solver1, SolversIndividuals & solver2,int & depth_);
+    
+    void set_white_player(SolversIndividuals &solver);
+    void set_black_player(SolversIndividuals &solver);
+    void set_depth(int & depth_);
+    Result playGame();
+};
+
 #endif //CHINESECHECKERS_TOURNAMENT_HPP

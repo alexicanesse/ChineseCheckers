@@ -34,7 +34,7 @@
 
 
 /* Probability of mutation of an element */
-#define P_MUTATION 0.05
+#define P_MUTATION 0.2
 /* variability of a mutation */
 #define SIGMA_MUTATION  25.0
 //Creating distribution generators
@@ -50,10 +50,13 @@ int main() {
     int population_size = 10;
     std::cout << "Current seed: "<< seed << std::endl;
 
-    SolversIndividuals test;
-    test.print_info();
-    test.mutate();
-    test.print_info();
+    SolversIndividuals solver1;
+    SolversIndividuals solver2;
+
+    GamePlayer gp(solver1,solver2);
+    std::cout << gp.playGame()<< "\n";
+
+
 
 
     /*
@@ -83,25 +86,24 @@ loose(std::vector<double> ({0,   1,  4,  9, 16, 25, 36, 49,
                             16, 17, 20, 25, 32, 41, 52, 65,
                             25, 26, 29, 34, 41, 50, 62, 74,
                             36, 37, 40, 45, 52, 62, 72, 85,
-                            49, 50, 53, 58, 65, 74, 85, 98}))
-{}
+                            49, 50, 53, 58, 65, 74, 85, 98})){}
 
 SolversIndividuals::SolversIndividuals(std::vector<double> & win_, std::vector<double> & loose_) : win(win_) , loose(loose_) {}
 
 std::vector<double> SolversIndividuals::get_win() {
-    return(win);
+    return(this->win);
 }
 
 std::vector<double> SolversIndividuals::get_loose() {
-    return(loose);
+    return(this->loose);
 }
 
 void SolversIndividuals::set_win(std::vector<double> & win_) {
-    win = win_;
+    this->win = win_;
 }
 
 void SolversIndividuals::set_loose(std::vector<double> & loose_) {
-    loose = loose_;
+    this->loose = loose_;
 }
 
 void SolversIndividuals::mutate() {
@@ -132,26 +134,78 @@ void print_matrix(const std::vector< std::vector<double> > &matrix) {
     }
 }
 
-Result playGame(AlphaBeta &player0, AlphaBeta &player1, const int &depth) {
-    int remaining_moves = 100;
-    while((player0.state_of_game() == NotFinished) && (remaining_moves > 0)) {
-        auto move = player0.getMove(depth, -100000, 100000);
-        player0.move(0, move);
-        player1.move(0, move);
 
-        //player0.print_grid_();
+//Writing GamePlayer class
+
+GamePlayer::GamePlayer() : white_player(AlphaBeta()), black_player(AlphaBeta()), depth(1) {}
+GamePlayer::GamePlayer(int & depth_) : white_player(AlphaBeta()), black_player(AlphaBeta()), depth(depth_) {}
+
+GamePlayer::GamePlayer(SolversIndividuals & solver1, SolversIndividuals & solver2) {
+    this->set_white_player(solver1);
+    this->set_black_player(solver2);
+    this->depth = 1;
+}
+
+GamePlayer::GamePlayer(SolversIndividuals & solver1, SolversIndividuals & solver2,int & depth_) {
+    this->set_white_player(solver1);
+    this->set_black_player(solver2);
+    this->depth = depth_;
+}
+
+void GamePlayer::set_white_player(SolversIndividuals &solver) {
+    std::vector<double> win_ = solver.get_win();
+    std::vector<double> loose_ = solver.get_loose();
+    std::vector< std::vector<double> > matrix1(8, std::vector<double>(8));
+    std::vector< std::vector<double> > matrix2(8, std::vector<double>(8));
+    for (int i = 0; i != 8; ++i) {
+        for (int j = 0; j != 8; ++j) {
+            matrix1[i][j] = win_[i*8 + j];
+            matrix2[i][j] =loose_[i*i +j];
+        }
+    }
+    this->white_player.set_player_to_win_value_(matrix1);
+    this->white_player.set_player_to_loose_value_(matrix2);
+}
+
+void GamePlayer::set_black_player(SolversIndividuals &solver) {
+    std::vector<double> win_ = solver.get_win();
+    std::vector<double> loose_ = solver.get_loose();
+    std::vector< std::vector<double> > matrix1(8, std::vector<double>(8));
+    std::vector< std::vector<double> > matrix2(8, std::vector<double>(8));
+    for (int i = 0; i != 8; ++i) {
+        for (int j = 0; j != 8; ++j) {
+            matrix1[i][j] = win_[i*8 + j];
+            matrix2[i][j] =loose_[i*i +j];
+        }
+    }
+    this->black_player.set_player_to_win_value_(matrix1);
+    this->black_player.set_player_to_loose_value_(matrix2);
+}
+
+void GamePlayer::set_depth(int & depth_) {
+    this->depth = depth_;
+}
+
+Result GamePlayer::playGame() {
+    int remaining_moves = 100;
+    while((this->white_player.state_of_game() == NotFinished) && (remaining_moves > 0)) {
+        auto move = this->white_player.getMove(this->depth, -100000, 100000);
+        this->white_player.move(0, move);
+        this->black_player.move(0, move);
+
+        //this->white_player.print_grid_();
         //std::cout << "\n";
 
-        if(player0.state_of_game() != NotFinished)
-            return player0.state_of_game();
+        if(this->white_player.state_of_game() != NotFinished)
+            return this->white_player.state_of_game();
 
-        move = player1.getMove(depth, -100000, 100000);
-        player0.move(1, move);
-        player1.move(1, move);
+        move = this->black_player.getMove(this->depth, -100000, 100000);
+        this->white_player.move(1, move);
+        this->black_player.move(1, move);
 
-        //player0.print_grid_();
+        //this->white_player.print_grid_();
         //std::cout << "\n";
         --remaining_moves;
     }
-    return player0.state_of_game();
+    return this->white_player.state_of_game();
 }
