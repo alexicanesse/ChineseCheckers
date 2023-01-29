@@ -31,4 +31,24 @@
 
 Result playGame(AlphaBeta &player0, AlphaBeta &player1, const int &depth);
 
+class SolversIndividuals {
+    private:
+    std::vector<double> win;
+    std::vector<double> loose;
+
+    public:
+    SolversIndividuals();
+    SolversIndividuals(std::vector<double> & win_, std::vector<double> & loose_);
+
+    std::vector<double> get_win();
+    std::vector<double> get_loose();
+
+    void set_win(std::vector<double> & win_);
+    void set_loose(std::vector<double> & lose_);
+
+    void mutate();
+
+    void print_info();
+};
+
 #endif //CHINESECHECKERS_TOURNAMENT_HPP
