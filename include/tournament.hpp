@@ -30,6 +30,7 @@
 #include "AlphaBeta.hpp"
 
 Result playGame(AlphaBeta &player0, AlphaBeta &player1, const int &depth);
+void print_matrix(const std::vector< std::vector<double> > &matrix);
 
 class SolversIndividuals {
     private:
