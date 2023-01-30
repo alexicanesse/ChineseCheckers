@@ -368,3 +368,8 @@ cython_debug/
 objects/
 test.py
 bin/
+.vscode
+values.txt
+grids.txt
+python3
+python3.11

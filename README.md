@@ -41,52 +41,170 @@ Requirements for the software and other tools to build, test and push
 - [Boost](https://www.boost.org/)
 - [Boost.Python](https://www.boost.org/doc/libs/1_72_0/libs/python/doc/html/index.html)
 - [Tkinter](https://docs.python.org/3/library/tkinter.html)
+- [GoogleTest](https://github.com/google/googletest)
+- [Google Benchmark](https://github.com/google/benchmark)
+- [Eigen3](https://eigen.tuxfamily.org/index.php?title=Main_Page)
+- [Abseil](https://github.com/abseil/abseil-cpp)
+- [Tensorflow](https://github.com/tensorflow/tensorflow)
+- [Protobuf v3.9.2](https://github.com/protocolbuffers/protobuf/releases/v3.9.2)
 
 
 ### Installing
 
 #### Installing prerequisites
 
-On Ubuntu
+On Ubuntu and Debian based systems
 
 ```sh
-sudo apt update
-sudo apt install libboost-all-dev libboost-python-dev doxygen libgtest-dev libbenchmark-dev
+# Boost
+sudo apt-get install libboost-all-dev
 
-pip3 install --upgrade pip
-pip3 install tk cpplint
+# Boost.Python
+sudo apt-get install libboost-python-dev
+
+# Tkinter
+sudo apt-get install python3-tk
+
+#Google Test
+sudo apt-get install libgtest-dev
+
+#Google Benchmark
+sudo apt-get install libbenchmark-dev
+
+# Eigen3
+sudo apt-get install libeigen3-dev
+
+# Abseil
+git clone https://github.com/abseil/abseil-cpp.git
+cd abseil-cpp
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+
+# Tensorflow
+pip3 install tensorflow
+
+# Protobuf v3.9.2
+wget https://github.com/protocolbuffers/protobuf/releases/download/v3.9.2/protobuf-cpp-3.9.2.tar.gz
+tar xzf protobuf-cpp-3.9.2.tar.gz
+cd protobuf-3.9.2
+./configure
+make
+make check
+sudo make install
 ```
 
 On macOS
 ```sh
-brew install boost boost-python3 doxygen googletest google-benchmark
+# Boost
+brew install boost
 
-pip3 install --upgrade pip
-pip3 install python-tk cpplint
+# Boost.Python
+brew install boost-python3
+
+# Tkinter
+brew install python-tk
+
+# GoogleTest
+brew install googletest
+
+# Google Benchmark
+brew install google-benchmark
+
+# Eigen3
+brew install eigen
+
+# Abseil
+git clone https://github.com/abseil/abseil-cpp.git
+cd abseil-cpp
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+
+# Tensorflow
+pip3 install tensorflow
+
+# Protobuf v3.9.2
+tar xzf protobuf-cpp-3.9.2.tar.gz
+cd protobuf-3.9.2
+./configure
+make
+make check
+sudo make install
 ```
 
 On ArchLinux
 ```sh
-sudo pacman -S boost doxygen 
+# Boost
+sudo pacman -S boost
 
-pip3 install --upgrade pip
-pip3 install tk cpplint
-```
+# Boost.Python
+sudo pacman -S boost-python
 
-#### Compiling the library
+# Tkinter
+sudo pacman -S python-tk
 
-Run `make`.
-```sh
+# GoogleTest
+sudo pacman -S googletest
+
+# Google Benchmark
+sudo pacman -S google-benchmark
+
+# Eigen3
+sudo pacman -S eigen
+
+# Abseil
+git clone https://github.com/abseil/abseil-cpp.git
+cd abseil-cpp
+mkdir build
+cd build
+cmake ..
 make
+sudo make install
+
+# Tensorflow
+pip3 install tensorflow
+
+# Protobuf v3.9.2
+tar xzf protobuf-cpp-3.9.2.tar.gz
+cd protobuf-3.9.2
+./configure
+make
+make check
+sudo make install
 ```
+
+#### Building
+
+To build the projet, follow these steps:
+- Clone the repository
+- Create a build directory `mkdir bin`
+- Run CMake `cmake -B ./bin -S .`
+- Build the project `cmake --build ./bin`
+
+```sh
+git clone https://github.com/alexicanesse/ChineseCheckers
+mkdir bin
+cmake -B ./bin -S .
+cmake --build ./bin
+```
+
+## Usage
+
+- The shared library `libChineseCheckers` can be used to interface with the main game logic in other projects.
+- The shared library `AlphaBeta` can be used to interface with the AlphaBeta solver in other projects.
+- The executable `benchmarks` can be used to run benchmarks on the main game logic.
+- The executable `AlphaBeta_benchmarks` can be used to run benchmarks on the AlphaBeta solver.
+- The executable `Tournament` can be used to run tournament between different solvers.
+- The executable `Intuition_data_generator` can be used to generate intuition data for the AlphaBeta solver
 
 ## Documentation
 
 The full documentation is accessible at [Documentation](https://alexicanesse.github.io/ChineseCheckers/index.html).
-
-## Running the tests
-
-TODO
 
 
 ## Built With
@@ -125,6 +243,3 @@ described and licensed for free under LGPL. Derivatives works
 can only be redistributed under LGPL, but applications that use the library
 don't have to be.
 
-## Acknowledgments
-
-TODO
