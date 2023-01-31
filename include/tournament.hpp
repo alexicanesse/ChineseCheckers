@@ -36,21 +36,28 @@ class SolversIndividuals {
     private:
     std::vector<double> win;
     std::vector<double> loose;
+    double score;
 
     public:
     SolversIndividuals();
     SolversIndividuals(std::vector<double> & win_, std::vector<double> & loose_);
 
+    friend bool operator<(SolversIndividuals const & s1, SolversIndividuals const & s2);
+
     std::vector<double> get_win();
     std::vector<double> get_loose();
+    double get_score();
 
     void set_win(std::vector<double> & win_);
     void set_loose(std::vector<double> & lose_);
+    void set_score(double & score_);
 
     void mutate();
 
     void print_info();
 };
+
+
 
 class GamePlayer {
     private:
@@ -61,9 +68,8 @@ class GamePlayer {
     public:
     GamePlayer();
     GamePlayer(int & depth_);
-    GamePlayer(SolversIndividuals & solver1, SolversIndividuals & solver2);
-    GamePlayer(SolversIndividuals & solver1, SolversIndividuals & solver2,int & depth_);
-    
+    GamePlayer(SolversIndividuals & solver1, SolversIndividuals & solver2,int depth_ = 1);
+
     void set_white_player(SolversIndividuals &solver);
     void set_black_player(SolversIndividuals &solver);
     void set_depth(int & depth_);

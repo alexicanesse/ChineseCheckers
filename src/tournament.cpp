@@ -31,12 +31,14 @@
 #include "Types.hpp"
 #include "AlphaBeta.hpp"
 
+#warning TODO normaliser les matrices
+
 
 
 /* Probability of mutation of an element */
-#define P_MUTATION 0.2
+#define P_MUTATION 1
 /* variability of a mutation */
-#define SIGMA_MUTATION  25.0
+#define SIGMA_MUTATION  2.5
 //Creating distribution generators
 const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 std::mt19937 generator(seed);/*Use std::random_device generator; for true randomness*/
@@ -49,23 +51,21 @@ auto variation = std::bind(n_distrib,generator);
 int main() {
     int population_size = 10;
     std::cout << "Current seed: "<< seed << std::endl;
-
-    SolversIndividuals solver1;
-    SolversIndividuals solver2;
-
-    GamePlayer gp(solver1,solver2);
-    std::cout << gp.playGame()<< "\n";
+    std::vector< SolversIndividuals > population(population_size ,SolversIndividuals());
 
 
+    for (int i = 0; i != 10; ++i) {
+        double rnd_score = variation();
+        population[i].set_score(rnd_score);
+        std::cout << population[i].get_score() << std::endl;
+    }
 
+    std::sort(population.begin(),population.end());
+    std::cout << "After sorting:"<<std::endl;
+    for (int i = 0; i != 10; ++i) {
+        std::cout << population[i].get_score() << std::endl;
+    }
 
-    /*
-    std::vector< std::vector<double> > matrix(8, std::vector<double>(8));
-    */
-    // AlphaBeta player0;
-    // auto matrix = player0.get_player_to_win_value_();
-    // AlphaBeta player1(matrix, matrix);
-    // std::cout << playGame(player0, player1, 3) << "\n";
     return 0;
 }
 
@@ -86,9 +86,17 @@ loose(std::vector<double> ({0,   1,  4,  9, 16, 25, 36, 49,
                             16, 17, 20, 25, 32, 41, 52, 65,
                             25, 26, 29, 34, 41, 50, 62, 74,
                             36, 37, 40, 45, 52, 62, 72, 85,
-                            49, 50, 53, 58, 65, 74, 85, 98})){}
+                            49, 50, 53, 58, 65, 74, 85, 98})),
+score(0) {}
 
-SolversIndividuals::SolversIndividuals(std::vector<double> & win_, std::vector<double> & loose_) : win(win_) , loose(loose_) {}
+SolversIndividuals::SolversIndividuals(std::vector<double> & win_, std::vector<double> & loose_) : win(win_) , loose(loose_), score(0) {}
+
+
+bool operator<(SolversIndividuals const& s1, SolversIndividuals const& s2) {
+    //We sort by the probability of dying i.e we want to keep solvers with the highest score
+    return(s1.score > s2.score);
+}
+
 
 std::vector<double> SolversIndividuals::get_win() {
     return(this->win);
@@ -105,6 +113,15 @@ void SolversIndividuals::set_win(std::vector<double> & win_) {
 void SolversIndividuals::set_loose(std::vector<double> & loose_) {
     this->loose = loose_;
 }
+
+void SolversIndividuals::set_score(double & score_) {
+    this->score = score_;
+}
+
+double SolversIndividuals::get_score() {
+    return(this->score);
+}
+
 
 void SolversIndividuals::mutate() {
     for (int i = 0; i != 64; ++i) {
@@ -139,14 +156,7 @@ void print_matrix(const std::vector< std::vector<double> > &matrix) {
 
 GamePlayer::GamePlayer() : white_player(AlphaBeta()), black_player(AlphaBeta()), depth(1) {}
 GamePlayer::GamePlayer(int & depth_) : white_player(AlphaBeta()), black_player(AlphaBeta()), depth(depth_) {}
-
-GamePlayer::GamePlayer(SolversIndividuals & solver1, SolversIndividuals & solver2) {
-    this->set_white_player(solver1);
-    this->set_black_player(solver2);
-    this->depth = 1;
-}
-
-GamePlayer::GamePlayer(SolversIndividuals & solver1, SolversIndividuals & solver2,int & depth_) {
+GamePlayer::GamePlayer(SolversIndividuals & solver1, SolversIndividuals & solver2,int depth_) {
     this->set_white_player(solver1);
     this->set_black_player(solver2);
     this->depth = depth_;
@@ -207,5 +217,7 @@ Result GamePlayer::playGame() {
         //std::cout << "\n";
         --remaining_moves;
     }
+    if (remaining_moves == 0)
+        std::cout << "No moves remaining" << std::endl;
     return this->white_player.state_of_game();
 }
