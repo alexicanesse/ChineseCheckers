@@ -19,6 +19,7 @@
 #include <vector>
 #include <random>
 #include <chrono>
+#include <cmath>
 /* The following pragma are used to removed deprecation warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
  */
@@ -137,12 +138,12 @@ void SolversIndividuals::mutate() {
         if (mutates()) {
             variation_ = variation();
             win[i] += variation_;
-            normalization_factor_w += variation_;
+            normalization_factor_w += std::abs(variation_);
         }
         if (mutates()) {
             variation_ = variation();
             loose[i] += variation_;
-            normalization_factor_l += variation_;
+            normalization_factor_l += std::abs(variation_);
         }
     }
 
