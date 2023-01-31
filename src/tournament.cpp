@@ -31,14 +31,15 @@
 #include "Types.hpp"
 #include "AlphaBeta.hpp"
 
-#warning TODO normaliser les matrices
 
-
-
+//Global parameters
 /* Probability of mutation of an element */
-#define P_MUTATION 1
+#define P_MUTATION 0.05
 /* variability of a mutation */
-#define SIGMA_MUTATION  2.5
+#define SIGMA_MUTATION  0.05
+/*Number of solvers in the evolution*/
+#define POP_SIZE 10
+
 //Creating distribution generators
 const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 std::mt19937 generator(seed);/*Use std::random_device generator; for true randomness*/
@@ -49,12 +50,17 @@ auto variation = std::bind(n_distrib,generator);
 
 
 int main() {
-    int population_size = 10;
     std::cout << "Current seed: "<< seed << std::endl;
-    std::vector< SolversIndividuals > population(population_size ,SolversIndividuals());
+    std::vector< SolversIndividuals > population(POP_SIZE ,SolversIndividuals());
+    std::vector<double> vect = population[0].get_win();
 
 
-    for (int i = 0; i != 10; ++i) {
+    double sum = std::accumulate(vect.begin(),vect.end(),0.0);
+    std::cout<<sum;
+    
+
+    /*
+    for (int i = 0; i != POP_SIZE; ++i) {
         double rnd_score = variation();
         population[i].set_score(rnd_score);
         std::cout << population[i].get_score() << std::endl;
@@ -62,31 +68,31 @@ int main() {
 
     std::sort(population.begin(),population.end());
     std::cout << "After sorting:"<<std::endl;
-    for (int i = 0; i != 10; ++i) {
+    for (int i = 0; i != POP_SIZE; ++i) {
         std::cout << population[i].get_score() << std::endl;
     }
-
+    */
     return 0;
 }
 
 //writing SolversIndividuals class 
 SolversIndividuals::SolversIndividuals() : 
-win(  std::vector<double> ({0,   1,  4,  9, 16, 25, 36, 49, 
-                            1,   2,  5, 10, 17, 26, 37, 50,
-                            4,   5,  8, 13, 20, 29, 40, 53,
-                            9,  10, 13, 18, 25, 34, 45, 58,
-                            16, 17, 20, 25, 32, 41, 52, 65,
-                            25, 26, 29, 34, 41, 50, 62, 74,
-                            36, 37, 40, 45, 52, 62, 72, 85,
-                            49, 50, 53, 58, 65, 74, 85, 98})),
-loose(std::vector<double> ({0,   1,  4,  9, 16, 25, 36, 49, 
-                            1,   2,  5, 10, 17, 26, 37, 50,
-                            4,   5,  8, 13, 20, 29, 40, 53,
-                            9,  10, 13, 18, 25, 34, 45, 58,
-                            16, 17, 20, 25, 32, 41, 52, 65,
-                            25, 26, 29, 34, 41, 50, 62, 74,
-                            36, 37, 40, 45, 52, 62, 72, 85,
-                            49, 50, 53, 58, 65, 74, 85, 98})),
+win(  std::vector<double> ({0         ,  0.00044603, 0.00178412, 0.00401427, 0.00713649, 0.0111508, 0.0160571, 0.0218555,
+                            0.00044603, 0.000892061, 0.00223015,  0.0044603, 0.00758252, 0.0115968, 0.0165031, 0.0223015, 
+                            0.00178412,  0.00223015, 0.00356824, 0.00579839, 0.00892061, 0.0129349, 0.0178412, 0.0236396, 
+                            0.00401427,   0.0044603, 0.00579839, 0.00802855,  0.0111508,  0.015165, 0.0200714, 0.0258698, 
+                            0.00713649,  0.00758252, 0.00892061,  0.0111508,   0.014273, 0.0182872, 0.0231936,  0.028992, 
+                             0.0111508,   0.0115968,  0.0129349,   0.015165,  0.0182872, 0.0223015, 0.0276539, 0.0330062, 
+                             0.0160571,   0.0165031,  0.0178412,  0.0200714,  0.0231936, 0.0276539, 0.0321142, 0.0379126, 
+                             0.0218555,   0.0223015,  0.0236396,  0.0258698,   0.028992, 0.0330062, 0.0379126, 0.043711  })),
+loose(std::vector<double> ({0         ,  0.00044603, 0.00178412, 0.00401427, 0.00713649, 0.0111508, 0.0160571, 0.0218555,
+                            0.00044603, 0.000892061, 0.00223015,  0.0044603, 0.00758252, 0.0115968, 0.0165031, 0.0223015, 
+                            0.00178412,  0.00223015, 0.00356824, 0.00579839, 0.00892061, 0.0129349, 0.0178412, 0.0236396, 
+                            0.00401427,   0.0044603, 0.00579839, 0.00802855,  0.0111508,  0.015165, 0.0200714, 0.0258698, 
+                            0.00713649,  0.00758252, 0.00892061,  0.0111508,   0.014273, 0.0182872, 0.0231936,  0.028992, 
+                             0.0111508,   0.0115968,  0.0129349,   0.015165,  0.0182872, 0.0223015, 0.0276539, 0.0330062, 
+                             0.0160571,   0.0165031,  0.0178412,  0.0200714,  0.0231936, 0.0276539, 0.0321142, 0.0379126, 
+                             0.0218555,   0.0223015,  0.0236396,  0.0258698,   0.028992, 0.0330062, 0.0379126, 0.043711   })),
 score(0) {}
 
 SolversIndividuals::SolversIndividuals(std::vector<double> & win_, std::vector<double> & loose_) : win(win_) , loose(loose_), score(0) {}
@@ -124,12 +130,27 @@ double SolversIndividuals::get_score() {
 
 
 void SolversIndividuals::mutate() {
+    double normalization_factor_w = 1;
+    double normalization_factor_l = 1;
+    double variation_ = 0;
     for (int i = 0; i != 64; ++i) {
-        if (mutates())
-            win[i] += variation();
-        if (mutates())
-            loose[i] += variation();
+        if (mutates()) {
+            variation_ = variation();
+            win[i] += variation_;
+            normalization_factor_w += variation_;
+        }
+        if (mutates()) {
+            variation_ = variation();
+            loose[i] += variation_;
+            normalization_factor_l += variation_;
+        }
     }
+
+    for (int i = 0; i != 64; ++i) {
+        win[i]   /= normalization_factor_w;
+        loose[i] /= normalization_factor_l;
+    }
+
 }
 
 
@@ -196,15 +217,12 @@ void GamePlayer::set_depth(int & depth_) {
     this->depth = depth_;
 }
 
-Result GamePlayer::playGame() {
+double GamePlayer::playGame() {
     int remaining_moves = 100;
     while((this->white_player.state_of_game() == NotFinished) && (remaining_moves > 0)) {
         auto move = this->white_player.getMove(this->depth, -100000, 100000);
         this->white_player.move(0, move);
         this->black_player.move(0, move);
-
-        //this->white_player.print_grid_();
-        //std::cout << "\n";
 
         if(this->white_player.state_of_game() != NotFinished)
             return this->white_player.state_of_game();
@@ -212,12 +230,28 @@ Result GamePlayer::playGame() {
         move = this->black_player.getMove(this->depth, -100000, 100000);
         this->white_player.move(1, move);
         this->black_player.move(1, move);
-
-        //this->white_player.print_grid_();
-        //std::cout << "\n";
         --remaining_moves;
     }
-    if (remaining_moves == 0)
-        std::cout << "No moves remaining" << std::endl;
-    return this->white_player.state_of_game();
+
+    Result result = this->white_player.state_of_game();
+    switch(result) {
+        case NotFinished:
+            return(0.0);
+            break;
+        case Draw:
+            return(0.0);
+            break;
+        case WhiteWon:
+            return(1.0);
+            break;
+        case BlackWon:
+            return(-1.0);
+            break;
+        default:
+            std::cout<<"Error in the switch of GamePlayer::playGame(), return 0.0 by default";
+            return(0.0);
+            break;
+    }
+     
+
 }

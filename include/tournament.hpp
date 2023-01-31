@@ -73,7 +73,7 @@ class GamePlayer {
     void set_white_player(SolversIndividuals &solver);
     void set_black_player(SolversIndividuals &solver);
     void set_depth(int & depth_);
-    Result playGame();
+    double playGame();
 };
 
 #endif //CHINESECHECKERS_TOURNAMENT_HPP
