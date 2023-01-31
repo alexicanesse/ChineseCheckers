@@ -19,7 +19,7 @@
 #include <vector>
 #include <random>
 #include <chrono>
-#include <cmath>
+#include<algorithm>
 /* The following pragma are used to removed deprecation warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
  */
@@ -50,15 +50,21 @@ auto mutates = std::bind(b_distrib ,generator);
 auto variation = std::bind(n_distrib,generator);
 
 
+
 int main() {
     std::cout << "Current seed: "<< seed << std::endl;
     std::vector< SolversIndividuals > population(POP_SIZE ,SolversIndividuals());
-    std::vector<double> vect = population[0].get_win();
 
 
-    double sum = std::accumulate(vect.begin(),vect.end(),0.0);
-    std::cout<<sum;
-    
+    std::vector<double> test(POP_SIZE);
+    for (int i = 0; i != POP_SIZE; ++i) {
+        population[i].mutate();
+        auto win__ = population[i].get_win();
+        auto loose__ = population[i].get_loose();
+        std::cout << *std::max_element(win__.begin(),win__.end()) << " "<< *std::min_element(win__.begin(),win__.end()) << " " <<*std::max_element(loose__.begin(),loose__.end()) << " "<< *std::min_element(loose__.begin(),loose__.end()) << std::endl;
+    }
+
+
 
     /*
     for (int i = 0; i != POP_SIZE; ++i) {
@@ -96,7 +102,7 @@ loose(std::vector<double> ({0         ,  0.00044603, 0.00178412, 0.00401427, 0.0
                              0.0218555,   0.0223015,  0.0236396,  0.0258698,   0.028992, 0.0330062, 0.0379126, 0.043711   })),
 score(0) {}
 
-SolversIndividuals::SolversIndividuals(std::vector<double> & win_, std::vector<double> & loose_) : win(win_) , loose(loose_), score(0) {}
+SolversIndividuals::SolversIndividuals(std::vector<double> & win_, std::vector<double> & loose_) : win(win_), loose(loose_), score(0) {}
 
 
 bool operator<(SolversIndividuals const& s1, SolversIndividuals const& s2) {
@@ -131,25 +137,22 @@ double SolversIndividuals::get_score() {
 
 
 void SolversIndividuals::mutate() {
-    double normalization_factor_w = 1;
-    double normalization_factor_l = 1;
-    double variation_ = 0;
+    double normalisation_factor = 0;
     for (int i = 0; i != 64; ++i) {
-        if (mutates()) {
-            variation_ = variation();
-            win[i] += variation_;
-            normalization_factor_w += std::abs(variation_);
-        }
-        if (mutates()) {
-            variation_ = variation();
-            loose[i] += variation_;
-            normalization_factor_l += std::abs(variation_);
-        }
+        if (mutates()) 
+            this->win[i] += variation();
+        if (mutates())
+            this->loose[i] += variation();
     }
 
+    const auto [min0,max0]= std::minmax_element(this->win.begin(), this->win.end());
+    normalisation_factor = std::max(std::abs(*min0), std::abs(*max0));
+    const auto [min,max] = std::minmax_element(this->loose.begin(), this->loose.end());
+    normalisation_factor = std::max(normalisation_factor, std::max(std::abs(*min), std::abs(*max)));
+
     for (int i = 0; i != 64; ++i) {
-        win[i]   /= normalization_factor_w;
-        loose[i] /= normalization_factor_l;
+        win[i]   /= normalisation_factor;
+        loose[i] /= normalisation_factor;
     }
 
 }

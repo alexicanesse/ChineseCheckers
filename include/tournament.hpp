@@ -20,6 +20,7 @@
 #include <random>
 #include <chrono>
 #include <cmath>
+#include<algorithm>
 /* The following pragma are used to removed depraction warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
  */
