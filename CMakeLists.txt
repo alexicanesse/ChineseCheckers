@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.20)
 
-
+# ignore BOOST deprecated headers
+add_definitions("-DBOOST_ALLOW_DEPRECATED_HEADERS")
+add_definitions("-DBOOST_BIND_GLOBAL_PLACEHOLDERS")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

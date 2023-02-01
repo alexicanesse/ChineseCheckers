@@ -31,7 +31,6 @@
 
 /* Other */
 #include "Types.hpp"
-#warning Rename
 class ChineseCheckers {
  protected:
     /*! A data structure containing the grid */

@@ -59,13 +59,8 @@ int main() {
     auto vect = sol.get_win();
     double max = *std::max_element(vect.begin(),vect.end());
 
-    std::cout<<"{";
-    for (auto x: vect) {
-        std::cout << x/max << ", ";
-    }
-    std::cout<<"{";
-
     /*
+    
     std::vector<double> test(POP_SIZE);
     for (int i = 0; i != POP_SIZE; ++i) {
         population[i].mutate();
@@ -73,8 +68,8 @@ int main() {
         auto loose__ = population[i].get_loose();
         std::cout << *std::max_element(win__.begin(),win__.end()) << " "<< *std::min_element(win__.begin(),win__.end()) << " " <<*std::max_element(loose__.begin(),loose__.end()) << " "<< *std::min_element(loose__.begin(),loose__.end()) << std::endl;
     }
+    
     */
-
 
     /*
     for (int i = 0; i != POP_SIZE; ++i) {
