@@ -59,11 +59,9 @@ int main() {
     SolversIndividuals sol1;
     SolversIndividuals sol2;
     GamePlayer gp1;
-    GamePlayer gp2(sol1,sol2);
+    GamePlayer gp2(sol1,sol2,1);
     std::cout << "A game " << gp1.playGame() << std::endl;
     std::cout << "A game " << gp2.playGame() << std::endl;
-
-
 
 
     /*
@@ -194,7 +192,9 @@ void print_matrix(const std::vector< std::vector<double> > &matrix) {
 //Writing GamePlayer class
 
 GamePlayer::GamePlayer() : white_player(AlphaBeta()), black_player(AlphaBeta()), depth(1) {}
+
 GamePlayer::GamePlayer(int & depth_) : white_player(AlphaBeta()), black_player(AlphaBeta()), depth(depth_) {}
+
 GamePlayer::GamePlayer(SolversIndividuals & solver1, SolversIndividuals & solver2,int depth_) {
     this->set_white_player(solver1);
     this->set_black_player(solver2);
@@ -204,14 +204,15 @@ GamePlayer::GamePlayer(SolversIndividuals & solver1, SolversIndividuals & solver
 void GamePlayer::set_white_player(SolversIndividuals &solver) {
     std::vector<double> win_ = solver.get_win();
     std::vector<double> loose_ = solver.get_loose();
-    std::vector< std::vector<double> > matrix1(8, std::vector<double>(8));
-    std::vector< std::vector<double> > matrix2(8, std::vector<double>(8));
+    std::vector< std::vector<double> > matrix1(8, std::vector<double>(8,0));
+    std::vector< std::vector<double> > matrix2(8, std::vector<double>(8,0));
     for (int i = 0; i != 8; ++i) {
         for (int j = 0; j != 8; ++j) {
             matrix1[i][j] = win_[i*8 + j];
-            matrix2[i][j] =loose_[i*8 +j];
+            matrix2[i][j] = loose_[i*8 + j];
         }
     }
+    
     this->white_player.set_player_to_win_value_(matrix1);
     this->white_player.set_player_to_loose_value_(matrix2);
 }
@@ -219,12 +220,12 @@ void GamePlayer::set_white_player(SolversIndividuals &solver) {
 void GamePlayer::set_black_player(SolversIndividuals &solver) {
     std::vector<double> win_ = solver.get_win();
     std::vector<double> loose_ = solver.get_loose();
-    std::vector< std::vector<double> > matrix1(8, std::vector<double>(8));
-    std::vector< std::vector<double> > matrix2(8, std::vector<double>(8));
+    std::vector< std::vector<double> > matrix1(8, std::vector<double>(8,0));
+    std::vector< std::vector<double> > matrix2(8, std::vector<double>(8,0));
     for (int i = 0; i != 8; ++i) {
         for (int j = 0; j != 8; ++j) {
             matrix1[i][j] = win_[i*8 + j];
-            matrix2[i][j] =loose_[i*8 +j];
+            matrix2[i][j] = loose_[i*8 + j];
         }
     }
     this->black_player.set_player_to_win_value_(matrix1);
@@ -237,6 +238,8 @@ void GamePlayer::set_depth(int & depth_) {
 
 double GamePlayer::playGame() {
     int remaining_moves = 100;
+    this->white_player.new_game();
+    this->black_player.new_game();
     while((this->white_player.state_of_game() == NotFinished) && (remaining_moves > 0)) {
         auto move = this->white_player.getMove(this->depth, -100000, 100000);
         this->white_player.move(0, move);
