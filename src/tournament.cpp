@@ -50,14 +50,22 @@ auto mutates = std::bind(b_distrib ,generator);
 auto variation = std::bind(n_distrib,generator);
 
 
+#warning Mutate que dans [0,1]0.0); ?
 
 int main() {
     std::cout << "Current seed: "<< seed << std::endl;
     std::vector< SolversIndividuals > population(POP_SIZE ,SolversIndividuals());
 
-    SolversIndividuals sol;
-    auto vect = sol.get_win();
-    double max = *std::max_element(vect.begin(),vect.end());
+    SolversIndividuals sol1;
+    SolversIndividuals sol2;
+    GamePlayer gp1;
+    GamePlayer gp2(sol1,sol2);
+    std::cout << "A game " << gp1.playGame() << std::endl;
+    std::cout << "A game " << gp2.playGame() << std::endl;
+
+
+
+    
 
     /*
     
@@ -150,14 +158,16 @@ void SolversIndividuals::mutate() {
             this->loose[i] += variation();
     }
 
-    const auto [min0,max0]= std::minmax_element(this->win.begin(), this->win.end());
+    const auto [min0, max0] = std::minmax_element(this->win.begin(), this->win.end());
+    const auto [min1, max1] = std::minmax_element(this->loose.begin(), this->loose.end());
     normalisation_factor = std::max(std::abs(*min0), std::abs(*max0));
-    const auto [min,max] = std::minmax_element(this->loose.begin(), this->loose.end());
-    normalisation_factor = std::max(normalisation_factor, std::max(std::abs(*min), std::abs(*max)));
+    normalisation_factor = std::max(normalisation_factor, std::max(std::abs(*min1), std::abs(*max1)));
 
-    for (int i = 0; i != 64; ++i) {
-        win[i]   /= normalisation_factor;
-        loose[i] /= normalisation_factor;
+    if (normalisation_factor != 0) {
+        for (int i = 0; i != 64; ++i) {
+            win[i]   /= normalisation_factor;
+            loose[i] /= normalisation_factor;
+        }
     }
 
 }
@@ -243,24 +253,39 @@ double GamePlayer::playGame() {
     }
 
     Result result = this->white_player.state_of_game();
+    std::vector<std::vector<Color> > end_grid;
+    double score = 0.0;
     switch(result) {
         case NotFinished:
-            return(0.0);
+            end_grid = this->white_player.get_grid_();
+            for (auto x: this->white_triangle) {
+                if (end_grid[x[0]][x[1]] != Empty) {
+                    score -= 1;
+                }
+            }
+            for (auto x: this->black_triangle) {
+                if (end_grid[x[0]][x[1]] != Empty) {
+                    score += 1;
+                }
+            }
+            return(score/20);
             break;
+
         case Draw:
             return(0.0);
             break;
+
         case WhiteWon:
-            return(1.0);
+            return(1.0 + remaining_moves/100);
             break;
+
         case BlackWon:
-            return(-1.0);
+            return(-1.0 - remaining_moves/100);
             break;
+
         default:
             std::cout<<"Error in the switch of GamePlayer::playGame(), return 0.0 by default";
             return(0.0);
             break;
     }
-     
-
 }
