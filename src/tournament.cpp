@@ -212,7 +212,6 @@ void GamePlayer::set_white_player(SolversIndividuals &solver) {
             matrix2[i][j] = loose_[i*8 + j];
         }
     }
-    
     this->white_player.set_player_to_win_value_(matrix1);
     this->white_player.set_player_to_loose_value_(matrix2);
 }
@@ -246,7 +245,7 @@ double GamePlayer::playGame() {
         this->black_player.move(0, move);
 
         if(this->white_player.state_of_game() != NotFinished)
-            return this->white_player.state_of_game();
+            break;
 
         move = this->black_player.getMove(this->depth, -100000, 100000);
         this->white_player.move(1, move);
@@ -257,6 +256,7 @@ double GamePlayer::playGame() {
     Result result = this->white_player.state_of_game();
     std::vector<std::vector<Color> > end_grid;
     double score = 0.0;
+    std::cout << " remaining moves" << remaining_moves<< std::endl;
     switch(result) {
         case NotFinished:
             end_grid = this->white_player.get_grid_();
@@ -278,11 +278,11 @@ double GamePlayer::playGame() {
             break;
 
         case WhiteWon:
-            return(1.0 + remaining_moves/100);
+            return(1.0 + ((double) remaining_moves)/100);
             break;
 
         case BlackWon:
-            return(-1.0 - remaining_moves/100);
+            return(-1.0 - ((double) remaining_moves)/100);
             break;
 
         default:
