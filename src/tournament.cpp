@@ -210,7 +210,7 @@ void GamePlayer::set_white_player(SolversIndividuals &solver) {
     for (int i = 0; i != 8; ++i) {
         for (int j = 0; j != 8; ++j) {
             matrix1[i][j] = win_[i*8 + j];
-            matrix2[i][j] =loose_[i*i +j];
+            matrix2[i][j] =loose_[i*8 +j];
         }
     }
     this->white_player.set_player_to_win_value_(matrix1);
