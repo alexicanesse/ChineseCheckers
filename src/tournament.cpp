@@ -40,9 +40,10 @@
 #define SIGMA_MUTATION  0.05
 /*Number of solvers in the evolution*/
 #define POP_SIZE 10
-
 /*Maximum number of moves authorized in a evolution game*/
 #define MAX_NUM_MOVES 100
+/*Depth for AlphaBeta*/
+#define AB_DEPTH 1
 
 //Creating distribution generators
 const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -57,14 +58,17 @@ auto variation = std::bind(n_distrib,generator);
 
 int main() {
     std::cout << "Current seed: "<< seed << std::endl;
-    std::vector< SolversIndividuals > population(POP_SIZE ,SolversIndividuals());
-
     SolversIndividuals sol1;
     SolversIndividuals sol2;
-    GamePlayer gp1;
-    GamePlayer gp2(sol1,sol2,1);
-    std::cout << "A game " << gp1.playGame() << std::endl;
-    std::cout << "A game " << gp2.playGame() << std::endl;
+    GamePlayer gp1(AB_DEPTH);
+    GamePlayer gp2(sol1,sol2,AB_DEPTH);
+    //gp1.print_players_info();
+    //gp2.print_players_info();
+
+    std::cout << "Constructor test: "<< gp2.constructor_test()<<std::endl;
+
+    std::cout << "Default constructor game: " << gp1.playGame() << std::endl;
+    std::cout << "Specific constructor game: " << gp2.playGame() << std::endl;
 
 
     /*
@@ -97,22 +101,22 @@ int main() {
 
 //writing SolversIndividuals class 
 SolversIndividuals::SolversIndividuals() : 
-win(  std::vector<double> ({0        , 0.0102041, 0.0408163, 0.0918366, 0.163265, 0.255103, 0.367347, 0.5,
-                            0.0102041, 0.0204082, 0.0510203, 0.102041,  0.173469, 0.265306, 0.37755,  0.510203, 
-                            0.0408163, 0.0510203, 0.0816325, 0.132653,  0.204082, 0.295919, 0.408163, 0.540816,
-                            0.0918366, 0.102041,  0.132653,  0.183673,  0.255103, 0.346938, 0.459184, 0.591837, 
-                            0.163265,  0.173469,  0.204082,  0.255103,  0.326531, 0.418366, 0.530612, 0.663266, 
-                            0.255103,  0.265306,  0.295919,  0.346938,  0.418366, 0.510203, 0.632653, 0.755101, 
-                            0.367347,  0.37755,   0.408163,  0.459184,  0.530612, 0.632653, 0.734694, 0.867347,
-                            0.5,       0.510203,  0.540816,  0.591837,  0.663266, 0.755101, 0.867347, 1         })),
-loose(std::vector<double> ({0        , 0.0102041, 0.0408163, 0.0918366, 0.163265, 0.255103, 0.367347, 0.5,
-                            0.0102041, 0.0204082, 0.0510203, 0.102041,  0.173469, 0.265306, 0.37755,  0.510203, 
-                            0.0408163, 0.0510203, 0.0816325, 0.132653,  0.204082, 0.295919, 0.408163, 0.540816,
-                            0.0918366, 0.102041,  0.132653,  0.183673,  0.255103, 0.346938, 0.459184, 0.591837, 
-                            0.163265,  0.173469,  0.204082,  0.255103,  0.326531, 0.418366, 0.530612, 0.663266, 
-                            0.255103,  0.265306,  0.295919,  0.346938,  0.418366, 0.510203, 0.632653, 0.755101, 
-                            0.367347,  0.37755,   0.408163,  0.459184,  0.530612, 0.632653, 0.734694, 0.867347,
-                            0.5,       0.510203,  0.540816,  0.591837,  0.663266, 0.755101, 0.867347, 1         })),
+win(  std::vector<double> ({  0.0/98,  1.0/98,  4.0/98,  9.0/98, 16.0/98, 25.0/98, 36.0/98, 49.0/98,
+                              1.0/98,  2.0/98,  5.0/98, 10.0/98, 17.0/98, 26.0/98, 37.0/98, 50.0/98,
+                              4.0/98,  5.0/98,  8.0/98, 13.0/98, 20.0/98, 29.0/98, 40.0/98, 53.0/98,
+                              9.0/98, 10.0/98, 13.0/98, 18.0/98, 25.0/98, 34.0/98, 45.0/98, 58.0/98,
+                             16.0/98, 17.0/98, 20.0/98, 25.0/98, 32.0/98, 41.0/98, 52.0/98, 65.0/98,
+                             25.0/98, 26.0/98, 29.0/98, 34.0/98, 41.0/98, 50.0/98, 62.0/98, 74.0/98,
+                             36.0/98, 37.0/98, 40.0/98, 45.0/98, 52.0/98, 62.0/98, 72.0/98, 85.0/98,
+                             49.0/98, 50.0/98, 53.0/98, 58.0/98, 65.0/98, 74.0/98, 85.0/98, 98.0/98  })),
+loose(std::vector<double> ({  0.0/98,  1.0/98,  4.0/98,  9.0/98, 16.0/98, 25.0/98, 36.0/98, 49.0/98,
+                              1.0/98,  2.0/98,  5.0/98, 10.0/98, 17.0/98, 26.0/98, 37.0/98, 50.0/98,
+                              4.0/98,  5.0/98,  8.0/98, 13.0/98, 20.0/98, 29.0/98, 40.0/98, 53.0/98,
+                              9.0/98, 10.0/98, 13.0/98, 18.0/98, 25.0/98, 34.0/98, 45.0/98, 58.0/98,
+                             16.0/98, 17.0/98, 20.0/98, 25.0/98, 32.0/98, 41.0/98, 52.0/98, 65.0/98,
+                             25.0/98, 26.0/98, 29.0/98, 34.0/98, 41.0/98, 50.0/98, 62.0/98, 74.0/98,
+                             36.0/98, 37.0/98, 40.0/98, 45.0/98, 52.0/98, 62.0/98, 72.0/98, 85.0/98,
+                             49.0/98, 50.0/98, 53.0/98, 58.0/98, 65.0/98, 74.0/98, 85.0/98, 98.0/98  })),
 score(0) {}
 
 SolversIndividuals::SolversIndividuals(std::vector<double> & win_, std::vector<double> & loose_) : win(win_), loose(loose_), score(0) {}
@@ -196,7 +200,7 @@ void print_matrix(const std::vector< std::vector<double> > &matrix) {
 
 GamePlayer::GamePlayer() : white_player(AlphaBeta()), black_player(AlphaBeta()), depth(1) {}
 
-GamePlayer::GamePlayer(int & depth_) : white_player(AlphaBeta()), black_player(AlphaBeta()), depth(depth_) {}
+GamePlayer::GamePlayer(int depth_) : white_player(AlphaBeta()), black_player(AlphaBeta()), depth(depth_) {}
 
 GamePlayer::GamePlayer(SolversIndividuals & solver1, SolversIndividuals & solver2,int depth_) {
     this->set_white_player(solver1);
@@ -294,4 +298,49 @@ double GamePlayer::playGame() {
             return(0.0);
             break;
     }
+}
+
+void GamePlayer::print_players_info() {
+    std::cout << std::endl;
+    auto matrix11 = this->white_player.get_player_to_win_value_();
+    auto matrix12 = this->white_player.get_player_to_loose_value_();
+    std::cout << "White player info:" << std::endl << "Win value:" << std::endl;
+    print_matrix(matrix11);
+    std::cout << std::endl;
+    std::cout << "Loose value:" << std::endl;
+    print_matrix(matrix12);
+
+    std::cout << std::endl;
+    auto matrix21 = this->black_player.get_player_to_win_value_();
+    auto matrix22 = this->black_player.get_player_to_loose_value_();
+    std::cout << "Black player info:" << std::endl << "Win value:" << std::endl;
+    print_matrix(matrix21);
+    std::cout << std::endl;
+    std::cout << "Loose value:" << std::endl;
+    print_matrix(matrix22);
+}
+
+int GamePlayer::constructor_test() {
+    AlphaBeta testPlayer;
+    auto matrix11 = this->white_player.get_player_to_win_value_();
+    auto matrix12 = this->white_player.get_player_to_loose_value_();
+    auto matrix21 = testPlayer.get_player_to_win_value_();
+    auto matrix22 = testPlayer.get_player_to_loose_value_();
+
+    for (int i = 0; i != 8; ++i) {
+        for (int j = 0; j != 8; ++j) {
+            if (matrix11[i][j] != matrix21[i][j]) {
+                std::cout << "ko" << i << " " << j << "case 1" << std::endl;
+                return(0);
+            }
+                
+            if (matrix12[i][j] != matrix22[i][j]) {
+                std::cout << "ko" << i << " " << j << "case 1" << std::endl;
+                return(0);
+            }
+        }
+    }
+    std::cout << "ok " ;
+    return(1);
+
 }

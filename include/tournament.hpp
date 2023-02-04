@@ -73,13 +73,15 @@ class GamePlayer {
 
     public:
     GamePlayer();
-    GamePlayer(int & depth_);
+    GamePlayer(int depth_);
     GamePlayer(SolversIndividuals & solver1, SolversIndividuals & solver2,int depth_ = 1);
 
     void set_white_player(SolversIndividuals &solver);
     void set_black_player(SolversIndividuals &solver);
     void set_depth(int & depth_);
     double playGame();
+    void print_players_info();
+    int constructor_test();
 };
 
 #endif //CHINESECHECKERS_TOURNAMENT_HPP
