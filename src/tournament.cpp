@@ -41,6 +41,9 @@
 /*Number of solvers in the evolution*/
 #define POP_SIZE 10
 
+/*Maximum number of moves authorized in a evolution game*/
+#define MAX_NUM_MOVES 100
+
 //Creating distribution generators
 const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 std::mt19937 generator(seed);/*Use std::random_device generator; for true randomness*/
@@ -236,13 +239,14 @@ void GamePlayer::set_depth(int & depth_) {
 }
 
 double GamePlayer::playGame() {
-    int remaining_moves = 100;
+    int remaining_moves = MAX_NUM_MOVES;
     this->white_player.new_game();
     this->black_player.new_game();
     while((this->white_player.state_of_game() == NotFinished) && (remaining_moves > 0)) {
         auto move = this->white_player.getMove(this->depth, -100000, 100000);
         this->white_player.move(0, move);
         this->black_player.move(0, move);
+        --remaining_moves;
 
         if(this->white_player.state_of_game() != NotFinished)
             break;
@@ -278,11 +282,11 @@ double GamePlayer::playGame() {
             break;
 
         case WhiteWon:
-            return(1.0 + ((double) remaining_moves)/100);
+            return(1.0 + ((double) remaining_moves)/MAX_NUM_MOVES);
             break;
 
         case BlackWon:
-            return(-1.0 - ((double) remaining_moves)/100);
+            return(-1.0 - ((double) remaining_moves)/MAX_NUM_MOVES);
             break;
 
         default:
