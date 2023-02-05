@@ -17,6 +17,10 @@
 
 /* C++ libraries */
 #include <vector>
+#include <random>
+#include <chrono>
+#include <cmath>
+#include<algorithm>
 /* The following pragma are used to removed depraction warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
  */
@@ -36,38 +40,48 @@ class SolversIndividuals {
     private:
     std::vector<double> win;
     std::vector<double> loose;
+    double score;
 
     public:
     SolversIndividuals();
     SolversIndividuals(std::vector<double> & win_, std::vector<double> & loose_);
 
+    friend bool operator<(SolversIndividuals const & s1, SolversIndividuals const & s2);
+
     std::vector<double> get_win();
     std::vector<double> get_loose();
+    double get_score();
 
     void set_win(std::vector<double> & win_);
     void set_loose(std::vector<double> & lose_);
+    void set_score(double & score_);
 
     void mutate();
 
     void print_info();
 };
 
+
+
 class GamePlayer {
     private:
     AlphaBeta white_player;
     AlphaBeta black_player;
+    std::vector< std::vector<int> > white_triangle = {{0, 0}, {0, 1}, {0, 2}, {0, 3}, {1, 0}, {1, 1}, {1, 2}, {2, 0}, {2, 1}, {3, 0}};
+    std::vector< std::vector<int> > black_triangle = {{7, 7}, {7, 6}, {7, 5}, {7, 4}, {6, 7}, {6, 6}, {6, 5}, {5, 7}, {5, 6}, {4, 7}};
     int depth;
 
     public:
     GamePlayer();
-    GamePlayer(int & depth_);
-    GamePlayer(SolversIndividuals & solver1, SolversIndividuals & solver2);
-    GamePlayer(SolversIndividuals & solver1, SolversIndividuals & solver2,int & depth_);
-    
+    GamePlayer(int depth_);
+    GamePlayer(SolversIndividuals & solver1, SolversIndividuals & solver2,int depth_ = 1);
+
     void set_white_player(SolversIndividuals &solver);
     void set_black_player(SolversIndividuals &solver);
     void set_depth(int & depth_);
-    Result playGame();
+    double playGame();
+    void print_players_info();
+    int constructor_test();
 };
 
 #endif //CHINESECHECKERS_TOURNAMENT_HPP
