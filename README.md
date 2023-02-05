@@ -38,15 +38,16 @@ your local machine for development and testing purposes.
 ### Prerequisites
 
 Requirements for the software and other tools to build, test and push 
+- [pip3](https://pypi.org/project/pip/)
+- [Numpy](https://numpy.org)
 - [Boost](https://www.boost.org/)
 - [Boost.Python](https://www.boost.org/doc/libs/1_72_0/libs/python/doc/html/index.html)
 - [Tkinter](https://docs.python.org/3/library/tkinter.html)
 - [GoogleTest](https://github.com/google/googletest)
 - [Google Benchmark](https://github.com/google/benchmark)
 - [Eigen3](https://eigen.tuxfamily.org/index.php?title=Main_Page)
-- [Abseil](https://github.com/abseil/abseil-cpp)
-- [Tensorflow](https://github.com/tensorflow/tensorflow)
-- [Protobuf v3.9.2](https://github.com/protocolbuffers/protobuf/releases/v3.9.2)
+- [Tensorflow C API](https://www.tensorflow.org/install/lang_c)
+- [Cppflow](https://github.com/serizba/cppflow)
 
 
 ### Installing
@@ -56,6 +57,12 @@ Requirements for the software and other tools to build, test and push
 On Ubuntu and Debian based systems
 
 ```sh
+# pip3
+sudo apt install python3-pip
+
+# Numpy
+pip3 install numpy
+
 # Boost
 sudo apt-get install libboost-all-dev
 
@@ -65,39 +72,35 @@ sudo apt-get install libboost-python-dev
 # Tkinter
 sudo apt-get install python3-tk
 
-#Google Test
+# Google Test
 sudo apt-get install libgtest-dev
 
-#Google Benchmark
+# Google Benchmark
 sudo apt-get install libbenchmark-dev
 
 # Eigen3
 sudo apt-get install libeigen3-dev
 
-# Abseil
-git clone https://github.com/abseil/abseil-cpp.git
-cd abseil-cpp
+# Tensorflow C API
+FILENAME=libtensorflow-cpu-linux-x86_64-2.11.0.tar.gz
+wget -q --no-check-certificate https://storage.googleapis.com/tensorflow/libtensorflow/${FILENAME}
+sudo tar -C /usr/local -xzf ${FILENAME}
+
+# cppflow
+git clone https://github.com/serizba/cppflow
+cd cppflow
 mkdir build
 cd build
 cmake ..
-make
-sudo make install
-
-# Tensorflow
-pip3 install tensorflow
-
-# Protobuf v3.9.2
-wget https://github.com/protocolbuffers/protobuf/releases/download/v3.9.2/protobuf-cpp-3.9.2.tar.gz
-tar xzf protobuf-cpp-3.9.2.tar.gz
-cd protobuf-3.9.2
-./configure
-make
-make check
+make -j
 sudo make install
 ```
 
 On macOS
 ```sh
+# Numpy
+pip3 install numpy
+
 # Boost
 brew install boost
 
@@ -116,65 +119,19 @@ brew install google-benchmark
 # Eigen3
 brew install eigen
 
-# Abseil
-git clone https://github.com/abseil/abseil-cpp.git
-cd abseil-cpp
+
+# Tensorflow C API
+FILENAME=libtensorflow-cpu-darwin-x86_64-2.11.0.tar.gz
+wget -q --no-check-certificate https://storage.googleapis.com/tensorflow/libtensorflow/${FILENAME}
+sudo tar -C /usr/local -xzf ${FILENAME}
+
+# cppflow
+git clone https://github.com/serizba/cppflow
+cd cppflow
 mkdir build
 cd build
 cmake ..
-make
-sudo make install
-
-# Tensorflow
-pip3 install tensorflow
-
-# Protobuf v3.9.2
-tar xzf protobuf-cpp-3.9.2.tar.gz
-cd protobuf-3.9.2
-./configure
-make
-make check
-sudo make install
-```
-
-On ArchLinux
-```sh
-# Boost
-sudo pacman -S boost
-
-# Boost.Python
-sudo pacman -S boost-python
-
-# Tkinter
-sudo pacman -S python-tk
-
-# GoogleTest
-sudo pacman -S googletest
-
-# Google Benchmark
-sudo pacman -S google-benchmark
-
-# Eigen3
-sudo pacman -S eigen
-
-# Abseil
-git clone https://github.com/abseil/abseil-cpp.git
-cd abseil-cpp
-mkdir build
-cd build
-cmake ..
-make
-sudo make install
-
-# Tensorflow
-pip3 install tensorflow
-
-# Protobuf v3.9.2
-tar xzf protobuf-cpp-3.9.2.tar.gz
-cd protobuf-3.9.2
-./configure
-make
-make check
+make -j
 sudo make install
 ```
 
