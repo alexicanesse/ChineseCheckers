@@ -15,8 +15,15 @@
 #ifndef SOLVERS_ALPHABETA_INCLUDE_ALPHABETA_HPP_
 #define SOLVERS_ALPHABETA_INCLUDE_ALPHABETA_HPP_
 
+#define TF_CPP_MIN_LOG_LEVEL 3
+
 /* C Libraries */
-#include <stdint.h>
+#include <stdint.h>/*
+#include <tensorflow/cc/saved_model/loader.h>
+#include <tensorflow/core/public/session.h>
+#include <tensorflow/core/public/session_options.h>
+#include <tensorflow/core/framework/logging.h>*/
+#include <cppflow/cppflow.h>
 
 /* C++ libraries */
 #include <utility>
@@ -56,8 +63,12 @@ class AlphaBeta : public ChineseCheckers{
     ListOfPositionType best_move_;
 
     /* transposition table to store the results of previous searches */
-    std::unordered_map<unsigned long long, std::pair<int, int>> transTable;
+    std::unordered_map<unsigned long long, std::pair<double, int>> transTable;
 
+    cppflow::model *model = new cppflow::model("./model");
+    //tensorflow::SavedModelBundleLite *savedModelBundle = new tensorflow::SavedModelBundleLite;
+    void tensorflowOrderMoves(ListOfMoves &possible_moves);
+    void sortDepth1(ListOfMoves &possible_moves);
  public:
     double AlphaBetaEval(const int &depth,
                       double alpha,
@@ -77,6 +88,10 @@ class AlphaBeta : public ChineseCheckers{
     std::vector<std::vector<double> > get_player_to_win_value_();
     void set_player_to_loose_value_(std::vector< std::vector<double> > &player_to_loose_value_);
     void set_player_to_win_value_(  std::vector< std::vector<double> > &player_to_win_value_  );
+
+//temp
+    int rank;
+    int number_of_moves;
 };
 
 #endif  // SOLVERS_ALPHABETA_INCLUDE_ALPHABETA_HPP_

@@ -12,13 +12,24 @@
  *
  */
 
+#define PLUS_INFTY (100000)
+#define MINUS_INFTY (-100000)
+#define DRAW_VALUE (-50000);
+
+
 /* AlphaBeta.hpp */
 #include "AlphaBeta.hpp"
 
 /* C Libraries */
 #include <stdint.h>
 #include <stdio.h>
-#include <string.h>
+#include <string.h> /*
+#include <tensorflow/cc/saved_model/loader.h>
+#include <tensorflow/cc/saved_model/constants.h>
+#include <tensorflow/core/public/session.h>
+#include <tensorflow/core/public/session_options.h>
+#include <tensorflow/core/framework/logging.h> */
+#include <cppflow/cppflow.h>
 
 /* C++ Libraries */
 #include <vector>
@@ -27,37 +38,40 @@
 #include <algorithm>
 #include <unordered_map>
 #include <utility>
+#include <fstream>
 
 /* Other */
 #include "Types.hpp"
 #include "ChineseCheckers.hpp"
 
+typedef std::vector<std::pair<std::string, tensorflow::Tensor>> tensor_dict;
+
 AlphaBeta::AlphaBeta() {
     /* this is meant to be seen from black perspective: white should
      * use symmetries to use this matrix. */
     this->player_to_win_value_ = std::vector< std::vector<double> >({
-                { 0,  1,  4,  9, 16, 25, 36, 49},
-                { 1,  2,  5, 10, 17, 26, 37, 50},
-                { 4,  5,  8, 13, 20, 29, 40, 53},
-                { 9, 10, 13, 18, 25, 34, 45, 58},
-                {16, 17, 20, 25, 32, 41, 52, 65},
-                {25, 26, 29, 34, 41, 50, 62, 74},
-                {36, 37, 40, 45, 52, 62, 72, 85},
-                {49, 50, 53, 58, 65, 74, 85, 98}
-        });
+        { 0,  1,  4,  9, 16, 25, 36, 49},
+        { 1,  2,  5, 10, 17, 26, 37, 50},
+        { 4,  5,  8, 13, 20, 29, 40, 53},
+        { 9, 10, 13, 18, 25, 34, 45, 58},
+        {16, 17, 20, 25, 32, 41, 52, 65},
+        {25, 26, 29, 34, 41, 50, 62, 74},
+        {36, 37, 40, 45, 52, 62, 72, 85},
+        {49, 50, 53, 58, 65, 74, 85, 98}
+    });
 
     /* this is meant to be seen from black perspective: white should
      * use symmetries to use this matrix. */
     this->player_to_loose_value_ = std::vector< std::vector<double> >({
-                { 0,  1,  4,  9, 16, 25, 36, 49},
-                { 1,  2,  5, 10, 17, 26, 37, 50},
-                { 4,  5,  8, 13, 20, 29, 40, 53},
-                { 9, 10, 13, 18, 25, 34, 45, 58},
-                {16, 17, 20, 25, 32, 41, 52, 65},
-                {25, 26, 29, 34, 41, 50, 62, 74},
-                {36, 37, 40, 45, 52, 62, 72, 85},
-                {49, 50, 53, 58, 65, 74, 85, 98}
-        });
+        { 0,  1,  4,  9, 16, 25, 36, 49},
+        { 1,  2,  5, 10, 17, 26, 37, 50},
+        { 4,  5,  8, 13, 20, 29, 40, 53},
+        { 9, 10, 13, 18, 25, 34, 45, 58},
+        {16, 17, 20, 25, 32, 41, 52, 65},
+        {25, 26, 29, 34, 41, 50, 62, 74},
+        {36, 37, 40, 45, 52, 62, 72, 85},
+        {49, 50, 53, 58, 65, 74, 85, 98}
+    });
 }
 
 AlphaBeta::AlphaBeta(const std::vector< std::vector<double> > &player_to_win_value_,
@@ -211,12 +225,13 @@ double AlphaBeta::evaluate(const Player &player) {
     return result;
 }
 
-#warning use inf
 ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, const double &beta) {
     this->maximizing_player_ = this->who_is_to_play_;
 
-    //std::cout << AlphaBetaEval(depth, alpha, beta, false, true) << "\n";
     AlphaBetaEval(depth, alpha, beta, false, true);
+
+    //std::cout << "Rank : " << std::setw(2) << rank << " / " << std::setw(2) << number_of_moves << " " << std::setprecision(2) << (100 - 100*static_cast<double>(rank)/number_of_moves) << "%\n";
+
     return this->best_move_;
 }
 
@@ -228,24 +243,19 @@ double AlphaBeta::AlphaBetaEval(const int &depth,
     /* Check if the current node is a terminating node */
     switch (this->state_of_game()) {
         case WhiteWon:
-            if (this->maximizing_player_ == 0)
-                return -100000;
-            else
-                return 100000;
+            if (this->maximizing_player_ == 0) return MINUS_INFTY;
+            else return PLUS_INFTY;
             break;
 
         case BlackWon:
-            if (this->maximizing_player_ == 1)
-                return -100000;
-            else
-                return 100000;
+            if (this->maximizing_player_ == 1) return MINUS_INFTY;
+            else return PLUS_INFTY;
             break;
 
         case Draw:
-            if (this->maximizing_player_ == 1 - this->who_is_to_play_)
-                return 50000;
-            else
-                return -50000;
+            if (this->maximizing_player_ ==
+                1 - this->who_is_to_play_) return 50000;
+            else return -50000;
             break;
 
         default: /* the game is not over */
@@ -259,66 +269,38 @@ double AlphaBeta::AlphaBetaEval(const int &depth,
     if (it != transTable.end() && it->second.second >= depth) {
         /* retrieve the value from the transposition table */
         double value = it->second.first;
+        if (!keepMove) return value;
 
         /* update beta if value is lower */
         beta = std::min(value, beta);
         /* update alpha if value is higher */
         alpha = std::max(value, alpha);
-
-        if (!keepMove) return value;
     }
 
-    if (depth == 0)
-        return heuristicValue();
-
-    /* The state is not a termination node */
-    double value = 0;
+    if (depth == 0) return heuristicValue();
 
     /* Sort according to the value of the move in order to increase the number of cut-offs */
-    auto compMove = [this](const ListOfPositionType &a, const ListOfPositionType &b){
-        double valueA = 0;
-        double valueB = 0;
-        switch (maximizing_player_) {
-            case 0:
-                valueA += this->player_to_win_value_
-                          [7 - a.back()[0]][7 - a.back()[1]]
-                          - this->player_to_win_value_
-                          [7 - a.front()[0]][7 - a.front()[1]];
-                valueB += this->player_to_win_value_
-                          [7 - b.back()[0]][7 - b.back()[1]]
-                          - this->player_to_win_value_
-                          [7 - b.front()[0]][7 - b.front()[1]];
-
-                break;
-
-            case 1:
-                valueA += this->player_to_loose_value_
-                          [a.back()[0]][a.back()[1]]
-                          - this->player_to_loose_value_
-                          [a.front()[0]][a.front()[1]];
-                valueB += this->player_to_loose_value_
-                          [b.back()[0]][b.back()[1]]
-                          - this->player_to_loose_value_
-                          [b.front()[0]][b.front()[1]];
-                break;
-        }
-        return valueA < valueB;
-    };
-
     ListOfMoves possible_moves = this->availableMoves(this->who_is_to_play_, keepMove);
-    std::sort(possible_moves.begin(), possible_moves.end(), compMove);
-    //possible_moves.resize(10);
-
-
-    ListOfPositionType best_move;
-    if (maximizingPlayer)
-        value = -100000;
+    if (keepMove)
+        this->tensorflowOrderMoves(possible_moves);
     else
-        value =  100000;
+        this->sortDepth1(possible_moves);
 
+    //possible_moves.resize(possible_moves.size()/2);
+    double value = 0;
+    if (maximizingPlayer)
+        value = MINUS_INFTY;
+    else
+        value = PLUS_INFTY;
+
+//temp
+    int r = 0;
+    if (keepMove) number_of_moves = possible_moves.size();
     for (const ListOfPositionType &move : possible_moves) {
+//temp
+        ++r;
         this->moveWithoutVerification(this->who_is_to_play_, move);
-        int buff = AlphaBetaEval(depth - 1,
+        double buff = AlphaBetaEval(depth - 1,
                                  alpha,
                                  beta,
                                  !maximizingPlayer,
@@ -337,16 +319,13 @@ double AlphaBeta::AlphaBetaEval(const int &depth,
             beta = std::min(beta, static_cast<double>(buff));
             if (buff <= value) {
                 value = buff;
-                if (keepMove) best_move = move;
+                if (keepMove) this->best_move_ = move;
+                if (keepMove) rank = r;
                 if (value <= alpha)
                     break; /* alpha cutoff */
             }
         }
     }
-
-    /* set the best move if asked to */
-    if (keepMove)
-        this->best_move_ = best_move;
 
     /* store the value in the transposition table */
     transTable[hash] = std::make_pair(value, depth);
@@ -356,7 +335,7 @@ double AlphaBeta::AlphaBetaEval(const int &depth,
 }
 
 double AlphaBeta::heuristicValue() {
-    return evaluate(this->maximizing_player_)
+    return 6*evaluate(this->maximizing_player_)
                     - evaluate(1 - this->maximizing_player_);
 }
 
@@ -441,4 +420,110 @@ void AlphaBeta::set_player_to_loose_value_(
 void AlphaBeta::set_player_to_win_value_(
         std::vector< std::vector<double> > &player_to_win_value_  ) {
     this->player_to_win_value_ = player_to_win_value_;
+}
+
+void AlphaBeta::tensorflowOrderMoves(ListOfMoves &possible_moves) {
+    std::vector<float> data_(200*64);
+
+    /* copy the grid and reverse it if black is playing */
+    std::vector<float> grid_temp(64);
+    if (this->who_is_to_play_ == 0) {
+        for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 8; ++j)
+                grid_temp[8 * i + j] = this->grid_[i][j];
+        }
+    } else {
+        for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 8; ++j)
+                grid_temp[8 * (7 - i) + (7 - j)] = this->grid_[i][j];
+        }
+    }
+
+    /* modify it in the right format */
+    for (int i = 0; i < 64; ++i)
+        if (grid_temp[i] == 2) grid_temp[i] = -1;
+
+    /* switch colors if black */
+    if (this->who_is_to_play_ == 1) {
+        for (int i = 0; i < 64; ++i)
+            grid_temp[i] *= -1;
+    }
+
+    /* duplicate it enough times */
+    for (int d = 0; d < possible_moves.size(); ++d) {
+        for (int i = 0; i < 64; ++i)
+            data_[64*d + i] = grid_temp[i];
+    }
+
+
+    int i;
+    int j;
+    /* make the moves */
+    for (int d = 0; d < possible_moves.size(); ++d) {
+        i = possible_moves[d].front()[0];
+        j = possible_moves[d].front()[1];
+        if (this->who_is_to_play_ == 1) {
+            i = 7 - i;
+            j = 7 - j;
+        }
+
+        data_[64 * d + i * 8 + j] = 0;
+
+        i = possible_moves[d].back()[0];
+        j = possible_moves[d].back()[1];
+        if (this->who_is_to_play_ == 1) {
+            i = 7 - i;
+            j = 7 - j;
+        }
+
+        data_[64 * d + i * 8 + j] = 1;
+    }
+
+    cppflow::tensor tensor_data_ = cppflow::tensor(data_, {200, 64});
+    std::vector<cppflow::tensor> output = (*model)({{"serving_default_dense_input:0", tensor_data_}}, {"StatefulPartitionedCall:0"});
+
+    std::map<ListOfPositionType, double> res;
+
+    for (int d = 0; d < possible_moves.size(); ++d)
+        res[possible_moves[d]] = output[0].get_data<float>()[d];
+
+
+    auto compMove = [&](const ListOfPositionType &a, const ListOfPositionType &b) {
+        return res[a] < res[b];
+    };
+
+    std::sort(possible_moves.begin(), possible_moves.end(), compMove);
+}
+
+void AlphaBeta::sortDepth1(ListOfMoves &possible_moves) {
+    auto compMove = [this](const ListOfPositionType &a, const ListOfPositionType &b){
+        double valueA = 0;
+        double valueB = 0;
+        switch (maximizing_player_) {
+            case 0:
+                valueA += this->player_to_win_value_
+                          [7 - a.back()[0]][7 - a.back()[1]]
+                          - this->player_to_win_value_
+                          [7 - a.front()[0]][7 - a.front()[1]];
+                valueB += this->player_to_win_value_
+                          [7 - b.back()[0]][7 - b.back()[1]]
+                          - this->player_to_win_value_
+                          [7 - b.front()[0]][7 - b.front()[1]];
+
+                break;
+
+            case 1:
+                valueA += this->player_to_loose_value_
+                          [a.back()[0]][a.back()[1]]
+                          - this->player_to_loose_value_
+                          [a.front()[0]][a.front()[1]];
+                valueB += this->player_to_loose_value_
+                          [b.back()[0]][b.back()[1]]
+                          - this->player_to_loose_value_
+                          [b.front()[0]][b.front()[1]];
+                break;
+        }
+        return valueA < valueB;
+    };
+    std::sort(possible_moves.begin(), possible_moves.end(), compMove);
 }
