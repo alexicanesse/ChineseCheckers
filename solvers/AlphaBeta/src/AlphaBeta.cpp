@@ -434,10 +434,6 @@ void AlphaBeta::tensorflowOrderMoves(ListOfMoves &possible_moves) {
         }
     }
 
-    /* modify it in the right format */
-    //for (int i = 0; i < 64; ++i)
-        //if (grid_temp[i] == 2) grid_temp[i] = -1;
-
     /* switch colors if black */
     if (this->who_is_to_play_ == 1) {
         for (int i = 0; i < 64; ++i)
