@@ -23,12 +23,8 @@
 /* C Libraries */
 #include <stdint.h>
 #include <stdio.h>
-#include <string.h> /*
-#include <tensorflow/cc/saved_model/loader.h>
-#include <tensorflow/cc/saved_model/constants.h>
-#include <tensorflow/core/public/session.h>
-#include <tensorflow/core/public/session_options.h>
-#include <tensorflow/core/framework/logging.h> */
+#include <string.h>
+#include <stdlib.h>
 #include <cppflow/cppflow.h>
 
 /* C++ Libraries */
@@ -43,8 +39,6 @@
 /* Other */
 #include "Types.hpp"
 #include "ChineseCheckers.hpp"
-
-typedef std::vector<std::pair<std::string, tensorflow::Tensor>> tensor_dict;
 
 AlphaBeta::AlphaBeta() {
     /* this is meant to be seen from black perspective: white should
@@ -423,8 +417,6 @@ void AlphaBeta::set_player_to_win_value_(
 }
 
 void AlphaBeta::tensorflowOrderMoves(ListOfMoves &possible_moves) {
-    std::vector<float> data_(200*64);
-
     /* copy the grid and reverse it if black is playing */
     std::vector<float> grid_temp(64);
     if (this->who_is_to_play_ == 0) {
@@ -449,12 +441,11 @@ void AlphaBeta::tensorflowOrderMoves(ListOfMoves &possible_moves) {
             grid_temp[i] *= -1;
     }
 
+    std::vector<float> data_;
     /* duplicate it enough times */
     for (int d = 0; d < possible_moves.size(); ++d) {
-        for (int i = 0; i < 64; ++i)
-            data_[64*d + i] = grid_temp[i];
+        data_.insert(data_.begin(), grid_temp.begin(), grid_temp.end());
     }
-
 
     int i;
     int j;
@@ -479,14 +470,16 @@ void AlphaBeta::tensorflowOrderMoves(ListOfMoves &possible_moves) {
         data_[64 * d + i * 8 + j] = 1;
     }
 
-    cppflow::tensor tensor_data_ = cppflow::tensor(data_, {200, 64});
-    std::vector<cppflow::tensor> output = (*model)({{"serving_default_dense_input:0", tensor_data_}}, {"StatefulPartitionedCall:0"});
+    cppflow::tensor tensor_data_ = cppflow::tensor(data_, {static_cast<int>(possible_moves.size()), 64});
+
+    std::vector<cppflow::tensor> output = (*model)({{"serving_default_dense_input:0", tensor_data_}},
+                                                    {"StatefulPartitionedCall:0"});
 
     std::map<ListOfPositionType, double> res;
 
+    auto output_data_ = output[0].get_data<float>();
     for (int d = 0; d < possible_moves.size(); ++d)
-        res[possible_moves[d]] = output[0].get_data<float>()[d];
-
+        res[possible_moves[d]] = output_data_[d];
 
     auto compMove = [&](const ListOfPositionType &a, const ListOfPositionType &b) {
         return res[a] < res[b];
