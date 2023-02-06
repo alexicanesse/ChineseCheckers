@@ -144,7 +144,7 @@ struct fromPythonToColor {
                 value = White;
                 break;
 
-            case 2:
+            case -1:
                 value = Black;
                 break;
 

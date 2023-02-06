@@ -338,8 +338,11 @@ void AlphaBeta::reverseMove(const ListOfPositionType &move){
 
     this->who_is_to_play_ = 1 - this->who_is_to_play_;
     this->grid_[move.back()[0]][move.back()[1]] = Empty;
-    this->grid_[move.front()[0]][move.front()[1]]
-            = (Color) (this->who_is_to_play_ + 1);
+    if (this->who_is_to_play_)
+        this->grid_[move.front()[0]][move.front()[1]] = Black;
+    else
+        this->grid_[move.front()[0]][move.front()[1]] = White;
+
     for (int i = 0; i < 10; ++i) {
         if (this->position_colors_players_[this->who_is_to_play_][i][0]
             == move.back()[0]
@@ -432,8 +435,8 @@ void AlphaBeta::tensorflowOrderMoves(ListOfMoves &possible_moves) {
     }
 
     /* modify it in the right format */
-    for (int i = 0; i < 64; ++i)
-        if (grid_temp[i] == 2) grid_temp[i] = -1;
+    //for (int i = 0; i < 64; ++i)
+        //if (grid_temp[i] == 2) grid_temp[i] = -1;
 
     /* switch colors if black */
     if (this->who_is_to_play_ == 1) {

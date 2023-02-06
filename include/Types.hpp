@@ -23,7 +23,7 @@
 /*! \enum Color
     \brief Used to denote the colors.
 */
-enum Color {Empty, White, Black};
+enum Color {Empty = 0, White = 1, Black = -1};
 
 /*! \enum Result
     \brief Used to return the current state of a game

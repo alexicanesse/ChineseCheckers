@@ -138,7 +138,8 @@ bool ChineseCheckers::move(Player player,
         return false;
 
     /* Check that the right player is playing */
-    if (this->grid_[list_moves[0][0]][list_moves[0][1]] != player + 1)
+    if ((this->grid_[list_moves[0][0]][list_moves[0][1]] == 1 && player == 1)
+        || (this->grid_[list_moves[0][0]][list_moves[0][1]] == -1 && player == 0))
         return false;
 
     if (player != this->who_is_to_play_)
