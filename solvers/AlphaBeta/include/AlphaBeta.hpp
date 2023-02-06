@@ -39,14 +39,6 @@ class AlphaBeta : public ChineseCheckers{
  protected:
     double heuristicValue();
 
-    /* functions used for the transposition tables */
-    /* FNV-1a hash function */
-    inline uint64_t fnv1aColor(uint64_t h, const Color &x);
-    inline uint64_t fnv1a(uint64_t h, const int &x);
-    uint64_t hashMatrix(const GridType &matrix, const int &player);
-    inline uint64_t hashMove(const ListOfPositionType &move);
-    inline uint64_t hashPosition(const PositionType &move);
-
     /* this is meant to be seen from black perspective: white should
      * use symmetries to use this matrix. */
     std::vector<std::vector<double> > player_to_win_value_;

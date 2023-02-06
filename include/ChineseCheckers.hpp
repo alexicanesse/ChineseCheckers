@@ -21,6 +21,7 @@
 #include <iostream>
 #include <utility>
 #include <map>
+#include <unordered_map>
 /* The following pragma are used to removed depraction warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
  */
@@ -41,7 +42,7 @@ class ChineseCheckers {
     /*! Indicate which is the next player to play */
     Player who_is_to_play_ = 0;
     /*! Indicates the number of times a position has been seen */
-    std::map<GridType, int> number_of_times_seen;
+    std::unordered_map<unsigned long long, int> number_of_times_seen;
     /*! Keeps the positions  of the winning zone */
     const std::vector<std::pair<int, int>> winning_positions_ = {
         {0, 0}, {0, 1}, {0, 2}, {0, 3}, {1, 0},
@@ -99,6 +100,14 @@ class ChineseCheckers {
     void moveWithoutVerification(Player player,
               const ListOfPositionType &list_moves);
 
+    /* functions used for the transposition tables */
+    /* FNV-1a hash function */
+    inline uint64_t fnv1aColor(uint64_t h, const Color &x);
+    inline uint64_t fnv1a(uint64_t h, const int &x);
+    uint64_t hashMatrix(const GridType &matrix, const int &player);
+    uint64_t hashMove(const ListOfPositionType &move);
+    uint64_t hashPosition(const PositionType &move);
+
  public:
     /*! \brief
      * This member checks if a move is legal and executes it if it is legal.
@@ -154,7 +163,7 @@ class ChineseCheckers {
      */
     Player get_who_is_to_play_() const;
 
-    std::map<GridType, int> get_number_of_times_seen() const;
+    std::unordered_map<unsigned long long, int> get_number_of_times_seen() const;
     ChineseCheckers();
 };
 

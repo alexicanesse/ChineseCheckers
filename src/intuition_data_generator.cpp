@@ -109,7 +109,7 @@ std::pair<std::vector<std::vector<int>>, std::vector<double>> IntuitionDataGener
         }
 
         /* evaluate the move */
-        int buff = AlphaBetaEval(depth - 1,
+        double buff = AlphaBetaEval(depth - 1,
                                  -100000,
                                  100000,
                                  true,

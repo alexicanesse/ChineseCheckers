@@ -12,9 +12,9 @@
  *
  */
 
-#define PLUS_INFTY (100000)
-#define MINUS_INFTY (-100000)
-#define DRAW_VALUE (-50000);
+#define PLUS_INFTY (20)
+#define MINUS_INFTY (-20)
+#define DRAW_VALUE (0);
 
 
 /* AlphaBeta.hpp */
@@ -44,28 +44,26 @@ AlphaBeta::AlphaBeta() {
     /* this is meant to be seen from black perspective: white should
      * use symmetries to use this matrix. */
     this->player_to_win_value_ = std::vector< std::vector<double> >({
-        { 0,  1,  4,  9, 16, 25, 36, 49},
-        { 1,  2,  5, 10, 17, 26, 37, 50},
-        { 4,  5,  8, 13, 20, 29, 40, 53},
-        { 9, 10, 13, 18, 25, 34, 45, 58},
-        {16, 17, 20, 25, 32, 41, 52, 65},
-        {25, 26, 29, 34, 41, 50, 62, 74},
-        {36, 37, 40, 45, 52, 62, 72, 85},
-        {49, 50, 53, 58, 65, 74, 85, 98}
-    });
+        {0        , 0.0102041, 0.0408163, 0.0918366, 0.163265, 0.255103, 0.367347, 0.5     },
+        {0.0102041, 0.0204082, 0.0510203, 0.102041 , 0.173469, 0.265306, 0.37755 , 0.510203},
+        {0.0408163, 0.0510203, 0.0816325, 0.132653 , 0.204082, 0.295919, 0.408163, 0.540816},
+        {0.0918366, 0.102041 , 0.132653 , 0.183673 , 0.255103, 0.346938, 0.459184, 0.591837},
+        {0.163265 , 0.173469 , 0.204082 , 0.255103 , 0.326531, 0.418366, 0.530612, 0.663266},
+        {0.255103 , 0.265306 , 0.295919 , 0.346938 , 0.418366, 0.510203, 0.632653, 0.755101},
+        {0.367347 , 0.37755  , 0.408163 , 0.459184 , 0.530612, 0.632653, 0.734694, 0.867347},
+        {0.5      , 0.510203 , 0.540816 , 0.591837 , 0.663266, 0.755101, 0.867347, 1       }});
 
     /* this is meant to be seen from black perspective: white should
      * use symmetries to use this matrix. */
     this->player_to_loose_value_ = std::vector< std::vector<double> >({
-        { 0,  1,  4,  9, 16, 25, 36, 49},
-        { 1,  2,  5, 10, 17, 26, 37, 50},
-        { 4,  5,  8, 13, 20, 29, 40, 53},
-        { 9, 10, 13, 18, 25, 34, 45, 58},
-        {16, 17, 20, 25, 32, 41, 52, 65},
-        {25, 26, 29, 34, 41, 50, 62, 74},
-        {36, 37, 40, 45, 52, 62, 72, 85},
-        {49, 50, 53, 58, 65, 74, 85, 98}
-    });
+        {0        , 0.0102041, 0.0408163, 0.0918366, 0.163265, 0.255103, 0.367347, 0.5     },
+        {0.0102041, 0.0204082, 0.0510203, 0.102041 , 0.173469, 0.265306, 0.37755 , 0.510203},
+        {0.0408163, 0.0510203, 0.0816325, 0.132653 , 0.204082, 0.295919, 0.408163, 0.540816},
+        {0.0918366, 0.102041 , 0.132653 , 0.183673 , 0.255103, 0.346938, 0.459184, 0.591837},
+        {0.163265 , 0.173469 , 0.204082 , 0.255103 , 0.326531, 0.418366, 0.530612, 0.663266},
+        {0.255103 , 0.265306 , 0.295919 , 0.346938 , 0.418366, 0.510203, 0.632653, 0.755101},
+        {0.367347 , 0.37755  , 0.408163 , 0.459184 , 0.530612, 0.632653, 0.734694, 0.867347},
+        {0.5      , 0.510203 , 0.540816 , 0.591837 , 0.663266, 0.755101, 0.867347, 1       }});
 }
 
 AlphaBeta::AlphaBeta(const std::vector< std::vector<double> > &player_to_win_value_,
@@ -247,9 +245,7 @@ double AlphaBeta::AlphaBetaEval(const int &depth,
             break;
 
         case Draw:
-            if (this->maximizing_player_ ==
-                1 - this->who_is_to_play_) return 50000;
-            else return -50000;
+            return 0;
             break;
 
         default: /* the game is not over */
@@ -329,12 +325,12 @@ double AlphaBeta::AlphaBetaEval(const int &depth,
 }
 
 double AlphaBeta::heuristicValue() {
-    return 6*evaluate(this->maximizing_player_)
+    return evaluate(this->maximizing_player_)
                     - evaluate(1 - this->maximizing_player_);
 }
 
 void AlphaBeta::reverseMove(const ListOfPositionType &move){
-    --this->number_of_times_seen.at(this->grid_);
+    --this->number_of_times_seen.at(hashMatrix(this->grid_, 0));
 
     this->who_is_to_play_ = 1 - this->who_is_to_play_;
     this->grid_[move.back()[0]][move.back()[1]] = Empty;
@@ -355,46 +351,6 @@ void AlphaBeta::reverseMove(const ListOfPositionType &move){
             break;
         }
     }
-}
-
-/* FNV-1a hash function */
-inline uint64_t AlphaBeta::fnv1a(uint64_t h, const int &x) {
-    h ^= (uint64_t) x;
-    h *= 0x100000001b3;
-    return h;
-}
-
-inline uint64_t AlphaBeta::fnv1aColor(uint64_t h, const Color &x) {
-    h ^= (uint64_t) x;
-    h *= 0x100000001b3;
-    return h;
-}
-
-uint64_t AlphaBeta::hashMatrix(const GridType &matrix, const int &player) {
-    uint64_t hash = 0xcbf29ce484222325; /* FNV-1a seed value */
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            /* combine the hash values of the individual elements */
-            hash = fnv1aColor(hash, matrix[i][j]);
-        }
-    }
-    return fnv1a(hash, player);;
-}
-
-inline uint64_t AlphaBeta::hashMove(const ListOfPositionType &move) {
-    uint64_t hash = 0xcbf29ce484222325; /* FNV-1a seed value */
-    hash = fnv1a(hash, move[0][0]);
-    hash = fnv1a(hash, move[0][1]);
-    hash = fnv1a(hash, move.back()[0]);
-    hash = fnv1a(hash, move.back()[1]);
-    return hash;
-}
-
-inline uint64_t AlphaBeta::hashPosition(const PositionType &move) {
-    uint64_t hash = 0xcbf29ce484222325; /* FNV-1a seed value */
-    hash = fnv1a(hash, move[0]);
-    hash = fnv1a(hash, move[1]);
-    return hash;
 }
 
 Player AlphaBeta::get_maximizing_player_() const {

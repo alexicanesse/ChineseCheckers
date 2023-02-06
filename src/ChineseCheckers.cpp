@@ -17,6 +17,7 @@
 
 /* C++ libraries */
 #include <vector>
+#include <unordered_map>
 /* The following pragma are used to removed deprecation warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
  */
@@ -185,10 +186,11 @@ bool ChineseCheckers::move(Player player,
     }
 
     /* indicates that this position has been seen another time */
-    if (this->number_of_times_seen.contains(this->grid_))
-        this->number_of_times_seen[this->grid_]++;
+    unsigned long long hash = hashMatrix(this->grid_, 0);
+    if (this->number_of_times_seen.contains(hash))
+        this->number_of_times_seen[hash]++;
     else
-        this->number_of_times_seen.insert({this->grid_, 1});
+        this->number_of_times_seen.insert({hash, 1});
 
 
     this->who_is_to_play_ = 1 - this->who_is_to_play_;
@@ -215,10 +217,11 @@ void ChineseCheckers::moveWithoutVerification(Player player,
     }
 
     /* indicates that is position has been seen another time */
-    if (this->number_of_times_seen.contains(this->grid_))
-        this->number_of_times_seen[this->grid_]++;
+    unsigned long long hash = hashMatrix(this->grid_, 0);
+    if (this->number_of_times_seen.contains(hash))
+        this->number_of_times_seen[hash]++;
     else
-        this->number_of_times_seen.insert({this->grid_, 1});
+        this->number_of_times_seen.insert({hash, 1});
 
 
     this->who_is_to_play_ = 1 - this->who_is_to_play_;
@@ -270,7 +273,7 @@ Result ChineseCheckers::state_of_game() {
         return BlackWon;
 
     /* Check for a draw */
-    if (this->number_of_times_seen[this->grid_]
+    if (this->number_of_times_seen[hashMatrix(this->grid_, 0)]
                                 == MAX_NUMBER_OF_CYCLES_FOR_DRAW_)
         return Draw;
     return NotFinished;
@@ -299,7 +302,7 @@ void ChineseCheckers::new_game() {
 
     /* init the history */
     this->number_of_times_seen.clear();
-    this->number_of_times_seen[this->grid_] = 1;
+    this->number_of_times_seen[hashMatrix(this->grid_, 0)] = 1;
 }
 
 void ChineseCheckers::print_grid_() {
@@ -340,6 +343,47 @@ Player ChineseCheckers::get_who_is_to_play_() const {
     return this->who_is_to_play_;
 }
 
-std::map<GridType, int> ChineseCheckers::get_number_of_times_seen() const {
+std::unordered_map<unsigned long long, int> ChineseCheckers::get_number_of_times_seen() const {
     return this->number_of_times_seen;
+}
+
+
+/* FNV-1a hash function */
+inline uint64_t ChineseCheckers::fnv1a(uint64_t h, const int &x) {
+    h ^= (uint64_t) x;
+    h *= 0x100000001b3;
+    return h;
+}
+
+inline uint64_t ChineseCheckers::fnv1aColor(uint64_t h, const Color &x) {
+    h ^= (uint64_t) x;
+    h *= 0x100000001b3;
+    return h;
+}
+
+uint64_t ChineseCheckers::hashMatrix(const GridType &matrix, const int &player) {
+    uint64_t hash = 0xcbf29ce484222325; /* FNV-1a seed value */
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            /* combine the hash values of the individual elements */
+            hash = fnv1aColor(hash, matrix[i][j]);
+        }
+    }
+    return fnv1a(hash, player);;
+}
+
+uint64_t ChineseCheckers::hashMove(const ListOfPositionType &move) {
+    uint64_t hash = 0xcbf29ce484222325; /* FNV-1a seed value */
+    hash = fnv1a(hash, move[0][0]);
+    hash = fnv1a(hash, move[0][1]);
+    hash = fnv1a(hash, move.back()[0]);
+    hash = fnv1a(hash, move.back()[1]);
+    return hash;
+}
+
+uint64_t ChineseCheckers::hashPosition(const PositionType &move) {
+    uint64_t hash = 0xcbf29ce484222325; /* FNV-1a seed value */
+    hash = fnv1a(hash, move[0]);
+    hash = fnv1a(hash, move[1]);
+    return hash;
 }
