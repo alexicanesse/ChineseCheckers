@@ -47,6 +47,9 @@ add_library(AlphaBeta
                 SHARED
                 ${CXXFILESALPHABETA})
 
+add_executable(unittests
+                ${CXXFILESUNITTESTS})
+
 add_executable(benchmarks
                 ${CXXFILESBENCHMARKS})
 
@@ -70,13 +73,16 @@ find_package(PythonLibs 3.6 REQUIRED)
 string(REPLACE "." ";" VERSION_LIST ${PYTHONLIBS_VERSION_STRING})
 list(GET VERSION_LIST 0 PYTHONLIBS_VERSION_MAJOR)
 list(GET VERSION_LIST 1 PYTHONLIBS_VERSION_MINOR)
+
+enable_testing()
 find_package(Boost COMPONENTS python${PYTHONLIBS_VERSION_MAJOR}${PYTHONLIBS_VERSION_MINOR} REQUIRED)
 find_package(benchmark REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(cppflow REQUIRED)
-
+find_package(GTest REQUIRED)
 
 target_link_libraries(libChineseCheckers PUBLIC ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
+target_link_libraries(unittests PUBLIC libChineseCheckers GTest::gtest)
 target_link_libraries(AlphaBeta PUBLIC libChineseCheckers ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} cppflow::cppflow)
 target_link_libraries(benchmarks PUBLIC libChineseCheckers benchmark::benchmark)
 target_link_libraries(AlphaBeta_benchmarks PUBLIC AlphaBeta libChineseCheckers benchmark::benchmark)
