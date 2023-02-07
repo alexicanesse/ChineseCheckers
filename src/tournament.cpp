@@ -50,7 +50,7 @@
 /*Depth for AlphaBeta*/
 #define AB_DEPTH 1
 /*Number of generations in the evolution*/
-#define NUM_GENERATION 500
+#define NUM_GENERATION 1000
 
 //Creating distribution generators
 const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
