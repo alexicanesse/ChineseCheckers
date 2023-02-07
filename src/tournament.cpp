@@ -39,11 +39,13 @@
 /* variability of a mutation */
 #define SIGMA_MUTATION  0.05
 /*Number of solvers in the evolution*/
-#define POP_SIZE 10
+#define POP_SIZE 100
 /*Maximum number of moves authorized in a evolution game*/
 #define MAX_NUM_MOVES 100
 /*Depth for AlphaBeta*/
 #define AB_DEPTH 1
+/*Number of generations in the evolution*/
+#define NUM_GENERATION 10
 
 //Creating distribution generators
 const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -58,17 +60,47 @@ auto variation = std::bind(n_distrib,generator);
 
 int main() {
     std::cout << "Current seed: "<< seed << std::endl;
-    SolversIndividuals sol1;
-    SolversIndividuals sol2;
-    GamePlayer gp1(AB_DEPTH);
-    GamePlayer gp2(sol1,sol2,AB_DEPTH);
-    //gp1.print_players_info();
-    //gp2.print_players_info();
+    SolversIndividuals best_white;
+    SolversIndividuals best_black;
+    GamePlayer gp(AB_DEPTH);
 
-    std::cout << "Constructor test: "<< gp2.constructor_test()<<std::endl;
+    std::vector< SolversIndividuals > population(500);
 
-    std::cout << "Default constructor game: " << gp1.playGame() << std::endl;
-    std::cout << "Specific constructor game: " << gp2.playGame() << std::endl;
+    /*initialisation gen0*/
+    for (int i = 0; i != POP_SIZE; ++i) {
+        population[i].mutate();
+    }
+    //initialisation of working variables
+    double score = 0.0;
+    auto win_ = best_white.get_win();
+    auto loose_ = best_white.get_loose();
+
+    for (int gen = 0; gen != NUM_GENERATION ; ++gen) {
+        /*Do every games*/
+        for (int i = 0; i != POP_SIZE; ++i)  {
+            gp.set_white_player(population[i]);
+            score = gp.playGame();
+            population[i].set_score(score);
+        }
+        
+        /*sort the population by their scores*/
+        std::sort(population.begin(),population.end());
+
+        std::cout <<"Gen n° " << gen << " Best score: " << population[0].get_score() << std::endl;
+
+        /*Kill and reproduce*/
+
+        for (int i = 0; i < POP_SIZE/2; ++i) {
+            win_ = population[i].get_win();
+            loose_ = population[i].get_loose();
+            population[i + POP_SIZE/2].set_win(win_);
+            population[i + POP_SIZE/2].set_loose(loose_);
+            population[i + POP_SIZE/2].mutate();
+        }
+
+    }
+
+    
 
 
     /*
@@ -264,7 +296,7 @@ double GamePlayer::playGame() {
     Result result = this->white_player.state_of_game();
     std::vector<std::vector<Color> > end_grid;
     double score = 0.0;
-    std::cout << " remaining moves: " << remaining_moves<< std::endl;
+    //std::cout << " remaining moves: " << remaining_moves<< std::endl;
     switch(result) {
         case NotFinished:
             end_grid = this->white_player.get_grid_();
