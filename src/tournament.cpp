@@ -19,7 +19,12 @@
 #include <vector>
 #include <random>
 #include <chrono>
-#include<algorithm>
+#include <algorithm>
+#include <iomanip>
+#include <limits>
+#include <numbers>
+#include <fstream>
+ 
 /* The following pragma are used to removed deprecation warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
  */
@@ -37,15 +42,15 @@
 /* Probability of mutation of an element */
 #define P_MUTATION 0.05
 /* variability of a mutation */
-#define SIGMA_MUTATION  0.05
+#define SIGMA_MUTATION  0.1
 /*Number of solvers in the evolution*/
-#define POP_SIZE 100
+#define POP_SIZE 500
 /*Maximum number of moves authorized in a evolution game*/
 #define MAX_NUM_MOVES 100
 /*Depth for AlphaBeta*/
 #define AB_DEPTH 1
 /*Number of generations in the evolution*/
-#define NUM_GENERATION 10
+#define NUM_GENERATION 100
 
 //Creating distribution generators
 const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -59,6 +64,10 @@ auto variation = std::bind(n_distrib,generator);
 #warning Mutate que dans [0,1]0.0); ?
 
 int main() {
+    std::ofstream white_evol;
+    white_evol.open ("White_evol.txt");
+    white_evol << seed <<"\n";
+
     std::cout << "Current seed: "<< seed << std::endl;
     SolversIndividuals best_white;
     SolversIndividuals best_black;
@@ -67,13 +76,13 @@ int main() {
     std::vector< SolversIndividuals > population(500);
 
     /*initialisation gen0*/
+    #warning Improve initialisation
     for (int i = 0; i != POP_SIZE; ++i) {
-        population[i].mutate();
+        population[i].mutate(); /*to mutate at start*/
     }
     //initialisation of working variables
+    gp.set_black_player(best_white);//playing white against best black so far
     double score = 0.0;
-    auto win_ = best_white.get_win();
-    auto loose_ = best_white.get_loose();
 
     for (int gen = 0; gen != NUM_GENERATION ; ++gen) {
         /*Do every games*/
@@ -82,52 +91,48 @@ int main() {
             score = gp.playGame();
             population[i].set_score(score);
         }
-        
         /*sort the population by their scores*/
         std::sort(population.begin(),population.end());
-
-        std::cout <<"Gen n° " << gen << " Best score: " << population[0].get_score() << std::endl;
-
-        /*Kill and reproduce*/
-
-        for (int i = 0; i < POP_SIZE/2; ++i) {
-            win_ = population[i].get_win();
-            loose_ = population[i].get_loose();
-            population[i + POP_SIZE/2].set_win(win_);
-            population[i + POP_SIZE/2].set_loose(loose_);
-            population[i + POP_SIZE/2].mutate();
+        /*Saving best white solver*/
+        if (population[0].get_score() > best_white.get_score()) {
+            best_white = population[0];
         }
 
+        white_evol << best_white.get_score() <<",";
+        for (int i = 0; i != 10; ++i) {
+            white_evol << population[i * POP_SIZE /10].get_score();
+            if (i != 9) {
+                white_evol << ",";
+            } else {
+                white_evol << "," << population[POP_SIZE - 1].get_score() << "\n";
+            }
+        }
+
+        std::cout << "Gen n° " << gen << ": Best so far: " << best_white.get_score();
+        std::cout << " Best score of the genration: " << population[0].get_score() << std::endl;
+
+        /*Kill and reproduce*/
+        population[0] = best_white;
+        for (int i = 1; i < POP_SIZE/2 - 1; ++i) {
+            population[i + POP_SIZE/2 + 1] = population[i];
+        }
+        for (int i = 1; i != POP_SIZE; ++i) {
+            population[i].mutate();
+        }
+
+
     }
 
+    auto winner = population[0];
+    std::cout <<"Best so far:" << std::endl;
+    winner.print_info();
+
+
+    white_evol.close();
     
 
 
-    /*
-    
-    std::vector<double> test(POP_SIZE);
-    for (int i = 0; i != POP_SIZE; ++i) {
-        population[i].mutate();
-        auto win__ = population[i].get_win();
-        auto loose__ = population[i].get_loose();
-        std::cout << *std::max_element(win__.begin(),win__.end()) << " "<< *std::min_element(win__.begin(),win__.end()) << " " <<*std::max_element(loose__.begin(),loose__.end()) << " "<< *std::min_element(loose__.begin(),loose__.end()) << std::endl;
-    }
-    
-    */
 
-    /*
-    for (int i = 0; i != POP_SIZE; ++i) {
-        double rnd_score = variation();
-        population[i].set_score(rnd_score);
-        std::cout << population[i].get_score() << std::endl;
-    }
-
-    std::sort(population.begin(),population.end());
-    std::cout << "After sorting:"<<std::endl;
-    for (int i = 0; i != POP_SIZE; ++i) {
-        std::cout << population[i].get_score() << std::endl;
-    }
-    */
     return 0;
 }
 
@@ -159,6 +164,15 @@ bool operator<(SolversIndividuals const& s1, SolversIndividuals const& s2) {
     return(s1.score > s2.score);
 }
 
+SolversIndividuals& SolversIndividuals::operator=(const SolversIndividuals & other) {
+    if (this == &other)
+        return *this;
+
+    this->win = other.win;
+    this->loose = other.loose;
+    this->score = other.score;
+    return *this;
+}
 
 std::vector<double> SolversIndividuals::get_win() {
     return(this->win);
@@ -210,12 +224,23 @@ void SolversIndividuals::mutate() {
 
 
 void SolversIndividuals::print_info() {
+    constexpr auto max_precision {std::numeric_limits<long double>::digits10 + 1};
     std::cout << "Win data:" << std::endl;
-    for (auto x : win) 
-        std::cout << x << " ";
+    std::cout << "{";
+    for (int i = 0; i != 64; ++i) {
+        std::cout << std::setprecision(max_precision) << this->win[i];
+        if (i != 63)
+            std::cout << ", ";
+    }
+    std::cout << "}";
     std::cout << std::endl << "Loose data:" << std::endl;
-    for (auto x : loose) 
-        std::cout << x << " ";
+    std::cout << "{";
+    for (int i = 0; i != 64; ++i) {
+        std::cout << std::setprecision(max_precision) << this->loose[i];
+        if (i != 63)
+            std::cout << ", ";
+    }
+    std::cout << "}";
     std::cout << std::endl;
 }
 
