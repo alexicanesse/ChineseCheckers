@@ -4,7 +4,7 @@ with open("White_evol.txt","r") as f:
     lines = f.readlines()
 
 seed = int(lines[0])
-data = [[] for i in range(12)]
+data = [[] for i in range(13)]
 
 for line in lines[1:-1]:
     d = line.split('\n')[0].split(',')
@@ -18,9 +18,9 @@ labels = ["Best so far","Best","Top 10%", "Top 20%", "Top 30%", "Top 40%","Top 5
 
 for i in range(12):
     if (i in {0,3,6,9}):
-        plt.plot(data[i],color = colors[i], linewidth = widths[i],label = labels[i])
+        plt.plot(data[0],data[i+1],color = colors[i], linewidth = widths[i],label = labels[i])
     else:
-        plt.plot(data[i],color = colors[i], linewidth = widths[i])
+        plt.plot(data[0],data[i+1],color = colors[i], linewidth = widths[i])
 
 plt.title(f"Genetic evolution of evaluation. seed: {seed}")
 plt.xlabel("Generation")

@@ -40,7 +40,7 @@
 
 //Global parameters
 /* Probability of mutation of an element */
-#define P_MUTATION 0.05
+#define P_MUTATION 0.1
 /* variability of a mutation */
 #define SIGMA_MUTATION  0.1
 /*Number of solvers in the evolution*/
@@ -50,7 +50,7 @@
 /*Depth for AlphaBeta*/
 #define AB_DEPTH 1
 /*Number of generations in the evolution*/
-#define NUM_GENERATION 100
+#define NUM_GENERATION 500
 
 //Creating distribution generators
 const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -76,14 +76,18 @@ int main() {
     std::vector< SolversIndividuals > population(500);
 
     /*initialisation gen0*/
+    std::vector< double > zeros(64,0);
     #warning Improve initialisation
     for (int i = 0; i != POP_SIZE; ++i) {
+        population[i].set_win(zeros);
+        population[i].set_loose(zeros);
         population[i].mutate(); /*to mutate at start*/
     }
     //initialisation of working variables
     gp.set_black_player(best_white);//playing white against best black so far
-    double score = 0.0;
-
+    double score = -2;
+    best_white = population[0];//best_white is a zero at beginning
+    best_white.set_score(score);
     for (int gen = 0; gen != NUM_GENERATION ; ++gen) {
         /*Do every games*/
         for (int i = 0; i != POP_SIZE; ++i)  {
@@ -98,6 +102,7 @@ int main() {
             best_white = population[0];
         }
 
+        white_evol << gen <<",";
         white_evol << best_white.get_score() <<",";
         for (int i = 0; i != 10; ++i) {
             white_evol << population[i * POP_SIZE /10].get_score();
@@ -109,7 +114,7 @@ int main() {
         }
 
         std::cout << "Gen n° " << gen << ": Best so far: " << best_white.get_score();
-        std::cout << " Best score of the genration: " << population[0].get_score() << std::endl;
+        std::cout << " Best score of the generation: " << population[0].get_score() << std::endl;
 
         /*Kill and reproduce*/
         population[0] = best_white;
