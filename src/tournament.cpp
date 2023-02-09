@@ -44,13 +44,15 @@
 /* variability of a mutation */
 #define SIGMA_MUTATION  0.1
 /*Number of solvers in the evolution*/
-#define POP_SIZE 500
+#define POP_SIZE 100
 /*Maximum number of moves authorized in a evolution game*/
 #define MAX_NUM_MOVES 100
 /*Depth for AlphaBeta*/
 #define AB_DEPTH 1
 /*Number of generations in the evolution*/
-#define NUM_GENERATION 1000
+#define NUM_GENERATION 10000
+/*Number of generation training white or black players*/
+#define ROUND_LENGTH 100
 
 //Creating distribution generators
 const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -61,79 +63,80 @@ auto mutates = std::bind(b_distrib ,generator);
 auto variation = std::bind(n_distrib,generator);
 
 
-#warning Mutate que dans [0,1]0.0); ?
+#warning TODO: Mutate que dans [0,1]0.0); ?
+#warning TODO: écrire qu'a la fin dans les fichiers pour gagner du temps
 
 int main() {
-    std::ofstream white_evol;
-    white_evol.open ("White_evol.txt");
-    white_evol << seed <<"\n";
-
+    /*Gives the seed to reproduce results*/
     std::cout << "Current seed: "<< seed << std::endl;
-    SolversIndividuals best_white;
-    SolversIndividuals best_black;
+
+    /*Files to write in data of evolution*/
+    std::ofstream white_evol;
+    std::ofstream black_evol;
+    white_evol.open ("White_evol.txt");
+    black_evol.open("Black_evol.txt");
+    white_evol << seed << ","<< P_MUTATION << "," << SIGMA_MUTATION << "," << POP_SIZE << "," << AB_DEPTH  << "," << NUM_GENERATION << "," << ROUND_LENGTH << "\n";
+    black_evol << seed << ","<< P_MUTATION << "," << SIGMA_MUTATION << "," << POP_SIZE << "," << AB_DEPTH  << "," << NUM_GENERATION << "," << ROUND_LENGTH << "\n";
+
+
     GamePlayer gp(AB_DEPTH);
 
-    std::vector< SolversIndividuals > population(500);
+    std::vector< SolversIndividuals > pop_white(500);
+    std::vector< SolversIndividuals > pop_black(500);
 
-    /*initialisation gen0*/
+    /*Initialisation of the population*/
     std::vector< double > zeros(64,0);
-    #warning Improve initialisation
+    #warning Improve initialisation in constructor ?
     for (int i = 0; i != POP_SIZE; ++i) {
-        population[i].set_win(zeros);
-        population[i].set_loose(zeros);
-        population[i].mutate(); /*to mutate at start*/
+        //pop_white[i].set_win(zeros);
+        //pop_white[i].set_loose(zeros);
+        //pop_white[i].mutate(); /*to mutate at start*/
+        //pop_black[i].set_win(zeros);
+        //pop_black[i].set_loose(zeros);
+        //pop_black[i].mutate(); /*to mutate at start*/
     }
+
+
     //initialisation of working variables
-    gp.set_black_player(best_white);//playing white against best black so far
-    double score = -2;
-    best_white = population[0];//best_white is a zero at beginning
+    SolversIndividuals best_white;
+    SolversIndividuals best_black;
+    gp.set_black_player(best_black);//Evolving white player at first
+    double score = -2;//Minimum possible score
     best_white.set_score(score);
+    best_black.set_score(score);
+    bool is_white_evolving = true;
+    int count = 0;
+
     for (int gen = 0; gen != NUM_GENERATION ; ++gen) {
-        /*Do every games*/
-        for (int i = 0; i != POP_SIZE; ++i)  {
-            gp.set_white_player(population[i]);
-            score = gp.playGame();
-            population[i].set_score(score);
-        }
-        /*sort the population by their scores*/
-        std::sort(population.begin(),population.end());
-        /*Saving best white solver*/
-        if (population[0].get_score() > best_white.get_score()) {
-            best_white = population[0];
+        if (count == ROUND_LENGTH) {//swaping who is evolving
+            is_white_evolving = !is_white_evolving;
+            count = 0;
+            is_white_evolving ? gp.set_white_player(best_white): gp.set_black_player(best_black);
         }
 
-        white_evol << gen <<",";
-        white_evol << best_white.get_score() <<",";
-        for (int i = 0; i != 10; ++i) {
-            white_evol << population[i * POP_SIZE /10].get_score();
-            if (i != 9) {
-                white_evol << ",";
-            } else {
-                white_evol << "," << population[POP_SIZE - 1].get_score() << "\n";
-            }
+        is_white_evolving ? evol(&gp, pop_white, &best_white, is_white_evolving) : evol(&gp, pop_black, &best_black, is_white_evolving);
+
+        is_white_evolving ? write_scores(white_evol, pop_white, best_white, gen) : write_scores(black_evol, pop_black, best_black, gen);
+        std::cout << "Gen n° " << gen << ", white is evolving: " << is_white_evolving << ", Best so far: ";
+        if (is_white_evolving) {
+            std::cout << best_white.get_score() << " Best score of the generation: " << pop_white[0].get_score() << std::endl;
+        } else {
+            std::cout << best_black.get_score() << " Best score of the generation: " << pop_black[0].get_score() << std::endl;
         }
-
-        std::cout << "Gen n° " << gen << ": Best so far: " << best_white.get_score();
-        std::cout << " Best score of the generation: " << population[0].get_score() << std::endl;
-
-        /*Kill and reproduce*/
-        population[0] = best_white;
-        for (int i = 1; i < POP_SIZE/2 - 1; ++i) {
-            population[i + POP_SIZE/2 + 1] = population[i];
-        }
-        for (int i = 1; i != POP_SIZE; ++i) {
-            population[i].mutate();
-        }
-
-
+        
+        ++count;
     }
 
-    auto winner = population[0];
-    std::cout <<"Best so far:" << std::endl;
-    winner.print_info();
+
+    std::cout <<"Best white so far:" << std::endl;
+    best_white.print_info();
+
+    std::cout <<"Best black so far:" << std::endl;
+    best_black.print_info();
 
 
     white_evol.close();
+    black_evol.close();
     
 
 
@@ -404,5 +407,44 @@ int GamePlayer::constructor_test() {
     }
     std::cout << "ok " ;
     return(1);
+
+}
+
+void write_scores(std::ofstream & file,std::vector< SolversIndividuals > & population, SolversIndividuals & best_to_write, int& gen) {
+    file << gen <<",";
+    file << best_to_write.get_score() <<",";
+    for (int i = 0; i != 10; ++i) {
+        file << population[i * POP_SIZE /10].get_score();
+        if (i != 9) {
+            file << ",";
+        } else {
+            file << "," << population[POP_SIZE - 1].get_score() << "\n";
+        }
+    }
+
+}
+
+void evol(GamePlayer *gp,std::vector< SolversIndividuals >& population,  SolversIndividuals *best_player, bool is_white_evolving) {
+        double score = -2;
+        /*Do every games*/
+        for (int i = 0; i != POP_SIZE; ++i)  {
+            is_white_evolving ? gp->set_white_player(population[i]) : gp->set_black_player(population[i]);
+            is_white_evolving ? score = gp->playGame():  score = - gp->playGame();
+            population[i].set_score(score);
+        }
+        /*sort the population by their scores*/
+        std::sort(population.begin(),population.end());
+        /*Saving best white solver*/
+        if (population[0].get_score() > best_player->get_score()) 
+            *best_player = population[0];
+
+        /*Kill and reproduce*/
+        population[POP_SIZE/2-1] = *best_player;/*Best player always reproduces*/
+        for (int i = 0; i < POP_SIZE/2 ; ++i) {
+            population[i + POP_SIZE/2 ] = population[i];
+        }
+        for (int i = 0; i != POP_SIZE; ++i) {
+            population[i].mutate();
+        }
 
 }

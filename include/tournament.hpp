@@ -90,4 +90,7 @@ class GamePlayer {
     int constructor_test();
 };
 
+void write_scores(std::ofstream & file,std::vector< SolversIndividuals > & population, SolversIndividuals & best_to_write, int& gen);
+void evol(GamePlayer  *gp,std::vector< SolversIndividuals >& population,  SolversIndividuals *best_player, bool is_white_evolving);
+
 #endif //CHINESECHECKERS_TOURNAMENT_HPP
