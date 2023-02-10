@@ -163,6 +163,8 @@ class ChineseCheckers {
      */
     Player get_who_is_to_play_() const;
 
+    uint64_t hashGrid() const;
+
     std::unordered_map<uint64_t, int> get_number_of_times_seen() const;
     ChineseCheckers();
 };

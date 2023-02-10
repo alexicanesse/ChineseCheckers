@@ -387,3 +387,7 @@ uint64_t ChineseCheckers::hashPosition(const PositionType &move) {
     hash = fnv1a(hash, move[1]);
     return hash;
 }
+
+uint64_t ChineseCheckers::hashGrid() const {
+    return this->hashMatrix(this->grid_, this->who_is_to_play_);
+}
