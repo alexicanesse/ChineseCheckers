@@ -217,7 +217,7 @@ void ChineseCheckers::moveWithoutVerification(Player player,
     }
 
     /* indicates that is position has been seen another time */
-    uint64_t = hashMatrix(this->grid_, 0);
+    uint64_t hash = hashMatrix(this->grid_, 0);
     if (this->number_of_times_seen.contains(hash))
         this->number_of_times_seen[hash]++;
     else
@@ -388,6 +388,6 @@ uint64_t ChineseCheckers::hashPosition(const PositionType &move) {
     return hash;
 }
 
-uint64_t ChineseCheckers::hashGrid() const {
+uint64_t ChineseCheckers::hashGrid(){
     return this->hashMatrix(this->grid_, this->who_is_to_play_);
 }

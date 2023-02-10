@@ -42,7 +42,7 @@ class ChineseCheckers {
     /*! Indicate which is the next player to play */
     Player who_is_to_play_ = 0;
     /*! Indicates the number of times a position has been seen */
-    std::unordered_map<unsigned long long, int> number_of_times_seen;
+    std::unordered_map<uint64_t , int> number_of_times_seen;
     /*! Keeps the positions  of the winning zone */
     const std::vector<std::pair<int, int>> winning_positions_ = {
         {0, 0}, {0, 1}, {0, 2}, {0, 3}, {1, 0},
@@ -163,7 +163,7 @@ class ChineseCheckers {
      */
     Player get_who_is_to_play_() const;
 
-    uint64_t hashGrid() const;
+    uint64_t hashGrid();
 
     std::unordered_map<uint64_t, int> get_number_of_times_seen() const;
     ChineseCheckers();
