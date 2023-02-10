@@ -55,7 +55,7 @@ class AlphaBeta : public ChineseCheckers{
     ListOfPositionType best_move_;
 
     /* transposition table to store the results of previous searches */
-    std::unordered_map<unsigned long long, std::pair<double, int>> transTable;
+    std::unordered_map<uint64_t, std::pair<double, int>> transTable;
 
     cppflow::model *model = new cppflow::model("./model");
     //tensorflow::SavedModelBundleLite *savedModelBundle = new tensorflow::SavedModelBundleLite;
