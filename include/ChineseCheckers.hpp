@@ -167,45 +167,6 @@ class ChineseCheckers {
     ChineseCheckers();
 };
 
-class Addon : public ChineseCheckers{
- private:
-    /*! \brief
-    * Contains the history of the moves played.
-    */
-    std::vector<MoveType> history_;
-
- public:
-    /*! \brief
-     * List of all available moves.
-     */
-    std::vector<std::vector<PositionType>> available_moves();
-    /*! \brief
-     * List of available moves from a given position.
-     */
-    /*!
-     \param player Indicates the person who is playing.
-     \param position Indicates the current position
-                        considered by the player.
-     \return available_moves A vector of positions available.
-    */
-    std::vector<PositionType> available_moves(Player player,
-                                              PositionType position);
-    /*!
-      \brief
-     * Allows to cancel a certain number of moves.
-     */
-    /*!
-     \param number_of_moves_to_cancel The number of moves the
-                player wants to cancel.
-    */
-    void cancel_moves(int number_of_moves_to_cancel);
-    /*! \brief
-     * Gives the history of the moves played.
-     */
-    std::vector<std::pair<Player, GridType>> get_history();
-    Addon();
-};
-
 
 
 #endif /* INCLUDE_CHINESECHECKERS_HPP_ */
