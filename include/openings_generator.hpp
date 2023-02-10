@@ -16,6 +16,7 @@
 #define CHINESECHECKERS_OPENINGS_GENERATOR_HPP
 
 /* C++ libraries */
+#include <unordered_map>
 /* The following pragma are used to removed depraction warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
  */
@@ -27,6 +28,14 @@
 /* Other */
 #include "Types.hpp"
 #include "AlphaBeta.hpp"
+
+class OpeningsGenerator : public AlphaBeta {
+  private:
+
+  public:
+    void generateOpenings(int depth);
+    void saveOpenings();
+};
 
 
 #endif //CHINESECHECKERS_OPENINGS_GENERATOR_HPP

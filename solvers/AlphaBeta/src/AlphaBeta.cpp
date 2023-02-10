@@ -65,12 +65,16 @@ AlphaBeta::AlphaBeta() {
         {0.676857254037366074, -0.2864446634523950541, -0.7074368423396788508, -0.4362880910768491272, 0.6686428532238517519, 0.1633777774661320792, 0.3913251458888382661, 0.4149641807650202852},
         {-0.1419548025857928497, -0.4761503678250039728, 0.6143547088015027802, -0.377542154579426914, -0.2740492418784775674, 0.1763990824264763113, 0.4944970475758798667, -0.02683867796016010943}
     });
+
+    this->loadOpenings();
 }
 
 AlphaBeta::AlphaBeta(const std::vector< std::vector<double> > &player_to_win_value_,
                      const std::vector< std::vector<double> > &player_to_loose_value_) {
     this->player_to_win_value_ = player_to_win_value_;
     this->player_to_loose_value_ = player_to_loose_value_;
+
+    this->loadOpenings();
 }
 
 ListOfMoves AlphaBeta::availableMoves(const Player &player, const bool &full) {
@@ -221,9 +225,12 @@ double AlphaBeta::evaluate(const Player &player) {
 ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, const double &beta) {
     this->maximizing_player_ = this->who_is_to_play_;
 
-    AlphaBetaEval(depth, alpha, beta, false, true);
+    if (this->opening.contains(this->hashGrid())) {
+        std::cout << "Found opening\n";
+        return this->opening[this->hashGrid()];
+    }
 
-    //std::cout << "Rank : " << std::setw(2) << rank << " / " << std::setw(2) << number_of_moves << " " << std::setprecision(2) << (100 - 100*static_cast<double>(rank)/number_of_moves) << "%\n";
+    AlphaBetaEval(depth, alpha, beta, false, true);
 
     return this->best_move_;
 }
@@ -475,4 +482,26 @@ void AlphaBeta::sortDepth1(ListOfMoves &possible_moves) {
         return valueA < valueB;
     };
     std::sort(possible_moves.begin(), possible_moves.end(), compMove);
+}
+
+void AlphaBeta::loadOpenings() {
+    std::ifstream inFile("openings.dat");
+
+    /* Iterate through the file and load each element through the file */
+    std::string line;
+    uint64_t hash;
+    int position0, position1;
+    ListOfPositionType move;
+    while(std::getline(inFile, line)) {
+        move.clear();
+        std::istringstream ss(line);
+        ss >> hash;
+        while(ss >> position0 >> position1)
+            move.push_back({position0, position1});
+
+        this->opening[hash] = move;
+    }
+
+    /* Close the file */
+    inFile.close();
 }
