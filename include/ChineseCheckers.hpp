@@ -163,7 +163,7 @@ class ChineseCheckers {
      */
     Player get_who_is_to_play_() const;
 
-    std::unordered_map<unsigned long long, int> get_number_of_times_seen() const;
+    std::unordered_map<uint64_t, int> get_number_of_times_seen() const;
     ChineseCheckers();
 };
 
