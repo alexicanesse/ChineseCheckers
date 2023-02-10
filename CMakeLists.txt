@@ -33,7 +33,7 @@ set(CXXFILESBENCHMARKS ./src/ChineseCheckers_benchmark.cpp)
 set(CXXFILESALPHABETABENCHMARKS ./solvers/AlphaBeta/src/AlphaBeta_benchmark.cpp)
 set(CXXFILESTOURNAMENT ./src/tournament.cpp)
 set(CXXFILESINTUITIONDATAGENERATOR ./src/intuition_data_generator.cpp)
-
+set(CXXFILESOPENINGSGENERATOR ./src/openings_generator.cpp)
 
 ###############################################################################
 ## target definitions #########################################################
@@ -58,12 +58,14 @@ add_executable(AlphaBeta_benchmarks
 
 add_executable(Tournament ${CXXFILESTOURNAMENT})
 add_executable(Intuition_data_generator ${CXXFILESINTUITIONDATAGENERATOR})
+add_executable(Openings_generator ${CXXFILESOPENINGSGENERATOR})
 
 include_directories("./include")
 target_include_directories(AlphaBeta PRIVATE ./solvers/AlphaBeta/include/)
+target_include_directories(AlphaBeta_benchmarks PRIVATE ./solvers/AlphaBeta/include/)
 target_include_directories(Tournament PRIVATE ./solvers/AlphaBeta/include/)
 target_include_directories(Intuition_data_generator PRIVATE ./solvers/AlphaBeta/include/)
-target_include_directories(AlphaBeta_benchmarks PRIVATE ./solvers/AlphaBeta/include/)
+target_include_directories(Openings_generator PRIVATE ./solvers/AlphaBeta/include/)
 
 ###############################################################################
 ## dependencies ###############################################################
@@ -88,6 +90,7 @@ target_link_libraries(benchmarks PUBLIC libChineseCheckers benchmark::benchmark)
 target_link_libraries(AlphaBeta_benchmarks PUBLIC AlphaBeta libChineseCheckers benchmark::benchmark)
 target_link_libraries(Tournament PUBLIC AlphaBeta)
 target_link_libraries(Intuition_data_generator PUBLIC AlphaBeta cppflow::cppflow)
+target_link_libraries(Openings_generator PUBLIC AlphaBeta)
 
 target_include_directories(libChineseCheckers PUBLIC ${PYTHON_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
 target_include_directories(AlphaBeta PUBLIC ${PYTHON_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIR})
