@@ -20,7 +20,12 @@
 #include <random>
 #include <chrono>
 #include <cmath>
-#include<algorithm>
+#include <algorithm>
+#include <iomanip>
+#include <limits>
+#include <numbers>
+#include <fstream>
+ 
 /* The following pragma are used to removed depraction warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
  */
@@ -47,6 +52,7 @@ class SolversIndividuals {
     SolversIndividuals(std::vector<double> & win_, std::vector<double> & loose_);
 
     friend bool operator<(SolversIndividuals const & s1, SolversIndividuals const & s2);
+    SolversIndividuals& operator=(const SolversIndividuals & other);
 
     std::vector<double> get_win();
     std::vector<double> get_loose();
