@@ -42,7 +42,7 @@ class ChineseCheckers {
     /*! Indicate which is the next player to play */
     Player who_is_to_play_ = 0;
     /*! Indicates the number of times a position has been seen */
-    std::unordered_map<unsigned long long, int> number_of_times_seen;
+    std::unordered_map<uint64_t , int> number_of_times_seen;
     /*! Keeps the positions  of the winning zone */
     const std::vector<std::pair<int, int>> winning_positions_ = {
         {0, 0}, {0, 1}, {0, 2}, {0, 3}, {1, 0},
@@ -163,47 +163,10 @@ class ChineseCheckers {
      */
     Player get_who_is_to_play_() const;
 
-    std::unordered_map<unsigned long long, int> get_number_of_times_seen() const;
+    uint64_t hashGrid();
+
+    std::unordered_map<uint64_t, int> get_number_of_times_seen() const;
     ChineseCheckers();
-};
-
-class Addon : public ChineseCheckers{
- private:
-    /*! \brief
-    * Contains the history of the moves played.
-    */
-    std::vector<MoveType> history_;
-
- public:
-    /*! \brief
-     * List of all available moves.
-     */
-    std::vector<std::vector<PositionType>> available_moves();
-    /*! \brief
-     * List of available moves from a given position.
-     */
-    /*!
-     \param player Indicates the person who is playing.
-     \param position Indicates the current position
-                        considered by the player.
-     \return available_moves A vector of positions available.
-    */
-    std::vector<PositionType> available_moves(Player player,
-                                              PositionType position);
-    /*!
-      \brief
-     * Allows to cancel a certain number of moves.
-     */
-    /*!
-     \param number_of_moves_to_cancel The number of moves the
-                player wants to cancel.
-    */
-    void cancel_moves(int number_of_moves_to_cancel);
-    /*! \brief
-     * Gives the history of the moves played.
-     */
-    std::vector<std::pair<Player, GridType>> get_history();
-    Addon();
 };
 
 

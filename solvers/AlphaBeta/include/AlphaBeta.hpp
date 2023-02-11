@@ -49,19 +49,21 @@ class AlphaBeta : public ChineseCheckers{
 
     double evaluate(const Player &player);
 
-    void reverseMove(const ListOfPositionType &move);
+
 
     Player maximizing_player_;
     ListOfPositionType best_move_;
 
     /* transposition table to store the results of previous searches */
-    std::unordered_map<unsigned long long, std::pair<double, int>> transTable;
+    std::unordered_map<uint64_t, std::pair<double, int>> transTable;
+    std::unordered_map<uint64_t, ListOfPositionType> opening;
 
     cppflow::model *model = new cppflow::model("./model");
     //tensorflow::SavedModelBundleLite *savedModelBundle = new tensorflow::SavedModelBundleLite;
     void tensorflowOrderMoves(ListOfMoves &possible_moves);
     void sortDepth1(ListOfMoves &possible_moves);
  public:
+    void loadOpenings();
     double AlphaBetaEval(const int &depth,
                       double alpha,
                       double beta,
@@ -70,6 +72,8 @@ class AlphaBeta : public ChineseCheckers{
 
     ListOfMoves availableMoves(const Player &player, const bool &full);
     ListOfPositionType getMove(const int &depth, const double &alpha, const double &beta);
+    void reverseMove(const ListOfPositionType &move);
+
     bool isHuman() {return false; }
     AlphaBeta();
     AlphaBeta(const std::vector< std::vector<double> > &player_to_win_value_,

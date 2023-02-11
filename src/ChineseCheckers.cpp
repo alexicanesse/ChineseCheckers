@@ -186,7 +186,7 @@ bool ChineseCheckers::move(Player player,
     }
 
     /* indicates that this position has been seen another time */
-    unsigned long long hash = hashMatrix(this->grid_, 0);
+    uint64_t hash = hashMatrix(this->grid_, 0);
     if (this->number_of_times_seen.contains(hash))
         this->number_of_times_seen[hash]++;
     else
@@ -217,7 +217,7 @@ void ChineseCheckers::moveWithoutVerification(Player player,
     }
 
     /* indicates that is position has been seen another time */
-    unsigned long long hash = hashMatrix(this->grid_, 0);
+    uint64_t hash = hashMatrix(this->grid_, 0);
     if (this->number_of_times_seen.contains(hash))
         this->number_of_times_seen[hash]++;
     else
@@ -343,7 +343,7 @@ Player ChineseCheckers::get_who_is_to_play_() const {
     return this->who_is_to_play_;
 }
 
-std::unordered_map<unsigned long long, int> ChineseCheckers::get_number_of_times_seen() const {
+std::unordered_map<uint64_t, int> ChineseCheckers::get_number_of_times_seen() const {
     return this->number_of_times_seen;
 }
 
@@ -386,4 +386,8 @@ uint64_t ChineseCheckers::hashPosition(const PositionType &move) {
     hash = fnv1a(hash, move[0]);
     hash = fnv1a(hash, move[1]);
     return hash;
+}
+
+uint64_t ChineseCheckers::hashGrid(){
+    return this->hashMatrix(this->grid_, this->who_is_to_play_);
 }
