@@ -65,6 +65,9 @@ class SolversIndividuals {
     void mutate();
 
     void print_info();
+    void print_info_as_matrix();
+    void print_info_as_matrix_to_file(std::ofstream & file);
+
 };
 
 

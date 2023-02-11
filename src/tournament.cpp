@@ -44,15 +44,15 @@
 /* variability of a mutation */
 #define SIGMA_MUTATION  0.1
 /*Number of solvers in the evolution*/
-#define POP_SIZE 100
+#define POP_SIZE 500
 /*Maximum number of moves authorized in a evolution game*/
 #define MAX_NUM_MOVES 100
 /*Depth for AlphaBeta*/
 #define AB_DEPTH 1
 /*Number of generations in the evolution*/
-#define NUM_GENERATION 10000
+#define NUM_GENERATION 100000
 /*Number of generation training white or black players*/
-#define ROUND_LENGTH 100
+#define ROUND_LENGTH 200
 
 //Creating distribution generators
 const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -73,10 +73,16 @@ int main() {
     /*Files to write in data of evolution*/
     std::ofstream white_evol;
     std::ofstream black_evol;
+    std::ofstream white_best_players;
+    std::ofstream black_best_players;
     white_evol.open ("White_evol.txt");
     black_evol.open("Black_evol.txt");
+    white_best_players.open ("White_best_players.txt");
+    black_best_players.open("Black_best_players.txt");
     white_evol << seed << ","<< P_MUTATION << "," << SIGMA_MUTATION << "," << POP_SIZE << "," << AB_DEPTH  << "," << NUM_GENERATION << "," << ROUND_LENGTH << "\n";
     black_evol << seed << ","<< P_MUTATION << "," << SIGMA_MUTATION << "," << POP_SIZE << "," << AB_DEPTH  << "," << NUM_GENERATION << "," << ROUND_LENGTH << "\n";
+    white_best_players << seed << ","<< P_MUTATION << "," << SIGMA_MUTATION << "," << POP_SIZE << "," << AB_DEPTH  << "," << NUM_GENERATION << "," << ROUND_LENGTH << "\n";
+    black_best_players << seed << ","<< P_MUTATION << "," << SIGMA_MUTATION << "," << POP_SIZE << "," << AB_DEPTH  << "," << NUM_GENERATION << "," << ROUND_LENGTH << "\n";
 
 
     GamePlayer gp(AB_DEPTH);
@@ -112,6 +118,7 @@ int main() {
             is_white_evolving = !is_white_evolving;
             count = 0;
             is_white_evolving ? gp.set_white_player(best_white): gp.set_black_player(best_black);
+            is_white_evolving ? best_white.print_info_as_matrix_to_file(white_best_players): best_black.print_info_as_matrix_to_file(black_best_players);
         }
 
         is_white_evolving ? evol(&gp, pop_white, &best_white, is_white_evolving) : evol(&gp, pop_black, &best_black, is_white_evolving);
@@ -250,6 +257,78 @@ void SolversIndividuals::print_info() {
     }
     std::cout << "}";
     std::cout << std::endl;
+}
+
+void SolversIndividuals::print_info_as_matrix() {
+    constexpr auto max_precision {std::numeric_limits<long double>::digits10 + 2};
+    std::cout << "Win data:" << std::endl;
+    std::cout << "{";
+    for (int i = 0; i != 8; ++i) {
+        std::cout << "{";
+        for (auto j = 0; j != 8; ++j) {
+            std::cout << std::setprecision(max_precision) << this->win[i*8 + j];
+            if (j != 7)
+                std::cout << ", ";
+        };
+        if (i != 7) {
+            std::cout << "}," << std::endl;
+        } else {
+            std::cout << "}";
+        }
+    }
+    std::cout << "}";
+    std::cout << std::endl << "Loose data:" << std::endl;
+    std::cout << "{";
+    for (int i = 0; i != 8; ++i) {
+        std::cout << "{";
+        for (auto j = 0; j != 8; ++j) {
+            std::cout << std::setprecision(max_precision) << this->loose[i*8 + j];
+            if (j != 7)
+                std::cout << ", ";
+        };
+        if (i != 7) {
+            std::cout << "}," << std::endl;
+        } else {
+            std::cout << "}";
+        }
+    }
+    std::cout << "}";
+}
+
+void SolversIndividuals::print_info_as_matrix_to_file(std::ofstream & file) {
+    constexpr auto max_precision {std::numeric_limits<long double>::digits10 + 2};
+    file << "Win data:" << std::endl;
+    file << "{";
+    for (int i = 0; i != 8; ++i) {
+        file << "{";
+        for (auto j = 0; j != 8; ++j) {
+            file << std::setprecision(max_precision) << this->win[i*8 + j];
+            if (j != 7)
+                file << ", ";
+        };
+        if (i != 7) {
+            file << "}," << std::endl;
+        } else {
+            file << "}";
+        }
+    }
+    file << "}";
+    file << std::endl << "Loose data:" << std::endl;
+    file << "{";
+    for (int i = 0; i != 8; ++i) {
+        file << "{";
+        for (auto j = 0; j != 8; ++j) {
+            file << std::setprecision(max_precision) << this->loose[i*8 + j];
+            if (j != 7)
+                file << ", ";
+        };
+        if (i != 7) {
+            file << "}," << std::endl;
+        } else {
+            file << "}";
+        }
+    }
+    file << "}" << std::endl<< std::endl;
 }
 
 void print_matrix(const std::vector< std::vector<double> > &matrix) {
