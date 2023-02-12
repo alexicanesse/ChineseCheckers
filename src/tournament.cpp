@@ -44,13 +44,13 @@
 /* variability of a mutation */
 #define SIGMA_MUTATION  0.1
 /*Number of solvers in the evolution*/
-#define POP_SIZE 500
+#define POP_SIZE 50
 /*Maximum number of moves authorized in a evolution game*/
 #define MAX_NUM_MOVES 100
 /*Depth for AlphaBeta*/
 #define AB_DEPTH 1
 /*Number of generations in the evolution*/
-#define NUM_GENERATION 100000
+#define NUM_GENERATION 100
 /*Number of generation training white or black players*/
 #define ROUND_LENGTH 200
 
@@ -144,9 +144,8 @@ int main() {
 
     white_evol.close();
     black_evol.close();
-    
-
-
+    white_best_players.close();
+    black_best_players.close();
 
     return 0;
 }
