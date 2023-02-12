@@ -5,10 +5,10 @@
  */
 
 /**
- * \file intuition_data_generator.hpp
- * \brief
+ * @file intuition_data_generator.hpp
+ * @brief
  *
- *
+ * This class is used to generate the data required for the intuition learning process
  *
  */
 
@@ -29,16 +29,48 @@
 #include "Types.hpp"
 #include "AlphaBeta.hpp"
 
+/*!
+ * @brief This class is used to generate the data required for the intuition learning process
+ */
 class IntuitionDataGenerator : public AlphaBeta {
   public:
+
+    /*!
+     * @brief this function is used to eval all possible moves
+     */
+    /*!
+     * @param depth The depth used by the alpha beta algorithm
+     * @return The evaluation associated with each move and the grid obtained after each move
+     */
     std::pair<std::vector<std::vector<int>>, std::vector<double>> evalAllMoves(int depth);
 
+    /*!
+     * @brief Save a vector to a file
+     */
+    /*!
+     * @tparam T
+     * @param input The vector to save
+     * @param outputFileName The name of the file we need to save the data to
+     */
     template<typename T>
     void saveVectorToFile(const std::vector<T> &input,
                                                   const std::string &outputFileName);
-    template<typename T>
-    void saveVectorOfVectorToFile(const std::vector<std::vector<T>> &input, const std::string &outputFileName);
 
+    /*!
+     * @brief Save a matrix to a file
+     */
+    /*!
+     * @tparam T
+     * @param input The matrix to save
+     * @param outputFileName The name of the file we need to save the data to
+     */
+    template<typename T>
+    void saveVectorOfVectorToFile(const std::vector<std::vector<T>> &input,
+                                                    const std::string &outputFileName);
+
+    /*!
+     * @brief Fill the @ref transTable with the data we already calculated
+     */
     void fillTransTable();
 };
 
