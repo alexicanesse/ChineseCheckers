@@ -12,8 +12,8 @@
  *
  */
 
-#ifndef CHINESECHECKERS_OPENINGS_GENERATOR_HPP
-#define CHINESECHECKERS_OPENINGS_GENERATOR_HPP
+#ifndef INCLUDE_OPENINGS_GENERATOR_HPP_
+#define INCLUDE_OPENINGS_GENERATOR_HPP_
 
 /* C++ libraries */
 #include <unordered_map>
@@ -34,9 +34,8 @@
  * This class is used in order to generate the openings
  */
 class OpeningsGenerator : public AlphaBeta {
-  private:
-
-  public:
+ private:
+ public:
     /*!
      * @brief Generates the openings up to a given depth
      * @param depth Defines the length of the openings we will compute
@@ -52,4 +51,4 @@ class OpeningsGenerator : public AlphaBeta {
 };
 
 
-#endif //CHINESECHECKERS_OPENINGS_GENERATOR_HPP
+#endif  // INCLUDE_OPENINGS_GENERATOR_HPP_

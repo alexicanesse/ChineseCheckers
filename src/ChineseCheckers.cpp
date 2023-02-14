@@ -80,7 +80,7 @@ MoveType ChineseCheckers::elementaryMove(PositionType original_position,
         mid = direction[1]*(d - b)/2;
 
     /* Check if there is a pown to jump over */
-    if(this->grid_[a + direction[0]*mid][b + direction[1]*mid] == Empty)
+    if (this->grid_[a + direction[0]*mid][b + direction[1]*mid] == Empty)
         return Illegal;
 
     /* Check that there aren't any powns in the way */
@@ -140,7 +140,7 @@ bool ChineseCheckers::move(Player player,
 
     /* Check that the right player is playing */
     if ((this->grid_[list_moves[0][0]][list_moves[0][1]] == 1 && player == 1)
-        || (this->grid_[list_moves[0][0]][list_moves[0][1]] == -1 && player == 0))
+     || (this->grid_[list_moves[0][0]][list_moves[0][1]] == -1 && player == 0))
         return false;
 
     if (player != this->who_is_to_play_)
@@ -343,7 +343,8 @@ Player ChineseCheckers::get_who_is_to_play_() const {
     return this->who_is_to_play_;
 }
 
-std::unordered_map<uint64_t, int> ChineseCheckers::get_number_of_times_seen() const {
+std::unordered_map<uint64_t, int>
+        ChineseCheckers::get_number_of_times_seen() const {
     return this->number_of_times_seen;
 }
 
@@ -361,7 +362,8 @@ inline uint64_t ChineseCheckers::fnv1aColor(uint64_t h, const Color &x) {
     return h;
 }
 
-uint64_t ChineseCheckers::hashMatrix(const GridType &matrix, const int &player) {
+uint64_t ChineseCheckers::hashMatrix(const GridType &matrix,
+                                     const int &player) {
     uint64_t hash = 0xcbf29ce484222325; /* FNV-1a seed value */
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
@@ -388,6 +390,6 @@ uint64_t ChineseCheckers::hashPosition(const PositionType &move) {
     return hash;
 }
 
-uint64_t ChineseCheckers::hashGrid(){
+uint64_t ChineseCheckers::hashGrid() {
     return this->hashMatrix(this->grid_, this->who_is_to_play_);
 }
