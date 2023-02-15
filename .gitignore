@@ -370,6 +370,10 @@ test.py
 bin/
 .vscode
 values.txt
+Black_best_players.txt
+Black_evol.txt
+White_best_players.txt
+White_evol.txt
 grids.txt
 python3
 python3.11
