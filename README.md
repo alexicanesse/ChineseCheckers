@@ -161,7 +161,7 @@ cmake --build ./bin
 
 ## Documentation
 
-The full documentation is accessible at [Documentation](https://alexicanesse.github.io/ChineseCheckers/index.html).
+The full documentation is accessible at [Documentation](https://alexicanesse.github.io/ChineseCheckers/html/index.html).
 
 
 ## Built With

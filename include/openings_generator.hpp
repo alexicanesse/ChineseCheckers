@@ -8,12 +8,12 @@
  * \file openings_generator.hpp
  * \brief
  *
- *
+ * This file is used for the declarations needed to generate the openings
  *
  */
 
-#ifndef CHINESECHECKERS_OPENINGS_GENERATOR_HPP
-#define CHINESECHECKERS_OPENINGS_GENERATOR_HPP
+#ifndef INCLUDE_OPENINGS_GENERATOR_HPP_
+#define INCLUDE_OPENINGS_GENERATOR_HPP_
 
 /* C++ libraries */
 #include <unordered_map>
@@ -29,13 +29,26 @@
 #include "Types.hpp"
 #include "AlphaBeta.hpp"
 
+/*!
+ * @brief
+ * This class is used in order to generate the openings
+ */
 class OpeningsGenerator : public AlphaBeta {
-  private:
-
-  public:
+ private:
+ public:
+    /*!
+     * @brief Generates the openings up to a given depth
+     * @param depth Defines the length of the openings we will compute
+     * @sa saveOpenings()
+     */
     void generateOpenings(int depth);
+
+    /*!
+     * @brief Saves the openings generated using @ref generateOpenings(int depth)
+     * @sa generateOpenings(int depth)
+     */
     void saveOpenings();
 };
 
 
-#endif //CHINESECHECKERS_OPENINGS_GENERATOR_HPP
+#endif  // INCLUDE_OPENINGS_GENERATOR_HPP_

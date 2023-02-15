@@ -225,7 +225,7 @@ double AlphaBeta::evaluate(const Player &player) {
 ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, const double &beta) {
     this->maximizing_player_ = this->who_is_to_play_;
 
-    if (this->opening.contains(this->hashGrid())) {
+    if (0 && this->opening.contains(this->hashGrid())) {
         std::cout << "Found opening\n";
         return this->opening[this->hashGrid()];
     }
@@ -279,7 +279,7 @@ double AlphaBeta::AlphaBetaEval(const int &depth,
 
     /* Sort according to the value of the move in order to increase the number of cut-offs */
     ListOfMoves possible_moves = this->availableMoves(this->who_is_to_play_, keepMove);
-    if (keepMove)
+    if (0 && keepMove)
         this->tensorflowOrderMoves(possible_moves);
     else
         this->sortDepth1(possible_moves);
