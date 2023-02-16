@@ -123,7 +123,7 @@ class AlphaBeta : public ChineseCheckers{
     std::unordered_map<uint64_t, ListOfPositionType> opening;
 
     /*! Tensorflow model used by @ref tensorflowOrderMoves(ListOfMoves &possible_moves) */
-    cppflow::model *model = new cppflow::model("./model");
+    cppflow::model *model = new cppflow::model("./raw_data/model");
 
  public:
     /* Constructors */

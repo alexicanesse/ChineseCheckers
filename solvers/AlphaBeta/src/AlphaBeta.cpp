@@ -485,7 +485,7 @@ void AlphaBeta::sortDepth1(ListOfMoves &possible_moves) {
 }
 
 void AlphaBeta::loadOpenings() {
-    std::ifstream inFile("openings.dat");
+    std::ifstream inFile("raw_data/openings.dat");
 
     /* Iterate through the file and load each element through the file */
     std::string line;
