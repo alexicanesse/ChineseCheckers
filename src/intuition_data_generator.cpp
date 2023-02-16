@@ -8,12 +8,16 @@
  * \file intuition_data_generator.cpp
  * \brief
  *
- *
+ * This class is used to generate the data required for the intuition learning process
  *
  */
 
 /* intuition_data_generator.hpp */
 #include "intuition_data_generator.hpp"
+
+/* C libraries */
+#include <time.h>
+#include <stdlib.h>
 
 /* C++ libraries */
 #include <vector>
@@ -27,10 +31,6 @@
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/python.hpp>
 #pragma GCC diagnostic pop
-
-/* C libraries */
-#include <time.h>
-#include <stdlib.h>
 
 /* Other */
 #include "Types.hpp"
@@ -55,14 +55,16 @@ int main() {
                 generator.move(0, generator.getMove(3, -100000, 100000));
             } else {
                 ListOfMoves moves = generator.availableMoves(0, false);
-                generator.move(0, moves[rand() % static_cast<int>(moves.size())]);
+                generator.move(0, moves[rand()
+                        % static_cast<int>(moves.size())]);
             }
 
             if (rand() % 10 <= 7) {
                 generator.move(1, generator.getMove(3, -100000, 100000));
             } else {
                 ListOfMoves moves = generator.availableMoves(1, false);
-                generator.move(1, moves[rand() % static_cast<int>(moves.size())]);
+                generator.move(1, moves[rand()
+                        % static_cast<int>(moves.size())]);
             }
         }
     }
@@ -70,8 +72,9 @@ int main() {
 }
 
 template<typename T>
-void IntuitionDataGenerator::saveVectorToFile(const std::vector<T> &input,
-                                              const std::string &outputFileName) {
+void IntuitionDataGenerator::saveVectorToFile(
+        const std::vector<T> &input,
+        const std::string &outputFileName) {
     std::ofstream output_file(outputFileName, std::ios_base::app);
 
     std::ostream_iterator<T> output_iterator(output_file, "\n");
@@ -81,8 +84,9 @@ void IntuitionDataGenerator::saveVectorToFile(const std::vector<T> &input,
 }
 
 template<typename T>
-void IntuitionDataGenerator::saveVectorOfVectorToFile(const std::vector<std::vector<T>> &input,
-                                                      const std::string &outputFileName) {
+void IntuitionDataGenerator::saveVectorOfVectorToFile(
+        const std::vector<std::vector<T>> &input,
+        const std::string &outputFileName) {
     std::ofstream output_file(outputFileName, std::ios_base::app);
 
     for (const auto &line : input) {
@@ -93,7 +97,8 @@ void IntuitionDataGenerator::saveVectorOfVectorToFile(const std::vector<std::vec
     output_file.close();
 }
 
-std::pair<std::vector<std::vector<int>>, std::vector<double>> IntuitionDataGenerator::evalAllMoves(int depth) {
+std::pair<std::vector<std::vector<int>>, std::vector<double>>
+                IntuitionDataGenerator::evalAllMoves(int depth) {
     this->maximizing_player_ = this->who_is_to_play_;
     ListOfMoves moves = this->availableMoves(this->who_is_to_play_, false);
     std::vector<double> evals;
@@ -145,7 +150,8 @@ void IntuitionDataGenerator::fillTransTable() {
         std::stringstream ss;
         ss << str;
 
-        GridType buff = std::vector<std::vector<Color>>(8, std::vector<Color>(8, Empty));
+        GridType buff = std::vector<std::vector<Color>>(8,
+                                        std::vector<Color>(8, Empty));
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
                 std::string temp;
@@ -158,7 +164,7 @@ void IntuitionDataGenerator::fillTransTable() {
     }
     grid_file.close();
 
-    unsigned long long hash;
+    uint64_t hash;
     for (int i = 0; i < rs.size(); ++i) {
         hash = this->hashMatrix(rs[i], 1);
         this->transTable[hash] = std::make_pair(values[i], 2);

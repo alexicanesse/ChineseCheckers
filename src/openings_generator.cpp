@@ -8,7 +8,7 @@
  * \file openings_generator.cpp
  * \brief
  *
- *
+ * This class is used in order to generate the openings
  *
  */
 
@@ -55,7 +55,7 @@ void OpeningsGenerator::generateOpenings(int depth) {
     std::cout << this->opening.size() << "\n";
 
     ListOfMoves moves_1 = this->availableMoves(1, true);
-    for (const auto &move_1: moves_1) {
+    for (const auto &move_1 : moves_1) {
         this->moveWithoutVerification(1, move_1);
         this->generateOpenings(depth - 1);
         this->reverseMove(move_1);
@@ -68,7 +68,7 @@ void OpeningsGenerator::saveOpenings() {
     std::ofstream outFile("openings.dat");
 
     /* Iterate through the map and save each element to the file */
-    for(const auto &it : this->opening) {
+    for (const auto &it : this->opening) {
         outFile << it.first;
         for (const auto &val : it.second)
             outFile << " " << val[0] << " " << val[1];

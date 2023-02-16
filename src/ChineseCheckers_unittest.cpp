@@ -22,7 +22,9 @@
 /* Other */
 #include <Types.hpp>
 
-/* The fixture for testing class ChineseCheckers */
+/*! @brief
+ * The fixture for testing class ChineseCheckers
+ */
 class ChineseCheckersTest : public::testing::Test {
 };
 
