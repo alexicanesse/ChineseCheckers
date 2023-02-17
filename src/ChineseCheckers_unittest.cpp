@@ -1109,6 +1109,157 @@ TEST(GetWhoIsToPlay, DoesntChangeWhenMoveIsIllegal) {
     EXPECT_EQ(cc.get_who_is_to_play_(), 0);
 }
 
+TEST(IllegalPositions, WhiteSideNotIllegal) {
+    /* Arrange */
+    ChineseCheckers cc;
+
+    /* Act */
+    cc.move(0, {{0, 3}, {0, 4}});
+    cc.move(1, {{7, 4}, {7, 3}});
+    cc.move(0, {{0, 2}, {0, 3}});
+
+    /* Assert */
+    EXPECT_EQ(cc.move(1, {{7, 5}, {7, 4}}), true);
+}
+
+TEST(IllegalPositions, WhiteSideIllegal) {
+    /* Arrange */
+    ChineseCheckers cc;
+
+    /* Act */
+    cc.move(0, {{0, 3}, {0, 4}});
+    cc.move(1, {{7, 4}, {7, 3}});
+    cc.move(0, {{0, 2}, {0, 3}});
+    cc.move(1, {{7, 5}, {7, 4}});
+
+    /* Assert */
+    EXPECT_EQ(cc.move(0, {{0, 1}, {0, 2}}), false);
+}
+
+TEST(IllegalPositions, BlackSideNotIllegal) {
+    /* Arrange */
+    ChineseCheckers cc;
+
+    /* Act */
+    cc.move(0, {{0, 3}, {0, 4}});
+    cc.move(1, {{7, 4}, {7, 3}});
+    cc.move(0, {{0, 4}, {0, 3}});
+    cc.move(1, {{7, 5}, {7, 4}});
+
+    /* Assert */
+    EXPECT_EQ(cc.move(0, {{0, 3}, {0, 4}}), true);
+}
+
+TEST(IllegalPositions, BlackSideIllegal) {
+    /* Arrange */
+    ChineseCheckers cc;
+
+    /* Act */
+    cc.move(0, {{0, 3}, {0, 4}});
+    cc.move(1, {{7, 4}, {7, 3}});
+    cc.move(0, {{0, 4}, {0, 3}});
+    cc.move(1, {{7, 5}, {7, 4}});
+    cc.move(0, {{0, 3}, {0, 4}});
+
+    /* Assert */
+    EXPECT_EQ(cc.move(0, {{7, 6}, {7, 5}}), false);
+}
+
+TEST(IllegalPositions, IllegalWithNaiveBlack) {
+    /* Arrange */
+    ChineseCheckers cc;
+
+    /* Act */
+    cc.move(0, {{0, 3}, {0, 4}});
+    cc.move(1, {{7, 4}, {7, 3}});
+    cc.move(0, {{0, 4}, {1, 4}});
+    cc.move(1, {{7, 3}, {6, 3}});
+    cc.move(0, {{1, 4}, {2, 4}});
+    cc.move(1, {{6, 3}, {5, 3}});
+    cc.move(0, {{2, 4}, {3, 4}});
+    cc.move(1, {{5, 3}, {4, 3}});
+    cc.move(0, {{3, 4}, {4, 4}});
+    cc.move(1, {{4, 3}, {3, 3}});
+    cc.move(0, {{4, 4}, {5, 4}});
+    cc.move(1, {{3, 3}, {2, 3}});
+    cc.move(0, {{5, 4}, {6, 4}});
+    cc.move(1, {{2, 3}, {1, 3}});
+    cc.move(0, {{0, 2}, {0, 3}});
+    cc.move(1, {{7, 5}, {7, 4}});
+    cc.move(0, {{0, 3}, {0, 4}});
+    cc.move(1, {{7, 4}, {7, 3}});
+    cc.move(0, {{0, 4}, {1, 4}});
+    cc.move(1, {{7, 3}, {6, 3}});
+    cc.move(0, {{1, 4}, {2, 4}});
+    cc.move(1, {{6, 3}, {5, 3}});
+    cc.move(0, {{2, 4}, {3, 4}});
+    cc.move(1, {{5, 3}, {4, 3}});
+    cc.move(0, {{3, 4}, {4, 4}});
+    cc.move(1, {{4, 3}, {3, 3}});
+    cc.move(0, {{4, 4}, {5, 4}});
+    cc.move(1, {{3, 3}, {2, 3}});
+    cc.move(0, {{6, 4}, {7, 4}});
+    cc.move(1, {{1, 3}, {0, 3}});
+    cc.move(0, {{5, 4}, {6, 4}});
+    cc.move(1, {{2, 3}, {1, 3}});
+    cc.move(0, {{0, 1}, {0, 2}});
+    cc.move(1, {{7, 6}, {7, 5}});
+    cc.move(0, {{0, 2}, {0, 4}});
+    cc.move(1, {{7, 5}, {7, 3}});
+    cc.move(0, {{7, 4}, {7, 5}});
+    cc.move(1, {{0, 3}, {0, 2}});
+
+    /* Assert */
+    EXPECT_EQ(cc.move(0, {{6, 4}, {7, 4}}), true);
+}
+
+TEST(IllegalPositions, IllegalWithNaiveWhite) {
+    /* Arrange */
+    ChineseCheckers cc;
+
+    /* Act */
+    cc.move(0, {{0, 3}, {0, 4}});
+    cc.move(1, {{7, 4}, {7, 3}});
+    cc.move(0, {{0, 4}, {1, 4}});
+    cc.move(1, {{7, 3}, {6, 3}});
+    cc.move(0, {{1, 4}, {2, 4}});
+    cc.move(1, {{6, 3}, {5, 3}});
+    cc.move(0, {{2, 4}, {3, 4}});
+    cc.move(1, {{5, 3}, {4, 3}});
+    cc.move(0, {{3, 4}, {4, 4}});
+    cc.move(1, {{4, 3}, {3, 3}});
+    cc.move(0, {{4, 4}, {5, 4}});
+    cc.move(1, {{3, 3}, {2, 3}});
+    cc.move(0, {{5, 4}, {6, 4}});
+    cc.move(1, {{2, 3}, {1, 3}});
+    cc.move(0, {{0, 2}, {0, 3}});
+    cc.move(1, {{7, 5}, {7, 4}});
+    cc.move(0, {{0, 3}, {0, 4}});
+    cc.move(1, {{7, 4}, {7, 3}});
+    cc.move(0, {{0, 4}, {1, 4}});
+    cc.move(1, {{7, 3}, {6, 3}});
+    cc.move(0, {{1, 4}, {2, 4}});
+    cc.move(1, {{6, 3}, {5, 3}});
+    cc.move(0, {{2, 4}, {3, 4}});
+    cc.move(1, {{5, 3}, {4, 3}});
+    cc.move(0, {{3, 4}, {4, 4}});
+    cc.move(1, {{4, 3}, {3, 3}});
+    cc.move(0, {{4, 4}, {5, 4}});
+    cc.move(1, {{3, 3}, {2, 3}});
+    cc.move(0, {{6, 4}, {7, 4}});
+    cc.move(1, {{1, 3}, {0, 3}});
+    cc.move(0, {{5, 4}, {6, 4}});
+    cc.move(1, {{2, 3}, {1, 3}});
+    cc.move(0, {{0, 1}, {0, 2}});
+    cc.move(1, {{7, 6}, {7, 5}});
+    cc.move(0, {{0, 2}, {0, 4}});
+    cc.move(1, {{0, 3}, {0, 2}});
+    cc.move(0, {{7, 4}, {7, 3}});
+
+    /* Assert */
+    EXPECT_EQ(cc.move(1, {{1, 3}, {0, 3}}), true);
+}
+
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
