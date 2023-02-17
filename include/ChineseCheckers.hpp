@@ -56,6 +56,9 @@ class ChineseCheckers {
         {0, 0}, {0, 1}, {0, 2}, {0, 3}, {1, 0},
         {1, 1}, {1, 2}, {2, 0}, {2, 1}, {3, 0}};
 
+    /*! Stores the illegal positions */
+    std::unordered_map<uint32_t, bool> illegalPositions;
+
     /*! @brief
      * A member returning the type of an elementary move
      * (not a succession of jumps).
@@ -161,6 +164,25 @@ class ChineseCheckers {
      * @return A hash of the position according to the fnv1a scheme.
      */
     uint64_t hashPosition(const PositionType &move);
+
+    /*!
+     * @brief Cantor's pairing function
+     * @param x first argument
+     * @param y second argument
+     * @return cantor's pairing function applied to @ref x and @ref y
+     */
+    int cantorPairingFunction(const int &x, const int &y);
+
+    /*!
+     * @brief Loads illegal positions
+     */
+    void loadIllegalPositions();
+
+    /*!
+     * @breif Indicates whether the position is illegal or not
+     * @return Returns true iff the position is illegal
+     */
+    bool isPositionIllegal();
 
  public:
     /*! @brief

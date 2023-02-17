@@ -18,6 +18,7 @@
 /* C++ libraries */
 #include <vector>
 #include <unordered_map>
+#include <fstream>
 /* The following pragma are used to removed deprecation warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
  */
@@ -96,6 +97,7 @@ MoveType ChineseCheckers::elementaryMove(PositionType original_position,
 
 ChineseCheckers::ChineseCheckers() {
     this->new_game();
+    this->loadIllegalPositions();
 }
 
 void ChineseCheckers::remove_pawn(Player player, PositionType position) {
@@ -167,10 +169,18 @@ bool ChineseCheckers::move(Player player,
             }
     }
 
-    /* Now that we know that the move is legal, we just have to apply it */
+    /* Applying the move */
     this->grid_[list_moves[n-1][0]][list_moves[n-1][1]] =
         grid_[list_moves[0][0]][list_moves[0][1]];
     this->grid_[list_moves[0][0]][list_moves[0][1]] = Empty;
+
+    /* Checks for an illegal position */
+    if (this->isPositionIllegal()) {
+        this->grid_[list_moves.front()[0]][list_moves.front()[1]] =
+                grid_[list_moves.back()[0]][list_moves.back()[1]];
+        this->grid_[list_moves.back()[0]][list_moves.back()[1]] = Empty;
+        return false;
+    }
 
     for (int i = 0; i < 10; ++i) {
         if ((this->position_colors_players_[player][i][0]
@@ -308,7 +318,7 @@ void ChineseCheckers::new_game() {
 void ChineseCheckers::print_grid_() {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j)
-            std::cout << this->grid_[i][j] << " ";
+            std::cout << std::setw(2) << this->grid_[i][j] << " ";
         std::cout << "\n";
     }
 }
@@ -392,4 +402,132 @@ uint64_t ChineseCheckers::hashPosition(const PositionType &move) {
 
 uint64_t ChineseCheckers::hashGrid() {
     return this->hashMatrix(this->grid_, this->who_is_to_play_);
+}
+
+int ChineseCheckers::cantorPairingFunction(const int &x, const int &y) {
+    return (x + y) * (x + y + 1) / 2 + x;
+}
+
+void ChineseCheckers::loadIllegalPositions() {
+    std::ifstream inFile("./raw_data/illegal_moves.dat");
+    /* Iterate through the file and load each element through the file */
+    std::string line;
+    uint32_t hash;
+
+    while(std::getline(inFile, line)) {
+        std::istringstream ss(line);
+        ss >> std::hex >> hash;
+
+        this->illegalPositions[hash] = true;
+    }
+    /* Close the file */
+    inFile.close();
+}
+
+bool ChineseCheckers::isPositionIllegal() {
+    int i = 0, j = 0;
+    std::vector<std::vector<int>> valid_lines = {{-1,  0},
+                                                 {-1,  1},
+                                                 {0 , -1},
+                                                 {0 ,  1},
+                                                 {1 , -1},
+                                                 {1 ,  0},
+                                                 {-2,  0},
+                                                 {-2,  2},
+                                                 {0 , -2},
+                                                 {0 ,  2},
+                                                 {2 , -2},
+                                                 {2 ,  0}};
+
+    /* white side */
+    uint_fast32_t code = 0;
+
+    /* First version of the code. It checks if the position *can* be illegal */
+    for (i = 0; i < 6; ++i) {
+        for (j = 0; j < 6 - i; ++j) {
+            if (this->grid_[7 - i][7 - j] != Empty)
+                code |= 1 << this->cantorPairingFunction(i , j);
+        }
+    }
+
+    if (this->illegalPositions.contains(code)) {
+       /* full test */
+        for (i = 7; i > 1; --i) {
+            for (j = 7; j > 8 - i; --j) {
+                switch (this->grid_[7-i][7-j]) {
+                    /* if the location is unoccupied, the bit is set to 0 */
+                    case 0:
+                        break;
+
+                    /* if the location is occupied with an enemy piece, the bit is set to 1 */
+                    case -1:
+                        code |= 1 << this->cantorPairingFunction(i, j);
+                        break;
+
+                    /*
+                     *  if the location is occupied with an ally piece, there are two cases :
+                     *  either the piece can move, therefore the bit is set to 0
+                     *  or it cannot move, therefore the bit is set to 1
+                     */
+                    case 1:
+                        code |= 1 << this->cantorPairingFunction(i, j);
+                        for(const std::vector<int> &direction : valid_lines) {
+                            if (this->elementaryMove({7 - i, 7 - j}, {7 - i - direction[0], 7 - j - direction[1]}) != Illegal) {
+                                code &= (0b111111111111111111111 ^ (1 << this->cantorPairingFunction(i, j)));
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+    }
+    if (this->illegalPositions.contains(code))
+        return true;
+
+
+
+
+    /* black side */
+    code = 0;
+
+    /* First version of the code. It checks if the position *can* be illegal */
+    for (i = 0; i < 6; ++i) {
+        for (j = 0; j < 6 - i; ++j) {
+            if (this->grid_[i][j] != Empty)
+                code |= 1 << this->cantorPairingFunction(i , j);
+        }
+    }
+
+    if (this->illegalPositions.contains(code)) {
+        /* full test */
+        for (i = 0; i < 6; ++i) {
+            for (j = 0; j < 6 - i; ++j) {
+                switch (this->grid_[i][j]) {
+                    /* if the location is unoccupied, the bit is set to 0 */
+                    case 0:
+                        break;
+
+                        /* if the location is occupied with an enemy piece, the bit is set to 1 */
+                    case 1:
+                        code |= 1 << this->cantorPairingFunction(i, j);
+                        break;
+
+                        /*
+                         *  if the location is occupied with an ally piece, there are two cases :
+                         *  either the piece can move, therefore the bit is set to 0
+                         *  or it cannot move, therefore the bit is set to 1
+                         */
+                    case -1:
+                        code |= 1 << this->cantorPairingFunction(i, j);
+                        for(const std::vector<int> &direction : valid_lines) {
+                            if (this->elementaryMove({i, j}, {i + direction[0], j + direction[1]}) != Illegal) {
+                                code &= (0b111111111111111111111 ^ (1 << this->cantorPairingFunction(i, j)));
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+    }
+    return this->illegalPositions.contains(code);
 }
