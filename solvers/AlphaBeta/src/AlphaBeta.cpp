@@ -298,6 +298,13 @@ double AlphaBeta::AlphaBetaEval(const int &depth,
 //temp
         ++r;
         this->moveWithoutVerification(this->who_is_to_play_, move);
+
+        /* Checks for an illegal position */
+        if (this->isPositionIllegal()) {
+            this->reverseMove(move);
+            continue;
+        }
+
         double buff = AlphaBetaEval(depth - 1,
                                  alpha,
                                  beta,
