@@ -67,6 +67,21 @@ target_include_directories(Tournament PRIVATE ./solvers/AlphaBeta/include/)
 target_include_directories(Intuition_data_generator PRIVATE ./solvers/AlphaBeta/include/)
 target_include_directories(Openings_generator PRIVATE ./solvers/AlphaBeta/include/)
 
+add_custom_target(run_unittests
+        COMMAND unittests
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Run generated unittests in ${CMAKE_CURRENT_SOURCE_DIR}"
+        SOURCES ${CXXFILESUNITTESTS}
+        )
+
+add_dependencies(AlphaBeta run_unittests)
+add_dependencies(benchmarks run_unittests)
+add_dependencies(AlphaBeta_benchmarks run_unittests)
+add_dependencies(Tournament run_unittests)
+add_dependencies(Intuition_data_generator run_unittests)
+add_dependencies(Openings_generator run_unittests)
+
+
 ###############################################################################
 ## dependencies ###############################################################
 ###############################################################################
