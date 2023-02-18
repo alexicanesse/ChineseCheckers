@@ -414,7 +414,7 @@ void ChineseCheckers::loadIllegalPositions() {
     std::string line;
     uint32_t hash;
 
-    while(std::getline(inFile, line)) {
+    while (std::getline(inFile, line)) {
         std::istringstream ss(line);
         ss >> std::hex >> hash;
 
@@ -459,7 +459,10 @@ bool ChineseCheckers::isPositionIllegal() {
                     case 0:
                         break;
 
-                    /* if the location is occupied with an enemy piece, the bit is set to 1 */
+                    /*
+                     * if the location is occupied with an enemy piece,
+                     * the bit is set to 1
+                     */
                     case -1:
                         code |= 1 << this->cantorPairingFunction(i, j);
                         break;
@@ -471,9 +474,13 @@ bool ChineseCheckers::isPositionIllegal() {
                      */
                     case 1:
                         code |= 1 << this->cantorPairingFunction(i, j);
-                        for(const std::vector<int> &direction : valid_lines) {
-                            if (this->elementaryMove({7 - i, 7 - j}, {7 - i - direction[0], 7 - j - direction[1]}) != Illegal) {
-                                code &= (0b111111111111111111111 ^ (1 << this->cantorPairingFunction(i, j)));
+                        for (const std::vector<int> &direction : valid_lines) {
+                            if (this->elementaryMove(
+                                    {7 - i, 7 - j},
+                                    {7 - i - direction[0], 7 - j - direction[1]})
+                                        != Illegal) {
+                                code &= (0b111111111111111111111
+                                  ^ (1 << this->cantorPairingFunction(i, j)));
                             }
                         }
                         break;
@@ -507,7 +514,10 @@ bool ChineseCheckers::isPositionIllegal() {
                     case 0:
                         break;
 
-                        /* if the location is occupied with an enemy piece, the bit is set to 1 */
+                        /*
+                         * if the location is occupied with an enemy piece,
+                         * the bit is set to 1
+                         */
                     case 1:
                         code |= 1 << this->cantorPairingFunction(i, j);
                         break;
@@ -519,9 +529,12 @@ bool ChineseCheckers::isPositionIllegal() {
                          */
                     case -1:
                         code |= 1 << this->cantorPairingFunction(i, j);
-                        for(const std::vector<int> &direction : valid_lines) {
-                            if (this->elementaryMove({i, j}, {i + direction[0], j + direction[1]}) != Illegal) {
-                                code &= (0b111111111111111111111 ^ (1 << this->cantorPairingFunction(i, j)));
+                        for (const std::vector<int> &direction : valid_lines) {
+                            if (this->elementaryMove({i, j}, {i + direction[0],
+                                                              j + direction[1]})
+                                                              != Illegal) {
+                                code &= (0b111111111111111111111
+                                  ^ (1 << this->cantorPairingFunction(i, j)));
                             }
                         }
                         break;
