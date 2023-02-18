@@ -19,6 +19,7 @@
 #include <vector>
 #include <unordered_map>
 #include <fstream>
+#include <iomanip>
 /* The following pragma are used to removed deprecation warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
  */
