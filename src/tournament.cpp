@@ -48,7 +48,7 @@
 /* Variability of a mutation */
 #define SIGMA_MUTATION  0.1
 /* Number of solvers in the evolution */
-#define POP_SIZE 50
+#define POP_SIZE 100
 /* Maximum number of moves authorized in a evolution game */
 #define MAX_NUM_MOVES 100
 /* Depth for AlphaBeta */
@@ -56,11 +56,14 @@
 /* Number of generations in the evolution */
 #define NUM_GENERATION 100
 /* Number of generation training white or black players */
-#define ROUND_LENGTH 200
+#define ROUND_LENGTH 2000
 
 // Creating distribution generators
+/*
 const unsigned seed = std::chrono::system_clock::now()
         .time_since_epoch().count();
+*/
+const unsigned seed = 461975186;
 /* Use std::random_device generator; for true randomness */
 std::mt19937 generator(seed);
 std::bernoulli_distribution b_distrib(P_MUTATION);
@@ -116,19 +119,19 @@ int main() {
 
     GamePlayer gp(AB_DEPTH);
 
-    std::vector< SolversIndividuals > pop_white(500);
-    std::vector< SolversIndividuals > pop_black(500);
+    std::vector< SolversIndividuals > pop_white(POP_SIZE);
+    std::vector< SolversIndividuals > pop_black(POP_SIZE);
 
     /* Initialisation of the population */
     std::vector< double > zeros(64, 0);
     #warning Improve initialisation in constructor ?
     for (int i = 0; i != POP_SIZE; ++i) {
-        // pop_white[i].set_win(zeros);
-        // pop_white[i].set_loose(zeros);
-        //  pop_white[i].mutate(); /*to mutate at start*/
-        // pop_black[i].set_win(zeros);
-        // pop_black[i].set_loose(zeros);
-        // pop_black[i].mutate(); /*to mutate at start*/
+        pop_white[i].set_win(zeros);
+        pop_white[i].set_loose(zeros);
+        pop_white[i].mutate(); /*to mutate at start*/
+        pop_black[i].set_win(zeros);
+        pop_black[i].set_loose(zeros);
+        pop_black[i].mutate(); /*to mutate at start*/
     }
 
     /* Initialisation of working variables */
