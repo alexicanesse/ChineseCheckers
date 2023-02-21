@@ -227,7 +227,7 @@ void ChineseCheckers::moveWithoutVerification(Player player,
         }
     }
 
-    /* indicates that is position has been seen another time */
+    /* indicates that this position has been seen another time */
     uint64_t hash = hashMatrix(this->grid_, 0);
     if (this->number_of_times_seen.contains(hash))
         this->number_of_times_seen[hash]++;
@@ -446,7 +446,7 @@ bool ChineseCheckers::isPositionIllegal() {
     /* First version of the code. It checks if the position *can* be illegal */
     for (i = 0; i < 6; ++i) {
         for (j = 0; j < 6 - i; ++j) {
-            if (this->grid_[7 - i][7 - j] != Empty)
+            if (this->grid_[7 - i][7 - j] == Black)
                 code |= 1 << this->cantorPairingFunction(i , j);
         }
     }
@@ -501,7 +501,7 @@ bool ChineseCheckers::isPositionIllegal() {
     /* First version of the code. It checks if the position *can* be illegal */
     for (i = 0; i < 6; ++i) {
         for (j = 0; j < 6 - i; ++j) {
-            if (this->grid_[i][j] != Empty)
+            if (this->grid_[i][j] == White)
                 code |= 1 << this->cantorPairingFunction(i , j);
         }
     }
