@@ -230,15 +230,15 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
     }
 
     /* Aspiration window */
-    this->best_move_ = {};
-    double current_value_ = this->heuristicValue();
-    AlphaBetaEval(depth,
-                  current_value_ - current_value_/8,
-                  current_value_ + current_value_/8,
-                  false,
-                  true);
+    //this->best_move_ = {};
+    //double current_value_ = this->heuristicValue();
+    //AlphaBetaEval(depth,
+    //              current_value_ - current_value_/8,
+    //              current_value_ + current_value_/8,
+    //              false,
+    //              true);
 
-    if(this->best_move_.size() == 0)
+    //if(this->best_move_.size() == 0)
         AlphaBetaEval(depth, -20, 20, false, true);
 
     return this->best_move_;
