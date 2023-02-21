@@ -21,6 +21,7 @@ class Board(Tk,Areas):
         # [DONE] relaunch game
         # allow user to specify depth for AI
         
+        # new window that shows weights
         # when disabling then enabling "show arrows" checkbox, show arrows that were previously shown before disabling
         # fix classicbuttons colors when pressed
         # fix a bug where cancelling a move (human side) doesn't gray out the "Play AI" button
@@ -66,9 +67,9 @@ class Board(Tk,Areas):
         
         #default players
         default_selectedW = 1
-        default_depthW = 3
+        default_depthW = 30
         default_selectedB = 0
-        default_depthB = 3
+        default_depthB = 30
         
         default_playerW = Human() if default_selectedW == 1 else AI_cpp(depth = default_depthW)
         default_playerB = Human() if default_selectedB == 1 else AI_cpp(depth = default_depthB)
@@ -108,13 +109,13 @@ class Board(Tk,Areas):
         self.p_buttons[0].set_state("on")
         self.p_buttons[1].set_state("on")
     
-        # create player choice
+        # create player choice menus and associated decoration elements
         self.ITEM_WIDTH = parameters_width / 3.2
         self.ITEM_HEIGHT = 1.5 * self.BUTTONS_HEIGHT
-        choices = ["C++ AI", "Human"]
+        choices = ["Human", "C++ AI"]
         menu_height = len(choices) * self.ITEM_HEIGHT
         x = (parameters_width - 2 * self.ITEM_WIDTH) // 3
-        y = (height - self.ITEM_HEIGHT) // 4
+        y = (height - self.ITEM_HEIGHT) // 6
         self.deco_elts = []
         self.DECO_WIDTH = 2 * x // 5
         self.deco_elts.append(self.__parametersArea.create_text(parameters_width // 2,
@@ -134,17 +135,31 @@ class Board(Tk,Areas):
                                                                     y + menu_height, 
                                                                     fill=self.get_color("black"), 
                                                                     outline="black"))
-        self.playerW_menu = ChoiceMenu(self.__parametersArea, self.ITEM_WIDTH, self.ITEM_HEIGHT, x, y, choices,default_selectedW)
-        self.playerB_menu = ChoiceMenu(self.__parametersArea, self.ITEM_WIDTH, self.ITEM_HEIGHT, self.ITEM_WIDTH + 2 * x, y, choices,default_selectedB)
+        self.playerW_menu = ChoiceMenu(self.__parametersArea, 
+                                        self.ITEM_WIDTH,
+                                        self.ITEM_HEIGHT, 
+                                        x, 
+                                        y, 
+                                        choices, 
+                                        self.DECO_WIDTH,
+                                        default_selectedW)
+        self.playerB_menu = ChoiceMenu(self.__parametersArea, 
+                                        self.ITEM_WIDTH, 
+                                        self.ITEM_HEIGHT, 
+                                        self.ITEM_WIDTH + 2 * x, 
+                                        y, 
+                                        choices, 
+                                        self.DECO_WIDTH,
+                                        default_selectedB)
         
-        # "GO" button
-        self.GO_WIDTH = control_width // 2
-        self.GO_HEIGHT = self.ITEM_HEIGHT
-        self.go_button = ClassicButton(self.__controlArea, 
-                                        self.GO_WIDTH,
-                                        self.GO_HEIGHT,
-                                        (control_width - self.GO_WIDTH) // 2,
-                                        height // 3 - self.GO_HEIGHT // 2,
+        # "New Game" button
+        self.NEW_GAME_WIDTH = control_width // 2
+        self.NEW_GAME_HEIGHT = self.ITEM_HEIGHT
+        self.new_game_button = ClassicButton(self.__controlArea, 
+                                        self.NEW_GAME_WIDTH,
+                                        self.NEW_GAME_HEIGHT,
+                                        (control_width - self.NEW_GAME_WIDTH) // 2,
+                                        height // 3 - self.NEW_GAME_HEIGHT // 2,
                                         "New game",
                                         "normal")
         
@@ -161,7 +176,7 @@ class Board(Tk,Areas):
         
         # mouse events config
         self.__controlArea.tag_bind(self.nextturn_b.hitbox, "<Button-1>", self.press_NextTurn)
-        self.__controlArea.tag_bind(self.go_button.hitbox, "<Button-1>", self.press_Go)
+        self.__controlArea.tag_bind(self.new_game_button.hitbox, "<Button-1>", self.press_NewGame)
 
         for i in range(N_buttons):
             self.p_buttons[i].bind(i)
@@ -180,28 +195,21 @@ class Board(Tk,Areas):
     def game_is_over(self,type_of_end : int):#triggered when game is over
         print("Game's over !",type_of_end)
     
-    def press_Go(self, event):
+    def press_NewGame(self, event):
         ''' begins a new game '''
 
-        if self.go_button.get_state() == "grayed":
+        if self.new_game_button.get_state() == "grayed":
             return
 
         choice_playerB = self.playerB_menu.get_selected()
         choice_playerW = self.playerW_menu.get_selected()
+        depthB = self.playerB_menu.getInputDepth()
+        depthW = self.playerW_menu.getInputDepth()
         if choice_playerB != "" and choice_playerW != "": # if human has chosen both
-            """
-            self.go_button.set_state("grayed") # disable go button and menus
-            self.__parametersArea.itemconfigure(self.deco_elts[0], fill=self.get_color("gray"))
-            self.playerB_menu.disable()
-            self.playerW_menu.disable()
-            
-            for b in self.p_buttons: # enable checkboxes
-                b.set_state(b.get_state()[1:])
-            """
             self.nextturn_b.set_state("normal") # enable next turn button
 
-            playerW = AI_cpp() if choice_playerW == "C++ AI" else Human()
-            playerB = AI_cpp() if choice_playerB == "C++ AI" else Human()
+            playerW = AI_cpp(depthW) if choice_playerW == "C++ AI" else Human() # TODO ckoicebordel
+            playerB = AI_cpp(depthB) if choice_playerB == "C++ AI" else Human()
             self.__boardArea.reset(playerW,playerB)
         else:
             print("No choice of players has been made")
@@ -229,9 +237,9 @@ class Board(Tk,Areas):
                 self.p_buttons[i].moveto((parameters_width - self.BUTTONS_WIDTH) // 2,
                                                  (event.height + (4 * i + start) * self.BUTTONS_HEIGHT) // 2)
             x = (parameters_width - 2 * self.ITEM_WIDTH) // 3
-            y = (event.height - self.ITEM_HEIGHT) // 4
-            self.playerB_menu.moveto(x, y)
-            self.playerW_menu.moveto(2 * x + self.ITEM_WIDTH, y)
+            y = (event.height - self.ITEM_HEIGHT) // 6
+            self.playerW_menu.moveto(x, y)
+            self.playerB_menu.moveto(2 * x + self.ITEM_WIDTH, y)
 
             # fixes deco position
             menu_height = self.ITEM_HEIGHT * self.playerB_menu.get_n_items()
@@ -242,7 +250,7 @@ class Board(Tk,Areas):
             self.__parametersArea.moveto(self.deco_elts[2], 2 * x + 2 * self.ITEM_WIDTH + self.DECO_WIDTH, y) 
 
             # fix buttons positions
-            self.go_button.moveto((control_width - self.GO_WIDTH) // 2, event.height // 3 - self.GO_HEIGHT // 2) 
+            self.new_game_button.moveto((control_width - self.NEW_GAME_WIDTH) // 2, event.height // 3 - self.NEW_GAME_HEIGHT // 2) 
             self.nextturn_b.moveto((control_width - self.TURN_WIDTH) // 2, 2 * event.height // 3 - self.TURN_HEIGHT // 2)
                                                  
             self.__parametersArea.update_idletasks()
@@ -252,5 +260,5 @@ class Board(Tk,Areas):
 
 if __name__ == "__main__":
     
-    fen = Board(1700, 900)
+    fen = Board(1300, 700)
     fen.mainloop()

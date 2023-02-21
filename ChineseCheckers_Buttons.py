@@ -204,10 +204,59 @@ class ChoiceButton(Areas):
         canvas.itemconfigure(self.ui_text, fill=t_fill)
         canvas.update_idletasks()
         self.state = state
+        
+
+class ChoiceDepth(Areas):
+    # for the input fields that allow user to enter depth
+    def __init__(self, parent : Canvas, width : int, x : int, y : int, defaultText : str):
+        ''' x, y is the coordinate of the leftmost top corner '''
+        self.parent = parent
+        self.defaultText = defaultText
+
+        self.entry = Entry(self.parent, font=self.get_font(15), fg=self.get_color("gray"), justify=CENTER)
+        self.entry.insert(0, self.defaultText)
+        self.input_field = self.parent.create_window(x, y, window=self.entry, anchor=NW, width=width)
+
+        # bind to make default text disappear when focusing widget and re-appear afterwards
+        self.entry.bind('<FocusIn>', self.onFocusIn)
+        self.entry.bind('<FocusOut>', self.onFocusOut)
+    
+    def onFocusIn(self, event):
+        if self.entry.get() == self.defaultText:
+            self.entry.delete(0, 'end')
+            self.entry.configure({"fg": "black"})
+
+    def onFocusOut(self, event):
+        if self.entry.get() == "":
+            self.entry.insert(0, self.defaultText)
+            self.entry.configure({"fg": self.get_color("gray")})
+    
+    def disable(self):
+        '''make the text field disappear'''
+        self.parent.itemconfig(self.input_field, state='hidden')
+        self.parent.update_idletasks()
+
+    def enable(self):
+        '''make the text field appear'''
+        self.parent.itemconfig(self.input_field, state='normal')
+        self.parent.update_idletasks()
+
+    def moveto(self, x, y):
+        '''moves the text field on the ui'''
+        self.parent.moveto(self.input_field, x, y)
+    
+    def getDepth(self):
+        '''returns entered depth if it is valid, -1 otherwise'''
+        inp_text = self.entry.get()
+        try:
+            return int(inp_text)
+        except:
+            return -1
+
 
 class ChoiceMenu(Areas):
     # for the player choices on the left
-    def __init__(self, parent : Canvas, width : int, height : int, x : int, y : int, labels : list[str],selected = -1):# no choice is selected by default
+    def __init__(self, parent : Canvas, width : int, height : int, x : int, y : int, labels : list[str], gap, selected = -1):# no choice is selected by default
         self.choice_buttons = []
 
         N_choices = len(labels)
@@ -232,6 +281,13 @@ class ChoiceMenu(Areas):
             parent.tag_bind(button.hitbox, "<Enter>", function("<Enter>", button, i))
             parent.tag_bind(button.hitbox, "<Leave>", function("<Leave>", button, i))
         self.parent = parent
+
+        # create depth input field
+        self.text_entry = ChoiceDepth(self.parent, width, x, y + len(self.choice_buttons) * self.height + gap, "depth")
+        # hide it if C++ AI is not selectef
+        if self.get_selected() != "C++ AI":
+            self.text_entry.disable()
+        self.GAP = gap
     
 
     def disable(self):
@@ -243,6 +299,7 @@ class ChoiceMenu(Areas):
         '''moves the button on the ui'''
         for i in range(len(self.choice_buttons)):
             self.choice_buttons[i].moveto(self.parent, x, y + i * self.height)
+        self.text_entry.moveto(x, y + len(self.choice_buttons) * self.height + self.GAP)
     
 
     def get_selected(self):
@@ -258,6 +315,7 @@ class ChoiceMenu(Areas):
 
     
     def click_param(self, i, event):
+        '''event when clicking on an item in the list'''
         old_state = self.choice_buttons[i].get_state()
         if old_state[0] == "g" or old_state == "sel": # cannot click on grayed or selected button
             return
@@ -267,5 +325,12 @@ class ChoiceMenu(Areas):
         if self.selected != -1:
             self.choice_buttons[self.selected].set_state(self.parent, "nsel") # de-select button
         self.selected = i
-        
 
+        # activates or de-activates text field according to selected item
+        if self.choice_buttons[i].get_text() == "C++ AI":
+            self.text_entry.enable()
+        else:
+            self.text_entry.disable()
+    
+    def getInputDepth(self):
+        return self.text_entry.getDepth()
