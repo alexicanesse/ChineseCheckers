@@ -31,7 +31,7 @@
 #include "Types.hpp"
 #include "AlphaBeta.hpp"
 
-#define MAX_TREE_DEPTH 3
+#define MAX_TREE_DEPTH 4
 #define DEPTH_ALPHABETA 5
 
 
@@ -82,6 +82,7 @@ void OpeningsGenerator::generateOpeningsBlack(int depth, std::ofstream *outFile)
         return;
 
     const auto move_1 = this->getMove(DEPTH_ALPHABETA, -20, 20);
+
     if (!this->opening.contains(this->hashGrid())) {
         this->opening[this->hashGrid()] = move_1;
 
@@ -98,7 +99,10 @@ void OpeningsGenerator::generateOpeningsBlack(int depth, std::ofstream *outFile)
     ListOfMoves moves_0 = this->availableMoves(0, true);
     for (const auto &move_0 : moves_0) {
         this->moveWithoutVerification(0, move_0);
-        this->generateOpeningsBlack(depth - 1, outFile);
+
+        if (!this->isPositionIllegal())
+            this->generateOpeningsBlack(depth - 1, outFile);
+
         this->reverseMove(move_0);
     }
 
