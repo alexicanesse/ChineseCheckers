@@ -123,7 +123,19 @@ class BoardArea(Areas):
         self.pospioninit = (-1,-1)
         self.coup_precedent = ""
         self.coup_courant = []
-        self.movablePaws = self.wp if self.playerW.getHumanity() else [] 
+        #seeing which pawns are movable and which are not TODO
+        if self.playerB.getHumanity() and self.playerW.getHumanity():
+            self.movablePaws = self.bp + self.wp
+            self.notMovablePaws = []
+        else: 
+            if (not self.playerB.getHumanity()) and (not self.playerW.getHumanity()):
+                self.movablePaws = []
+                self.notMovablePaws = self.bp + self.wp
+            else:
+                self.movablePaws = self.wp if self.playerW.getHumanity() else (self.bp if self.playerB.getHumanity() else [])
+                self.notMovablePaws = self.bp if self.playerW.getHumanity() else (self.wp if self.playerB.getHumanity() else [])
+        self.allPaws = self.bp + self.wp
+
 
     def reset(self,playerW : Player,playerB : Player):
         self.playerW = playerW
@@ -165,38 +177,45 @@ class BoardArea(Areas):
         self.whoistoplay = self.playerW
         
     def pawn_pressed(self,event):
+
+        #TODO
+        eventi,eventj = self._canv2plat(event.x,event.y)
+        for p in self.allPaws:
+            if p.is_in_case(eventi,eventj):
+                    self.__piece_courante = p
+                    break
+
         if self.whoistoplay != None and self.whoistoplay.getHumanity():
-            eventi,eventj = self._canv2plat(event.x,event.y)
-            for p in self.movablePaws:
-                if p.is_in_case(eventi,eventj):
-                        self.__piece_courante = p
-                        break
-            if self.__piece_courante != "":
+            if self.__piece_courante != "" and self.__piece_courante in self.movablePaws:
                 self.__piece_courante.redraw()
                 if self.pospioninit == (-1,-1):
                     self.pospioninit = self.__piece_courante.case_x,self.__piece_courante.case_y
                     self.coup_courant = [(eventi,eventj)]
+
+
                 
     def pawn_moved(self,event):
-        if self.__piece_courante != "":
+        if self.__piece_courante != "" and self.__piece_courante in self.movablePaws and self.whoistoplay.getHumanity():
             dx = event.x - self.__piece_courante.x
             dy = event.y - self.__piece_courante.y
             self.__piece_courante.move_on_ui(dx,dy)
 
     def pawn_released(self,event):
         color_playing = "black" if self.whoistoplay == self.playerB else "white"
-        if self.__piece_courante != "" :
+
+        if self.__piece_courante != "" and self.__piece_courante in self.allPaws:
+            if self.show_moves: # Drawing of the reachable cases
+                possible_moves = self.possible_moves([self.__piece_courante.case_x,
+                                                                    self.__piece_courante.case_y],
+                                                                    self.__pbpn2pospion(self.wp, self.bp))
+                self.highlight_cases(possible_moves)
+                self.show_arrows([], color_playing) # erases drawn arrows    
+
+        if self.__piece_courante != "" and self.whoistoplay.getHumanity() and self.__piece_courante in self.movablePaws:
             ncase_x,ncase_y = self._canv2plat(event.x,event.y)
             etude_coup = self.elementaryMove(self.__piece_courante.case_x,self.__piece_courante.case_y,ncase_x,ncase_y)
             if ncase_x == self.pospioninit[0] and ncase_y == self.pospioninit[1]:
                 # dropped the pawn on the same case as before
-                
-                if self.show_moves: # Drawing of the reachable cases
-                    possible_moves = self.possible_moves([self.__piece_courante.case_x,
-                                                                       self.__piece_courante.case_y],
-                                                                       self.__pbpn2pospion(self.wp, self.bp))
-                    self.highlight_cases(possible_moves)
-                    self.show_arrows([], color_playing) # erases drawn arrows
                 
                 self.__piece_courante.move(event.x,event.y) 
                 self.__reset_working_data()
@@ -212,7 +231,8 @@ class BoardArea(Areas):
     
             else:
                 xf,yf = self._plat2canv(self.__piece_courante.case_x,self.__piece_courante.case_y)
-                self.__piece_courante.move_on_ui(xf-self.__piece_courante.x,yf-self.__piece_courante.y)         
+                self.__piece_courante.move_on_ui(xf-self.__piece_courante.x,yf-self.__piece_courante.y) 
+
             
             
     def __reset_working_data(self):
