@@ -108,7 +108,7 @@ class AlphaBeta : public ChineseCheckers{
     /*! This matrix indicates the values we will assign to each
      * pawns when we compute the heuristic value for the player
      * we are playing against */
-    std::vector<std::vector<double> > player_to_loose_value_;
+    std::vector<std::vector<double> > player_to_lose_value_;
 
     /*! Indicates which plyaer we are playing for */
     Player maximizing_player_;
@@ -132,7 +132,7 @@ class AlphaBeta : public ChineseCheckers{
      */
     /*!
      * @sa  AlphaBeta(const std::vector< std::vector<double> > &player_to_win_value_,
-             const std::vector< std::vector<double> > &player_to_loose_value_)
+             const std::vector< std::vector<double> > &player_to_lose_value_)
      */
     AlphaBeta();
 
@@ -141,12 +141,12 @@ class AlphaBeta : public ChineseCheckers{
      */
     /*!
      * @param player_to_win_value_
-     * @param player_to_loose_value_
+     * @param player_to_lose_value_
      * @sa  AlphaBeta(const std::vector< std::vector<double> > &player_to_win_value_,
-             const std::vector< std::vector<double> > &player_to_loose_value_)
+             const std::vector< std::vector<double> > &player_to_lose_value_)
      */
     AlphaBeta(const std::vector< std::vector<double> > &player_to_win_value_,
-              const std::vector< std::vector<double> > &player_to_loose_value_);
+              const std::vector< std::vector<double> > &player_to_lose_value_);
 
 
     /*! @brief
@@ -232,9 +232,9 @@ class AlphaBeta : public ChineseCheckers{
      * A simple get
      */
     /*!
-     * @return @ref player_to_loose_value_
+     * @return @ref player_to_lose_value_
      */
-    std::vector<std::vector<double> > get_player_to_loose_value_();
+    std::vector<std::vector<double> > get_player_to_lose_value_();
 
     /*! @brief
      * A simple get
@@ -248,9 +248,9 @@ class AlphaBeta : public ChineseCheckers{
      * A simple set
      */
     /*!
-     * @param player_to_loose_value_
+     * @param player_to_lose_value_
      */
-    void set_player_to_loose_value_(std::vector< std::vector<double> > &player_to_loose_value_);
+    void set_player_to_lose_value_(std::vector< std::vector<double> > &player_to_lose_value_);
 
     /*! @brief
      * A simple set
