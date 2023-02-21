@@ -46,23 +46,24 @@ void print_matrix(const std::vector< std::vector<double> > &matrix);
 class SolversIndividuals {
  private:
     std::vector<double> win;
-    std::vector<double> loose;
+    std::vector<double> lose;
     double score;
 
  public:
     SolversIndividuals();
-    SolversIndividuals(std::vector<double> &win_, std::vector<double> &loose_);
+    SolversIndividuals(std::vector<double> &win_, std::vector<double> &lose_);
 
     friend bool operator<(SolversIndividuals const &s1,
                           SolversIndividuals const &s2);
     SolversIndividuals& operator=(const SolversIndividuals & other);
 
     std::vector<double> get_win();
-    std::vector<double> get_loose();
+    std::vector<double> get_lose();
     double get_score();
 
+    void init_at_random();
     void set_win(const std::vector<double> &win_);
-    void set_loose(const std::vector<double> &lose_);
+    void set_lose(const std::vector<double> &lose_);
     void set_score(const double &score_);
 
     void mutate();

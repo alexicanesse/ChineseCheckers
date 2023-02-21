@@ -72,7 +72,7 @@ class AI_python(Player):
                 rep.append((p,[(p.case_x,p.case_y),(p.case_x+a,p.case_y +b)]))
                 nb_non_sauts +=1
         
-        #gestion des sauts
+        # Jumps management 
         vus = [(p.case_x,p.case_y)]
         a_voir = [[(p.case_x,p.case_y)]]
         while len(a_voir) != 0:
@@ -82,7 +82,7 @@ class AI_python(Player):
                 ii = pp[0] + a
                 jj = pp[1] + b
                 saut = False
-                while (0 <= ii <= 7) and (0<= jj <= 7):#on se déplace dans la direction donnée par a,b et on cherche le premier pion
+                while (0 <= ii <= 7) and (0<= jj <= 7): # Going in the direction given by a,b and searcching for the first pawn
                     if  self.pospions[ii,jj]:
                         saut = True
                         break
@@ -117,7 +117,7 @@ class AI_python(Player):
     def coups_possibles2(self,p,pospions):
         rep = []
         pospions[p] = False
-        #gestion des sauts
+        # Jumps management
         vus = [p]
         a_voir = [[p]]
         while len(a_voir) != 0:
@@ -127,7 +127,7 @@ class AI_python(Player):
                 ii = pp[0] + a
                 jj = pp[1] + b
                 saut = False
-                while (0 <= ii <= 7) and (0<= jj <= 7):#on se déplace dans la direction donnée par a,b et on cherche le premier pion
+                while (0 <= ii <= 7) and (0<= jj <= 7): # Going in the direction given by a,b and searcching for the first pawn
                     if pospions[ii,jj]:
                         saut = True
                         sauti = ii
@@ -166,7 +166,7 @@ class AI_python(Player):
         rep = []
         pospions[p[0],p[1]] = False
         
-        #gestion des sauts
+        # Jumps management
         vus = np.empty((8,8),dtype = 'bool')
         vus.fill(False)
         vus[p[0],p[1]] = True
@@ -177,7 +177,7 @@ class AI_python(Player):
                 ii = pp[0] + a
                 jj = pp[1] + b 
                 saut = False
-                while (0 <= ii <= 7) and (0<= jj <= 7):#on se déplace dans la direction donnée par a,b et on cherche le premier pion
+                while (0 <= ii <= 7) and (0<= jj <= 7): # Going in the direction given by a,b and searcching for the first pawn
                     if pospions[ii,jj]:
                         saut = True
                         break
@@ -277,7 +277,7 @@ class AI_python(Player):
         pospion = self.pbpn2pospion(pb, pn)
         
         coups_possibles = []
-        for p in pn:#on joue les noirs
+        for p in pn: # Playing the black pawns
             coups_possibles += self.coups_possibles2(p,pospion)
         coups_possibles.sort(key = lambda x: sum(x[-1]) - sum(x[0]))
         alpha = -1e10
@@ -311,10 +311,10 @@ class AI_python(Player):
             return(self.evaluer(pb,pn))
         if  t == "min":
             v = 1e10
-            # récupération des coups possibles
+            # Finding the possible moves
             pospion = self.pbpn2pospion(pb, pn)
             fils = []
-            for p in pn:#les noirs jouent
+            for p in pn:# Black is playing
                 fils += self.coups_possibles3(p,pospion)
 
             fils.sort(key = lambda x: sum(x[-1]) - sum(x[0]))

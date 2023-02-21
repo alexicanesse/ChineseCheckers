@@ -96,25 +96,6 @@ class ChineseCheckers {
      */
     void reset_pawn(Player player, PositionType position);
 
-    /*! @brief
-     * This member execute a move without checking if the move is legal.
-     * @details
-     * This function is not made to be used by the end user. It has been engineered to
-     * be used by solvers. It bypasses usual verifications and hence allows illegal moves to be
-     * played. This function should be used with great care.
-     */
-    /*!
-     * @param player indicates which player made the move.
-     * @param list_moves contains the list of intermediate positions.
-                                of a move (including the starting point
-                                and the arrival point).
-     * @sa elementaryMove(PositionType original_position
-     * @sa PositionType arrival_position)
-     * @sa move(Player player, const ListOfPositionType &list_moves).
-     */
-    void moveWithoutVerification(Player player,
-              const ListOfPositionType &list_moves);
-
     /* Functions used for the transposition tables */
     /* FNV-1a hash function */
     /*! @brief
@@ -216,6 +197,25 @@ class ChineseCheckers {
      * @sa new_game().
      */
     Result state_of_game();
+
+    /*! @brief
+     * This member execute a move without checking if the move is legal.
+     * @details
+     * This function is not made to be used by the end user. It has been engineered to
+     * be used by solvers. It bypasses usual verifications and hence allows illegal moves to be
+     * played. This function should be used with great care.
+     */
+    /*!
+     * @param player indicates which player made the move.
+     * @param list_moves contains the list of intermediate positions.
+                                of a move (including the starting point
+                                and the arrival point).
+     * @sa elementaryMove(PositionType original_position
+     * @sa PositionType arrival_position)
+     * @sa move(Player player, const ListOfPositionType &list_moves).
+     */
+    void moveWithoutVerification(Player player,
+                                 const ListOfPositionType &list_moves);
 
     /*! @brief
      * Creates a new game.

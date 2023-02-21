@@ -19,6 +19,10 @@ class Board(Tk,Areas):
         # [DONE] split this file into several
         # [MOSTLY DONE] ends of games
         # [DONE] relaunch game
+        # [DONE] show possible moves when clicking on a pawn even if it is AI
+        # [MAYBE DONE I THINK??] bug where u can drag black pawns even if black player is not human
+        # [DONE i think] pb when changing player, does not work 
+        # [DONE ??????] diverse bugs with new_game function
         # allow user to specify depth for AI
         
         # new window that shows weights
@@ -31,8 +35,6 @@ class Board(Tk,Areas):
         # gray buttons when "new game" hasn't been pressed at all
         # make in-depth tests of "new game" button
         # fix moments when buttons become grayed
-        # show possible moves when clicking on a pawn even if it is AI
-        # bug where u can drag black pawns even if black player is not human
         # diverse bugs with new_game function
 
         Tk.__init__(self)
@@ -54,7 +56,7 @@ class Board(Tk,Areas):
         # constants for the sizes of buttons and canvas
         self.CONTROL_RATIO = 2.2
 
-        # The scene is in 5 parts : on the left are parameters, in the center is the board, on the right is the "play" button
+        # The scene is in 3 parts : on the left are parameters, in the center is the board, on the right is the "play" button
         # in the bottom & top are blank spaces
         board_side = height
         control_width = int((width -  board_side) / self.CONTROL_RATIO)
@@ -190,7 +192,7 @@ class Board(Tk,Areas):
         ''' next turn '''
 
         if self.nextturn_b.get_state() != "grayed":
-            self.__boardArea.jouerIA()
+            self.__boardArea.jouerIA() # TODO certainement a recoder
 
     def game_is_over(self,type_of_end : int):#triggered when game is over
         print("Game's over !",type_of_end)

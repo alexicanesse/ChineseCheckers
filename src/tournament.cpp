@@ -48,7 +48,7 @@
 /* Variability of a mutation */
 #define SIGMA_MUTATION  0.1
 /* Number of solvers in the evolution */
-#define POP_SIZE 50
+#define POP_SIZE 100
 /* Maximum number of moves authorized in a evolution game */
 #define MAX_NUM_MOVES 100
 /* Depth for AlphaBeta */
@@ -56,21 +56,31 @@
 /* Number of generations in the evolution */
 #define NUM_GENERATION 100
 /* Number of generation training white or black players */
-#define ROUND_LENGTH 200
+#define ROUND_LENGTH 2000
+
+/*Mean for initialisation*/
+#define MEAN_INIT 0.5
+/*Mean for initialisation*/
+#define SIGMA_INIT 0.5
 
 // Creating distribution generators
+/*
 const unsigned seed = std::chrono::system_clock::now()
         .time_since_epoch().count();
+*/
+const unsigned seed = 461975186;
 /* Use std::random_device generator; for true randomness */
 std::mt19937 generator(seed);
 std::bernoulli_distribution b_distrib(P_MUTATION);
 std::normal_distribution<double> n_distrib(0, SIGMA_MUTATION);
+std::normal_distribution<double> n_distrib_for_initialisation(MEAN_INIT, SIGMA_INIT);
 auto mutates   = std::bind(b_distrib, generator);
 auto variation = std::bind(n_distrib, generator);
+auto initiator_ = std::bind(n_distrib_for_initialisation,generator);
 
 
-#warning TODO: Mutate que dans [0, 1]0.0); ?
 #warning TODO: écrire qu'a la fin dans les fichiers pour gagner du temps
+#warning TODO: Improve reproduction
 
 int main() {
     /* Gives the seed to reproduce results */
@@ -116,19 +126,14 @@ int main() {
 
     GamePlayer gp(AB_DEPTH);
 
-    std::vector< SolversIndividuals > pop_white(500);
-    std::vector< SolversIndividuals > pop_black(500);
+    std::vector< SolversIndividuals > pop_white(POP_SIZE);
+    std::vector< SolversIndividuals > pop_black(POP_SIZE);
 
     /* Initialisation of the population */
     std::vector< double > zeros(64, 0);
-    #warning Improve initialisation in constructor ?
     for (int i = 0; i != POP_SIZE; ++i) {
-        // pop_white[i].set_win(zeros);
-        // pop_white[i].set_loose(zeros);
-        //  pop_white[i].mutate(); /*to mutate at start*/
-        // pop_black[i].set_win(zeros);
-        // pop_black[i].set_loose(zeros);
-        // pop_black[i].mutate(); /*to mutate at start*/
+        pop_white[i].init_at_random();
+        pop_black[i].init_at_random();
     }
 
     /* Initialisation of working variables */
@@ -188,6 +193,13 @@ int main() {
     std::cout <<"Best black so far:" << std::endl;
     best_black.print_info();
 
+    if (!is_white_evolving) {
+        gp.set_white_player(best_white);
+        best_white.print_info_as_matrix_to_file(white_best_players);
+    } else {
+        gp.set_black_player(best_black);
+        best_black.print_info_as_matrix_to_file(black_best_players);
+    }
 
     white_evol.close();
     black_evol.close();
@@ -208,21 +220,32 @@ win(std::vector<double> ({
     25.0/98, 26.0/98, 29.0/98, 34.0/98, 41.0/98, 50.0/98, 62.0/98, 74.0/98,
     36.0/98, 37.0/98, 40.0/98, 45.0/98, 52.0/98, 62.0/98, 72.0/98, 85.0/98,
     49.0/98, 50.0/98, 53.0/98, 58.0/98, 65.0/98, 74.0/98, 85.0/98, 98.0/98  })),
-loose(std::vector<double> ({
-     0.0/98,  1.0/98,  4.0/98,  9.0/98, 16.0/98, 25.0/98, 36.0/98, 49.0/98,
-     1.0/98,  2.0/98,  5.0/98, 10.0/98, 17.0/98, 26.0/98, 37.0/98, 50.0/98,
-     4.0/98,  5.0/98,  8.0/98, 13.0/98, 20.0/98, 29.0/98, 40.0/98, 53.0/98,
-     9.0/98, 10.0/98, 13.0/98, 18.0/98, 25.0/98, 34.0/98, 45.0/98, 58.0/98,
-    16.0/98, 17.0/98, 20.0/98, 25.0/98, 32.0/98, 41.0/98, 52.0/98, 65.0/98,
-    25.0/98, 26.0/98, 29.0/98, 34.0/98, 41.0/98, 50.0/98, 62.0/98, 74.0/98,
-    36.0/98, 37.0/98, 40.0/98, 45.0/98, 52.0/98, 62.0/98, 72.0/98, 85.0/98,
-    49.0/98, 50.0/98, 53.0/98, 58.0/98, 65.0/98, 74.0/98, 85.0/98, 98.0/98  })),
+lose(std::vector<double> ({
+     0.0/588,  1.0/588,  4.0/588,  9.0/588, 16.0/588, 25.0/588, 36.0/588, 49.0/588,
+     1.0/588,  2.0/588,  5.0/588, 10.0/588, 17.0/588, 26.0/588, 37.0/588, 50.0/588,
+     4.0/588,  5.0/588,  8.0/588, 13.0/588, 20.0/588, 29.0/588, 40.0/588, 53.0/588,
+     9.0/588, 10.0/588, 13.0/588, 18.0/588, 25.0/588, 34.0/588, 45.0/588, 58.0/588,
+    16.0/588, 17.0/588, 20.0/588, 25.0/588, 32.0/588, 41.0/588, 52.0/588, 65.0/588,
+    25.0/588, 26.0/588, 29.0/588, 34.0/588, 41.0/588, 50.0/588, 62.0/588, 74.0/588,
+    36.0/588, 37.0/588, 40.0/588, 45.0/588, 52.0/588, 62.0/588, 72.0/588, 85.0/588,
+    49.0/588, 50.0/588, 53.0/588, 58.0/588, 65.0/588, 74.0/588, 85.0/588, 588.0/588  })),
 score(0) {}
 
+void SolversIndividuals::init_at_random() {
+    std::vector< double > zeros(64, 0);
+    this->set_lose(zeros);
+    this->set_win(zeros);
+    for (int i = 0; i != 64; ++i) {
+        this->win[i] = std::min(1.0, std::max(0.0, initiator_()));
+        this->lose[i] = std::min(1.0, std::max(0.0, initiator_()));
+    }
+
+}
+
 SolversIndividuals::SolversIndividuals(std::vector<double> &win_,
-                                       std::vector<double> &loose_) :
+                                       std::vector<double> &lose_) :
                                        win(win_),
-                                       loose(loose_),
+                                       lose(lose_),
                                        score(0) {}
 
 
@@ -240,7 +263,7 @@ SolversIndividuals& SolversIndividuals::operator=(
         return *this;
 
     this->win = other.win;
-    this->loose = other.loose;
+    this->lose = other.lose;
     this->score = other.score;
     return *this;
 }
@@ -249,16 +272,16 @@ std::vector<double> SolversIndividuals::get_win() {
     return(this->win);
 }
 
-std::vector<double> SolversIndividuals::get_loose() {
-    return(this->loose);
+std::vector<double> SolversIndividuals::get_lose() {
+    return(this->lose);
 }
 
 void SolversIndividuals::set_win(const std::vector<double> &win_) {
     this->win = win_;
 }
 
-void SolversIndividuals::set_loose(const std::vector<double> &loose_) {
-    this->loose = loose_;
+void SolversIndividuals::set_lose(const std::vector<double> &lose_) {
+    this->lose = lose_;
 }
 
 void SolversIndividuals::set_score(const double &score_) {
@@ -274,13 +297,16 @@ void SolversIndividuals::mutate() {
     double normalisation_factor = 0;
     for (int i = 0; i != 64; ++i) {
         if (mutates()) this->win[i] += variation();
-        if (mutates()) this->loose[i] += variation();
+        if (mutates()) this->lose[i] += variation();
+        this->win[i] = std::min(1.0, std::max(0.0, this->win[i]));
+        this->lose[i] = std::min(1.0, std::max(0.0, this->win[i]));
     }
 
+    /*
     const auto [min0, max0] = std::minmax_element(this->win.begin(),
                                                   this->win.end());
-    const auto [min1, max1] = std::minmax_element(this->loose.begin(),
-                                                  this->loose.end());
+    const auto [min1, max1] = std::minmax_element(this->lose.begin(),
+                                                  this->lose.end());
     normalisation_factor = std::max(std::abs(*min0),
                                     std::abs(*max0));
     normalisation_factor = std::max(normalisation_factor,
@@ -290,9 +316,10 @@ void SolversIndividuals::mutate() {
     if (normalisation_factor != 0) {
         for (int i = 0; i != 64; ++i) {
             win[i]   /= normalisation_factor;
-            loose[i] /= normalisation_factor;
+            lose[i] /= normalisation_factor;
         }
     }
+    */
 }
 
 
@@ -307,9 +334,9 @@ void SolversIndividuals::print_info() {
             std::cout << ", ";
     }
 
-    std::cout << "}" << std::endl << "Loose data:" << std::endl << "{";
+    std::cout << "}" << std::endl << "lose data:" << std::endl << "{";
     for (int i = 0; i != 64; ++i) {
-        std::cout << std::setprecision(max_precision) << this->loose[i];
+        std::cout << std::setprecision(max_precision) << this->lose[i];
         if (i != 63)
             std::cout << ", ";
     }
@@ -334,12 +361,12 @@ void SolversIndividuals::print_info_as_matrix() {
             std::cout << "}";
     }
 
-    std::cout << "}" << std::endl << "Loose data:" << std::endl << "{";
+    std::cout << "}" << std::endl << "lose data:" << std::endl << "{";
     for (int i = 0; i != 8; ++i) {
         std::cout << "{";
         for (auto j = 0; j != 8; ++j) {
             std::cout << std::setprecision(max_precision)
-                      << this->loose[i*8 + j];
+                      << this->lose[i*8 + j];
             if (j != 7)
                 std::cout << ", ";
         }
@@ -370,11 +397,11 @@ void SolversIndividuals::print_info_as_matrix_to_file(std::ofstream & file) {
             file << "}";
     }
 
-    file << "}" << std::endl << "Loose data:" << std::endl << "{";
+    file << "}" << std::endl << "lose data:" << std::endl << "{";
     for (int i = 0; i != 8; ++i) {
         file << "{";
         for (auto j = 0; j != 8; ++j) {
-            file << std::setprecision(max_precision) << this->loose[i*8 + j];
+            file << std::setprecision(max_precision) << this->lose[i*8 + j];
             if (j != 7)
                 file << ", ";
         }
@@ -415,32 +442,32 @@ GamePlayer::GamePlayer(SolversIndividuals &solver1,
 
 void GamePlayer::set_white_player(SolversIndividuals &solver) {
     std::vector<double> win_ = solver.get_win();
-    std::vector<double> loose_ = solver.get_loose();
+    std::vector<double> lose_ = solver.get_lose();
     std::vector< std::vector<double> > matrix1(8, std::vector<double>(8, 0));
     std::vector< std::vector<double> > matrix2(8, std::vector<double>(8, 0));
     for (int i = 0; i != 8; ++i) {
         for (int j = 0; j != 8; ++j) {
             matrix1[i][j] = win_[i*8 + j];
-            matrix2[i][j] = loose_[i*8 + j];
+            matrix2[i][j] = lose_[i*8 + j];
         }
     }
     this->white_player.set_player_to_win_value_(matrix1);
-    this->white_player.set_player_to_loose_value_(matrix2);
+    this->white_player.set_player_to_lose_value_(matrix2);
 }
 
 void GamePlayer::set_black_player(SolversIndividuals &solver) {
     std::vector<double> win_ = solver.get_win();
-    std::vector<double> loose_ = solver.get_loose();
+    std::vector<double> lose_ = solver.get_lose();
     std::vector< std::vector<double> > matrix1(8, std::vector<double>(8, 0));
     std::vector< std::vector<double> > matrix2(8, std::vector<double>(8, 0));
     for (int i = 0; i != 8; ++i) {
         for (int j = 0; j != 8; ++j) {
             matrix1[i][j] = win_[i*8 + j];
-            matrix2[i][j] = loose_[i*8 + j];
+            matrix2[i][j] = lose_[i*8 + j];
         }
     }
     this->black_player.set_player_to_win_value_(matrix1);
-    this->black_player.set_player_to_loose_value_(matrix2);
+    this->black_player.set_player_to_lose_value_(matrix2);
 }
 
 void GamePlayer::set_depth(const int &depth_) {
@@ -504,29 +531,29 @@ double GamePlayer::playGame() {
 void GamePlayer::print_players_info() {
     std::cout << std::endl;
     auto matrix11 = this->white_player.get_player_to_win_value_();
-    auto matrix12 = this->white_player.get_player_to_loose_value_();
+    auto matrix12 = this->white_player.get_player_to_lose_value_();
     std::cout << "White player info:" << std::endl << "Win value:" << std::endl;
     print_matrix(matrix11);
     std::cout << std::endl;
-    std::cout << "Loose value:" << std::endl;
+    std::cout << "lose value:" << std::endl;
     print_matrix(matrix12);
 
     std::cout << std::endl;
     auto matrix21 = this->black_player.get_player_to_win_value_();
-    auto matrix22 = this->black_player.get_player_to_loose_value_();
+    auto matrix22 = this->black_player.get_player_to_lose_value_();
     std::cout << "Black player info:" << std::endl << "Win value:" << std::endl;
     print_matrix(matrix21);
     std::cout << std::endl;
-    std::cout << "Loose value:" << std::endl;
+    std::cout << "lose value:" << std::endl;
     print_matrix(matrix22);
 }
 
 int GamePlayer::constructor_test() {
     AlphaBeta testPlayer;
     auto matrix11 = this->white_player.get_player_to_win_value_();
-    auto matrix12 = this->white_player.get_player_to_loose_value_();
+    auto matrix12 = this->white_player.get_player_to_lose_value_();
     auto matrix21 = testPlayer.get_player_to_win_value_();
-    auto matrix22 = testPlayer.get_player_to_loose_value_();
+    auto matrix22 = testPlayer.get_player_to_lose_value_();
 
     for (int i = 0; i != 8; ++i) {
         for (int j = 0; j != 8; ++j) {

@@ -55,7 +55,7 @@ AlphaBeta::AlphaBeta() {
 
     /* this is meant to be seen from black perspective: white should
      * use symmetries to use this matrix. */
-    this->player_to_loose_value_ = std::vector< std::vector<double> >({
+    this->player_to_lose_value_ = std::vector< std::vector<double> >({
         {0.0/588,  1.0/588,  4.0/588,  9.0/588, 16.0/588, 25.0/588, 36.0/588, 49.0/588},
         {1.0/588,  2.0/588,  5.0/588, 10.0/588, 17.0/588, 26.0/588, 37.0/588, 50.0/588},
         {4.0/588,  5.0/588,  8.0/588, 13.0/588, 20.0/588, 29.0/588, 40.0/588, 53.0/588},
@@ -69,9 +69,9 @@ AlphaBeta::AlphaBeta() {
 }
 
 AlphaBeta::AlphaBeta(const std::vector< std::vector<double> > &player_to_win_value_,
-                     const std::vector< std::vector<double> > &player_to_loose_value_) {
+                     const std::vector< std::vector<double> > &player_to_lose_value_) {
     this->player_to_win_value_ = player_to_win_value_;
-    this->player_to_loose_value_ = player_to_loose_value_;
+    this->player_to_lose_value_ = player_to_lose_value_;
 
     this->loadOpenings();
 }
@@ -198,7 +198,7 @@ double AlphaBeta::evaluate(const Player &player) {
         case 0:  /* White */
             if (this->maximizing_player_) {
                 for (const PositionType &pown: position_colors_players_[0])
-                    result += this->player_to_loose_value_[7 - pown[0]][7 - pown[1]];
+                    result += this->player_to_lose_value_[7 - pown[0]][7 - pown[1]];
             } else {
                 for (const PositionType &pown: position_colors_players_[0])
                     result += this->player_to_win_value_[7 - pown[0]][7 - pown[1]];
@@ -211,7 +211,7 @@ double AlphaBeta::evaluate(const Player &player) {
                     result += this->player_to_win_value_[pown[0]][pown[1]];
             } else {
                 for (const PositionType &pown: position_colors_players_[1])
-                    result += this->player_to_loose_value_[pown[0]][pown[1]];
+                    result += this->player_to_lose_value_[pown[0]][pown[1]];
             }
             break;
 
@@ -224,10 +224,8 @@ double AlphaBeta::evaluate(const Player &player) {
 ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, const double &beta) {
     this->maximizing_player_ = this->who_is_to_play_;
 
-    if (0 && this->opening.contains(this->hashGrid())) {
-        std::cout << "Found opening\n";
+    if (this->opening.contains(this->hashGrid()))
         return this->opening[this->hashGrid()];
-    }
 
     /* Aspiration window */
     //this->best_move_ = {};
@@ -293,7 +291,7 @@ double AlphaBeta::AlphaBetaEval(const int &depth,
     else
         this->sortDepth1(possible_moves);
 
-    //possible_moves.resize(possible_moves.size()/2);
+    // possible_moves.resize(20);
     double value = 0;
     if (maximizingPlayer)
         value = MINUS_INFTY;
@@ -354,7 +352,8 @@ double AlphaBeta::heuristicValue() {
 }
 
 void AlphaBeta::reverseMove(const ListOfPositionType &move){
-    --this->number_of_times_seen.at(hashMatrix(this->grid_, 0));
+    if(this->number_of_times_seen.contains(hashMatrix(this->grid_, 0)))
+        --this->number_of_times_seen.at(hashMatrix(this->grid_, 0));
 
     this->who_is_to_play_ = 1 - this->who_is_to_play_;
     this->grid_[move.back()[0]][move.back()[1]] = Empty;
@@ -381,17 +380,17 @@ Player AlphaBeta::get_maximizing_player_() const {
     return this->maximizing_player_;
 }
 
-std::vector<std::vector<double> > AlphaBeta::get_player_to_loose_value_() {
-    return this->player_to_loose_value_;
+std::vector<std::vector<double> > AlphaBeta::get_player_to_lose_value_() {
+    return this->player_to_lose_value_;
 }
 
 std::vector<std::vector<double> > AlphaBeta::get_player_to_win_value_() {
     return this->player_to_win_value_;
 }
 
-void AlphaBeta::set_player_to_loose_value_(
-        std::vector< std::vector<double> > &player_to_loose_value_) {
-    this->player_to_loose_value_ = player_to_loose_value_;
+void AlphaBeta::set_player_to_lose_value_(
+        std::vector< std::vector<double> > &player_to_lose_value_) {
+    this->player_to_lose_value_ = player_to_lose_value_;
 }
 
 void AlphaBeta::set_player_to_win_value_(
@@ -485,13 +484,13 @@ void AlphaBeta::sortDepth1(ListOfMoves &possible_moves) {
                 break;
 
             case 1:
-                valueA += this->player_to_loose_value_
+                valueA += this->player_to_lose_value_
                           [a.back()[0]][a.back()[1]]
-                          - this->player_to_loose_value_
+                          - this->player_to_lose_value_
                           [a.front()[0]][a.front()[1]];
-                valueB += this->player_to_loose_value_
+                valueB += this->player_to_lose_value_
                           [b.back()[0]][b.back()[1]]
-                          - this->player_to_loose_value_
+                          - this->player_to_lose_value_
                           [b.front()[0]][b.front()[1]];
                 break;
         }
