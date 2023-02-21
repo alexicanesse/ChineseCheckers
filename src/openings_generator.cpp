@@ -31,50 +31,77 @@
 #include "Types.hpp"
 #include "AlphaBeta.hpp"
 
-#define MAX_TREE_DEPTH 4
-#define DEPTH_ALPHABETA 3
+#define MAX_TREE_DEPTH 3
+#define DEPTH_ALPHABETA 5
 
 
 int main() {
     OpeningsGenerator og;
     og.loadOpenings();
-    og.generateOpenings(MAX_TREE_DEPTH);
-    og.saveOpenings();
+
+    std::ofstream outFile("./raw_data/openings.dat", std::ios_base::app);
+    // og.generateOpeningsWhite(MAX_TREE_DEPTH, &outFile);
+
+    const auto move_0 = og.getMove(DEPTH_ALPHABETA, -20, 20);
+    og.moveWithoutVerification(0, move_0);
+    og.generateOpeningsBlack(MAX_TREE_DEPTH, &outFile);
+
+    outFile.close();
     return 0;
 }
 
-void OpeningsGenerator::generateOpenings(int depth) {
+void OpeningsGenerator::generateOpeningsWhite(int depth, std::ofstream *outFile) {
     if (depth == 0)
         return;
 
     const auto move_0 = this->getMove(DEPTH_ALPHABETA, -20, 20);
-    if (!this->opening.contains(this->hashGrid()))
+    if (!this->opening.contains(this->hashGrid())) {
         this->opening[this->hashGrid()] = move_0;
+
+        *outFile << this->hashGrid();
+        for (const auto &val : move_0)
+            *outFile << " " << val[0] << " " << val[1];
+        *outFile << std::endl;
+    }
+
     this->moveWithoutVerification(0, move_0);
 
     std::cout << this->opening.size() << "\n";
-
     ListOfMoves moves_1 = this->availableMoves(1, true);
     for (const auto &move_1 : moves_1) {
         this->moveWithoutVerification(1, move_1);
-        this->generateOpenings(depth - 1);
+        this->generateOpeningsWhite(depth - 1, outFile);
         this->reverseMove(move_1);
     }
 
     this->reverseMove(move_0);
 }
 
-void OpeningsGenerator::saveOpenings() {
-    std::ofstream outFile("openings.dat");
+void OpeningsGenerator::generateOpeningsBlack(int depth, std::ofstream *outFile) {
+    if (depth == 0)
+        return;
 
-    /* Iterate through the map and save each element to the file */
-    for (const auto &it : this->opening) {
-        outFile << it.first;
-        for (const auto &val : it.second)
-            outFile << " " << val[0] << " " << val[1];
-        outFile << std::endl;
+    const auto move_1 = this->getMove(DEPTH_ALPHABETA, -20, 20);
+    if (!this->opening.contains(this->hashGrid())) {
+        this->opening[this->hashGrid()] = move_1;
+
+        *outFile << this->hashGrid();
+        for (const auto &val : move_1)
+            *outFile << " " << val[0] << " " << val[1];
+        *outFile << std::endl;
     }
 
-    /* Close the file */
-    outFile.close();
+    this->moveWithoutVerification(1, move_1);
+
+    std::cout << this->opening.size() << "\n";
+
+    ListOfMoves moves_0 = this->availableMoves(0, true);
+    for (const auto &move_0 : moves_0) {
+        this->moveWithoutVerification(0, move_0);
+        this->generateOpeningsBlack(depth - 1, outFile);
+        this->reverseMove(move_0);
+    }
+
+    this->reverseMove(move_1);
 }
+
