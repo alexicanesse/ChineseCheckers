@@ -19,6 +19,7 @@
 #include <unordered_map>
 #include <fstream>
 #include <sstream>
+#include <thread>
 /* The following pragma are used to removed deprecation warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
  */
@@ -31,19 +32,35 @@
 #include "Types.hpp"
 #include "AlphaBeta.hpp"
 
-#define MAX_TREE_DEPTH 2
+#define MAX_TREE_DEPTH 9
 #define DEPTH_ALPHABETA 5
 
 
 int main() {
-    OpeningsGenerator og;
-    og.loadOpenings();
+    auto white_openings = []() {
+        OpeningsGenerator og_white;
+        og_white.loadOpenings();
 
-    std::ofstream outFile("./raw_data/openings.dat", std::ios_base::app);
-    // og.generateOpeningsWhite(MAX_TREE_DEPTH, &outFile);
-    og.generateOpeningsBlack(MAX_TREE_DEPTH + 1, &outFile);
+        std::ofstream outFile("./raw_data/openings.dat", std::ios_base::app);
+        og_white.generateOpeningsWhite(MAX_TREE_DEPTH, &outFile);
+        outFile.close();
+    };
+    auto black_openings = []() {
+        OpeningsGenerator og_black;
+        og_black.loadOpenings();
 
-    outFile.close();
+        std::ofstream outFile("./raw_data/openings.dat", std::ios_base::app);
+        og_black.generateOpeningsBlack(MAX_TREE_DEPTH + 1, &outFile);
+        outFile.close();
+    };
+
+    std::thread white(white_openings);
+    std::thread black(black_openings);
+
+    white.join();
+    black.join();
+
+
     return 0;
 }
 
@@ -63,7 +80,7 @@ void OpeningsGenerator::generateOpeningsWhite(int depth, std::ofstream *outFile)
 
     this->moveWithoutVerification(0, move_0);
 
-    std::cout << this->opening.size() << "\n";
+    std::cout << "White : " << this->opening.size() << "\n";
     ListOfMoves moves_1 = this->availableMoves(1, true);
     for (const auto &move_1 : moves_1) {
         this->moveWithoutVerification(1, move_1);
@@ -94,7 +111,7 @@ void OpeningsGenerator::generateOpeningsBlack(int depth, std::ofstream *outFile)
         this->moveWithoutVerification(1, move_1);
     }
 
-    std::cout << this->opening.size() << "\n";
+    std::cout << "Black : " << this->opening.size() << "\n";
 
     ListOfMoves moves_0 = this->availableMoves(0, true);
     for (const auto &move_0 : moves_0) {
