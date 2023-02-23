@@ -28,6 +28,7 @@ class Human(Player):
 
 class AI_cpp(Player):
     def __init__(self,depth = 3):
+        assert(depth >= 0)
         super().__init__(False)
         self.__solver = ab.Solver()
         self.depth = depth

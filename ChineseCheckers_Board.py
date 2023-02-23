@@ -169,7 +169,7 @@ class BoardArea(Areas):
         if playerB == "Human":
             self.playerB = Human()
         elif playerB == "C++ AI":
-            self.playerB = AI_cpp(depth = 3)
+            self.playerB = AI_cpp(depth = 3) # TODO ça modifie pas
         else:
             print(f"Unknown player type {playerB}")  
 
