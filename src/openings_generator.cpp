@@ -31,7 +31,7 @@
 #include "Types.hpp"
 #include "AlphaBeta.hpp"
 
-#define MAX_TREE_DEPTH 4
+#define MAX_TREE_DEPTH 2
 #define DEPTH_ALPHABETA 5
 
 
@@ -41,10 +41,7 @@ int main() {
 
     std::ofstream outFile("./raw_data/openings.dat", std::ios_base::app);
     // og.generateOpeningsWhite(MAX_TREE_DEPTH, &outFile);
-
-    const auto move_0 = og.getMove(DEPTH_ALPHABETA, -20, 20);
-    og.moveWithoutVerification(0, move_0);
-    og.generateOpeningsBlack(MAX_TREE_DEPTH, &outFile);
+    og.generateOpeningsBlack(MAX_TREE_DEPTH + 1, &outFile);
 
     outFile.close();
     return 0;
@@ -81,18 +78,21 @@ void OpeningsGenerator::generateOpeningsBlack(int depth, std::ofstream *outFile)
     if (depth == 0)
         return;
 
-    const auto move_1 = this->getMove(DEPTH_ALPHABETA, -20, 20);
+    ListOfPositionType move_1;
+    if (depth != MAX_TREE_DEPTH + 1) {
+        move_1 = this->getMove(DEPTH_ALPHABETA, -20, 20);
 
-    if (!this->opening.contains(this->hashGrid())) {
-        this->opening[this->hashGrid()] = move_1;
+        if (!this->opening.contains(this->hashGrid())) {
+            this->opening[this->hashGrid()] = move_1;
 
-        *outFile << this->hashGrid();
-        for (const auto &val : move_1)
-            *outFile << " " << val[0] << " " << val[1];
-        *outFile << std::endl;
+            *outFile << this->hashGrid();
+            for (const auto &val: move_1)
+                *outFile << " " << val[0] << " " << val[1];
+            *outFile << std::endl;
+        }
+
+        this->moveWithoutVerification(1, move_1);
     }
-
-    this->moveWithoutVerification(1, move_1);
 
     std::cout << this->opening.size() << "\n";
 
@@ -106,6 +106,6 @@ void OpeningsGenerator::generateOpeningsBlack(int depth, std::ofstream *outFile)
         this->reverseMove(move_0);
     }
 
-    this->reverseMove(move_1);
+    if (depth != MAX_TREE_DEPTH + 1) this->reverseMove(move_1);
 }
 
