@@ -156,25 +156,27 @@ class Board(Tk,Areas):
         
         # "New Game" button
         self.NEW_GAME_WIDTH = control_width // 2
-        self.NEW_GAME_HEIGHT = self.ITEM_HEIGHT
+        self.NEW_GAME_HEIGHT = height // 14
         self.new_game_button = ClassicButton(self.__controlArea, 
                                         self.NEW_GAME_WIDTH,
                                         self.NEW_GAME_HEIGHT,
                                         (control_width - self.NEW_GAME_WIDTH) // 2,
                                         height // 3 - self.NEW_GAME_HEIGHT // 2,
                                         "New game",
-                                        "normal")
+                                        "grayed",
+                                        "First choose a\nconfiguration on the left")
         
         # "Next turn" button
         self.TURN_WIDTH = control_width // 2.2
-        self.TURN_HEIGHT = height // 12
+        self.TURN_HEIGHT = height // 14
         self.nextturn_b = ClassicButton(self.__controlArea, 
                                         self.TURN_WIDTH,
                                         self.TURN_HEIGHT,
                                         (control_width - self.TURN_WIDTH) // 2,
                                         2 * height // 3 - self.TURN_HEIGHT // 2,
                                         "Next turn",
-                                        "normal")
+                                        "grayed",
+                                        "First start a new\ngame or play a move")
         
         # mouse events config
         self.__controlArea.tag_bind(self.nextturn_b.hitbox, "<Button-1>", self.press_NextTurn)
@@ -187,6 +189,19 @@ class Board(Tk,Areas):
         self.__boardArea.bind("<Button-1>", self.__boardArea.pawn_pressed)
         self.__boardArea.bind("<B1-Motion>", self.__boardArea.pawn_moved)
         self.bind("<Configure>", self.on_resize)
+
+        # create a parametersArea hitbox to trigger update events
+        self.__parametersArea.bind("<ButtonRelease-1>", lambda event : self.updateClassicButtons(event))
+        self.bind("<KeyRelease>", lambda event : self.updateClassicButtons(event))
+    
+
+    def updateClassicButtons(self, event):
+        if self.playerB_menu.has_valid_configuration() and self.playerW_menu.has_valid_configuration():
+            # new game must be not grayed
+            self.new_game_button.set_state("normal")
+        else:
+            # no valid configuration is selected, should be grayed
+            self.new_game_button.set_state("grayed")
 
     def press_NextTurn(self, event):
         ''' next turn '''
@@ -203,11 +218,9 @@ class Board(Tk,Areas):
         if self.new_game_button.get_state() == "grayed":
             return
 
-        choice_playerB = self.playerB_menu.get_selected()
-        choice_playerW = self.playerW_menu.get_selected()
-        depthB = self.playerB_menu.getInputDepth()
-        depthW = self.playerW_menu.getInputDepth()
-        if choice_playerB != "" and choice_playerW != "": # if human has chosen both
+        choice_playerB, depthB = self.playerB_menu.get_selected()
+        choice_playerW, depthW = self.playerW_menu.get_selected()
+        if self.playerB_menu.has_valid_configuration() and self.playerW_menu.has_valid_configuration(): # if human has chosen both
             self.nextturn_b.set_state("normal") # enable next turn button
 
             playerW = AI_cpp(depthW) if choice_playerW == "C++ AI" else Human() # TODO ckoicebordel

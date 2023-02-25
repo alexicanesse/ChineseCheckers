@@ -4,8 +4,13 @@ import numpy as np
 from ChineseCheckers_Areas import *
 
 class ClassicButton(Areas):
-    # for the "Go" and "End Turn" button
-    def __init__(self, parent : Canvas, width : int, height : int, x : int, y : int, text, state):
+    # for the "New Game" and "Next Turn" button
+    def __init__(self, parent : Canvas, width : int, height : int, x : int, y : int, text : str, state : str, grayed_text : str):
+        # states are : pressed, normal, hovered, grayed
+        '''
+        - text : string that will appear on the button
+        - grayed_text : string that will appear below the button when it is grayed
+        '''
         assert(state in {"normal", "grayed"})
         c = self.get_color("darkgreen") if state == "normal" else self.get_color("gray")
         r = height // 4
@@ -13,23 +18,46 @@ class ClassicButton(Areas):
         self.box = self.create_rounded_rect(parent, x, y, x + width, y + height, r, c)
         self.text = parent.create_text(x + width // 2, y + height // 2, text=text,
                                         fill=self.get_color("white"), font=self.get_font(16), justify=CENTER)
+        self.grayed_text = parent.create_text(x + width // 2, y + 3 * height // 2, text=grayed_text,
+                                        fill=self.get_color("white"), font=self.get_font(12), justify=CENTER) 
         self.hitbox = self.create_rounded_rect(parent, x, y, x + width, y + height, r, "") # invisible hitbox
         self.state = state
         self.width = width
         self.height = height
-                                        
-        self.parent.tag_bind(self.hitbox, "<Enter>", lambda event : self.set_state("hovered") if self.state != "grayed" else None)
-        def f(event):
+
+          
+        if (self.state != "grayed"):
+            self.disable_grayedtext()
+
+        def f_enter_hitbox(event):
+            if self.state != "grayed":
+                self.set_state("hovered")
+
+        self.parent.tag_bind(self.hitbox, "<Enter>", f_enter_hitbox)
+
+        def f_leave_hitbox(event):
             if self.state == "hovered":
                 self.set_state("normal")
+                self.disable_grayedtext
             elif self.state == "pressed":
                 self.set_state("grayed")
+                self.enable_grayedtext()
 
-        self.parent.tag_bind(self.hitbox, "<Leave>", f)
+        self.parent.tag_bind(self.hitbox, "<Leave>", f_leave_hitbox)
+    
+
+    def enable_grayedtext(self):
+        # show the text below the button
+        self.parent.itemconfig(self.grayed_text, state = 'normal')
+    
+
+    def disable_grayedtext(self):
+        # show the text below the button
+        self.parent.itemconfig(self.grayed_text, state = 'hidden')
 
     
     def create_rounded_rect(self, canvas, x1, y1, x2, y2, r, c):
-        # r is corner radius, c is color (fill)
+        # r is corner radius, c is color (fill), thanks Stackoverflow for the code
         points = (x1+r, y1, x1+r, y1, x2-r, y1, x2-r, y1, x2, y1, x2, y1+r, x2, y1+r, x2, y2-r, x2, \
             y2-r, x2, y2, x2-r, y2, x2-r, y2, x1+r, y2, x1+r, y2, x1, y2, x1, y2-r, x1, y2-r, x1, y1+r, x1, y1+r, x1, y1)
         return canvas.create_polygon(points, outline="", fill=c, smooth=True)
@@ -41,14 +69,19 @@ class ClassicButton(Areas):
         a, b, c, d = self.parent.bbox(self.text)
         text_width, text_height = c - a, d - b
         self.parent.moveto(self.text, x + (self.width - text_width) // 2, y + (self.height - text_height) // 2)
+        a, b, c, d = self.parent.bbox(self.grayed_text)
+        text_width, text_height = c - a, d - b
+        self.parent.moveto(self.grayed_text, x + (self.width - text_width) // 2, y + self.height + (self.height - text_height) // 2)
 
 
     def set_state(self, state):
+        self.disable_grayedtext()
         if state == "pressed":
             c = self.get_color("pressed")
         elif state == "normal":
             c = self.get_color("darkgreen")
         elif state == "grayed":
+            self.enable_grayedtext()
             c = self.get_color("gray")
         elif state == "hovered":
             c = self.get_color("hovered")
@@ -223,11 +256,13 @@ class ChoiceDepth(Areas):
     
     def onFocusIn(self, event):
         if self.entry.get() == self.defaultText:
+            # delete placeholder on focus in
             self.entry.delete(0, 'end')
             self.entry.configure({"fg": "black"})
 
     def onFocusOut(self, event):
         if self.entry.get() == "":
+            # puts placeholder again if nothing is entered on focus out
             self.entry.insert(0, self.defaultText)
             self.entry.configure({"fg": self.get_color("gray")})
     
@@ -283,9 +318,9 @@ class ChoiceMenu(Areas):
         self.parent = parent
 
         # create depth input field
-        self.text_entry = ChoiceDepth(self.parent, width, x, y + len(self.choice_buttons) * self.height + gap, "depth")
+        self.text_entry = ChoiceDepth(self.parent, width, x, y + len(self.choice_buttons) * self.height + gap, "Depth")
         # hide it if C++ AI is not selectef
-        if self.get_selected() != "C++ AI":
+        if self.get_selected()[0] != "C++ AI":
             self.text_entry.disable()
         self.GAP = gap
     
@@ -303,11 +338,21 @@ class ChoiceMenu(Areas):
     
 
     def get_selected(self):
-        '''returns the text of the selected button if it exists. otherwise return "" '''
+        '''returns selected configuration if it is valid. otherwise return (text, None) '''
+        selected_text = self.choice_buttons[self.selected].get_text()
         if self.selected == -1:
-            return ""
+            return selected_text, None
         else:
-            return self.choice_buttons[self.selected].get_text()
+            if selected_text == "C++ AI":
+                # depth must be >= 0
+                selected_depth = self.text_entry.getDepth()
+                return (selected_text, selected_depth) if selected_depth >= 0 else (selected_text, None)
+            else:
+                # the selected player is human so depth doesn't matter
+                return selected_text, 0
+    
+    def has_valid_configuration(self):
+        return self.get_selected()[1] != None
     
 
     def get_n_items(self):
@@ -331,6 +376,3 @@ class ChoiceMenu(Areas):
             self.text_entry.enable()
         else:
             self.text_entry.disable()
-    
-    def getInputDepth(self):
-        return self.text_entry.getDepth()
