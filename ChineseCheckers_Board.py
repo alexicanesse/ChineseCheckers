@@ -6,67 +6,67 @@ import math
 
 import time #TEST
 
-class Pion:
+class Pawn(Areas):
     
-    def __init__(self, canvas, x : float, y : float, color = "white"):
+    def __init__(self, canvas, xy_pos : tuple, ij_pos : tuple, color : str):
+        '''
+        - ij_pos : board corodinates of the pawn
+        - xy_pos : pixel coordinates of the pawn
+        '''
         self._color = color
         self._canvas = canvas
+        x, y = xy_pos
         self._item = canvas.create_oval(x - self._canvas.pawn_radius,
                                          y - self._canvas.pawn_radius,
                                          x + self._canvas.pawn_radius,
                                          y + self._canvas.pawn_radius,
-                                         fill =self._color,
+                                         fill = self.get_color(color),
                                          outline="black",
                                          width=2)
-        self.x = x
-        self.y = y
-        self.case_x, self.case_y = self._canvas._canv2plat(x,y)
+        self.board_pos = ij_pos
     
     def __str__(self):
-        c = "blanc" if self._color == "white" else "noir"
-        return(f"Pion {c} ({self.case_x},{self.case_y})")
+        c = "White" if self._color == "white" else "Black"
+        return(f"{c} Pawn {self.board_pos}")
     
     def __repr__(self):
-        c = "b" if self._color =="white" else "n"
-        return(f"P{c}{self.case_x}{self.case_y}")
-
-    def set_xy(self, x : float, y : float):
-        self.x = x
-        self.y = y
+        c = "w" if self._color =="white" else "b"
+        return(f"P{c}{self.board_pos}")
     
     def redraw(self): 
         ''' deletes and redraws the pawn '''
         self._canvas.delete(self._item)
-        self._item = self._canvas.create_oval(self.x - self._canvas.pawn_radius,
-                                         self.y - self._canvas.pawn_radius,
-                                         self.x + self._canvas.pawn_radius,
-                                         self.y + self._canvas.pawn_radius,
-                                         fill=self._color,
+        i, j = self.get_board_pos()
+        x, y = self._canvas._plat2canv(i, j)
+        self._item = self._canvas.create_oval(x - self._canvas.pawn_radius,
+                                         y - self._canvas.pawn_radius,
+                                         x + self._canvas.pawn_radius,
+                                         y + self._canvas.pawn_radius,
+                                         fill = self.get_color(self._color),
                                          outline="black",
                                          width=2)
         
-    def move_on_ui(self, dx : float, dy : float): 
-        ''' moves the pawn on the UI '''
-        self._canvas.move(self._item, dx, dy)
-        self.x += dx
-        self.y += dy
-
+    def move_on_ui(self, new_x : float, new_y : float): 
+        ''' moves the pawn on the given pixel coordinates '''
+        self._canvas.moveto(self._item, 
+                            new_x - self._canvas.pawn_radius, 
+                            new_y - self._canvas.pawn_radius)
         
     def is_in_case(self, i : int, j : int):
-        return((i == self.case_x) and (j == self.case_y))
+        return (i, j) == self.board_pos
     
-    def get_color(self):
+    def get_pawn_color(self):
         return(self._color)
+
+    def get_board_pos(self):
+        return self.board_pos
     
-    def move(self,x : float,y : float):
-        ''' moves the pawn '''
-        ncase_x, ncase_y = self._canvas._canv2plat(x, y)
-        xf, yf = self._canvas._plat2canv(ncase_x, ncase_y)
-        self.move_on_ui(xf - self.x, yf - self.y)
-        self.x = xf
-        self.y = yf
-        self.case_x = ncase_x
-        self.case_y = ncase_y
+    def move_to_case(self, new_i : float, new_j : float):
+        ''' moves the pawn to case new_i, new_j '''
+        new_x, new_y = self._canvas._plat2canv(new_i, new_j)
+
+        self.move_on_ui(int(new_x), int(new_y))
+        self.board_pos = (new_i, new_j)
 
 class BoardArea(Areas):
     
@@ -105,9 +105,9 @@ class BoardArea(Areas):
             for j in range(4):
                 if i + j <= 3:
                     x,y = self._plat2canv(i, j)
-                    self.wp.append(Pion(self, x, y, self.get_color("white")))
+                    self.wp.append(Pawn(self, (x, y), (i, j), "white"))
                     x,y = self._plat2canv(7 - i, 7 - j)
-                    self.bp.append(Pion(self, x, y, self.get_color("black")))
+                    self.bp.append(Pawn(self, (x, y), (7 - i, 7 - j), "black"))
 
         #initiating a Game
         
@@ -117,24 +117,15 @@ class BoardArea(Areas):
         self.board = cc.Game()
         self.game_is_on = True
 
-        #working data 
-        self.__piece_courante = ""
+        # working data 
+        self.__clicked_piece = ""
         self.joueurajouer = False
         self.pospioninit = (-1,-1)
         self.coup_precedent = ""
         self.coup_courant = []
-        #seeing which pawns are movable and which are not TODO
-        if self.playerB.getHumanity() and self.playerW.getHumanity():
-            self.movablePaws = self.bp + self.wp
-            self.notMovablePaws = []
-        else: 
-            if (not self.playerB.getHumanity()) and (not self.playerW.getHumanity()):
-                self.movablePaws = []
-                self.notMovablePaws = self.bp + self.wp
-            else:
-                self.movablePaws = self.wp if self.playerW.getHumanity() else (self.bp if self.playerB.getHumanity() else [])
-                self.notMovablePaws = self.bp if self.playerW.getHumanity() else (self.wp if self.playerB.getHumanity() else [])
-        self.allPaws = self.bp + self.wp
+        
+        # list of all pawns
+        self.allPawns = self.bp + self.wp
 
 
     def reset(self,playerW : Player,playerB : Player):
@@ -146,10 +137,8 @@ class BoardArea(Areas):
         for i in range(4):
             for j in range(4):
                 if i + j <= 3:
-                    x,y = self._plat2canv(i, j)
-                    self.wp[count].move(x,y)
-                    x,y = self._plat2canv(7 - i, 7 - j)
-                    self.bp[count].move(x,y)
+                    self.wp[count].move_to_case(i, j)
+                    self.bp[count].move_to_case(7 - i, 7 - j)
                     count += 1
         self.highlight_cases([])
         self.show_arrows([], "black")
@@ -173,70 +162,87 @@ class BoardArea(Areas):
         else:
             print(f"Unknown player type {playerB}")  
 
-        self.movablePaws = self.wp if self.playerW.getHumanity() else [] 
         self.whoistoplay = self.playerW
+        print("RAAAAH")
         
     def pawn_pressed(self,event):
-
-        #TODO
-        eventi,eventj = self._canv2plat(event.x,event.y)
-        for p in self.allPaws:
+        ''' run when starting to click on a pawn '''
+        assert(self.__clicked_piece == "")
+        eventi, eventj = self._canv2plat(event.x, event.y)
+        if (eventi < 0 or eventi > 7) or (eventj < 0 or eventj > 7):
+            return
+        
+        # find clicked piece
+        for p in self.allPawns:
             if p.is_in_case(eventi,eventj):
-                    self.__piece_courante = p
+                    self.__clicked_piece = p
                     break
+        assert(self.__clicked_piece != "") 
 
         if self.whoistoplay != None and self.whoistoplay.getHumanity():
-            if self.__piece_courante != "" and self.__piece_courante in self.movablePaws:
-                self.__piece_courante.redraw()
+            # if it's human turn
+            movablePawns = self.wp if self.whoistoplay == self.playerW else self.bp
+            if self.__clicked_piece in movablePawns:
+                self.__clicked_piece.redraw()
                 if self.pospioninit == (-1,-1):
-                    self.pospioninit = self.__piece_courante.case_x,self.__piece_courante.case_y
-                    self.coup_courant = [(eventi,eventj)]
-
-
+                    self.pospioninit = self.__clicked_piece.get_board_pos()
+                    self.coup_courant = [(eventi, eventj)]
                 
     def pawn_moved(self,event):
-        if self.__piece_courante != "" and self.__piece_courante in self.movablePaws and self.whoistoplay.getHumanity():
-            dx = event.x - self.__piece_courante.x
-            dy = event.y - self.__piece_courante.y
-            self.__piece_courante.move_on_ui(dx,dy)
+        '''' run when dragging a pawn across the board '''
+        if self.__clicked_piece != "" and self.whoistoplay.getHumanity():
+            # can drag a pawn only if human plays
+            self.__clicked_piece.move_on_ui(event.x, event.y)
 
     def pawn_released(self,event):
+        ''' run when releasing a pawn on the board '''
+        if self.__clicked_piece == "":
+            return
+        
         color_playing = "black" if self.whoistoplay == self.playerB else "white"
 
-        if self.__piece_courante != "" and self.__piece_courante in self.allPaws:
-            if self.show_moves: # Drawing of the reachable cases
-                possible_moves = self.possible_moves([self.__piece_courante.case_x,
-                                                                    self.__piece_courante.case_y],
-                                                                    self.__pbpn2pospion(self.wp, self.bp))
-                self.highlight_cases(possible_moves)
-                self.show_arrows([], color_playing) # erases drawn arrows    
+        # first highlight cases
+        if self.__clicked_piece in self.allPawns:
+            if self.show_moves: # Drawing of the reachable cases from clicked pawn
+                i, j = self.__clicked_piece.get_board_pos()
+                possible_moves = self.possible_moves([i, j], self.__pbpn2pospion(self.wp, self.bp))
+                self.highlight_cases(possible_moves)   
 
-        if self.__piece_courante != "" and self.whoistoplay.getHumanity() and self.__piece_courante in self.movablePaws:
-            ncase_x,ncase_y = self._canv2plat(event.x,event.y)
-            etude_coup = self.elementaryMove(self.__piece_courante.case_x,self.__piece_courante.case_y,ncase_x,ncase_y)
-            if ncase_x == self.pospioninit[0] and ncase_y == self.pospioninit[1]:
+        movablePawns = self.wp if self.whoistoplay == self.playerW else self.bp
+        if self.whoistoplay.getHumanity() and self.__clicked_piece in movablePawns:
+            new_i, new_j = self._canv2plat(event.x,event.y)
+            old_i, old_j = self.pospioninit
+            etude_coup = self.elementaryMove(old_i, old_j, new_i, new_j)
+
+            if new_i == old_i and new_j == old_j:
                 # dropped the pawn on the same case as before
-                
-                self.__piece_courante.move(event.x,event.y) 
+                self.__clicked_piece.move_to_case(new_i, new_j) 
                 self.__reset_working_data()
-            elif etude_coup != 'ilegal' and (self.coup_precedent =="" or (self.coup_precedent == "saut" and etude_coup == "saut")):
+            elif etude_coup != 'illegal' and (self.coup_precedent == "" or (self.coup_precedent == "jump" and etude_coup == "jump")):
                 # wants to play a legal move
-                self.__piece_courante.move(event.x,event.y)
+                self.__clicked_piece.move_to_case(new_i, new_j) 
                 self.coup_precedent = etude_coup
                 self.joueurajouer = True
-                self.coup_courant.append((ncase_x,ncase_y))
+                self.coup_courant.append((new_i,new_j))
                 if (color_playing == 'white' and self.show_white_ar) or\
                    (color_playing == 'black' and self.show_black_ar):
                     self.show_arrows(self.coup_courant, color_playing)
-    
+                    self.highlight_cases([])   
             else:
-                xf,yf = self._plat2canv(self.__piece_courante.case_x,self.__piece_courante.case_y)
-                self.__piece_courante.move_on_ui(xf-self.__piece_courante.x,yf-self.__piece_courante.y) 
+                # reset clicked pawn position
+                i, j = self.__clicked_piece.get_board_pos()
+                self.__clicked_piece.redraw()
+    
+        else:
+            # reset clicked pawn position
+            i, j = self.__clicked_piece.get_board_pos()
+            self.__clicked_piece.redraw()
+        self.__clicked_piece = ""
 
             
             
     def __reset_working_data(self):
-        self.__piece_courante = ""
+        self.__clicked_piece = ""
         self.joueurajouer = False
         self.pospioninit = (-1,-1)
         self.coup_precedent = ""
@@ -245,10 +251,8 @@ class BoardArea(Areas):
     def __swap_whoistoplay(self):
         if self.whoistoplay == self.playerW:
             self.whoistoplay = self.playerB
-            self.movablePaws = self.bp
         else:
             self.whoistoplay = self.playerW
-            self.movablePaws = self.wp
             
                         
     def _plat2canv(self,i : int,j : int):
@@ -401,10 +405,6 @@ class BoardArea(Areas):
         self.case_radius_hit = self.side // (1 + 7 * math.sqrt(3)) # width of a case (for the hitbox)
         self.case_radius = self.case_radius_hit //5 # radius of a case
         self.pawn_radius = self.case_radius_hit / 2.5 # radius of a pawn
-        for pawn in self.wp:
-            pawn.set_xy(pawn.x * scale, pawn.y * scale)
-        for pawn in self.bp:
-            pawn.set_xy(pawn.x * scale, pawn.y * scale)
     
     # All of the following functions in the class are TEST
   
@@ -512,9 +512,11 @@ class BoardArea(Areas):
         pospion.fill(False)
         pb, pn = [], []
         for p in wp:
-            pb.append([p.case_x, p.case_y])
+            p_i, p_j = p.get_board_pos()
+            pb.append([p_i, p_j])
         for p in bp:
-            pn.append([p.case_x, p.case_y])
+            p_i, p_j = p.get_board_pos()
+            pn.append([p_i, p_j])
         
         for a,b in pb:
             pospion[a,b] = True
@@ -526,11 +528,13 @@ class BoardArea(Areas):
     def apply_move_without_check(self,move : list):
         ''' Apply move on screen'''
         for p in self.wp:
-            if p.case_x == move[0][0] and p.case_y == move[0][1]:
+            p_i, p_j = p.get_board_pos()
+            if p_i == move[0][0] and p_j == move[0][1]:
                 pp = p
                 break
         for p in self.bp:
-            if p.case_x == move[0][0] and p.case_y == move[0][1]:
+            p_i, p_j = p.get_board_pos()
+            if p_i == move[0][0] and p_j == move[0][1]:
                 pp = p
                 break
             
@@ -546,30 +550,32 @@ class BoardArea(Areas):
             if ((c-a)*(d-b) == 0) or ((d-b)/(c-a)==-1):
                 rep = (abs(a-c+b-d) <= 1) and (abs(a-c) +abs(b-d) <= 2)
                 for p in self.bp:
-                    if p.case_x == c and p.case_y ==d:
-                        return('ilegal')
-                    elif p.case_x != a or p.case_y != b :
-                        if p.case_x == (a+c)/2 and p.case_y == (b+d)/2:
+                    p_i, p_j = p.get_board_pos()
+                    if p_i == c and p_j ==d:
+                        return('illegal')
+                    elif p_i != a or p_j != b :
+                        if p_i == (a+c)/2 and p_j == (b+d)/2:
                             rep = True
-                        elif (p.case_x- a)*(d-b) == (p.case_y-b)*(c-a) and (p.case_x -a)*(c-a) + (p.case_y-b)*(d-b) >= 0 and (p.case_x -c)*(a-c) + (p.case_y-d)*(b-d) >= 0:
-                            return('ilegal')
+                        elif (p_i- a)*(d-b) == (p_j-b)*(c-a) and (p_i -a)*(c-a) + (p_j-b)*(d-b) >= 0 and (p_i -c)*(a-c) + (p_j-d)*(b-d) >= 0:
+                            return('illegal')
 
                 for p in self.wp:
-                    if p.case_x == c and p.case_y ==d:
-                        return('ilegal')
-                    elif p.case_x != a or p.case_y !=b :
-                        if p.case_x == (a+c)/2 and p.case_y == (b+d)/2:
+                    p_i, p_j = p.get_board_pos()
+                    if p_i == c and p_j ==d:
+                        return('illegal')
+                    elif p_i != a or p_j !=b :
+                        if p_i == (a+c)/2 and p_j == (b+d)/2:
                             rep = True
-                        elif (p.case_x- a)*(d-b) == (p.case_y-b)*(c-a) and (p.case_x -a)*(c-a) + (p.case_y-b)*(d-b) >= 0 and (p.case_x -c)*(a-c) + (p.case_y-d)*(b-d) >= 0:
-                            return('ilegal')
+                        elif (p_i- a)*(d-b) == (p_j-b)*(c-a) and (p_i -a)*(c-a) + (p_j-b)*(d-b) >= 0 and (p_i -c)*(a-c) + (p_j-d)*(b-d) >= 0:
+                            return('illegal')
                 if rep:
                     if (abs(a-c+b-d) <= 1) and abs(a-c) +abs(b-d) <= 2:
-                        return("non saut")
+                        return("non jump")
                     else:
-                        return("saut")
+                        return("jump")
                 else:   
-                    return('ilegal')
+                    return('illegal')
             else:
-                return('ilegal')
+                return('illegal')
         else:
-            return('ilegal')
+            return('illegal')

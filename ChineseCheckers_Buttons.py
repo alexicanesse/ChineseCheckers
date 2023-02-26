@@ -36,14 +36,16 @@ class ClassicButton(Areas):
         self.parent.tag_bind(self.hitbox, "<Enter>", f_enter_hitbox)
 
         def f_leave_hitbox(event):
-            if self.state == "hovered":
+            if self.state != "grayed":
                 self.set_state("normal")
-                self.disable_grayedtext
-            elif self.state == "pressed":
-                self.set_state("grayed")
-                self.enable_grayedtext()
 
         self.parent.tag_bind(self.hitbox, "<Leave>", f_leave_hitbox)
+    
+        def f_release_hitbox(event):
+            if self.state == "pressed":
+                self.set_state("hovered")
+
+        self.parent.tag_bind(self.hitbox, "<ButtonRelease-1>", f_release_hitbox)
     
 
     def enable_grayedtext(self):
@@ -69,9 +71,18 @@ class ClassicButton(Areas):
         a, b, c, d = self.parent.bbox(self.text)
         text_width, text_height = c - a, d - b
         self.parent.moveto(self.text, x + (self.width - text_width) // 2, y + (self.height - text_height) // 2)
-        a, b, c, d = self.parent.bbox(self.grayed_text)
-        text_width, text_height = c - a, d - b
-        self.parent.moveto(self.grayed_text, x + (self.width - text_width) // 2, y + self.height + (self.height - text_height) // 2)
+
+        try:
+            a, b, c, d = self.parent.bbox(self.grayed_text)
+            text_width, text_height = c - a, d - b
+            self.parent.moveto(self.grayed_text, x + (self.width - text_width) // 2, y + self.height + (self.height - text_height) // 2)
+        except TypeError:
+            
+            self.enable_grayedtext()
+            a, b, c, d = self.parent.bbox(self.grayed_text)
+            text_width, text_height = c - a, d - b
+            self.parent.moveto(self.grayed_text, x + (self.width - text_width) // 2, y + self.height + (self.height - text_height) // 2)
+            self.disable_grayedtext()
 
 
     def set_state(self, state):

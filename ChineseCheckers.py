@@ -21,21 +21,19 @@ class Board(Tk,Areas):
         # [DONE] relaunch game
         # [DONE] show possible moves when clicking on a pawn even if it is AI
         # [MAYBE DONE I THINK??] bug where u can drag black pawns even if black player is not human
-        # [DONE i think] pb when changing player, does not work 
-        # [DONE ??????] diverse bugs with new_game function
-        # allow user to specify depth for AI
+        # [DONE] pb when changing player, does not work 
+        # [DONE] allow user to specify depth for AI
         
         # new window that shows weights
         # when disabling then enabling "show arrows" checkbox, show arrows that were previously shown before disabling
-        # fix classicbuttons colors when pressed
+        # [DONE]fix classicbuttons colors when pressed
         # fix a bug where cancelling a move (human side) doesn't gray out the "Play AI" button
         # clean code
         # cancel current move as human
-        # change player when playing ?
-        # gray buttons when "new game" hasn't been pressed at all
-        # make in-depth tests of "new game" button
-        # fix moments when buttons become grayed
-        # diverse bugs with new_game function
+        # [DONE] gray buttons when "new game" hasn't been pressed at all
+        # [DONE MOSTLY] make in-depth tests of "new game" button
+        # print current state : who VS who, whose turn
+        # fix bug that allow human to move several pawns
 
         Tk.__init__(self)
         assert(width >= height) # we want the window to be wider than tall to fit buttons on the right
@@ -78,7 +76,7 @@ class Board(Tk,Areas):
 
         # Initializing the board
         init_states = [True, True,False]
-        self.__boardArea = BoardArea(self, board_side, init_states,default_playerW,default_playerB)
+        self.__boardArea = BoardArea(self, board_side, init_states, default_playerW, default_playerB)
         self.__boardArea.addtag_all("all")
         self.__boardArea.pack(padx=0, side=LEFT, fill=BOTH)
         
@@ -164,7 +162,7 @@ class Board(Tk,Areas):
                                         height // 3 - self.NEW_GAME_HEIGHT // 2,
                                         "New game",
                                         "grayed",
-                                        "First choose a\nconfiguration on the left")
+                                        "First choose a valid\nconfiguration on the left")
         
         # "Next turn" button
         self.TURN_WIDTH = control_width // 2.2
@@ -191,23 +189,31 @@ class Board(Tk,Areas):
         self.bind("<Configure>", self.on_resize)
 
         # create a parametersArea hitbox to trigger update events
-        self.__parametersArea.bind("<ButtonRelease-1>", lambda event : self.updateClassicButtons(event))
+        self.bind("<ButtonRelease-1>", lambda event : self.updateClassicButtons(event))
         self.bind("<KeyRelease>", lambda event : self.updateClassicButtons(event))
     
 
     def updateClassicButtons(self, event):
+        ''' this function is run at each click in the window or key press '''
+
+        # First update New Game button
         if self.playerB_menu.has_valid_configuration() and self.playerW_menu.has_valid_configuration():
-            # new game must be not grayed
-            self.new_game_button.set_state("normal")
+            if self.new_game_button.get_state() == "grayed":
+                # new game must be not grayed
+                self.new_game_button.set_state("normal")
         else:
             # no valid configuration is selected, should be grayed
             self.new_game_button.set_state("grayed")
+        
+        # Then update Next Turn button
+        # it must be grayed if human has canceled a move
 
     def press_NextTurn(self, event):
         ''' next turn '''
 
         if self.nextturn_b.get_state() != "grayed":
             self.__boardArea.jouerIA() # TODO certainement a recoder
+            self.nextturn_b.set_state("pressed")
 
     def game_is_over(self,type_of_end : int):#triggered when game is over
         print("Game's over !",type_of_end)
@@ -217,6 +223,8 @@ class Board(Tk,Areas):
 
         if self.new_game_button.get_state() == "grayed":
             return
+        else:
+            self.new_game_button.set_state("pressed")
 
         choice_playerB, depthB = self.playerB_menu.get_selected()
         choice_playerW, depthW = self.playerW_menu.get_selected()
@@ -231,7 +239,7 @@ class Board(Tk,Areas):
             
     
     def release_pawn(self, event):
-        '''wrapper function to update the status of the Play AI button when pawn in released'''
+        '''wrapper function to update the status of the Next Turn button when pawn in released'''
         self.__boardArea.pawn_released(event)
     
     def on_resize(self, event):
