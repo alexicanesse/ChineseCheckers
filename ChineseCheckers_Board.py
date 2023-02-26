@@ -169,15 +169,15 @@ class BoardArea(Areas):
         ''' run when starting to click on a pawn '''
         assert(self.__clicked_piece == "")
         eventi, eventj = self._canv2plat(event.x, event.y)
-        if (eventi < 0 or eventi > 7) or (eventj < 0 or eventj > 7):
-            return
         
         # find clicked piece
         for p in self.allPawns:
             if p.is_in_case(eventi,eventj):
                     self.__clicked_piece = p
                     break
-        assert(self.__clicked_piece != "") 
+            
+        if self.__clicked_piece == "": # no piece is clicked
+            return
 
         if self.whoistoplay != None and self.whoistoplay.getHumanity():
             # if it's human turn
@@ -211,13 +211,14 @@ class BoardArea(Areas):
         movablePawns = self.wp if self.whoistoplay == self.playerW else self.bp
         if self.whoistoplay.getHumanity() and self.__clicked_piece in movablePawns:
             new_i, new_j = self._canv2plat(event.x,event.y)
-            old_i, old_j = self.pospioninit
+            old_i, old_j = self.coup_courant[-1]
             etude_coup = self.elementaryMove(old_i, old_j, new_i, new_j)
 
             if new_i == old_i and new_j == old_j:
                 # dropped the pawn on the same case as before
                 self.__clicked_piece.move_to_case(new_i, new_j) 
                 self.__reset_working_data()
+                self.show_arrows([], color_playing)
             elif etude_coup != 'illegal' and (self.coup_precedent == "" or (self.coup_precedent == "jump" and etude_coup == "jump")):
                 # wants to play a legal move
                 self.__clicked_piece.move_to_case(new_i, new_j) 
@@ -227,11 +228,13 @@ class BoardArea(Areas):
                 if (color_playing == 'white' and self.show_white_ar) or\
                    (color_playing == 'black' and self.show_black_ar):
                     self.show_arrows(self.coup_courant, color_playing)
-                    self.highlight_cases([])   
+                    self.highlight_cases([])   # remove highlighted cases
             else:
                 # reset clicked pawn position
                 i, j = self.__clicked_piece.get_board_pos()
                 self.__clicked_piece.redraw()
+                if self.coup_courant == [self.pospioninit]:
+                    self.coup_courant = []
     
         else:
             # reset clicked pawn position

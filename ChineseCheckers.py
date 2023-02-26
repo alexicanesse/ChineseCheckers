@@ -26,14 +26,14 @@ class Board(Tk,Areas):
         
         # new window that shows weights
         # when disabling then enabling "show arrows" checkbox, show arrows that were previously shown before disabling
-        # [DONE]fix classicbuttons colors when pressed
-        # fix a bug where cancelling a move (human side) doesn't gray out the "Play AI" button
-        # clean code
+        # print current state : who VS who, whose turn
         # cancel current move as human
+        # [DONE] fix classicbuttons colors when pressed
+        # [DONE] fix a bug where cancelling a move (human side) doesn't gray out the "Next Turn" button
         # [DONE] gray buttons when "new game" hasn't been pressed at all
         # [DONE MOSTLY] make in-depth tests of "new game" button
-        # print current state : who VS who, whose turn
-        # fix bug that allow human to move several pawns
+        # [DONE] fix bug that allow human to move several pawns
+        # clean code
 
         Tk.__init__(self)
         assert(width >= height) # we want the window to be wider than tall to fit buttons on the right
@@ -174,7 +174,7 @@ class Board(Tk,Areas):
                                         2 * height // 3 - self.TURN_HEIGHT // 2,
                                         "Next turn",
                                         "grayed",
-                                        "First start a new\ngame or play a move")
+                                        "First start a new\ngame and play a move")
         
         # mouse events config
         self.__controlArea.tag_bind(self.nextturn_b.hitbox, "<Button-1>", self.press_NextTurn)
@@ -206,7 +206,13 @@ class Board(Tk,Areas):
             self.new_game_button.set_state("grayed")
         
         # Then update Next Turn button
-        # it must be grayed if human has canceled a move
+        # it must be grayed if human has no current move
+        if self.__boardArea.whoistoplay.getHumanity() and \
+            self.__boardArea.coup_courant == []:
+            self.nextturn_b.set_state("grayed")
+        elif self.nextturn_b.get_state() == "grayed":
+            self.nextturn_b.set_state("normal")
+
 
     def press_NextTurn(self, event):
         ''' next turn '''
