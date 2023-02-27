@@ -541,11 +541,8 @@ class BoardArea(Areas):
                 pp = p
                 break
             
-        x,y = self._plat2canv(move[-1][0],move[-1][1])
-        _ = pp.move(x,y)
+        pp.move_to_case(move[-1][0],move[-1][1])
         pp.redraw()
-
-
                     
     def elementaryMove(self,a : int,b : int,c : int,d : int):
         ''' Check legality of an elementary move'''
