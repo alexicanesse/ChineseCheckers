@@ -112,7 +112,23 @@ class AlphaBeta : public ChineseCheckers{
     /*! Indicates if there is a jump from (i, j) to (k, l) */
     boost::unordered_map<uint_fast64_t, std::vector<uint_fast64_t>> possible_elementary_move;
 
-    std::function<bool(const std::vector<uint_fast64_t>&, const std::vector<uint_fast64_t>&)> compMoveVect;
+    std::function<bool(const std::vector<uint_fast64_t>&, const std::vector<uint_fast64_t>&)> compMoveVect =
+            [this](const std::vector<uint_fast64_t> &a,
+                   const std::vector<uint_fast64_t> &b){
+                double valueA = 0;
+                double valueB = 0;
+                if (maximizing_player_) {
+                    return player_to_win_value_map_black_[a.back()]
+                           + player_to_win_value_map_black_[b[0]]
+                           < player_to_win_value_map_black_[b.back()]
+                             + player_to_win_value_map_black_[a[0]];
+                } else {
+                    return player_to_win_value_map_white_[a.back()]
+                           + player_to_win_value_map_white_[b[0]]
+                           < player_to_win_value_map_white_[b.back()]
+                             + player_to_win_value_map_white_[a[0]];
+                }
+            };
  public:
     /* Constructors */
     /*! @brief

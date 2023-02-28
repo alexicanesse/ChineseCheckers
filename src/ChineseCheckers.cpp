@@ -232,14 +232,10 @@ bool ChineseCheckers::move(const Player &player,
 }
 
 void ChineseCheckers::moveWithoutVerification(const std::vector<uint_fast64_t> &list_moves) {
-    int n = static_cast<int>(list_moves.size());
-    if (this->who_is_to_play_) {
-        this->bitBoardBlack |= list_moves[n-1];
-        this->bitBoardBlack &= ~list_moves[0];
-    } else {
-        this->bitBoardWhite |= list_moves[n-1];
-        this->bitBoardWhite &= ~list_moves[0];
-    }
+    if (this->who_is_to_play_)
+        this->bitBoardBlack = (this->bitBoardBlack | list_moves.back()) & ~list_moves[0];
+    else
+        this->bitBoardWhite = (this->bitBoardWhite | list_moves.back()) & ~list_moves[0];
 
     this->who_is_to_play_ ^= 1;
 

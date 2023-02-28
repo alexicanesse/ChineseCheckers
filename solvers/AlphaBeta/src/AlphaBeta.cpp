@@ -80,23 +80,6 @@ AlphaBeta::AlphaBeta() {
         ctz[i] = __builtin_ctzl(i);
     }
 
-    compMoveVect = [this](const std::vector<uint_fast64_t> &a,
-                          const std::vector<uint_fast64_t> &b){
-        double valueA = 0;
-        double valueB = 0;
-        if (maximizing_player_) {
-            return player_to_win_value_map_black_[a.back()]
-                   + player_to_win_value_map_black_[b[0]]
-                   < player_to_win_value_map_black_[b.back()]
-                     + player_to_win_value_map_black_[a[0]];
-        } else {
-            return player_to_win_value_map_white_[a.back()]
-                   + player_to_win_value_map_white_[b[0]]
-                   < player_to_win_value_map_white_[b.back()]
-                     + player_to_win_value_map_white_[a[0]];
-        }
-    };
-
     /* Indicates if there is a jump from (i, j) to (k, l) */
     for (int i = 0; i < 64; ++i)
         possible_elementary_move[un_64 << i] = std::vector<uint_fast64_t>(0);
@@ -148,12 +131,13 @@ AlphaBeta::AlphaBeta(const std::vector< std::vector<double> > &player_to_win_val
 }
 
 void AlphaBeta::availableMoves(std::vector< std::vector<uint_fast64_t> > &result, const bool &full) {
+    result.reserve(50);
+    uint_fast64_t computed_possible_elementary_move = 0;
+
     for (auto &x : possible_elementary_move)
         x.second.clear();
 
-    uint_fast64_t currentBitBoard;
-    if (who_is_to_play_) currentBitBoard = bitBoardBlack;
-    else                 currentBitBoard = bitBoardWhite;
+    uint_fast64_t currentBitBoard = who_is_to_play_ ? bitBoardBlack : bitBoardWhite;
 
     int i, j;
     /* Check the case of notJump moves */
@@ -174,8 +158,8 @@ void AlphaBeta::availableMoves(std::vector< std::vector<uint_fast64_t> > &result
      * Each pown is a root
      */
     std::queue<uint_fast64_t> queue;
-    uint_fast64_t explored = static_cast<uint_fast64_t>(0);
     boost::unordered_map<uint64_t, std::vector<uint_fast64_t> > paths;
+    uint_fast64_t explored = 0;
     uint_fast64_t v;
     int i_neig, j_neig, i_root, j_root;
     /* When another root is chosen, the queue is already empty */
@@ -198,7 +182,7 @@ void AlphaBeta::availableMoves(std::vector< std::vector<uint_fast64_t> > &result
 
             std::tie(i, j) = uint64_to_pair_[v];
 
-            if (possible_elementary_move[v].empty()) {
+            if (!(computed_possible_elementary_move & v)) {
                 for (const auto &possibleJumps : k_neighbours_[v]) {
                     for (const auto &possibleJump : possibleJumps) {
                         /* Check if there is a pawn to jump over and if the jump is valid */
@@ -210,6 +194,7 @@ void AlphaBeta::availableMoves(std::vector< std::vector<uint_fast64_t> > &result
                         }
                     }
                 }
+                computed_possible_elementary_move |= v;
             }
 
             for (uint_fast64_t neig : possible_elementary_move[v]) {
@@ -225,6 +210,7 @@ void AlphaBeta::availableMoves(std::vector< std::vector<uint_fast64_t> > &result
                     explored |= neig;
 
                     if (full) {
+                        paths[neig].reserve(paths[v].size() + 1);
                         paths[neig] = paths[v];
                         paths[neig].push_back(neig);
                     } else {
@@ -247,8 +233,7 @@ void AlphaBeta::availableMoves(std::vector< std::vector<uint_fast64_t> > &result
 ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, const double &beta) {
     maximizing_player_ = who_is_to_play_;
     heuristic_value_   = heuristicValue();
-
-    fullDepth_ = depth;
+    fullDepth_         = depth;
 
     //if (opening.contains(hashGrid()))
         //return opening[hashGrid()];
@@ -466,18 +451,16 @@ inline void AlphaBeta::updateHeuristicValueBack(const std::vector<uint_fast64_t>
 }
 
 void AlphaBeta::reverseMoveLight(const std::vector<uint_fast64_t> &move) {
-    if(number_of_times_seen.contains(hashGrid()))
-        --number_of_times_seen[hashGrid()];
+    uint64_t hash = hashGrid();
+    if(number_of_times_seen.contains(hash))
+        --number_of_times_seen[hash];
 
     who_is_to_play_ ^= 1;
 
-    if (who_is_to_play_) {
-        bitBoardBlack |= move[0];
-        bitBoardBlack &= ~move.back();
-    } else {
-        bitBoardWhite |= move[0];
-        bitBoardWhite &= ~move.back();
-    }
+    if (who_is_to_play_)
+        bitBoardBlack = (bitBoardBlack | move[0]) & ~move.back();
+    else
+        bitBoardWhite = (bitBoardWhite | move[0]) & ~move.back();
 }
 
 Player AlphaBeta::get_maximizing_player_() const {
