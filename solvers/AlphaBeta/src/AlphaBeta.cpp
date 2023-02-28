@@ -285,12 +285,8 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     //    sortDepth1Light(moves);
 
     // possible_moves.resize(20);
-    double value;
+    double value = maximizingPlayer ? MINUS_INFTY - 1 : PLUS_INFTY + 1;
     double buff;
-    if (maximizingPlayer)
-        value = MINUS_INFTY - 1;
-    else
-        value = PLUS_INFTY + 1;
 
 //temp
     // int r = 0;
@@ -417,7 +413,7 @@ inline void AlphaBeta::updateHeuristicValue(const std::vector<uint_fast64_t> &mo
                                 - player_to_win_value_map_black_[move[0]];
         } else {
             heuristic_value_ += player_to_lose_value_map_black_[move[0]]
-                                - player_to_lose_value_map_black_[move.back()];
+                               - player_to_lose_value_map_black_[move.back()];
         }
     } else {
         if (maximizing_player_) {
