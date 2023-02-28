@@ -830,70 +830,45 @@ TEST(StateOfGame, DrawIsDeclaredFromBlack) {
 /*
  * Tests for new_game
  */
-TEST(newGame, GridIsCorrecltyInitialized) {
+TEST(newGame, bitBoardWhiteIsCorrecltyInitialized) {
     /* Arrange */
     ChineseCheckers cc;
-    GridType expectedValue
-            {{White , White, White, White, Empty, Empty, Empty, Empty},
-             {White , White, White, Empty, Empty, Empty, Empty, Empty},
-             {White , White, Empty, Empty, Empty, Empty, Empty, Empty},
-             {White , Empty, Empty, Empty, Empty, Empty, Empty, Empty},
-             {Empty , Empty, Empty, Empty, Empty, Empty, Empty, Black},
-             {Empty , Empty, Empty, Empty, Empty, Empty, Black, Black},
-             {Empty , Empty, Empty, Empty, Empty, Black, Black, Black},
-             {Empty , Empty, Empty, Empty, Black, Black, Black, Black}};
+    uint_fast64_t expectedValue = 0b0000000000000000000000000000000000000001000000110000011100001111;
 
     /* Act */
     cc.move(0, {{0, 2}, {0, 4}});
     cc.new_game();
-    GridType obtainedValue = cc.get_grid_();
+    uint_fast64_t obtainedValue = cc.get_bitBoardWhite();
 
     /* Assert */
     EXPECT_EQ(expectedValue, obtainedValue);
 }
 
-TEST(newGame, PositionColorsPlayersIsCorrecltyInitialized) {
+TEST(newGame, bitBoardBlackIsCorrecltyInitialized) {
     /* Arrange */
     ChineseCheckers cc;
-    std::vector<std::vector<PositionType>>
-            expectedValues {
-            {{7, 7}, {7, 6}, {7, 5}, {7, 4}, {6, 7},
-                    {6, 6}, {6, 5}, {5, 7}, {5, 6}, {4, 7}},
-            {{0, 0}, {0, 1}, {0, 2}, {0, 3}, {1, 0},
-                    {1, 1}, {1, 2}, {2, 0}, {2, 1}, {3, 0}}
-    };
+    uint_fast64_t expectedValue = 0b1111000011100000110000001000000000000000000000000000000000000000;
+
     /* Act */
     cc.move(0, {{0, 2}, {0, 4}});
     cc.new_game();
-    std::vector<std::vector<PositionType>> obtainedValues
-            = cc.get_position_colors_players_();
-    /* we sort the vectors to be able to compare them */
-    sort(obtainedValues.begin(), obtainedValues.end());
-    sort(expectedValues.begin(), expectedValues.end());
+    uint_fast64_t obtainedValue = cc.get_bitBoardBlack();
 
     /* Assert */
-    EXPECT_EQ(expectedValues, obtainedValues);
+    EXPECT_EQ(expectedValue, obtainedValue);
 }
 
 
 
 /*
- * Tests for get_grid_
+ * Tests for get_bitBoardWhite
  */
 
-TEST(GetGrid, IsCorrecltyInitialized) {
+TEST(GetBitBoardWhite, IsCorrecltyInitialized) {
     /* Arrange */
     ChineseCheckers cc;
-    GridType obtainedValue = cc.get_grid_();
-    GridType expectedValue
-            {{White , White, White, White, Empty, Empty, Empty, Empty},
-             {White , White, White, Empty, Empty, Empty, Empty, Empty},
-             {White , White, Empty, Empty, Empty, Empty, Empty, Empty},
-             {White , Empty, Empty, Empty, Empty, Empty, Empty, Empty},
-             {Empty , Empty, Empty, Empty, Empty, Empty, Empty, Black},
-             {Empty , Empty, Empty, Empty, Empty, Empty, Black, Black},
-             {Empty , Empty, Empty, Empty, Empty, Black, Black, Black},
-             {Empty , Empty, Empty, Empty, Black, Black, Black, Black}};
+    uint_fast64_t obtainedValue = cc.get_bitBoardWhite();
+    uint_fast64_t expectedValue = 0b0000000000000000000000000000000000000001000000110000011100001111;
 
     /* Act */
 
@@ -901,165 +876,104 @@ TEST(GetGrid, IsCorrecltyInitialized) {
     EXPECT_EQ(expectedValue, obtainedValue);
 }
 
-TEST(GetGrid, IsCorrecltyChangedAfterAMove) {
+TEST(GetBitBoardWhite, IsCorrecltyChangedAfterAMove) {
     /* Arrange */
     ChineseCheckers cc;
-    GridType expectedValue
-            {{White , White, Empty, White, White, Empty, Empty, Empty},
-             {White , White, White, Empty, Empty, Empty, Empty, Empty},
-             {White , White, Empty, Empty, Empty, Empty, Empty, Empty},
-             {White , Empty, Empty, Empty, Empty, Empty, Empty, Empty},
-             {Empty , Empty, Empty, Empty, Empty, Empty, Empty, Black},
-             {Empty , Empty, Empty, Empty, Empty, Empty, Black, Black},
-             {Empty , Empty, Empty, Empty, Empty, Black, Black, Black},
-             {Empty , Empty, Empty, Empty, Black, Black, Black, Black}};
+    uint_fast64_t expectedValue = 0b0000000000000000000000000000000000000001000000110000011100011011;
 
     /* Act */
     cc.move(0, {{0, 2}, {0, 4}});
-    GridType obtainedValue = cc.get_grid_();
+    uint_fast64_t obtainedValue = cc.get_bitBoardWhite();
 
     /* Assert */
     EXPECT_EQ(expectedValue, obtainedValue);
 }
 
-TEST(GetGrid, IsCorrecltyChangedAfterTwoMoves) {
+TEST(GetBitBoardWhite, IsCorrecltyChangedAfterTwoMoves) {
     /* Arrange */
     ChineseCheckers cc;
-    GridType expectedValue
-            {{White , White, Empty, White, White, Empty, Empty, Empty},
-             {White , White, White, Empty, Empty, Empty, Empty, Empty},
-             {White , White, Empty, Empty, Empty, Empty, Empty, Empty},
-             {White , Empty, Empty, Empty, Empty, Empty, Empty, Black},
-             {Empty , Empty, Empty, Empty, Empty, Empty, Empty, Empty},
-             {Empty , Empty, Empty, Empty, Empty, Empty, Black, Black},
-             {Empty , Empty, Empty, Empty, Empty, Black, Black, Black},
-             {Empty , Empty, Empty, Empty, Black, Black, Black, Black}};
+    uint_fast64_t expectedValue = 0b0000000000000000000000000000000000000001000000110000011100011011;
 
     /* Act */
     cc.move(0, {{0, 2}, {0, 4}});
     cc.move(1, {{4, 7}, {3, 7}});
-    GridType obtainedValue = cc.get_grid_();
+    uint_fast64_t obtainedValue = cc.get_bitBoardWhite();
 
 
     /* Assert */
     EXPECT_EQ(expectedValue, obtainedValue);
 }
 
-TEST(GetGrid, IsCorrecltyChangedAfterIllegalMove) {
+TEST(GetBitBoardWhite, IsCorrecltyChangedAfterIllegalMove) {
     /* Arrange */
     ChineseCheckers cc;
-    GridType expectedValue
-            {{White , White, White, White, Empty, Empty, Empty, Empty},
-             {White , White, White, Empty, Empty, Empty, Empty, Empty},
-             {White , White, Empty, Empty, Empty, Empty, Empty, Empty},
-             {White , Empty, Empty, Empty, Empty, Empty, Empty, Empty},
-             {Empty , Empty, Empty, Empty, Empty, Empty, Empty, Black},
-             {Empty , Empty, Empty, Empty, Empty, Empty, Black, Black},
-             {Empty , Empty, Empty, Empty, Empty, Black, Black, Black},
-             {Empty , Empty, Empty, Empty, Black, Black, Black, Black}};
+    uint_fast64_t expectedValue = 0b0000000000000000000000000000000000000001000000110000011100001111;
 
     /* Act */
     cc.move(1, {{0, 2}, {0, 4}});
-    GridType obtainedValue = cc.get_grid_();
+    uint_fast64_t obtainedValue = cc.get_bitBoardWhite();
 
     /* Assert */
     EXPECT_EQ(expectedValue, obtainedValue);
 }
-
 
 /*
- * Tests for get_position_colors_players_
+ * Tests for get_bitBoardBlack
  */
 
-TEST(GetPositionColorPlayers, IsCorrecltyInitialized) {
+TEST(GetBitBoardBlack, IsCorrecltyInitialized) {
     /* Arrange */
     ChineseCheckers cc;
-    std::vector<std::vector<PositionType>> obtainedValues
-            = cc.get_position_colors_players_();
-    std::vector<std::vector<PositionType>>
-        expectedValues {
-            {{7, 7}, {7, 6}, {7, 5}, {7, 4}, {6, 7},
-             {6, 6}, {6, 5}, {5, 7}, {5, 6}, {4, 7}},
-            {{0, 0}, {0, 1}, {0, 2}, {0, 3}, {1, 0},
-             {1, 1}, {1, 2}, {2, 0}, {2, 1}, {3, 0}}
-    };
+    uint_fast64_t obtainedValue = cc.get_bitBoardBlack();
+    uint_fast64_t expectedValue = 0b1111000011100000110000001000000000000000000000000000000000000000;
+
     /* Act */
-    /* we sort the vectors to be able to compare them */
-    sort(obtainedValues.begin(), obtainedValues.end());
-    sort(expectedValues.begin(), expectedValues.end());
 
     /* Assert */
-    EXPECT_EQ(expectedValues, obtainedValues);
+    EXPECT_EQ(expectedValue, obtainedValue);
 }
 
-TEST(GetPositionColorPlayers, IsCorrecltyChangedAfterAMove) {
+TEST(GetBitBoardBlack, IsCorrecltyChangedAfterAMove) {
     /* Arrange */
     ChineseCheckers cc;
-    std::vector<std::vector<PositionType>>
-            expectedValues {
-            {{7, 7}, {7, 6}, {7, 5}, {7, 4}, {6, 7},
-                    {6, 6}, {6, 5}, {5, 7}, {5, 6}, {4, 7}},
-            {{0, 0}, {0, 1}, {0, 4}, {0, 3}, {1, 0},
-                    {1, 1}, {1, 2}, {2, 0}, {2, 1}, {3, 0}}
-    };
+    uint_fast64_t expectedValue = 0b1111000011100000110000001000000000000000000000000000000000000000;
+
     /* Act */
     cc.move(0, {{0, 2}, {0, 4}});
-    std::vector<std::vector<PositionType>> obtainedValues
-            = cc.get_position_colors_players_();
-    /* we sort the vectors to be able to compare them */
-    sort(obtainedValues.begin(), obtainedValues.end());
-    sort(expectedValues.begin(), expectedValues.end());
+    uint_fast64_t obtainedValue = cc.get_bitBoardBlack();
 
     /* Assert */
-    EXPECT_EQ(expectedValues, obtainedValues);
+    EXPECT_EQ(expectedValue, obtainedValue);
 }
 
-TEST(GetPositionColorPlayers, IsCorrecltyChangedAfterTwoMoves) {
+TEST(GetBitBoardBlack, IsCorrecltyChangedAfterTwoMoves) {
     /* Arrange */
     ChineseCheckers cc;
-    std::vector<std::vector<PositionType>>
-            expectedValues {
-            {{7, 7}, {7, 6}, {7, 5}, {7, 4}, {6, 7},
-                    {6, 6}, {6, 5}, {5, 7}, {5, 6}, {3, 7}},
-            {{0, 0}, {0, 1}, {0, 4}, {0, 3}, {1, 0},
-                    {1, 1}, {1, 2}, {2, 0}, {2, 1}, {3, 0}}
-    };
+    uint_fast64_t expectedValue = 0b1111000011100000110000000000000010000000000000000000000000000000;
+
     /* Act */
     cc.move(0, {{0, 2}, {0, 4}});
     cc.move(1, {{4, 7}, {3, 7}});
-    std::vector<std::vector<PositionType>> obtainedValues
-            = cc.get_position_colors_players_();
-    /* we sort the vectors to be able to compare them */
-    sort(obtainedValues.begin(), obtainedValues.end());
-    sort(expectedValues.begin(), expectedValues.end());
+    uint_fast64_t obtainedValue = cc.get_bitBoardBlack();
+
 
     /* Assert */
-    EXPECT_EQ(expectedValues, obtainedValues);
+    EXPECT_EQ(expectedValue, obtainedValue);
 }
 
-TEST(GetPositionColorPlayers, IsCorrecltyChangedAfterIllegalMove) {
+TEST(GetBitBoardBlack, IsCorrecltyChangedAfterTwoIllegalMoves) {
     /* Arrange */
     ChineseCheckers cc;
-    std::vector<std::vector<PositionType>>
-            expectedValues {
-            {{7, 7}, {7, 6}, {7, 5}, {7, 4}, {6, 7},
-                    {6, 6}, {6, 5}, {5, 7}, {5, 6}, {4, 7}},
-            {{0, 0}, {0, 1}, {0, 2}, {0, 3}, {1, 0},
-                    {1, 1}, {1, 2}, {2, 0}, {2, 1}, {3, 0}}
-    };
+    uint_fast64_t expectedValue = 0b1111000011100000110000001000000000000000000000000000000000000000;
+
     /* Act */
-    cc.move(1, {{0, 2}, {0, 4}});
-    std::vector<std::vector<PositionType>> obtainedValues
-            = cc.get_position_colors_players_();
-    /* we sort the vectors to be able to compare them */
-    sort(obtainedValues.begin(), obtainedValues.end());
-    sort(expectedValues.begin(), expectedValues.end());
+    cc.move(0, {{0, 2}, {0, 4}});
+    cc.move(0, {{4, 7}, {3, 7}});
+    uint_fast64_t obtainedValue = cc.get_bitBoardBlack();
 
     /* Assert */
-    EXPECT_EQ(expectedValues, obtainedValues);
+    EXPECT_EQ(expectedValue, obtainedValue);
 }
-
-
 
 /*
  * Tests for get_who_is_to_play_()

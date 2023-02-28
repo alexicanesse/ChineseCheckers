@@ -97,19 +97,6 @@ struct iterable_converter {
     }
 };
 
-struct gridtype_to_list {
-    static PyObject* convert(GridType const& grid) {
-        boost::python::list *result = new boost::python::list;
-        for (std::vector<Color> x : grid) {
-            boost::python::list row;
-            for (Color value : x)
-                row.append(static_cast<int>(value));
-            result->append(row);
-        }
-        return boost::python::incref(result->ptr());
-    }
-};
-
 struct ListOfPositionType_to_list {
     static PyObject* convert(ListOfPositionType const& move) {
         boost::python::list *result = new boost::python::list;
@@ -172,7 +159,6 @@ struct fromPythonToColor {
 
 
 BOOST_PYTHON_MODULE(AlphaBeta) {
-    boost::python::to_python_converter<GridType, gridtype_to_list>();
     boost::python::to_python_converter<ListOfPositionType,
                                             ListOfPositionType_to_list>();
     fromPythonToColor();

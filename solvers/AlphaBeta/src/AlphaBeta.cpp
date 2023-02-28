@@ -35,6 +35,7 @@
 #include <unordered_map>
 #include <utility>
 #include <fstream>
+#include <boost/unordered_map.hpp>
 
 /* Other */
 #include "Types.hpp"
@@ -43,7 +44,7 @@
 AlphaBeta::AlphaBeta() {
     /* this is meant to be seen from black perspective: white should
      * use symmetries to use this matrix. */
-    this->player_to_win_value_ = std::vector< std::vector<double> >({
+    player_to_win_value_ = std::vector< std::vector<double> >({
         {0.0/98,  1.0/98,  4.0/98,  9.0/98, 16.0/98, 25.0/98, 36.0/98, 49.0/98},
         {1.0/98,  2.0/98,  5.0/98, 10.0/98, 17.0/98, 26.0/98, 37.0/98, 50.0/98},
         {4.0/98,  5.0/98,  8.0/98, 13.0/98, 20.0/98, 29.0/98, 40.0/98, 53.0/98},
@@ -55,7 +56,7 @@ AlphaBeta::AlphaBeta() {
 
     /* this is meant to be seen from black perspective: white should
      * use symmetries to use this matrix. */
-    this->player_to_lose_value_ = std::vector< std::vector<double> >({
+    player_to_lose_value_ = std::vector< std::vector<double> >({
         {0.0/588,  1.0/588,  4.0/588,  9.0/588, 16.0/588, 25.0/588, 36.0/588, 49.0/588},
         {1.0/588,  2.0/588,  5.0/588, 10.0/588, 17.0/588, 26.0/588, 37.0/588, 50.0/588},
         {4.0/588,  5.0/588,  8.0/588, 13.0/588, 20.0/588, 29.0/588, 40.0/588, 53.0/588},
@@ -65,7 +66,42 @@ AlphaBeta::AlphaBeta() {
         {36.0/588, 37.0/588, 40.0/588, 45.0/588, 52.0/588, 62.0/588, 72.0/588, 85.0/588},
         {49.0/588, 50.0/588, 53.0/588, 58.0/588, 65.0/588, 74.0/588, 85.0/588, 98.0/588}  });
 
-    this->loadOpenings();
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            player_to_lose_value_map_white_[int_to_uint64_[i][j]] = player_to_lose_value_[7 - i][7 - j];
+            player_to_lose_value_map_black_[int_to_uint64_[i][j]] = player_to_lose_value_[i][j];
+            player_to_win_value_map_white_[int_to_uint64_[i][j]]  = player_to_win_value_[7 - i][7 - j];
+            player_to_win_value_map_black_[int_to_uint64_[i][j]]  = player_to_win_value_[i][j];
+        }
+    }
+
+    ctz[0] = 0;
+    for (uint_fast64_t i = un_64; i; i <<= 1) {
+        ctz[i] = __builtin_ctzl(i);
+    }
+
+    compMoveVect = [this](const std::vector<uint_fast64_t> &a,
+                          const std::vector<uint_fast64_t> &b){
+        double valueA = 0;
+        double valueB = 0;
+        if (maximizing_player_) {
+            return player_to_win_value_map_black_[a.back()]
+                   + player_to_win_value_map_black_[b[0]]
+                   < player_to_win_value_map_black_[b.back()]
+                     + player_to_win_value_map_black_[a[0]];
+        } else {
+            return player_to_win_value_map_white_[a.back()]
+                   + player_to_win_value_map_white_[b[0]]
+                   < player_to_win_value_map_white_[b.back()]
+                     + player_to_win_value_map_white_[a[0]];
+        }
+    };
+
+    /* Indicates if there is a jump from (i, j) to (k, l) */
+    for (int i = 0; i < 64; ++i)
+        possible_elementary_move[un_64 << i] = std::vector<uint_fast64_t>(0);
+
+    loadOpenings();
 }
 
 AlphaBeta::AlphaBeta(const std::vector< std::vector<double> > &player_to_win_value_,
@@ -73,34 +109,62 @@ AlphaBeta::AlphaBeta(const std::vector< std::vector<double> > &player_to_win_val
     this->player_to_win_value_ = player_to_win_value_;
     this->player_to_lose_value_ = player_to_lose_value_;
 
-    this->loadOpenings();
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            player_to_lose_value_map_white_[int_to_uint64_[i][j]] = this->player_to_lose_value_[7 - i][7 - j];
+            player_to_lose_value_map_black_[int_to_uint64_[i][j]] = this->player_to_lose_value_[i][j];
+            player_to_win_value_map_white_[int_to_uint64_[i][j]]  = this->player_to_win_value_[7 - i][7 - j];
+            player_to_win_value_map_black_[int_to_uint64_[i][j]]  = this->player_to_win_value_[i][j];
+        }
+    }
+
+    ctz[0] = 0;
+    for (uint_fast64_t i = un_64; i; i <<= 1) {
+        ctz[i] = __builtin_ctzl(i);
+    }
+
+    compMoveVect = [this](const std::vector<uint_fast64_t> &a,
+                          const std::vector<uint_fast64_t> &b){
+        double valueA = 0;
+        double valueB = 0;
+        if (maximizing_player_) {
+            return player_to_win_value_map_black_[a.back()]
+                   + player_to_win_value_map_black_[b[0]]
+                   < player_to_win_value_map_black_[b.back()]
+                     + player_to_win_value_map_black_[a[0]];
+        } else {
+            return player_to_win_value_map_white_[a.back()]
+                   + player_to_win_value_map_white_[b[0]]
+                   < player_to_win_value_map_white_[b.back()]
+                     + player_to_win_value_map_white_[a[0]];
+        }
+    };
+
+    /* Indicates if there is a jump from (i, j) to (k, l) */
+    for (int i = 0; i < 64; ++i)
+        possible_elementary_move[un_64 << i] = std::vector<uint_fast64_t>(0);
+
+    loadOpenings();
 }
 
-ListOfMoves AlphaBeta::availableMoves(const Player &player, const bool &full) {
-    /* Indicates if there is a jump from (i, j) to (k, l) */
-    std::vector<ListOfPositionType> possible_elementary_move(64);
-    std::vector<std::vector<int>> valid_lines = {{-1,  0},
-                                                 {-1,  1},
-                                                 {0 , -1},
-                                                 {0 ,  1},
-                                                 {1 , -1},
-                                                 {1 ,  0}};
+void AlphaBeta::availableMoves(std::vector< std::vector<uint_fast64_t> > &result, const bool &full) {
+    for (auto &x : possible_elementary_move)
+        x.second.clear();
 
-    ListOfMoves result;
+    uint_fast64_t currentBitBoard;
+    if (who_is_to_play_) currentBitBoard = bitBoardBlack;
+    else                 currentBitBoard = bitBoardWhite;
+
+    int i, j;
     /* Check the case of notJump moves */
-    for (const auto &pownPosition : position_colors_players_[player]) {
-        for(const std::vector<int> &direction : valid_lines) {
-            if (   pownPosition[0] + direction[0] >= 0
-                && pownPosition[1] + direction[1] >= 0
-                && pownPosition[0] + direction[0]  < 8
-                && pownPosition[1] + direction[1]  < 8) {
-                if (grid_[pownPosition[0] + direction[0]]
-                         [pownPosition[1] + direction[1]] == Empty) {
-                    result.push_back({pownPosition,
-                                      {pownPosition[0] + direction[0],
-                                       pownPosition[1] + direction[1]}});
-                }
-            }
+    for (uint_fast64_t pawnPosition = un_64; pawnPosition; pawnPosition <<= 1) {
+        /* Check if there is a pawn */
+        if (!(pawnPosition & currentBitBoard))
+            continue;
+
+        for (const auto &neig : direct_neighbours_[pawnPosition]) {
+            if (!((bitBoardWhite | bitBoardBlack) & neig))
+                result.push_back({pawnPosition, neig});
         }
     }
 
@@ -109,71 +173,60 @@ ListOfMoves AlphaBeta::availableMoves(const Player &player, const bool &full) {
      * Do a BFS to list all possible jumps.
      * Each pown is a root
      */
-    std::queue<PositionType> queue;
-    std::unordered_map<uint64_t, bool> explored;
-    std::unordered_map<uint64_t, ListOfPositionType> paths;
-    int i = -1;
-    int j = -1;
-    bool isPossible = true;
+    std::queue<uint_fast64_t> queue;
+    uint_fast64_t explored = static_cast<uint_fast64_t>(0);
+    boost::unordered_map<uint64_t, std::vector<uint_fast64_t> > paths;
+    uint_fast64_t v;
+    int i_neig, j_neig, i_root, j_root;
     /* When another root is chosen, the queue is already empty */
-    for (auto root : position_colors_players_[player]) {
+    for (uint_fast64_t root = un_64; root; root <<= 1) {
+        /* Check if there is a pawn */
+        if (!(root & currentBitBoard))
+            continue;
+
         queue.push(root);
 
-        explored.clear();
         paths.clear();
-        explored[hashPosition(root)] = true;
-        paths[hashPosition(root)] = {root};
+
+        explored = root;
+        paths[root] = {root};
+
+        std::tie(i_root, j_root) = uint64_to_pair_[root];
         while (!queue.empty()) {
-            PositionType v = queue.front();
+            v = queue.front();
             queue.pop();
 
+            std::tie(i, j) = uint64_to_pair_[v];
 
-            if (possible_elementary_move[(v[0] << 3) | v[1]].empty()) {
-                i = v[0];
-                j = v[1];
-                for(const std::vector<int> &direction : valid_lines) {
-                    for (int k = 1;    i + direction[0]*(k << 1) < 8
-                                    && j + direction[1]*(k << 1) < 8
-                                    && i + direction[0]*(k << 1) >= 0
-                                    && j + direction[1]*(k << 1) >= 0; ++k){
-                        /* Check if there is a pown to jump over */
-                        if (grid_[i + direction[0]*k]
-                                 [j + direction[1]*k] != Empty) {
-                            /* Check if the jump is valid */
-                            isPossible = true;
-                            for (int l = 1; l <= k; ++l) {
-                                if (grid_[i + direction[0]*(k + l)]
-                                         [j + direction[1]*(k + l)] != Empty) {
-                                    isPossible = false;
-                                    break;
-                                }
-                            }
-                            if (isPossible)
-                                possible_elementary_move[(i << 3) | j]
-                                        .push_back({i + direction[0]*(k << 1),
-                                                    j + direction[1]*(k << 1)});
+            if (possible_elementary_move[v].empty()) {
+                for (const auto &possibleJumps : k_neighbours_[v]) {
+                    for (const auto &possibleJump : possibleJumps) {
+                        /* Check if there is a pawn to jump over and if the jump is valid */
+                        if (((bitBoardWhite | bitBoardBlack) & possibleJump.first.first)
+                            && ! ((bitBoardWhite       | bitBoardBlack            )
+                                & (possibleJump.second | possibleJump.first.second))) {
+                            possible_elementary_move[v].push_back(possibleJump.first.second);
                             break;
                         }
                     }
                 }
             }
 
-
-            for (PositionType neig :
-                    possible_elementary_move[(v[0] << 3) | v[1]]) {
-                if (!explored.contains(hashPosition(neig))
+            for (uint_fast64_t neig : possible_elementary_move[v]) {
+                std::tie(i_neig, j_neig) = uint64_to_pair_[neig];
+                if (!(neig & explored)
                     /*
                      * Checks that we are not jumping over the root
                      * (it has moved)
                      */
-                    && !((v[0] + neig[0])/2 == root[0]
-                         && (v[1] + neig[1])/2 == root[1])) {
+                    && !((i + i_neig) / 2 == i_root
+                         &&   (j + j_neig)/ 2 == j_root)) {
                     queue.push(neig);
-                    explored[hashPosition(neig)] = true;
+                    explored |= neig;
 
                     if (full) {
-                        paths[hashPosition(neig)] = paths[hashPosition(v)];
-                        paths[hashPosition(neig)].push_back(neig);
+                        paths[neig] = paths[v];
+                        paths[neig].push_back(neig);
                     } else {
                         result.push_back({root, neig});
                     }
@@ -182,157 +235,165 @@ ListOfMoves AlphaBeta::availableMoves(const Player &player, const bool &full) {
         }
 
         if (full) {
-            paths.extract(hashPosition(root));
+            paths.extract(root);
             /* we add to result all the paths we found from this root */
-            for (const auto &move : paths)
+            for (const auto &move : paths) {
                 result.push_back(move.second);
+            }
         }
     }
-
-    return result;
-}
-
-double AlphaBeta::evaluate(const Player &player) {
-    double result = 0;
-    switch (player) {
-        case 0:  /* White */
-            if (this->maximizing_player_) {
-                for (const PositionType &pown: position_colors_players_[0])
-                    result += this->player_to_lose_value_[7 - pown[0]][7 - pown[1]];
-            } else {
-                for (const PositionType &pown: position_colors_players_[0])
-                    result += this->player_to_win_value_[7 - pown[0]][7 - pown[1]];
-            }
-            break;
-
-        case 1:  /* black */
-            if (this->maximizing_player_) {
-                for (const PositionType &pown: position_colors_players_[1])
-                    result += this->player_to_win_value_[pown[0]][pown[1]];
-            } else {
-                for (const PositionType &pown: position_colors_players_[1])
-                    result += this->player_to_lose_value_[pown[0]][pown[1]];
-            }
-            break;
-
-        default:
-            break;
-    }
-    return result;
 }
 
 ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, const double &beta) {
-    this->maximizing_player_ = this->who_is_to_play_;
+    maximizing_player_ = who_is_to_play_;
+    heuristic_value_   = heuristicValue();
 
-    if (this->opening.contains(this->hashGrid()))
-        return this->opening[this->hashGrid()];
+    fullDepth_ = depth;
+
+    //if (opening.contains(hashGrid()))
+        //return opening[hashGrid()];
 
     /* Aspiration window */
-    //this->best_move_ = {};
-    //double current_value_ = this->heuristicValue();
-    //AlphaBetaEval(depth,
-    //              current_value_ - current_value_/8,
-    //              current_value_ + current_value_/8,
-    //              false,
-    //              true);
+    /*best_move_.clear();
+    AlphaBetaEval(depth,
+                  -20,
+                  heuristic_value_,
+                  false,
+                  true);
 
-    //if(this->best_move_.size() == 0)
-        AlphaBetaEval(depth, -20, 20, false, true);
+    if(best_move_.size() == 0)*/
+    AlphaBetaEval(depth, -20, 20, false, true);
+    //std::cout << AlphaBetaEval(depth, -20, 20, false, true) << "\n";
 
-    return this->best_move_;
+    //print_grid_();
+
+    ListOfPositionType move;
+    int pos;
+    move.reserve(best_move_.size());
+    for (const auto &pose : best_move_) {
+        pos = ctz[pose];
+        move.push_back({pos /8, pos % 8});
+    }
+
+    return move;
 }
 
-double AlphaBeta::AlphaBetaEval(const int &depth,
+const double AlphaBeta::AlphaBetaEval(const int &depth,
                              double alpha,
                              double beta,
                              const bool &maximizingPlayer,
                              const bool &keepMove) {
-    /* Check if the current node is a terminating node */
-    switch (this->state_of_game()) {
-        case WhiteWon:
-            if (this->maximizing_player_ == 0) return MINUS_INFTY;
-            else return PLUS_INFTY;
-            break;
-
-        case BlackWon:
-            if (this->maximizing_player_ == 1) return MINUS_INFTY;
-            else return PLUS_INFTY;
-            break;
-
-        case Draw:
-            return 0;
-            break;
-
-        default: /* the game is not over */
-            break;
-    }
-
-    /* check if the current position has been searched before */
-    /* compute the hash value of the current board position */
-    uint64_t hash = hashMatrix(this->grid_, this->who_is_to_play_);
-    auto it = transTable.find(hash);
-    if (it != transTable.end() && it->second.second >= depth) {
-        /* retrieve the value from the transposition table */
-        double value = it->second.first;
-        if (!keepMove) return value;
-
-        /* update beta if value is lower */
-        beta = std::min(value, beta);
-        /* update alpha if value is higher */
-        alpha = std::max(value, alpha);
-    }
-
-    if (depth == 0) return heuristicValue();
+    if (depth == 0)
+        return heuristic_value_;
 
     /* Sort according to the value of the move in order to increase the number of cut-offs */
-    ListOfMoves possible_moves = this->availableMoves(this->who_is_to_play_, keepMove);
-    if (0 && keepMove)
-        this->tensorflowOrderMoves(possible_moves);
-    else
-        this->sortDepth1(possible_moves);
+    std::vector< std::vector<uint_fast64_t> > possible_moves;
+
+    availableMoves(possible_moves, keepMove);
+    std::sort(possible_moves.begin(), possible_moves.end(), compMoveVect);
+
+    // possible_moves.resize(std::min(10, std::max(1, possible_moves.size()/(1 + (fullDepth_ - depth)))));
+
+    //if (0 && keepMove)
+    //    tensorflowOrderMoves(possible_moves);
+    //else
+    //    sortDepth1Light(moves);
 
     // possible_moves.resize(20);
-    double value = 0;
+    double value;
+    double buff;
     if (maximizingPlayer)
-        value = MINUS_INFTY;
+        value = MINUS_INFTY - 1;
     else
-        value = PLUS_INFTY;
+        value = PLUS_INFTY + 1;
 
 //temp
-    int r = 0;
-    if (keepMove) number_of_moves = possible_moves.size();
-    for (const ListOfPositionType &move : possible_moves) {
+    // int r = 0;
+    // number_of_moves = possible_moves.size();
+    for (const auto &move:possible_moves) {
 //temp
-        ++r;
-        this->moveWithoutVerification(this->who_is_to_play_, move);
+        // ++r;
+        updateHeuristicValue(move);
+        moveWithoutVerification(move);
 
         /* Checks for an illegal position */
-        if (this->isPositionIllegal()) {
-            this->reverseMove(move);
+        if (isPositionIllegal()) {
+            reverseMoveLight(move);
+            updateHeuristicValueBack(move);
             continue;
         }
 
-        double buff = AlphaBetaEval(depth - 1,
-                                 alpha,
-                                 beta,
-                                 !maximizingPlayer,
-                                 false);
+        /* Check if the current node is a terminating node */
+        switch (state_of_game()) {
+            case WhiteWon:
+                if (maximizing_player_ == 0) {
+                    if (keepMove) {
+                        best_move_ = move;
+                        reverseMoveLight(move);
+                        return MINUS_INFTY;
+                    }
+                    buff = MINUS_INFTY;
+                } else {
+                    reverseMoveLight(move);
+                    return PLUS_INFTY;
+                }
+                break;
 
-        this->reverseMove(move);
+            case BlackWon:
+                if (maximizing_player_ == 1) {
+                    reverseMoveLight(move);
+                    if (keepMove) {
+                        best_move_ = move;
+                        reverseMoveLight(move);
+                        return MINUS_INFTY;
+                    }
+                    buff = MINUS_INFTY;
+                } else {
+                    reverseMoveLight(move);
+                    return PLUS_INFTY;
+                }
+                break;
+
+            case Draw:
+                buff = 10;
+                break;
+
+            default:
+                /* the game is not over */
+                if (depth == 1) {
+                    buff = heuristic_value_;
+                } else {
+                    it = transTable.find(hashGrid());
+                    if (it != transTable.end() && it->second.second >= depth - 1) {
+                        /* retrieve the value from the transposition table */
+                        buff = it->second.first;
+                    } else {
+                        buff = AlphaBetaEval(depth - 1,
+                                             alpha,
+                                             beta,
+                                             !maximizingPlayer,
+                                             false);
+                    }
+                }
+                break;
+        }
+
+        reverseMoveLight(move);
+        updateHeuristicValueBack(move);
 
         if (maximizingPlayer) {
-            alpha = std::max(alpha, static_cast<double>(buff));
-            if (buff >= value) {
+            alpha = std::max(alpha, buff);
+            if (buff > value) {
                 value = buff;
                 if (value >= beta)
                     break; /* beta cutoff */
             }
         } else {
-            beta = std::min(beta, static_cast<double>(buff));
-            if (buff <= value) {
+            beta = std::min(beta, buff);
+            if (buff < value) {
                 value = buff;
-                if (keepMove) this->best_move_ = move;
-                if (keepMove) rank = r;
+                if (keepMove) best_move_ = move;
+                // if (keepMove) rank = r;
                 if (value <= alpha)
                     break; /* alpha cutoff */
             }
@@ -340,163 +401,105 @@ double AlphaBeta::AlphaBetaEval(const int &depth,
     }
 
     /* store the value in the transposition table */
-    transTable[hash] = std::make_pair(value, depth);
+    transTable[hashGrid()] = {value, depth};
 
     /* return value */
     return value;
 }
 
 double AlphaBeta::heuristicValue() {
-    return evaluate(this->maximizing_player_)
-                    - evaluate(1 - this->maximizing_player_);
+    double result = 0;
+    for (uint_fast64_t pawnPosition = un_64; pawnPosition; pawnPosition <<= 1) {
+        if (pawnPosition & bitBoardWhite) {
+            if (maximizing_player_)
+                result -= player_to_lose_value_map_white_[pawnPosition];
+            else
+                result +=player_to_win_value_map_white_[pawnPosition];
+        } else if (pawnPosition & bitBoardBlack) {
+            if (maximizing_player_)
+                result += player_to_win_value_map_black_[pawnPosition];
+            else
+                result -=player_to_lose_value_map_black_[pawnPosition];
+        }
+    }
+    return result;
 }
 
-void AlphaBeta::reverseMove(const ListOfPositionType &move){
-    if(this->number_of_times_seen.contains(hashMatrix(this->grid_, 0)))
-        --this->number_of_times_seen.at(hashMatrix(this->grid_, 0));
-
-    this->who_is_to_play_ = 1 - this->who_is_to_play_;
-    this->grid_[move.back()[0]][move.back()[1]] = Empty;
-    if (this->who_is_to_play_)
-        this->grid_[move.front()[0]][move.front()[1]] = Black;
-    else
-        this->grid_[move.front()[0]][move.front()[1]] = White;
-
-    for (int i = 0; i < 10; ++i) {
-        if (this->position_colors_players_[this->who_is_to_play_][i][0]
-            == move.back()[0]
-            && this->position_colors_players_[this->who_is_to_play_][i][1]
-               == move.back()[1]) {
-            this->position_colors_players_[this->who_is_to_play_][i][0]
-                    = move.front()[0];
-            this->position_colors_players_[this->who_is_to_play_][i][1]
-                    = move.front()[1];
-            break;
+inline void AlphaBeta::updateHeuristicValue(const std::vector<uint_fast64_t> &move) {
+    if (who_is_to_play_) {
+        if (maximizing_player_) {
+            heuristic_value_ += player_to_win_value_map_black_[move.back()]
+                                - player_to_win_value_map_black_[move[0]];
+        } else {
+            heuristic_value_ += player_to_lose_value_map_black_[move[0]]
+                                - player_to_lose_value_map_black_[move.back()];
         }
+    } else {
+        if (maximizing_player_) {
+            heuristic_value_ += player_to_lose_value_map_white_[move[0]]
+                                - player_to_lose_value_map_white_[move.back()];
+        } else {
+            heuristic_value_ += player_to_win_value_map_white_[move.back()]
+                                - player_to_win_value_map_white_[move[0]];
+        }
+    }
+}
+
+inline void AlphaBeta::updateHeuristicValueBack(const std::vector<uint_fast64_t> &move) {
+    if (who_is_to_play_) {
+        if (maximizing_player_) {
+            heuristic_value_ += player_to_win_value_map_black_[move[0]]
+                                - player_to_win_value_map_black_[move.back()];
+        } else {
+            heuristic_value_ += player_to_lose_value_map_black_[move.back()]
+                                - player_to_lose_value_map_black_[move[0]];
+        }
+    } else {
+        if (maximizing_player_) {
+            heuristic_value_ += player_to_lose_value_map_white_[move.back()]
+                                - player_to_lose_value_map_white_[move[0]];
+        } else {
+            heuristic_value_ += player_to_win_value_map_white_[move[0]]
+                                - player_to_win_value_map_white_[move.back()];
+        }
+    }
+}
+
+void AlphaBeta::reverseMoveLight(const std::vector<uint_fast64_t> &move) {
+    if(number_of_times_seen.contains(hashGrid()))
+        --number_of_times_seen[hashGrid()];
+
+    who_is_to_play_ ^= 1;
+
+    if (who_is_to_play_) {
+        bitBoardBlack |= move[0];
+        bitBoardBlack &= ~move.back();
+    } else {
+        bitBoardWhite |= move[0];
+        bitBoardWhite &= ~move.back();
     }
 }
 
 Player AlphaBeta::get_maximizing_player_() const {
-    return this->maximizing_player_;
+    return maximizing_player_;
 }
 
 std::vector<std::vector<double> > AlphaBeta::get_player_to_lose_value_() {
-    return this->player_to_lose_value_;
+    return player_to_lose_value_;
 }
 
 std::vector<std::vector<double> > AlphaBeta::get_player_to_win_value_() {
-    return this->player_to_win_value_;
+    return player_to_win_value_;
 }
 
 void AlphaBeta::set_player_to_lose_value_(
         std::vector< std::vector<double> > &player_to_lose_value_) {
-    this->player_to_lose_value_ = player_to_lose_value_;
+    player_to_lose_value_ = player_to_lose_value_;
 }
 
 void AlphaBeta::set_player_to_win_value_(
         std::vector< std::vector<double> > &player_to_win_value_  ) {
-    this->player_to_win_value_ = player_to_win_value_;
-}
-
-void AlphaBeta::tensorflowOrderMoves(ListOfMoves &possible_moves) {
-    /* copy the grid and reverse it if black is playing */
-    std::vector<float> grid_temp(64);
-    if (this->who_is_to_play_ == 0) {
-        for (int i = 0; i < 8; ++i) {
-            for (int j = 0; j < 8; ++j)
-                grid_temp[8 * i + j] = this->grid_[i][j];
-        }
-    } else {
-        for (int i = 0; i < 8; ++i) {
-            for (int j = 0; j < 8; ++j)
-                grid_temp[8 * (7 - i) + (7 - j)] = this->grid_[i][j];
-        }
-    }
-
-    /* switch colors if black */
-    if (this->who_is_to_play_ == 1) {
-        for (int i = 0; i < 64; ++i)
-            grid_temp[i] *= -1;
-    }
-
-    std::vector<float> data_;
-    /* duplicate it enough times */
-    for (int d = 0; d < possible_moves.size(); ++d) {
-        data_.insert(data_.begin(), grid_temp.begin(), grid_temp.end());
-    }
-
-    int i;
-    int j;
-    /* make the moves */
-    for (int d = 0; d < possible_moves.size(); ++d) {
-        i = possible_moves[d].front()[0];
-        j = possible_moves[d].front()[1];
-        if (this->who_is_to_play_ == 1) {
-            i = 7 - i;
-            j = 7 - j;
-        }
-
-        data_[64 * d + i * 8 + j] = 0;
-
-        i = possible_moves[d].back()[0];
-        j = possible_moves[d].back()[1];
-        if (this->who_is_to_play_ == 1) {
-            i = 7 - i;
-            j = 7 - j;
-        }
-
-        data_[64 * d + i * 8 + j] = 1;
-    }
-
-    cppflow::tensor tensor_data_ = cppflow::tensor(data_, {static_cast<int>(possible_moves.size()), 64});
-
-    std::vector<cppflow::tensor> output = (*model)({{"serving_default_dense_input:0", tensor_data_}},
-                                                    {"StatefulPartitionedCall:0"});
-
-    std::map<ListOfPositionType, double> res;
-
-    auto output_data_ = output[0].get_data<float>();
-    for (int d = 0; d < possible_moves.size(); ++d)
-        res[possible_moves[d]] = output_data_[d];
-
-    auto compMove = [&](const ListOfPositionType &a, const ListOfPositionType &b) {
-        return res[a] < res[b];
-    };
-
-    std::sort(possible_moves.begin(), possible_moves.end(), compMove);
-}
-
-void AlphaBeta::sortDepth1(ListOfMoves &possible_moves) {
-    auto compMove = [this](const ListOfPositionType &a, const ListOfPositionType &b){
-        double valueA = 0;
-        double valueB = 0;
-        switch (maximizing_player_) {
-            case 0:
-                valueA += this->player_to_win_value_
-                          [7 - a.back()[0]][7 - a.back()[1]]
-                          - this->player_to_win_value_
-                          [7 - a.front()[0]][7 - a.front()[1]];
-                valueB += this->player_to_win_value_
-                          [7 - b.back()[0]][7 - b.back()[1]]
-                          - this->player_to_win_value_
-                          [7 - b.front()[0]][7 - b.front()[1]];
-
-                break;
-
-            case 1:
-                valueA += this->player_to_lose_value_
-                          [a.back()[0]][a.back()[1]]
-                          - this->player_to_lose_value_
-                          [a.front()[0]][a.front()[1]];
-                valueB += this->player_to_lose_value_
-                          [b.back()[0]][b.back()[1]]
-                          - this->player_to_lose_value_
-                          [b.front()[0]][b.front()[1]];
-                break;
-        }
-        return valueA < valueB;
-    };
-    std::sort(possible_moves.begin(), possible_moves.end(), compMove);
+    player_to_win_value_ = player_to_win_value_;
 }
 
 void AlphaBeta::loadOpenings() {
@@ -514,9 +517,14 @@ void AlphaBeta::loadOpenings() {
         while(ss >> position0 >> position1)
             move.push_back({position0, position1});
 
-        this->opening[hash] = move;
+        opening[hash] = move;
     }
 
     /* Close the file */
     inFile.close();
+}
+
+/* FNV-1a hash function */
+inline const uint64_t AlphaBeta::hashGrid() {
+    return 0x100000001b3 * (0x100000001b3 * (0xcbf29ce484222325 ^ bitBoardWhite) ^ bitBoardBlack);
 }

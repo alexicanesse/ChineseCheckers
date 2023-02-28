@@ -26,6 +26,7 @@
 #include <map>
 #include <vector>
 #include <unordered_map>
+#include <boost/unordered_map.hpp>
 
 /* Other */
 #include "Types.hpp"
@@ -50,21 +51,8 @@ class AlphaBeta : public ChineseCheckers{
      * @return The heuristic value of the current position
      */
     double heuristicValue();
-
-    /*! @brief
-     * A member used to estimate the value of a position for a given player
-     * @details
-     * This heuristic value is computed using a linear function generated
-     * by genetic evolution
-     */
-    /*!
-     * @param player The player whose position we are evaluating
-     * @sa heuristicValue()
-     * @sa tensorflowOrderMoves(ListOfMoves &possible_moves)
-     * @sa sortDepth1(ListOfMoves &possible_moves)
-     * @return The heuristic value of the current position for the given player
-     */
-    double evaluate(const Player &player);
+    inline void updateHeuristicValue(const std::vector<uint_fast64_t> &move);
+    inline void updateHeuristicValueBack(const std::vector<uint_fast64_t> &move);
 
     /*! @brief
      * A member used to order the moves before exploring them
@@ -81,27 +69,14 @@ class AlphaBeta : public ChineseCheckers{
      */
     void tensorflowOrderMoves(ListOfMoves &possible_moves);
 
-    /*! @brief
-     * A member used to order the moves before exploring them
-     * @details
-     * The moves are ordered using a computation of the alpha-beta algorithm
-     * at depth 1
-     */
-    /*!
-     * @param possible_moves The list of moves we could play
-     * @sa heuristicValue()
-     * @sa evaluate(const Player &player)
-     * @sa sortDepth1(ListOfMoves &possible_moves)
-     * @sa availableMoves(const Player &player, const bool &full)
-     */
-    void sortDepth1(ListOfMoves &possible_moves);
-
     /* this is meant to be seen from black perspective: white should
      * use symmetries to use this matrix. */
     /*! This matrix indicates the values we will assign to each
      * pawns when we compute the heuristic value for the player
      * we are playing for */
     std::vector<std::vector<double> > player_to_win_value_;
+    boost::unordered_map<uint_fast64_t, double> player_to_win_value_map_white_;
+    boost::unordered_map<uint_fast64_t, double> player_to_win_value_map_black_;
 
     /* this is meant to be seen from black perspective: white should
      * use symmetries to use this matrix. */
@@ -109,22 +84,35 @@ class AlphaBeta : public ChineseCheckers{
      * pawns when we compute the heuristic value for the player
      * we are playing against */
     std::vector<std::vector<double> > player_to_lose_value_;
+    boost::unordered_map<uint_fast64_t, double> player_to_lose_value_map_white_;
+    boost::unordered_map<uint_fast64_t, double> player_to_lose_value_map_black_;
 
     /*! Indicates which plyaer we are playing for */
     Player maximizing_player_;
 
     /*! Contains the best move we found so far */
-    ListOfPositionType best_move_;
+    std::vector<uint_fast64_t> best_move_;
 
     /*! Transposition table used to store the results of previous searches */
-    std::unordered_map<uint64_t, std::pair<double, int>> transTable;
+    boost::unordered_map<uint64_t, std::pair<double, int>> transTable;
+
+    boost::unordered_map<uint64_t, std::pair<double, int>>::iterator it;
 
     /*! Map of pre-computed optimal openings */
-    std::unordered_map<uint64_t, ListOfPositionType> opening;
+    boost::unordered_map<uint64_t, ListOfPositionType> opening;
 
     /*! Tensorflow model used by @ref tensorflowOrderMoves(ListOfMoves &possible_moves) */
     cppflow::model *model = new cppflow::model("./raw_data/model");
 
+    boost::unordered_map<uint_fast64_t, int> ctz;
+
+    double heuristic_value_;
+    int fullDepth_;
+
+    /*! Indicates if there is a jump from (i, j) to (k, l) */
+    boost::unordered_map<uint_fast64_t, std::vector<uint_fast64_t>> possible_elementary_move;
+
+    std::function<bool(const std::vector<uint_fast64_t>&, const std::vector<uint_fast64_t>&)> compMoveVect;
  public:
     /* Constructors */
     /*! @brief
@@ -158,15 +146,22 @@ class AlphaBeta : public ChineseCheckers{
      * Gives the list of available moves
      */
     /*!
-     * @param player Who is to play
-     * @param full Indicates if we want the full move or only the first and last position
      * @sa  getMove(const int &depth, const double &alpha, const double &beta)
      * @sa tensorflowOrderMoves(ListOfMoves &possible_moves)
      * @sa sortDepth1(ListOfMoves &possible_moves)
      * @return The list of available moves
      */
-    ListOfMoves availableMoves(const Player &player, const bool &full);
+    void availableMoves(std::vector< std::vector<uint_fast64_t> > &result, const bool &full);
 
+    /*! @brief
+     * Gives the list of available moves
+     */
+    /*!
+     * @sa  getMove(const int &depth, const double &alpha, const double &beta)
+     * @sa tensorflowOrderMoves(ListOfMoves &possible_moves)
+     * @sa sortDepth1(ListOfMoves &possible_moves)
+     * @return The list of available moves
+     */
     /*! @brief
      * Gives the best move according to the alpha beta algorithm
      */
@@ -201,7 +196,7 @@ class AlphaBeta : public ChineseCheckers{
      * @sa evaluate(const Player &player)
      * @return The value computed by the alpha beta algorithm. Sets the best move if asked to
      */
-    double AlphaBetaEval(const int &depth,
+    const double AlphaBetaEval(const int &depth,
                       double alpha,
                       double beta,
                       const bool &maximizingPlayer,
@@ -213,12 +208,12 @@ class AlphaBeta : public ChineseCheckers{
     /*!
      * @param move The move to cancel
      */
-    void reverseMove(const ListOfPositionType &move);
+    void reverseMoveLight(const std::vector<uint_fast64_t> &move);
 
     /*! @brief
      * A helper function for the python connexion
      */
-    bool isHuman() {return false; }
+    bool isHuman() { return false; }
 
     /*! @brief
      * A simple get
@@ -263,6 +258,8 @@ class AlphaBeta : public ChineseCheckers{
 //temp
     int rank;
     int number_of_moves;
+
+    inline const uint64_t hashGrid();
 };
 
 #endif  // SOLVERS_ALPHABETA_INCLUDE_ALPHABETA_HPP_

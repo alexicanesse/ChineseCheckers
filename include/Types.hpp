@@ -40,11 +40,6 @@ enum MoveType { Illegal, Jump, notJump};
 */
 typedef int Player;
 
-/*! \typedef GridType
-    \brief Used to denote the grid.
-*/
-typedef std::vector<std::vector<Color>> GridType;
-
 /*! \typedef PositionType
     \brief Used to denote a position.
 */

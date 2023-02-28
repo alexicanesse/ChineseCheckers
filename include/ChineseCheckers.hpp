@@ -22,6 +22,7 @@
 #include <utility>
 #include <map>
 #include <unordered_map>
+#include <boost/unordered_map.hpp>
 /* The following pragma are used to removed depraction warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
  */
@@ -38,26 +39,28 @@
  */
 class ChineseCheckers {
  protected:
+    uint_fast64_t un_64 = static_cast<uint_fast64_t>(1);
+
     /*! Indicate which is the next player to play */
     Player who_is_to_play_ = 0;
 
     /*! A data structure containing the grid */
-    GridType grid_;
+    uint_fast64_t bitBoardWhite;
 
-    /*! The variable `position_colors_players_.at(player).at(i)` contains the position
-     *  (of type `PositionType`) of the player `player` */
-    std::vector<std::vector<PositionType>> position_colors_players_;
+    /*! A data structure containing the grid */
+    uint_fast64_t bitBoardBlack;
 
     /*! Indicates the number of times a position has been seen */
-    std::unordered_map<uint64_t , int> number_of_times_seen;
+    boost::unordered_map<uint64_t , int> number_of_times_seen;
 
     /*! Keeps the positions  of the winning zone */
-    const std::vector<std::pair<int, int>> winning_positions_ = {
-        {0, 0}, {0, 1}, {0, 2}, {0, 3}, {1, 0},
-        {1, 1}, {1, 2}, {2, 0}, {2, 1}, {3, 0}};
+    const uint_fast64_t winning_positions_white_ =
+            0b1111000011100000110000001000000000000000000000000000000000000000;
+    const uint_fast64_t winning_positions_black_ =
+            0b0000000000000000000000000000000000000001000000110000011100001111;
 
     /*! Stores the illegal positions */
-    std::unordered_map<uint32_t, bool> illegalPositions;
+    boost::unordered_map<uint32_t, bool> illegalPositions;
 
     /*! @brief
      * A member returning the type of an elementary move
@@ -71,80 +74,8 @@ class ChineseCheckers {
      * @retval notJump if the elementary move realized was not a jump.
      * @sa move(Player player, const ListOfPositionType &list_moves).
      */
-    MoveType elementaryMove(PositionType original_position,
-                            PositionType arrival_position);
-
-    /*! @brief
-     * A member used to indicate that a pawn should not be considered until further notice.
-     * @details
-     * To indicates that the pawn should currently not be considered anymore,
-     * its position is set to (-1, -1).
-     */
-    /*!
-     * @param player The player to which belongs the pawn.
-     * @param position The position of the pawn.
-     * @sa reset_pawn(Player player, PositionType position)
-     */
-    void remove_pawn(Player player, PositionType position);
-
-    /*! A member setting the position of a pawn which has been removed
-     */
-    /*!
-     * @param player The player to which belongs the pawn.
-     * @param position The position of the pawn.
-     * @sa remove_pawn(Player player, PositionType position)
-     */
-    void reset_pawn(Player player, PositionType position);
-
-    /* Functions used for the transposition tables */
-    /* FNV-1a hash function */
-    /*! @brief
-     * Adds a color to a hash according to the fnv1a scheme
-     */
-     /*!
-      * @param h The current hash
-      * @param x The value to add to the hash
-      * @return `hash(h, x)`
-      */
-    inline uint64_t fnv1aColor(uint64_t h, const Color &x);
-
-    /*! @brief
-     * Adds a color to a hash according to the fnv1a scheme
-     */
-    /*!
-     * @param h The current hash
-     * @param x The value to add to the hash
-     * @return `hash(h, x)`
-     */
-    inline uint64_t fnv1a(uint64_t h, const int &x);
-
-    /*! @brief
-     * Hashes a matrix according to the fnv1a scheme
-     */
-    /*!
-     * @param matrix The matrix to hash
-     * @param player The player who is to play
-     * @return A hash of the matrix and the next player according to the fnv1a scheme.
-     */
-    uint64_t hashMatrix(const GridType &matrix, const int &player);
-
-    /*! @brief
-     * Hashes a move according to the fnv1a scheme
-     */
-    /*!
-     * @param move The move to hash
-     * @return A hash of the move according to the fnv1a scheme.
-     */
-    uint64_t hashMove(const ListOfPositionType &move);
-
-    /*! @brief
-     * Hashes a position according to the fnv1a scheme
-     */
-    /*!
-     * @param move The position to hash
-     * @return A hash of the position according to the fnv1a scheme.
-     */
-    uint64_t hashPosition(const PositionType &move);
+    MoveType elementaryMove(const PositionType &original_position,
+                            const PositionType &arrival_position);
 
     /*!
      * @brief Cantor's pairing function
@@ -165,6 +96,25 @@ class ChineseCheckers {
      */
     bool isPositionIllegal();
 
+    std::vector<std::vector<int>> valid_lines = {{-1,  0},
+                                                 {-1,  1},
+                                                 {0 , -1},
+                                                 {0 ,  1},
+                                                 {1 , -1},
+                                                 {1 ,  0}};
+
+    std::vector<std::vector<int>> valid_lines_illegal = {{-1,  0},
+                                                         {-1,  1},
+                                                         {0 , -1},
+                                                         {0 ,  1},
+                                                         {1 , -1},
+                                                         {1 ,  0},
+                                                         {-2,  0},
+                                                         {-2,  2},
+                                                         {0 , -2},
+                                                         {0 ,  2},
+                                                         {2 , -2},
+                                                         {2 ,  0}};
  public:
     /*! @brief
      * A simple constructor
@@ -183,7 +133,7 @@ class ChineseCheckers {
      * @retval false if the move was not legal.
      * @sa elementaryMove(PositionType original_position, PositionType arrival_position).
      */
-    bool move(Player player,
+    bool move(const Player &player,
               const ListOfPositionType &list_moves);
 
     /*! @brief
@@ -196,7 +146,7 @@ class ChineseCheckers {
      * @retval draw if a draw happened.
      * @sa new_game().
      */
-    Result state_of_game();
+    const Result state_of_game();
 
     /*! @brief
      * This member execute a move without checking if the move is legal.
@@ -214,8 +164,7 @@ class ChineseCheckers {
      * @sa PositionType arrival_position)
      * @sa move(Player player, const ListOfPositionType &list_moves).
      */
-    void moveWithoutVerification(Player player,
-                                 const ListOfPositionType &list_moves);
+    void moveWithoutVerification(const std::vector<uint_fast64_t> &list_moves);
 
     /*! @brief
      * Creates a new game.
@@ -226,27 +175,6 @@ class ChineseCheckers {
      * Prints \ref grid_.
      */
     void print_grid_();
-
-    /*! @brief
-     * Returns @ref grid_.
-     */
-    /*!
-     * @return @ref grid_
-     */
-    GridType get_grid_() const;
-
-    /*! @brief
-     * Prints @ref position_colors_players_.
-     */
-    void print_position_colors_players_();
-
-    /*! @brief
-     * Returns the @ref position_colors_players_.
-     */
-    /*!
-     * @return @ref position_colors_players_
-     */
-    std::vector<std::vector<PositionType>> get_position_colors_players_() const;
 
     /*! @brief
      * Prints @ref who_is_to_play_.
@@ -267,7 +195,12 @@ class ChineseCheckers {
     /*!
      * @return @ref number_of_times_seen
      */
-    std::unordered_map<uint64_t, int> get_number_of_times_seen() const;
+    boost::unordered_map<uint64_t, int> get_number_of_times_seen() const;
+
+    uint_fast64_t get_bitBoardWhite();
+    uint_fast64_t get_bitBoardBlack();
+    boost::unordered_map<uint_fast64_t, std::pair<int, int>> uint64_to_pair_;
+    std::array<std::array<uint_fast64_t, 8>, 8> int_to_uint64_;
 
     /*! @brief
      * Hashes @ref grid_ according to the fnv1a scheme
@@ -275,7 +208,13 @@ class ChineseCheckers {
     /*!
      * @return A hash of @ref grid_
      */
-    uint64_t hashGrid();
+    inline uint64_t hashGrid();
+
+    std::unordered_map<uint_fast64_t, std::vector<uint_fast64_t>> direct_neighbours_;
+    std::unordered_map<uint_fast64_t,
+        std::vector<std::vector<std::pair<
+                                    std::pair<uint_fast64_t, uint_fast64_t>,
+                                    uint_fast64_t> > > > k_neighbours_;
 };
 
 
