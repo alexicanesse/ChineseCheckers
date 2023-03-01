@@ -106,23 +106,6 @@ AlphaBeta::AlphaBeta(const std::vector< std::vector<double> > &player_to_win_val
         ctz[i] = __builtin_ctzl(i);
     }
 
-    compMoveVect = [this](const std::vector<uint_fast64_t> &a,
-                          const std::vector<uint_fast64_t> &b){
-        double valueA = 0;
-        double valueB = 0;
-        if (maximizing_player_) {
-            return player_to_win_value_map_black_[a.back()]
-                   + player_to_win_value_map_black_[b[0]]
-                   < player_to_win_value_map_black_[b.back()]
-                     + player_to_win_value_map_black_[a[0]];
-        } else {
-            return player_to_win_value_map_white_[a.back()]
-                   + player_to_win_value_map_white_[b[0]]
-                   < player_to_win_value_map_white_[b.back()]
-                     + player_to_win_value_map_white_[a[0]];
-        }
-    };
-
     /* Indicates if there is a jump from (i, j) to (k, l) */
     for (int i = 0; i < 64; ++i)
         possible_elementary_move[un_64 << i] = std::vector<uint_fast64_t>(0);
@@ -130,7 +113,7 @@ AlphaBeta::AlphaBeta(const std::vector< std::vector<double> > &player_to_win_val
     loadOpenings();
 }
 
-void AlphaBeta::availableMoves(std::vector< std::vector<uint_fast64_t> > &result) {
+void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
     result.reserve(50);
     uint_fast64_t computed_possible_elementary_move = 0;
 
@@ -152,7 +135,7 @@ void AlphaBeta::availableMoves(std::vector< std::vector<uint_fast64_t> > &result
 
         for (const auto &neig : direct_neighbours_[pawnPosition]) {
             if (!((bitBoardWhite | bitBoardBlack) & neig))
-                result.push_back({pawnPosition, neig});
+                result.push_back(pawnPosition | neig);
         }
     }
 
@@ -209,7 +192,7 @@ void AlphaBeta::availableMoves(std::vector< std::vector<uint_fast64_t> > &result
                     queue.push(neig);
                     explored |= neig;
 
-                    result.push_back({root, neig});
+                    result.push_back(root | neig);
                 }
             }
         }
@@ -234,13 +217,13 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
 
     if(best_move_.size() == 0)*/
 
-    std::cout << std::bitset<64>(bitBoardWhite).count() << "\n";
+    //std::cout << std::bitset<64>(bitBoardWhite).count() << "\n";
 
     AlphaBetaEval(depth, -20, 20, false, true);
 
     //std::cout << AlphaBetaEval(depth, -20, 20, false, true) << "\n";
-    std::cout << uint64_to_pair_[best_move_[0]].first << " " << uint64_to_pair_[best_move_[0]].second << " " << uint64_to_pair_[best_move_.back()].first << " " << uint64_to_pair_[best_move_.back()].second << "\n";
-    return retrieveMoves(best_move_[0] | best_move_.back());
+    //std::cout << std::bitset<64>(best_move_) << "\n";
+    return retrieveMoves(best_move_);
 }
 
 const double AlphaBeta::AlphaBetaEval(const int &depth,
@@ -253,7 +236,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     }
 
     /* Sort according to the value of the move in order to increase the number of cut-offs */
-    std::vector< std::vector<uint_fast64_t> > possible_moves;
+    std::vector<uint_fast64_t> possible_moves;
 
     availableMoves(possible_moves);
     std::sort(possible_moves.begin(), possible_moves.end(), compMoveVect);
@@ -265,7 +248,6 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     //else
     //    sortDepth1Light(moves);
 
-    // possible_moves.resize(20);
     double value = maximizingPlayer ? MINUS_INFTY - 1 : PLUS_INFTY + 1;
     double buff;
 
@@ -280,7 +262,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
 
         /* Checks for an illegal position */
         if (isPositionIllegal()) {
-            reverseMoveLight(move);
+            reverseMove(move);
             updateHeuristicValueBack(move);
             continue;
         }
@@ -291,13 +273,13 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
                 if (maximizing_player_ == 0) {
                     if (keepMove) {
                         best_move_ = move;
-                        reverseMoveLight(move);
+                        reverseMove(move);
                         updateHeuristicValueBack(move);
                         return MINUS_INFTY;
                     }
                     buff = MINUS_INFTY;
                 } else {
-                    reverseMoveLight(move);
+                    reverseMove(move);
                     updateHeuristicValueBack(move);
                     return PLUS_INFTY;
                 }
@@ -307,13 +289,13 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
                 if (maximizing_player_ == 1) {
                     if (keepMove) {
                         best_move_ = move;
-                        reverseMoveLight(move);
+                        reverseMove(move);
                         updateHeuristicValueBack(move);
                         return MINUS_INFTY;
                     }
                     buff = MINUS_INFTY;
                 } else {
-                    reverseMoveLight(move);
+                    reverseMove(move);
                     updateHeuristicValueBack(move);
                     return PLUS_INFTY;
                 }
@@ -342,16 +324,16 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
                 }
                 break;
         }
-        if (! (std::bitset<64>(bitBoardWhite).count() == 10))
-            std::cout << std::bitset<64>(bitBoardWhite).count() << "|0|\n";
-        reverseMoveLight(move);
-        if (! (std::bitset<64>(bitBoardWhite).count() == 10))
-            std::cout << std::bitset<64>(bitBoardWhite).count() << "|1|\n";
+        //if (! (std::bitset<64>(bitBoardWhite).count() == 10))
+        //    std::cout << std::bitset<64>(bitBoardWhite).count() << "|0|\n";
+        reverseMove(move);
+        //if (! (std::bitset<64>(bitBoardWhite).count() == 10))
+        //    std::cout << std::bitset<64>(bitBoardWhite).count() << "|1|\n";
         updateHeuristicValueBack(move);
-        if (! (std::bitset<64>(bitBoardWhite).count() == 10)) {
-            std::cout << std::bitset<64>(bitBoardWhite).count() << "|2|\n";
-            exit(0);
-        }
+        //if (! (std::bitset<64>(bitBoardWhite).count() == 10)) {
+        //    std::cout << std::bitset<64>(bitBoardWhite).count() << "|2|\n";
+        //    exit(0);
+        //}
 
         if (maximizingPlayer) {
             alpha = std::max(alpha, buff);
@@ -397,47 +379,47 @@ double AlphaBeta::heuristicValue() {
     return result;
 }
 
-inline void AlphaBeta::updateHeuristicValue(const std::vector<uint_fast64_t> &move) {
+inline void AlphaBeta::updateHeuristicValue(const uint_fast64_t &move) {
     if (who_is_to_play_) {
         if (maximizing_player_) {
-            heuristic_value_ += player_to_win_value_map_black_[move.back()]
-                                - player_to_win_value_map_black_[move[0]];
+            heuristic_value_ += player_to_win_value_map_black_[move & ~bitBoardBlack]
+                                - player_to_win_value_map_black_[move & bitBoardBlack];
         } else {
-            heuristic_value_ += player_to_lose_value_map_black_[move[0]]
-                               - player_to_lose_value_map_black_[move.back()];
+            heuristic_value_ += player_to_lose_value_map_black_[move & bitBoardBlack]
+                               - player_to_lose_value_map_black_[move & ~bitBoardBlack];
         }
     } else {
         if (maximizing_player_) {
-            heuristic_value_ += player_to_lose_value_map_white_[move[0]]
-                                - player_to_lose_value_map_white_[move.back()];
+            heuristic_value_ += player_to_lose_value_map_white_[move & bitBoardWhite]
+                                - player_to_lose_value_map_white_[move & ~bitBoardWhite];
         } else {
-            heuristic_value_ += player_to_win_value_map_white_[move.back()]
-                                - player_to_win_value_map_white_[move[0]];
+            heuristic_value_ += player_to_win_value_map_white_[move & ~bitBoardWhite]
+                                - player_to_win_value_map_white_[move & bitBoardWhite];
         }
     }
 }
 
-inline void AlphaBeta::updateHeuristicValueBack(const std::vector<uint_fast64_t> &move) {
+inline void AlphaBeta::updateHeuristicValueBack(const uint_fast64_t &move) {
     if (who_is_to_play_) {
         if (maximizing_player_) {
-            heuristic_value_ += player_to_win_value_map_black_[move[0]]
-                                - player_to_win_value_map_black_[move.back()];
+            heuristic_value_ += player_to_win_value_map_black_[move & bitBoardBlack]
+                                - player_to_win_value_map_black_[move & ~bitBoardBlack];
         } else {
-            heuristic_value_ += player_to_lose_value_map_black_[move.back()]
-                                - player_to_lose_value_map_black_[move[0]];
+            heuristic_value_ += player_to_lose_value_map_black_[move & ~bitBoardBlack]
+                                - player_to_lose_value_map_black_[move & bitBoardBlack];
         }
     } else {
         if (maximizing_player_) {
-            heuristic_value_ += player_to_lose_value_map_white_[move.back()]
-                                - player_to_lose_value_map_white_[move[0]];
+            heuristic_value_ += player_to_lose_value_map_white_[move & ~bitBoardWhite]
+                                - player_to_lose_value_map_white_[move & bitBoardWhite];
         } else {
-            heuristic_value_ += player_to_win_value_map_white_[move[0]]
-                                - player_to_win_value_map_white_[move.back()];
+            heuristic_value_ += player_to_win_value_map_white_[move & bitBoardWhite]
+                                - player_to_win_value_map_white_[move & ~bitBoardWhite];
         }
     }
 }
 
-void AlphaBeta::reverseMoveLight(const std::vector<uint_fast64_t> &move) {
+void AlphaBeta::reverseMove(const uint_fast64_t &move) {
     // std::cout << std::bitset<64>(bitBoardWhite) << " " << who_is_to_play_ << "\n";
     // std::cout << std::bitset<64>(bitBoardBlack) << "\n";
 
@@ -448,24 +430,24 @@ void AlphaBeta::reverseMoveLight(const std::vector<uint_fast64_t> &move) {
     who_is_to_play_ ^= 1;
 
     //////////////
-    if (! (std::bitset<64>(bitBoardWhite).count() == 10))
-        std::cout << std::bitset<64>(bitBoardWhite).count() << "    |0|\n";
+    //if (! (std::bitset<64>(bitBoardWhite).count() == 10))
+    //    std::cout << std::bitset<64>(bitBoardWhite).count() << "    |0|\n";
     //////////////
 
     if (who_is_to_play_)
-        bitBoardBlack = (bitBoardBlack | move[0]) & ~move.back();
+        bitBoardBlack ^= move;
     else
-        bitBoardWhite = (bitBoardWhite | move[0]) & ~move.back();
+        bitBoardWhite ^= move;
 
     //////////////
-    if (! (std::bitset<64>(bitBoardWhite).count() == 10)) {
-        std::cout << std::bitset<64>(bitBoardWhite).count() << "    |1|\n";
-        std::cout << std::bitset<64>(move[0]) << "\n";
-        std::cout << std::bitset<64>(move[1]) << "\n";
-        std::cout << std::bitset<64>(bitBoardWhite) << "\n";
-        std::cout << std::bitset<64>(bitBoardBlack) << "\n";
-        print_grid_();
-    }
+    //if (! (std::bitset<64>(bitBoardWhite).count() == 10)) {
+    //    std::cout << std::bitset<64>(bitBoardWhite).count() << "    |1|\n";
+    //    std::cout << std::bitset<64>(move[0]) << "\n";
+    //    std::cout << std::bitset<64>(move[1]) << "\n";
+    //    std::cout << std::bitset<64>(bitBoardWhite) << "\n";
+    //    std::cout << std::bitset<64>(bitBoardBlack) << "\n";
+    //    print_grid_();
+    //}
     //////////////
 }
 

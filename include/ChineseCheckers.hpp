@@ -165,7 +165,7 @@ class ChineseCheckers {
      * @sa PositionType arrival_position)
      * @sa move(Player player, const ListOfPositionType &list_moves).
      */
-    void moveWithoutVerification(const std::vector<uint_fast64_t> &list_moves);
+    void moveWithoutVerification(const uint_fast64_t &move);
 
     /*! @brief
      * Creates a new game.

@@ -51,8 +51,8 @@ class AlphaBeta : public ChineseCheckers{
      * @return The heuristic value of the current position
      */
     double heuristicValue();
-    inline void updateHeuristicValue(const std::vector<uint_fast64_t> &move);
-    inline void updateHeuristicValueBack(const std::vector<uint_fast64_t> &move);
+    inline void updateHeuristicValue(const uint_fast64_t &move);
+    inline void updateHeuristicValueBack(const uint_fast64_t &move);
 
     /*! @brief
      * A member used to order the moves before exploring them
@@ -91,7 +91,7 @@ class AlphaBeta : public ChineseCheckers{
     Player maximizing_player_;
 
     /*! Contains the best move we found so far */
-    std::vector<uint_fast64_t> best_move_;
+    uint_fast64_t best_move_;
 
     /*! Transposition table used to store the results of previous searches */
     boost::unordered_map<uint64_t, std::pair<double, int>> transTable;
@@ -112,19 +112,19 @@ class AlphaBeta : public ChineseCheckers{
     /*! Indicates if there is a jump from (i, j) to (k, l) */
     boost::unordered_map<uint_fast64_t, std::vector<uint_fast64_t>> possible_elementary_move;
 
-    std::function<bool(const std::vector<uint_fast64_t>&, const std::vector<uint_fast64_t>&)> compMoveVect =
-            [this](const std::vector<uint_fast64_t> &a,
-                   const std::vector<uint_fast64_t> &b){
+    std::function<bool(const uint_fast64_t&, const uint_fast64_t&)> compMoveVect =
+            [this](const uint_fast64_t &a,
+                   const uint_fast64_t &b){
                 if (maximizing_player_) {
-                    return player_to_win_value_map_black_[a.back()]
-                           + player_to_win_value_map_black_[b[0]]
-                           < player_to_win_value_map_black_[b.back()]
-                             + player_to_win_value_map_black_[a[0]];
+                    return player_to_win_value_map_black_[a & ~bitBoardBlack]
+                           + player_to_win_value_map_black_[b & bitBoardBlack]
+                           < player_to_win_value_map_black_[b & ~bitBoardBlack]
+                             + player_to_win_value_map_black_[a & bitBoardBlack];
                 } else {
-                    return player_to_win_value_map_white_[a.back()]
-                           + player_to_win_value_map_white_[b[0]]
-                           < player_to_win_value_map_white_[b.back()]
-                             + player_to_win_value_map_white_[a[0]];
+                    return player_to_win_value_map_white_[a & ~bitBoardWhite]
+                           + player_to_win_value_map_white_[b & bitBoardWhite]
+                           < player_to_win_value_map_white_[b & ~bitBoardWhite]
+                             + player_to_win_value_map_white_[a & bitBoardWhite];
                 }
             };
  public:
@@ -165,7 +165,7 @@ class AlphaBeta : public ChineseCheckers{
      * @sa sortDepth1(ListOfMoves &possible_moves)
      * @return The list of available moves
      */
-    void availableMoves(std::vector< std::vector<uint_fast64_t> > &result);
+    void availableMoves(std::vector<uint_fast64_t> &result);
 
     /*! @brief
      * Gives the list of available moves
@@ -222,7 +222,7 @@ class AlphaBeta : public ChineseCheckers{
     /*!
      * @param move The move to cancel
      */
-    void reverseMoveLight(const std::vector<uint_fast64_t> &move);
+    void reverseMove(const uint_fast64_t &move);
 
     /*! @brief
      * A helper function for the python connexion

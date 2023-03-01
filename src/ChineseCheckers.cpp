@@ -233,11 +233,11 @@ bool ChineseCheckers::move(const Player &player,
 }
 
 #warning use xor
-void ChineseCheckers::moveWithoutVerification(const std::vector<uint_fast64_t> &list_moves) {
+void ChineseCheckers::moveWithoutVerification(const uint_fast64_t &move) {
     if (this->who_is_to_play_)
-        this->bitBoardBlack = (this->bitBoardBlack | list_moves.back()) & ~list_moves[0];
+        this->bitBoardBlack ^= move;
     else
-        this->bitBoardWhite = (this->bitBoardWhite | list_moves.back()) & ~list_moves[0];
+        this->bitBoardWhite ^= move;
 
     this->who_is_to_play_ ^= 1;
 
