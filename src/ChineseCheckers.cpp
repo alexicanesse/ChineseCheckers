@@ -106,6 +106,7 @@ ChineseCheckers::ChineseCheckers() {
         for (int j = 0; j < 8; ++j) {
             uint64_to_pair_[un_64 << ((i * 8) + j)] = {i, j};
             int_to_uint64_[i][j] = un_64 << ((i * 8) + j);
+            cantorPairing_[i][j] = 1 << this->cantorPairingFunction(i , j);
         }
     }
 
@@ -231,6 +232,7 @@ bool ChineseCheckers::move(const Player &player,
     return true;
 }
 
+#warning use xor
 void ChineseCheckers::moveWithoutVerification(const std::vector<uint_fast64_t> &list_moves) {
     if (this->who_is_to_play_)
         this->bitBoardBlack = (this->bitBoardBlack | list_moves.back()) & ~list_moves[0];
@@ -313,7 +315,7 @@ boost::unordered_map<uint64_t, int>
 
 /* FNV-1a hash function */
 inline uint64_t ChineseCheckers::hashGrid() {
-    return 0x100000001b3 * (0x100000001b3 * (0xcbf29ce484222325 ^ this->bitBoardWhite) ^ this->bitBoardBlack);
+    return (0x100000001b3 * (0xcbf29ce484222325 ^ this->bitBoardWhite) ^ this->bitBoardBlack);
 }
 
 int ChineseCheckers::cantorPairingFunction(const int &x, const int &y) {
@@ -346,7 +348,7 @@ bool ChineseCheckers::isPositionIllegal() {
     for (i = 0; i < 6; ++i) {
         for (j = 0; j < 6 - i; ++j) {
             if (this->bitBoardBlack & int_to_uint64_[7 - i][7 - j])
-                code |= 1 << this->cantorPairingFunction(i , j);
+                code |= cantorPairing_[i][j];
         }
     }
 
@@ -359,30 +361,30 @@ bool ChineseCheckers::isPositionIllegal() {
                      * if the location is occupied with an enemy piece,
                      * the bit is set to 1
                      */
-                    code |= 1 << this->cantorPairingFunction(i, j);
+                    code |= cantorPairing_[i][j];
                 } else if (this->bitBoardWhite & int_to_uint64_[7 - i][7 - j]) {
                     /*
                      *  if the location is occupied with an ally piece, there are two cases :
                      *  either the piece can move, therefore the bit is set to 0
                      *  or it cannot move, therefore the bit is set to 1
                      */
-                    code |= 1 << this->cantorPairingFunction(i, j);
+                    code |= cantorPairing_[i][j];
                     for (const std::vector<int> &direction : valid_lines_illegal) {
                         if (this->elementaryMove(
                                 {7 - i, 7 - j},
                                 {7 - i - direction[0], 7 - j - direction[1]})
                             != Illegal) {
                             code &= (0b111111111111111111111
-                                     ^ (1 << this->cantorPairingFunction(i, j)));
+                                     ^ cantorPairing_[i][j]);
                         }
                     }
                 }
                 /* if the location is unoccupied, the bit is set to 0 */
             }
         }
+        if (this->illegalPositions.contains(code))
+            return true;
     }
-    if (this->illegalPositions.contains(code))
-        return true;
 
 
 
@@ -394,7 +396,7 @@ bool ChineseCheckers::isPositionIllegal() {
     for (i = 0; i < 6; ++i) {
         for (j = 0; j < 6 - i; ++j) {
             if (this->bitBoardWhite & int_to_uint64_[i][j])
-                code |= 1 << this->cantorPairingFunction(i , j);
+                code |= cantorPairing_[i][j];
         }
     }
 
@@ -407,20 +409,20 @@ bool ChineseCheckers::isPositionIllegal() {
                      * if the location is occupied with an enemy piece,
                      * the bit is set to 1
                      */
-                    code |= 1 << this->cantorPairingFunction(i, j);
+                    code |= cantorPairing_[i][j];
                 } else if (this->bitBoardBlack & int_to_uint64_[i][j]) {
                     /*
                      *  if the location is occupied with an ally piece, there are two cases :
                      *  either the piece can move, therefore the bit is set to 0
                      *  or it cannot move, therefore the bit is set to 1
                      */
-                    code |= 1 << this->cantorPairingFunction(i, j);
+                    code |= cantorPairing_[i][j];
                     for (const std::vector<int> &direction : valid_lines_illegal) {
                         if (this->elementaryMove({i, j}, {i + direction[0],
                                                           j + direction[1]})
                             != Illegal) {
                             code &= (0b111111111111111111111
-                                     ^ (1 << this->cantorPairingFunction(i, j)));
+                                     ^ cantorPairing_[i][j]);
                         }
                     }
                 }
