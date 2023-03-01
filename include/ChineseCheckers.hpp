@@ -61,6 +61,7 @@ class ChineseCheckers {
 
     /*! Stores the illegal positions */
     boost::unordered_map<uint32_t, bool> illegalPositions;
+    std::array<std::array<uint32_t, 8>, 8> cantorPairing_;
 
     /*! @brief
      * A member returning the type of an elementary move
