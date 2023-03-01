@@ -115,7 +115,7 @@ class AlphaBeta : public ChineseCheckers{
     std::function<bool(const uint_fast64_t&, const uint_fast64_t&)> compMoveVect =
             [this](const uint_fast64_t &a,
                    const uint_fast64_t &b){
-                if (maximizing_player_) {
+                if (who_is_to_play_) {
                     return player_to_win_value_map_black_[a & ~bitBoardBlack]
                            + player_to_win_value_map_black_[b & bitBoardBlack]
                            < player_to_win_value_map_black_[b & ~bitBoardBlack]
