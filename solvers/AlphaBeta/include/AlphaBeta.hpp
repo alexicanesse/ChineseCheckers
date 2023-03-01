@@ -115,8 +115,6 @@ class AlphaBeta : public ChineseCheckers{
     std::function<bool(const std::vector<uint_fast64_t>&, const std::vector<uint_fast64_t>&)> compMoveVect =
             [this](const std::vector<uint_fast64_t> &a,
                    const std::vector<uint_fast64_t> &b){
-                double valueA = 0;
-                double valueB = 0;
                 if (maximizing_player_) {
                     return player_to_win_value_map_black_[a.back()]
                            + player_to_win_value_map_black_[b[0]]
@@ -167,7 +165,7 @@ class AlphaBeta : public ChineseCheckers{
      * @sa sortDepth1(ListOfMoves &possible_moves)
      * @return The list of available moves
      */
-    void availableMoves(std::vector< std::vector<uint_fast64_t> > &result, const bool &full);
+    void availableMoves(std::vector< std::vector<uint_fast64_t> > &result);
 
     /*! @brief
      * Gives the list of available moves
@@ -276,6 +274,7 @@ class AlphaBeta : public ChineseCheckers{
     int number_of_moves;
 
     inline const uint64_t hashGrid();
+    ListOfPositionType retrieveMoves(const uint_fast64_t &move);
 };
 
 #endif  // SOLVERS_ALPHABETA_INCLUDE_ALPHABETA_HPP_

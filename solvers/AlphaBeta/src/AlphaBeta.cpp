@@ -130,7 +130,7 @@ AlphaBeta::AlphaBeta(const std::vector< std::vector<double> > &player_to_win_val
     loadOpenings();
 }
 
-void AlphaBeta::availableMoves(std::vector< std::vector<uint_fast64_t> > &result, const bool &full) {
+void AlphaBeta::availableMoves(std::vector< std::vector<uint_fast64_t> > &result) {
     result.reserve(50);
     uint_fast64_t computed_possible_elementary_move = 0;
 
@@ -158,7 +158,6 @@ void AlphaBeta::availableMoves(std::vector< std::vector<uint_fast64_t> > &result
      * Each pown is a root
      */
     std::queue<uint_fast64_t> queue;
-    boost::unordered_map<uint64_t, std::vector<uint_fast64_t> > paths;
     uint_fast64_t explored = 0;
     uint_fast64_t v;
     int i_neig, j_neig, i_root, j_root;
@@ -170,10 +169,7 @@ void AlphaBeta::availableMoves(std::vector< std::vector<uint_fast64_t> > &result
 
         queue.push(root);
 
-        paths.clear();
-
-        explored = root;
-        paths[root] = {root};
+        explored = root;;
 
         std::tie(i_root, j_root) = uint64_to_pair_[root];
         while (!queue.empty()) {
@@ -209,22 +205,8 @@ void AlphaBeta::availableMoves(std::vector< std::vector<uint_fast64_t> > &result
                     queue.push(neig);
                     explored |= neig;
 
-                    if (full) {
-                        paths[neig].reserve(paths[v].size() + 1);
-                        paths[neig] = paths[v];
-                        paths[neig].push_back(neig);
-                    } else {
-                        result.push_back({root, neig});
-                    }
+                    result.push_back({root, neig});
                 }
-            }
-        }
-
-        if (full) {
-            paths.extract(root);
-            /* we add to result all the paths we found from this root */
-            for (const auto &move : paths) {
-                result.push_back(move.second);
             }
         }
     }
@@ -250,17 +232,7 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
     AlphaBetaEval(depth, -20, 20, false, true);
     //std::cout << AlphaBetaEval(depth, -20, 20, false, true) << "\n";
 
-    //print_grid_();
-
-    ListOfPositionType move;
-    int pos;
-    move.reserve(best_move_.size());
-    for (const auto &pose : best_move_) {
-        pos = ctz[pose];
-        move.push_back({pos /8, pos % 8});
-    }
-
-    return move;
+    return retrieveMoves(best_move_[0] | best_move_.back());
 }
 
 const double AlphaBeta::AlphaBetaEval(const int &depth,
@@ -274,7 +246,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     /* Sort according to the value of the move in order to increase the number of cut-offs */
     std::vector< std::vector<uint_fast64_t> > possible_moves;
 
-    availableMoves(possible_moves, keepMove);
+    availableMoves(possible_moves);
     std::sort(possible_moves.begin(), possible_moves.end(), compMoveVect);
 
     // possible_moves.resize(std::min(10, std::max(1, possible_moves.size()/(1 + (fullDepth_ - depth)))));
@@ -474,11 +446,13 @@ std::vector<std::vector<double> > AlphaBeta::get_player_to_win_value_() {
 void AlphaBeta::set_player_to_lose_value_(
         std::vector< std::vector<double> > &player_to_lose_value_) {
     player_to_lose_value_ = player_to_lose_value_;
+    transTable.clear();
 }
 
 void AlphaBeta::set_player_to_win_value_(
         std::vector< std::vector<double> > &player_to_win_value_  ) {
     player_to_win_value_ = player_to_win_value_;
+    transTable.clear();
 }
 
 void AlphaBeta::loadOpenings() {
@@ -505,5 +479,94 @@ void AlphaBeta::loadOpenings() {
 
 /* FNV-1a hash function */
 inline const uint64_t AlphaBeta::hashGrid() {
-    return 0x100000001b3 * (0x100000001b3 * (0xcbf29ce484222325 ^ bitBoardWhite) ^ bitBoardBlack);
+    return (0x100000001b3 * (0xcbf29ce484222325 ^ bitBoardWhite) ^ bitBoardBlack);
+}
+
+ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
+    uint_fast64_t computed_possible_elementary_move = 0;
+
+    for (auto &x : possible_elementary_move)
+        x.second.clear();
+
+    uint_fast64_t currentBitBoard = who_is_to_play_ ? bitBoardBlack : bitBoardWhite;
+
+    /* Check the case of notJump moves */
+    for (const auto &neig : direct_neighbours_[currentBitBoard & move]) {
+        if (neig & move)
+            return {{uint64_to_pair_[currentBitBoard & move].first, uint64_to_pair_[currentBitBoard & move].second},
+                    {uint64_to_pair_[neig                  ].first, uint64_to_pair_[neig                  ].second}};
+    }
+
+    /* Check the case of Jump moves */
+    /*
+     * Do a BFS to list all possible jumps.
+     */
+    std::queue<uint_fast64_t> queue;
+    boost::unordered_map<uint64_t, std::vector<uint_fast64_t> > paths;
+    std::vector<uint_fast64_t> result;
+    uint_fast64_t explored = 0;
+    uint_fast64_t v;
+    int i, j, i_neig, j_neig, i_root, j_root;
+
+    uint_fast64_t root = currentBitBoard & move;
+    queue.push(root);
+    explored = root;
+
+    paths[root] = {root};
+
+
+    std::tie(i_root, j_root) = uint64_to_pair_[root];
+    while (!queue.empty()) {
+        v = queue.front();
+        queue.pop();
+
+        std::tie(i, j) = uint64_to_pair_[v];
+
+        if (!(computed_possible_elementary_move & v)) {
+            for (const auto &possibleJumps : k_neighbours_[v]) {
+                for (const auto &possibleJump : possibleJumps) {
+                    /* Check if there is a pawn to jump over and if the jump is valid */
+                    if (((bitBoardWhite | bitBoardBlack) & possibleJump.first.first)
+                        && ! ((bitBoardWhite       | bitBoardBlack            )
+                              & (possibleJump.second | possibleJump.first.second))) {
+                        possible_elementary_move[v].push_back(possibleJump.first.second);
+                        break;
+                    }
+                }
+            }
+            computed_possible_elementary_move |= v;
+        }
+
+        for (uint_fast64_t neig : possible_elementary_move[v]) {
+            std::tie(i_neig, j_neig) = uint64_to_pair_[neig];
+            if (!(neig & explored)
+                /*
+                 * Checks that we are not jumping over the root
+                 * (it has moved)
+                 */
+                && !((i + i_neig) / 2 == i_root
+                     &&   (j + j_neig)/ 2 == j_root)) {
+                queue.push(neig);
+                explored |= neig;
+
+                paths[neig].reserve(paths[v].size() + 1);
+                paths[neig] = paths[v];
+                paths[neig].push_back(neig);
+            }
+        }
+
+        paths.extract(root);
+
+        /* we add to result all the paths we found from this root */
+        ListOfPositionType result;
+        for (const auto &m : paths) {
+            if (m.second[0] == root && m.second.back() & move) {
+                for (const auto &pos : m.second)
+                    result.push_back({uint64_to_pair_[pos].first, uint64_to_pair_[pos].second});
+                return result;
+            }
+        }
+    }
+
+    return {};
 }
