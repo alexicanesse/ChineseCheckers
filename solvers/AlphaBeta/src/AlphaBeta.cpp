@@ -120,11 +120,7 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
     for (auto &x : possible_elementary_move)
         x.second.clear();
 
-    uint_fast64_t currentBitBoard;
-    if(who_is_to_play_)
-        currentBitBoard = bitBoardBlack;
-    else
-        currentBitBoard = bitBoardWhite;
+    uint_fast64_t currentBitBoard = who_is_to_play_ ? bitBoardBlack : bitBoardWhite;
 
     int i, j;
     /* Check the case of notJump moves */
@@ -144,7 +140,7 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
      * Do a BFS to list all possible jumps.
      * Each pown is a root
      */
-    std::queue<uint_fast64_t> queue;
+    uint_fast64_t queue;
     uint_fast64_t explored = 0;
     uint_fast64_t v;
     int i_neig, j_neig, i_root, j_root;
@@ -154,14 +150,13 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
         if (!(root & currentBitBoard))
             continue;
 
-        queue.push(root);
-
-        explored = root;;
+        queue    = root;
+        explored = root;
 
         std::tie(i_root, j_root) = uint64_to_pair_[root];
-        while (!queue.empty()) {
-            v = queue.front();
-            queue.pop();
+        while (queue) {
+            v = queue & -queue;
+            queue ^= v;
 
             std::tie(i, j) = uint64_to_pair_[v];
 
@@ -189,7 +184,7 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
                      */
                     && !((i + i_neig) / 2 == i_root
                          &&   (j + j_neig)/ 2 == j_root)) {
-                    queue.push(neig);
+                    queue    |= neig;
                     explored |= neig;
 
                     result.push_back(root | neig);
@@ -239,7 +234,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     std::vector<uint_fast64_t> possible_moves;
 
     availableMoves(possible_moves);
-    std::sort(possible_moves.begin(), possible_moves.end(), compMoveVect);
+    if (keepMove) std::sort(possible_moves.begin(), possible_moves.end(), compMoveVect);
 
     // possible_moves.resize(std::min(10, std::max(1, possible_moves.size()/(1 + (fullDepth_ - depth)))));
 
