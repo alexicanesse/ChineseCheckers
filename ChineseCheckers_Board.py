@@ -164,10 +164,18 @@ class BoardArea(Areas):
 
         self.whoistoplay = self.playerW
         print("RAAAAH")
+    
+    def cancel_current_move(self):
+        ''' resets working data and puts the pawn back to its original position '''
+        color_playing = "black" if self.whoistoplay == self.playerB else "white"
+        init_i, init_j = self.pospioninit
+        self.__clicked_piece.move_to_case(init_i, init_j) 
+        self.__reset_working_data()
+        self.show_arrows([], color_playing)
+        self.highlight_cases([])
         
     def pawn_pressed(self,event):
         ''' run when starting to click on a pawn '''
-        assert(self.__clicked_piece == "")
         eventi, eventj = self._canv2plat(event.x, event.y)
         
         # find clicked piece
@@ -175,6 +183,8 @@ class BoardArea(Areas):
             if p.is_in_case(eventi,eventj):
                     self.__clicked_piece = p
                     break
+        else:
+            self.__clicked_piece = ""
             
         if self.__clicked_piece == "": # no piece is clicked
             return
@@ -211,14 +221,13 @@ class BoardArea(Areas):
         movablePawns = self.wp if self.whoistoplay == self.playerW else self.bp
         if self.whoistoplay.getHumanity() and self.__clicked_piece in movablePawns:
             new_i, new_j = self._canv2plat(event.x,event.y)
-            old_i, old_j = self.coup_courant[-1]
+            init_i, init_j = self.pospioninit
+            old_i, old_j = self.coup_courant[-1] if self.coup_courant else self.pospioninit
             etude_coup = self.elementaryMove(old_i, old_j, new_i, new_j)
 
-            if new_i == old_i and new_j == old_j:
-                # dropped the pawn on the same case as before
-                self.__clicked_piece.move_to_case(new_i, new_j) 
-                self.__reset_working_data()
-                self.show_arrows([], color_playing)
+            if new_i == init_i and new_j == init_j and len(self.coup_courant) >= 2:
+                # dropped the pawn on the same case as initially
+                self.cancel_current_move()
             elif etude_coup != 'illegal' and (self.coup_precedent == "" or (self.coup_precedent == "jump" and etude_coup == "jump")):
                 # wants to play a legal move
                 self.__clicked_piece.move_to_case(new_i, new_j) 
@@ -235,12 +244,14 @@ class BoardArea(Areas):
                 self.__clicked_piece.redraw()
                 if self.coup_courant == [self.pospioninit]:
                     self.coup_courant = []
+                    self.pospioninit = (-1, -1)
+                
+                
     
         else:
             # reset clicked pawn position
             i, j = self.__clicked_piece.get_board_pos()
             self.__clicked_piece.redraw()
-        self.__clicked_piece = ""
 
             
             

@@ -154,31 +154,44 @@ class Board(Tk,Areas):
         
         # "New Game" button
         self.NEW_GAME_WIDTH = control_width // 2
-        self.NEW_GAME_HEIGHT = height // 14
+        self.NEW_GAME_HEIGHT = height // 15
         self.new_game_button = ClassicButton(self.__controlArea, 
                                         self.NEW_GAME_WIDTH,
                                         self.NEW_GAME_HEIGHT,
                                         (control_width - self.NEW_GAME_WIDTH) // 2,
-                                        height // 3 - self.NEW_GAME_HEIGHT // 2,
+                                        height // 4 - self.NEW_GAME_HEIGHT // 2,
                                         "New game",
                                         "grayed",
                                         "First choose a valid\nconfiguration on the left")
         
         # "Next turn" button
         self.TURN_WIDTH = control_width // 2.2
-        self.TURN_HEIGHT = height // 14
+        self.TURN_HEIGHT = height // 15
         self.nextturn_b = ClassicButton(self.__controlArea, 
                                         self.TURN_WIDTH,
                                         self.TURN_HEIGHT,
                                         (control_width - self.TURN_WIDTH) // 2,
-                                        2 * height // 3 - self.TURN_HEIGHT // 2,
+                                        2 * height // 4 - self.TURN_HEIGHT // 2,
                                         "Next turn",
                                         "grayed",
                                         "First start a new\ngame and play a move")
         
+        # "Cancel move" button
+        self.CANCEL_WIDTH = control_width // 1.7
+        self.CANCEL_HEIGHT = height // 15
+        self.cancelmove_b = ClassicButton(self.__controlArea, 
+                                        self.CANCEL_WIDTH,
+                                        self.CANCEL_HEIGHT,
+                                        (control_width - self.CANCEL_WIDTH) // 2,
+                                        3 * height // 4 - self.CANCEL_HEIGHT // 2,
+                                        "Cancel move",
+                                        "grayed",
+                                        "First make a move\nas a human player")
+        
         # mouse events config
         self.__controlArea.tag_bind(self.nextturn_b.hitbox, "<Button-1>", self.press_NextTurn)
         self.__controlArea.tag_bind(self.new_game_button.hitbox, "<Button-1>", self.press_NewGame)
+        self.__controlArea.tag_bind(self.cancelmove_b.hitbox, "<Button-1>", self.press_CancelMove)
 
         for i in range(N_buttons):
             self.p_buttons[i].bind(i)
@@ -207,18 +220,36 @@ class Board(Tk,Areas):
         
         # Then update Next Turn button
         # it must be grayed if human has no current move
-        if self.__boardArea.whoistoplay.getHumanity() and \
+        if self.__boardArea.whoistoplay != None and \
+            self.__boardArea.whoistoplay.getHumanity() and \
             self.__boardArea.coup_courant == []:
             self.nextturn_b.set_state("grayed")
         elif self.nextturn_b.get_state() == "grayed":
             self.nextturn_b.set_state("normal")
+        
+        # Then update Cancel Move button
+        # it must be grayed if human has no current move
+        if self.__boardArea.whoistoplay != None and \
+            self.__boardArea.whoistoplay.getHumanity() and \
+            self.__boardArea.coup_courant == []:
+            self.cancelmove_b.set_state("grayed")
+        elif self.cancelmove_b.get_state() == "grayed":
+            self.cancelmove_b.set_state("normal")
+
 
 
     def press_NextTurn(self, event):
         ''' next turn '''
 
         if self.nextturn_b.get_state() != "grayed":
-            self.__boardArea.jouerIA() # TODO certainement a recoder
+            self.__boardArea.jouerIA()
+            self.nextturn_b.set_state("pressed")
+
+    def press_CancelMove(self, event):
+        ''' next turn '''
+
+        if self.cancelmove_b.get_state() != "grayed":
+            self.__boardArea.cancel_current_move()
             self.nextturn_b.set_state("pressed")
 
     def game_is_over(self,type_of_end : int):#triggered when game is over
@@ -279,8 +310,9 @@ class Board(Tk,Areas):
             self.__parametersArea.moveto(self.deco_elts[2], 2 * x + 2 * self.ITEM_WIDTH + self.DECO_WIDTH, y) 
 
             # fix buttons positions
-            self.new_game_button.moveto((control_width - self.NEW_GAME_WIDTH) // 2, event.height // 3 - self.NEW_GAME_HEIGHT // 2) 
-            self.nextturn_b.moveto((control_width - self.TURN_WIDTH) // 2, 2 * event.height // 3 - self.TURN_HEIGHT // 2)
+            self.new_game_button.moveto((control_width - self.NEW_GAME_WIDTH) // 2, event.height // 4 - self.NEW_GAME_HEIGHT // 2) 
+            self.nextturn_b.moveto((control_width - self.TURN_WIDTH) // 2, 2 * event.height // 4 - self.TURN_HEIGHT // 2)
+            self.cancelmove_b.moveto((control_width - self.CANCEL_WIDTH) // 2, 3 * event.height // 4 - self.NEW_GAME_HEIGHT // 2) 
                                                  
             self.__parametersArea.update_idletasks()
             self.__controlArea.update_idletasks()
