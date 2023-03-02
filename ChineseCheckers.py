@@ -27,7 +27,7 @@ class Board(Tk,Areas):
         # new window that shows weights
         # when disabling then enabling "show arrows" checkbox, show arrows that were previously shown before disabling
         # print current state : who VS who, whose turn
-        # cancel current move as human
+        # [DONE] button to cancel current move as human
         # [DONE] fix classicbuttons colors when pressed
         # [DONE] fix a bug where cancelling a move (human side) doesn't gray out the "Next Turn" button
         # [DONE] gray buttons when "new game" hasn't been pressed at all

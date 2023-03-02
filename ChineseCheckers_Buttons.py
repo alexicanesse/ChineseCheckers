@@ -109,7 +109,7 @@ class ClassicButton(Areas):
 
 class Checkboxes(Areas):
     # for the parameter checkboxes on the left
-    def __init__(self, parent : Canvas, width : int, height : int, x : int, y : int, text, board, state = "off"):
+    def __init__(self, parent : Canvas, width : int, height : int, x : int, y : int, text, board : Canvas, state = "off"):
         assert(state[0] != "h") # a button is not highlighted by default
         w = height / 14
         self.parent = parent
@@ -126,6 +126,9 @@ class Checkboxes(Areas):
         self.height = height
         self.board = board
         self.cross_offset = int(self.parent.coords(self.cross)[0] - x) - w // 2
+
+        self.previous_arrows_white = []
+        self.previous_arrows_black = []
         
     
     def create_cross(self, canvas : Canvas, x : int, y : int, side : int, w : int, color):
@@ -160,12 +163,33 @@ class Checkboxes(Areas):
         self.set_state("hoff" if old_state == "hon" else "hon")
         if i == 0: # show white arrows button
             self.board.set_parameter("show_white_ar", not self.board.show_white_ar)
-            if not self.board.show_white_ar:
+            
+            if not self.board.show_white_ar and self.board.arrows_white:
+
+                # reset previously saved arrows
+                self.previous_arrows_white = []
+                self.previous_arrows_white.append(self.board.arrows_white[0][1])
+                self.previous_arrows_white.append(self.board.arrows_white[0][2])
+                for e in self.board.arrows_white[1:]: # save existing arrows
+                    self.previous_arrows_white.append(e[2])
                 self.board.show_arrows([], "white") # removes existing arrows
+            else:
+
+                self.board.show_arrows(self.previous_arrows_white, "white")
         elif i == 1: # show black arrows button
             self.board.set_parameter("show_black_ar", not self.board.show_black_ar)
             if not self.board.show_black_ar:
+                
+                # reset previously saved arrows
+                self.previous_arrows_black = []
+                self.previous_arrows_black.append(self.board.arrows_black[0][1])
+                self.previous_arrows_black.append(self.board.arrows_black[0][2])
+                for e in self.board.arrows_black[1:]: # save existing arrows
+                    self.previous_arrows_black.append(e[2])
                 self.board.show_arrows([], "black") # removes existing arrows
+            else:
+
+                self.board.show_arrows(self.previous_arrows_black, "black")
         elif i == 2: # show moves button
             self.board.set_parameter("show_moves", not self.board.show_moves)
             if not self.board.show_moves:

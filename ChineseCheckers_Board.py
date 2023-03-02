@@ -355,11 +355,11 @@ class BoardArea(Areas):
         # deletes existing arrows
         if color == 'white':
             for arrow in self.arrows_white:
-                self.delete(arrow)
+                self.delete(arrow[0])
             self.arrows_white = []
         else:
             for arrow in self.arrows_black:
-                self.delete(arrow)
+                self.delete(arrow[0 ])
             self.arrows_black = []
         
         if(len(l_moves) <= 1):
@@ -386,23 +386,27 @@ class BoardArea(Areas):
                 new_y -= self.case_radius
 
             if color == 'white':  
-                self.arrows_white.append(self.create_line(x, 
+                self.arrows_white.append([self.create_line(x, 
                                                   y, 
                                                   new_x, 
                                                   new_y, 
                                                   arrow=LAST, 
                                                   arrowshape='15 15 8', # length, width, arc
                                                   fill=self.get_color("white arrows"),
-                                                  width=8))
+                                                  width=8),
+                                          (i, j),
+                                          (new_i, new_j)])
             else:
-                self.arrows_black.append(self.create_line(x, 
+                self.arrows_black.append([self.create_line(x, 
                                                   y, 
                                                   new_x, 
                                                   new_y, 
                                                   arrow=LAST, 
-                                                  arrowshape='15 20 8',
+                                                  arrowshape='15 15 8',
                                                   fill=self.get_color("black arrows"),
-                                                  width=8))
+                                                  width=8),
+                                          (i, j),
+                                          (new_i, new_j)])
             last = new
     
     def on_resize(self, event):
