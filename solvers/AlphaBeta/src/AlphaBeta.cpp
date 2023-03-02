@@ -215,12 +215,7 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
 
     if(best_move_.size() == 0)*/
 
-    //std::cout << std::bitset<64>(bitBoardWhite).count() << "\n";
-
     AlphaBetaEval(depth, -20, 20, false, true);
-
-    //std::cout << AlphaBetaEval(depth, -20, 20, false, true) << "\n";
-    //std::cout << std::bitset<64>(best_move_) << "\n";
     return retrieveMoves(best_move_);
 }
 
@@ -322,16 +317,9 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
                 }
                 break;
         }
-        //if (! (std::bitset<64>(bitBoardWhite).count() == 10))
-        //    std::cout << std::bitset<64>(bitBoardWhite).count() << "|0|\n";
+
         reverseMove(move);
-        //if (! (std::bitset<64>(bitBoardWhite).count() == 10))
-        //    std::cout << std::bitset<64>(bitBoardWhite).count() << "|1|\n";
         updateHeuristicValueBack(move);
-        //if (! (std::bitset<64>(bitBoardWhite).count() == 10)) {
-        //    std::cout << std::bitset<64>(bitBoardWhite).count() << "|2|\n";
-        //    exit(0);
-        //}
 
         if (maximizingPlayer) {
             alpha = std::max(alpha, buff);
@@ -418,35 +406,16 @@ inline void AlphaBeta::updateHeuristicValueBack(const uint_fast64_t &move) {
 }
 
 void AlphaBeta::reverseMove(const uint_fast64_t &move) {
-    // std::cout << std::bitset<64>(bitBoardWhite) << " " << who_is_to_play_ << "\n";
-    // std::cout << std::bitset<64>(bitBoardBlack) << "\n";
-
     uint64_t hash = hashGrid();
     if(number_of_times_seen.contains(hash))
         --number_of_times_seen[hash];
 
     who_is_to_play_ ^= 1;
 
-    //////////////
-    //if (! (std::bitset<64>(bitBoardWhite).count() == 10))
-    //    std::cout << std::bitset<64>(bitBoardWhite).count() << "    |0|\n";
-    //////////////
-
     if (who_is_to_play_)
         bitBoardBlack ^= move;
     else
         bitBoardWhite ^= move;
-
-    //////////////
-    //if (! (std::bitset<64>(bitBoardWhite).count() == 10)) {
-    //    std::cout << std::bitset<64>(bitBoardWhite).count() << "    |1|\n";
-    //    std::cout << std::bitset<64>(move[0]) << "\n";
-    //    std::cout << std::bitset<64>(move[1]) << "\n";
-    //    std::cout << std::bitset<64>(bitBoardWhite) << "\n";
-    //    std::cout << std::bitset<64>(bitBoardBlack) << "\n";
-    //    print_grid_();
-    //}
-    //////////////
 }
 
 Player AlphaBeta::get_maximizing_player_() const {
@@ -578,7 +547,6 @@ ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
         /* we add to result all the paths we found from this root */
         ListOfPositionType result;
         for (const auto &m : paths) {
-            //std::cout << uint64_to_pair_[m.second[0]].first << " " << uint64_to_pair_[m.second[0]].second << " " << uint64_to_pair_[m.second[1]].first << " " << uint64_to_pair_[m.second[1]].second << "\n";
             if (m.second[0] == root && m.second.back() & move) {
                 for (const auto &pos : m.second)
                     result.push_back({uint64_to_pair_[pos].first, uint64_to_pair_[pos].second});
