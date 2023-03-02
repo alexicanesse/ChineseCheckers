@@ -123,19 +123,6 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
     uint_fast64_t currentBitBoard = who_is_to_play_ ? bitBoardBlack : bitBoardWhite;
 
     int i, j;
-    /* Check the case of notJump moves */
-    uint_fast64_t pawnPosition, pawnPositionMask = currentBitBoard;
-    for (pawnPosition = pawnPositionMask & -pawnPositionMask;
-                        pawnPositionMask & -pawnPositionMask;
-         pawnPosition = pawnPositionMask & -pawnPositionMask) {
-        pawnPositionMask ^= pawnPosition;
-
-        for (const auto &neig : direct_neighbours_[pawnPosition]) {
-            if (!((bitBoardWhite | bitBoardBlack) & neig))
-                result.push_back(pawnPosition | neig);
-        }
-    }
-
     /* Check the case of Jump moves */
     /*
      * Do a BFS to list all possible jumps.
@@ -147,9 +134,9 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
     int i_neig, j_neig, i_root, j_root;
     /* When another root is chosen, the queue is already empty */
     uint_fast64_t root;
-    pawnPositionMask = currentBitBoard;
+    uint_fast64_t pawnPositionMask = currentBitBoard;
     for (root = pawnPositionMask & -pawnPositionMask;
-                pawnPositionMask & -pawnPositionMask;
+         pawnPositionMask & -pawnPositionMask;
          root = pawnPositionMask & -pawnPositionMask) {
         pawnPositionMask ^= root;
 
@@ -169,7 +156,7 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
                         /* Check if there is a pawn to jump over and if the jump is valid */
                         if (((bitBoardWhite | bitBoardBlack) & possibleJump.first.first)
                             && ! ((bitBoardWhite       | bitBoardBlack            )
-                                & (possibleJump.second | possibleJump.first.second))) {
+                                  & (possibleJump.second | possibleJump.first.second))) {
                             possible_elementary_move[v].push_back(possibleJump.first.second);
                             break;
                         }
@@ -195,6 +182,20 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
             }
         }
     }
+
+    /* Check the case of notJump moves */
+    uint_fast64_t pawnPosition;
+    pawnPositionMask = currentBitBoard;
+    for (pawnPosition = pawnPositionMask & -pawnPositionMask;
+                        pawnPositionMask & -pawnPositionMask;
+         pawnPosition = pawnPositionMask & -pawnPositionMask) {
+        pawnPositionMask ^= pawnPosition;
+
+        for (const auto &neig : direct_neighbours_[pawnPosition]) {
+            if (!((bitBoardWhite | bitBoardBlack) & neig))
+                result.push_back(pawnPosition | neig);
+        }
+    }
 }
 
 ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, const double &beta) {
@@ -206,16 +207,17 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
         //return opening[hashGrid()];
 
     /* Aspiration window */
-    /*best_move_.clear();
-    AlphaBetaEval(depth,
-                  -20,
-                  heuristic_value_,
-                  false,
-                  true);
-
-    if(best_move_.size() == 0)*/
-
-    AlphaBetaEval(depth, -20, 20, false, true);
+    best_move_ = 0;
+    double heur_beta_ = heuristic_value_ * .8;
+    while(!best_move_) {
+        transTable.clear();
+        AlphaBetaEval(depth,
+                      -20,
+                      heur_beta_,
+                      false,
+                      true);
+        heur_beta_ *= 1.1;
+    }
     return retrieveMoves(best_move_);
 }
 
