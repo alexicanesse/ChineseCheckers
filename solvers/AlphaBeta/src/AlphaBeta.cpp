@@ -124,10 +124,11 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
 
     int i, j;
     /* Check the case of notJump moves */
-    for (uint_fast64_t pawnPosition = un_64; pawnPosition; pawnPosition <<= 1) {
-        /* Check if there is a pawn */
-        if (!(pawnPosition & currentBitBoard))
-            continue;
+    uint_fast64_t pawnPosition, pawnPositionMask = currentBitBoard;
+    for (pawnPosition = pawnPositionMask & -pawnPositionMask;
+                        pawnPositionMask & -pawnPositionMask;
+         pawnPosition = pawnPositionMask & -pawnPositionMask) {
+        pawnPositionMask ^= pawnPosition;
 
         for (const auto &neig : direct_neighbours_[pawnPosition]) {
             if (!((bitBoardWhite | bitBoardBlack) & neig))
@@ -145,10 +146,12 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
     uint_fast64_t v;
     int i_neig, j_neig, i_root, j_root;
     /* When another root is chosen, the queue is already empty */
-    for (uint_fast64_t root = un_64; root; root <<= 1) {
-        /* Check if there is a pawn */
-        if (!(root & currentBitBoard))
-            continue;
+    uint_fast64_t root;
+    pawnPositionMask = currentBitBoard;
+    for (root = pawnPositionMask & -pawnPositionMask;
+                pawnPositionMask & -pawnPositionMask;
+         root = pawnPositionMask & -pawnPositionMask) {
+        pawnPositionMask ^= root;
 
         queue    = root;
         explored = root;
