@@ -127,6 +127,37 @@ class BoardArea(Areas):
         # list of all pawns
         self.allPawns = self.bp + self.wp
 
+        self.previous_arrows_white = []
+        self.previous_arrows_black = []
+
+
+
+    def reset_saved_arrows(self, color):
+        ''' reset previously saved arrows '''
+        if color == "black":
+            self.previous_arrows_black = []
+        elif color == "white":
+            self.previous_arrows_white = []
+        else:
+            print(f"unknown color {color}")
+    
+    def save_arrows(self, color):
+        ''' save drawn arrows to a 'previous_arrows' list '''
+
+        if color == "white":
+
+            self.previous_arrows_white.append(self.arrows_white[0][1])
+            self.previous_arrows_white.append(self.arrows_white[0][2])
+            for e in self.arrows_white[1:]: # save existing arrows
+                self.previous_arrows_white.append(e[2])
+        elif color == "black":
+            self.previous_arrows_black.append(self.arrows_black[0][1])
+            self.previous_arrows_black.append(self.arrows_black[0][2])
+            for e in self.arrows_black[1:]: # save existing arrows
+                self.previous_arrows_black.append(e[2])
+        else:
+            print(f"unknown color {color}")
+
 
     def reset(self,playerW : Player,playerB : Player):
         self.playerW = playerW
@@ -431,9 +462,11 @@ class BoardArea(Areas):
         return self.joueurajouer
 
     def jouerIA(self):
+        
         if not self.game_is_on:
             return
         intwhoistoplay = 0 if self.whoistoplay == self.playerW else 1
+
         if self.whoistoplay.getHumanity():# A human is playing
             self.joueurajouer = self.board.move(intwhoistoplay,self.coup_courant)
             print( "Player White" if intwhoistoplay == 0 else"PLayer Black",self.joueurajouer,self.coup_courant)
@@ -474,6 +507,10 @@ class BoardArea(Areas):
         for case in self.hc:
             self.delete(case)
         self.hc = []
+        if intwhoistoplay == 0:
+            self.reset_saved_arrows("white") # reset saved white arrows
+        else:
+            self.reset_saved_arrows("black") # reset saved black arrows
         
             
     def possible_moves(self,p : list,pospions):

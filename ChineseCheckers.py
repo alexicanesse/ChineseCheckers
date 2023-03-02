@@ -25,7 +25,7 @@ class Board(Tk,Areas):
         # [DONE] allow user to specify depth for AI
         
         # new window that shows weights
-        # when disabling then enabling "show arrows" checkbox, show arrows that were previously shown before disabling
+        # [DONE] when disabling then enabling "show arrows" checkbox, show arrows that were previously shown before disabling
         # print current state : who VS who, whose turn
         # [DONE] button to cancel current move as human
         # [DONE] fix classicbuttons colors when pressed
