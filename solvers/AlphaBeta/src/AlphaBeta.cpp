@@ -236,7 +236,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     availableMoves(possible_moves);
     if (keepMove) std::sort(possible_moves.begin(), possible_moves.end(), compMoveVect);
 
-    // possible_moves.resize(std::min(10, std::max(1, possible_moves.size()/(1 + (fullDepth_ - depth)))));
+    //possible_moves.resize(std::min(10UL, possible_moves.size()));
 
     //if (0 && keepMove)
     //    tensorflowOrderMoves(possible_moves);
