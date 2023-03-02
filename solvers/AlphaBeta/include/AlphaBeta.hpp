@@ -275,6 +275,7 @@ class AlphaBeta : public ChineseCheckers{
 
     inline const uint64_t hashGrid();
     ListOfPositionType retrieveMoves(const uint_fast64_t &move);
+    std::array<bool, 2> won_ = {false, false};
 };
 
 #endif  // SOLVERS_ALPHABETA_INCLUDE_ALPHABETA_HPP_

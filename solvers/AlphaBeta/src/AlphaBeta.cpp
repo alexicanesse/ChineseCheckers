@@ -14,7 +14,7 @@
 
 #define PLUS_INFTY (20)
 #define MINUS_INFTY (-20)
-#define DRAW_VALUE (0);
+#define DRAW_VALUE (10);
 
 
 /* AlphaBeta.hpp */
@@ -206,18 +206,34 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
     //if (opening.contains(hashGrid()))
         //return opening[hashGrid()];
 
-    /* Aspiration window */
+    transTable.clear();
+
     best_move_ = 0;
-    double heur_beta_ = heuristic_value_ * .8;
-    while(!best_move_) {
-        transTable.clear();
-        AlphaBetaEval(depth,
-                      -20,
-                      heur_beta_,
+
+    int d = 1;
+    do {
+        if (AlphaBetaEval(1,
+                      MINUS_INFTY,
+                      MINUS_INFTY,
                       false,
-                      true);
-        heur_beta_ *= 1.1;
+                      true) == MINUS_INFTY)
+            won_[maximizing_player_] = true;
+        d += 2;
+    }  while (won_[maximizing_player_] && (d <= depth + 2));
+
+    double val = AlphaBetaEval(depth,
+                               MINUS_INFTY,
+                               PLUS_INFTY,
+                               false,
+                               true);
+
+    std::cout << val << "\n";
+    if (!won_[maximizing_player_]
+        && (val == MINUS_INFTY)) {
+            won_[maximizing_player_] = true;
     }
+
+
     return retrieveMoves(best_move_);
 }
 
@@ -226,16 +242,40 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
                              double beta,
                              const bool &maximizingPlayer,
                              const bool &keepMove) {
-    if (depth == 0) {
-        return heuristic_value_;
+#warning improve this check with zox
+#warning use who_is_to_play to skip one check
+    /* Check if the current node is a terminating node */
+    uint_fast64_t hash = hashGrid();
+    if ((this->bitBoardWhite & winning_positions_white_) /* Did white win ? */
+        && !(((this->bitBoardWhite | this->bitBoardBlack) & winning_positions_white_)
+             ^ winning_positions_white_)) {
+        return maximizing_player_ ? PLUS_INFTY : MINUS_INFTY;
+    } else if ((this->bitBoardBlack & winning_positions_black_) /* Did white win ? */
+         && !(((this->bitBoardWhite | this->bitBoardBlack) & winning_positions_black_)
+                   ^ winning_positions_black_)) {
+        return maximizing_player_ ? MINUS_INFTY : PLUS_INFTY;
+    } else if (number_of_times_seen[hash] == MAX_NUMBER_OF_CYCLES_FOR_DRAW_) { /* Is there a draw ? */
+        return DRAW_VALUE;
+    } else { /* the game is not over */
+        if (depth == 0) {
+            return heuristic_value_;
+        } else if (!keepMove) { /* Use a transposition table to boost performances */
+            //it = transTable.find(hash);
+            if (0 && it != transTable.end() && it->second.second == depth) {
+                /* retrieve the value from the transposition table */
+                return it->second.first;
+            }
+        }
     }
 
-    /* Sort according to the value of the move in order to increase the number of cut-offs */
+    /* Retrieve the possibles moves */
     std::vector<uint_fast64_t> possible_moves;
-
     availableMoves(possible_moves);
+
+    /* Sort according to the value of the move in order to increase the number of cut-offs */
     if (keepMove) std::sort(possible_moves.begin(), possible_moves.end(), compMoveVect);
 
+    /* We do not consider all moves in order to have a speed up */
     //possible_moves.resize(std::min(10UL, possible_moves.size()));
 
     //if (0 && keepMove)
@@ -262,88 +302,32 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
             continue;
         }
 
-        /* Check if the current node is a terminating node */
-        switch (state_of_game()) {
-            case WhiteWon:
-                if (maximizing_player_ == 0) {
-                    if (keepMove) {
-                        best_move_ = move;
-                        reverseMove(move);
-                        updateHeuristicValueBack(move);
-                        return MINUS_INFTY;
-                    }
-                    buff = MINUS_INFTY;
-                } else {
-                    reverseMove(move);
-                    updateHeuristicValueBack(move);
-                    return PLUS_INFTY;
-                }
-                break;
-
-            case BlackWon:
-                if (maximizing_player_ == 1) {
-                    if (keepMove) {
-                        best_move_ = move;
-                        reverseMove(move);
-                        updateHeuristicValueBack(move);
-                        return MINUS_INFTY;
-                    }
-                    buff = MINUS_INFTY;
-                } else {
-                    reverseMove(move);
-                    updateHeuristicValueBack(move);
-                    return PLUS_INFTY;
-                }
-                break;
-
-            case Draw:
-                buff = 10;
-                break;
-
-            default:
-                /* the game is not over */
-                if (depth == 1) {
-                    buff = heuristic_value_;
-                } else {
-                    it = transTable.find(hashGrid());
-                    if (it != transTable.end() && it->second.second >= depth - 1) {
-                        /* retrieve the value from the transposition table */
-                        buff = it->second.first;
-                    } else {
-                        buff = AlphaBetaEval(depth - 1,
-                                             alpha,
-                                             beta,
-                                             !maximizingPlayer,
-                                             false);
-                    }
-                }
-                break;
-        }
+        buff = AlphaBetaEval(depth - 1,
+                             alpha,
+                             beta,
+                             !maximizingPlayer,
+                             false);
 
         reverseMove(move);
         updateHeuristicValueBack(move);
 
-        if (maximizingPlayer) {
+        if (maximizingPlayer && buff >= value) {
             alpha = std::max(alpha, buff);
-            if (buff > value) {
-                value = buff;
-                if (value >= beta)
-                    break; /* beta cutoff */
-            }
-        } else {
+            value = buff;
+            if (value >= beta)
+                break; /* beta cutoff */
+        } else if (buff <= value) {
             beta = std::min(beta, buff);
-            if (buff < value) {
-                value = buff;
-                if (keepMove) best_move_ = move;
-                // if (keepMove) rank = r;
-                if (value <= alpha)
-                    break; /* alpha cutoff */
-            }
+            value = buff;
+            if (keepMove) best_move_ = move;
+            // if (keepMove) rank = r;
+            if (value <= alpha)
+                break; /* alpha cutoff */
         }
     }
 
     /* store the value in the transposition table */
-    transTable[hashGrid()] = {value, depth};
+    transTable[hash] = {value, depth};
 
     /* return value */
     return value;

@@ -315,7 +315,7 @@ boost::unordered_map<uint64_t, int>
 
 /* FNV-1a hash function */
 inline uint64_t ChineseCheckers::hashGrid() {
-    return (0x100000001b3 * (0xcbf29ce484222325 ^ this->bitBoardWhite) ^ this->bitBoardBlack);
+    return (0x100000001b3 * (0xcbf29ce484222325 ^ bitBoardWhite) ^ bitBoardBlack);
 }
 
 int ChineseCheckers::cantorPairingFunction(const int &x, const int &y) {
