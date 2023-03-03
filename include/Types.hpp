@@ -20,6 +20,24 @@
 /* The number of time a grid state can be seen before settling for a draw */
 #define MAX_NUMBER_OF_CYCLES_FOR_DRAW_ 3
 
+struct bitBoards_s {
+    uint_fast64_t White;
+    uint_fast64_t Black;
+};
+typedef struct bitBoards_s bitBoards_t;
+
+struct bitBoardsHasher {
+    std::size_t operator()(const bitBoards_t& b) const {
+        return boost::hash<uint_fast64_t>{}(b.White) ^ (std::hash<uint_fast64_t>{}(b.Black) << 1);
+    }
+};
+
+struct bitBoardsEqual {
+    bool operator()(const bitBoards_t& b1, const bitBoards_t& b2) const {
+        return (b1.White == b2.White) && (b1.Black == b2.Black);
+    }
+};
+
 /*! \enum Color
     \brief Used to denote the colors.
 */
