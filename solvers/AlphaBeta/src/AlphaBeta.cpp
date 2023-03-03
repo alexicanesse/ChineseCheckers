@@ -239,19 +239,21 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
                              double beta,
                              const bool &maximizingPlayer,
                              const bool &keepMove) {
-#warning improve this check with zox
-#warning use who_is_to_play to skip one check
     /* Check if the current node is a terminating node */
-    uint_fast64_t hash = hashGrid();
-    if ((bitBoardWhite & winning_positions_white_) /* Did white win ? */
-        && ((bitBoardWhite | bitBoardBlack) & winning_positions_white_)
-                == winning_positions_white_) {
+    if (who_is_to_play_
+                && (bitBoardWhite & winning_positions_white_) /* Did white win ? */
+                && ((bitBoardWhite | bitBoardBlack) & winning_positions_white_)
+                    == winning_positions_white_) {
         return maximizing_player_ ? PLUS_INFTY : MINUS_INFTY;
-    } else if ((bitBoardBlack & winning_positions_black_) /* Did white win ? */
-         && ((bitBoardWhite | bitBoardBlack) & winning_positions_black_)
-                == winning_positions_black_) {
+    } else if (!who_is_to_play_
+                && (bitBoardBlack & winning_positions_black_) /* Did white win ? */
+                && ((bitBoardWhite | bitBoardBlack) & winning_positions_black_)
+                        == winning_positions_black_) {
         return maximizing_player_ ? MINUS_INFTY : PLUS_INFTY;
-    } else if (number_of_times_seen[hash] == MAX_NUMBER_OF_CYCLES_FOR_DRAW_) { /* Is there a draw ? */
+    }
+
+    uint_fast64_t hash = hashGrid();
+    if (number_of_times_seen[hash] == MAX_NUMBER_OF_CYCLES_FOR_DRAW_) { /* Is there a draw ? */
         return DRAW_VALUE;
     } else { /* the game is not over */
         if (depth == 0) {
