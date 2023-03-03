@@ -57,7 +57,7 @@ MoveType ChineseCheckers::elementaryMove(const PositionType &original_position,
      * Whatever happens, if the arrival_position is already occupied,
      * then the move is not valid
      */
-    if ((this->bit_boards_.White | this->bit_boards_.Black) & int_to_uint64_[arrival_position[0]][arrival_position[1]])
+    if ((bit_boards_.White | bit_boards_.Black) & int_to_uint64_[arrival_position[0]][arrival_position[1]])
         return Illegal;
 
     int a = original_position[0];
@@ -83,18 +83,18 @@ MoveType ChineseCheckers::elementaryMove(const PositionType &original_position,
         mid = direction[1]*(d - b)/2;
 
     /* Check if there is a pawn to jump over */
-    if (!((this->bit_boards_.White | this->bit_boards_.Black) &
+    if (!((bit_boards_.White | bit_boards_.Black) &
             int_to_uint64_[a + direction[0]*mid][b + direction[1]*mid])) {
         return Illegal;
     }
 
     /* Check that there aren't any pawns in the way */
     for (int k = 1; k < mid; ++k) {
-        if ((this->bit_boards_.White | this->bit_boards_.Black) &
+        if ((bit_boards_.White | bit_boards_.Black) &
             int_to_uint64_[a + direction[0]*k][b + direction[1]*k])
             return Illegal;
 
-        if ((this->bit_boards_.White | this->bit_boards_.Black) &
+        if ((bit_boards_.White | bit_boards_.Black) &
             int_to_uint64_[c - direction[0]*k][d - direction[1]*k])
             return Illegal;
     }
@@ -104,15 +104,15 @@ MoveType ChineseCheckers::elementaryMove(const PositionType &original_position,
 ChineseCheckers::ChineseCheckers() {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
-            uint64_to_pair_[un_64 << ((i * 8) + j)] = {i, j};
-            int_to_uint64_[i][j] = un_64 << ((i * 8) + j);
-            cantorPairing_[i][j] = 1 << this->cantorPairingFunction(i , j);
+            uint64_to_pair_[un_64_ << ((i * 8) + j)] = {i, j};
+            int_to_uint64_[i][j] = un_64_ << ((i * 8) + j);
+            cantorPairing_[i][j] = 1 << cantorPairingFunction(i , j);
         }
     }
 
     /* Compute neighbouring positions */
     int i, j;
-    for (uint_fast64_t pawnPosition = un_64; pawnPosition; pawnPosition <<= 1) {
+    for (uint_fast64_t pawnPosition = un_64_; pawnPosition; pawnPosition <<= 1) {
         // direct_neighbours_[pawnPosition] = std::vector<uint_fast64_t>(0);
         std::tie(i, j) = uint64_to_pair_[pawnPosition];
         for(const std::vector<int> &direction : valid_lines) {
@@ -128,7 +128,7 @@ ChineseCheckers::ChineseCheckers() {
     }
 
     int s = 0;
-    for (uint_fast64_t pawnPosition = un_64; pawnPosition; pawnPosition <<= 1) {
+    for (uint_fast64_t pawnPosition = un_64_; pawnPosition; pawnPosition <<= 1) {
         std::tie(i, j) = uint64_to_pair_[pawnPosition];
         for (const std::vector<int> &direction: valid_lines) {
             std::vector<std::pair<std::pair<uint_fast64_t, uint_fast64_t>, uint_fast64_t > > lines_dir;
@@ -158,15 +158,15 @@ ChineseCheckers::ChineseCheckers() {
         }
     }
 
-    this->new_game();
-    this->loadIllegalPositions();
+    new_game();
+    loadIllegalPositions();
 }
 
 bool ChineseCheckers::move(const Player &player,
                            const ListOfPositionType &list_moves) {
     /* Check if the game is over */
-    if (this->state_of_game() != NotFinished) {
-        std::cout << "Game is over! " << this->state_of_game() << "\n";
+    if (state_of_game() != NotFinished) {
+        std::cout << "Game is over! " << state_of_game() << "\n";
         return false;
     }
 
@@ -175,11 +175,11 @@ bool ChineseCheckers::move(const Player &player,
         return false;
 
     /* Check that the right player is playing */
-    if (((this->bit_boards_.White & (un_64 << ((list_moves[0][0] * 8) + list_moves[0][1]))) && player == 1)
-        || ((this->bit_boards_.Black & (un_64 << ((list_moves[0][0] * 8) + list_moves[0][1]))) && player == 0))
+    if (((bit_boards_.White & (un_64_ << ((list_moves[0][0] * 8) + list_moves[0][1]))) && player == 1)
+        || ((bit_boards_.Black & (un_64_ << ((list_moves[0][0] * 8) + list_moves[0][1]))) && player == 0))
         return false;
 
-    if (player ^ this->who_is_to_play_)
+    if (player ^ who_is_to_play_)
         return false;
 
     /* Check that every moves are legals */
@@ -200,54 +200,54 @@ bool ChineseCheckers::move(const Player &player,
     }
 
     /* Applying the move */
-    if (this->who_is_to_play_) {
-        this->bit_boards_.Black |= int_to_uint64_[list_moves[n-1][0]][list_moves[n-1][1]];
-        this->bit_boards_.Black &= ~int_to_uint64_[list_moves[0][0]][list_moves[0][1]];
+    if (who_is_to_play_) {
+        bit_boards_.Black |= int_to_uint64_[list_moves[n-1][0]][list_moves[n-1][1]];
+        bit_boards_.Black &= ~int_to_uint64_[list_moves[0][0]][list_moves[0][1]];
     } else {
-        this->bit_boards_.White |=  int_to_uint64_[list_moves[n-1][0]][list_moves[n-1][1]];
-        this->bit_boards_.White &= ~int_to_uint64_[list_moves[0][0]][list_moves[0][1]];
+        bit_boards_.White |=  int_to_uint64_[list_moves[n-1][0]][list_moves[n-1][1]];
+        bit_boards_.White &= ~int_to_uint64_[list_moves[0][0]][list_moves[0][1]];
     }
 
     /* Checks for an illegal position */
-    if (this->isPositionIllegal()) {
-        if (this->who_is_to_play_) {
-            this->bit_boards_.Black |=  int_to_uint64_[list_moves[0][0]][list_moves[0][1]];
-            this->bit_boards_.Black &= ~int_to_uint64_[list_moves[n-1][0]][list_moves[n-1][1]];
+    if (isPositionIllegal()) {
+        if (who_is_to_play_) {
+            bit_boards_.Black |=  int_to_uint64_[list_moves[0][0]][list_moves[0][1]];
+            bit_boards_.Black &= ~int_to_uint64_[list_moves[n-1][0]][list_moves[n-1][1]];
         } else {
-            this->bit_boards_.White |=  int_to_uint64_[list_moves[0][0]][list_moves[0][1]];
-            this->bit_boards_.White &= ~int_to_uint64_[list_moves[n-1][0]][list_moves[n-1][1]];
+            bit_boards_.White |=  int_to_uint64_[list_moves[0][0]][list_moves[0][1]];
+            bit_boards_.White &= ~int_to_uint64_[list_moves[n-1][0]][list_moves[n-1][1]];
         }
         return false;
     }
 
-    this->who_is_to_play_ ^= 1;
+    who_is_to_play_ ^= 1;
 
     /* indicates that this position has been seen another time */
     uint64_t hash = hashGrid();
-    if (this->number_of_times_seen.contains(hash))
-        this->number_of_times_seen[hash]++;
+    if (number_of_times_seen_.find(hash) != number_of_times_seen_.end())
+        number_of_times_seen_[hash]++;
     else
-        this->number_of_times_seen.insert({hash, 1});
+        number_of_times_seen_.insert({hash, 1});
 
     return true;
 }
 
 
-#warning remove this->
+#warning remove
 void ChineseCheckers::moveWithoutVerification(const uint_fast64_t &move) {
-    if (this->who_is_to_play_)
-        this->bit_boards_.Black ^= move;
+    if (who_is_to_play_)
+        bit_boards_.Black ^= move;
     else
-        this->bit_boards_.White ^= move;
+        bit_boards_.White ^= move;
 
-    this->who_is_to_play_ ^= 1;
+    who_is_to_play_ ^= 1;
 
     /* indicates that this position has been seen another time */
     uint64_t hash = hashGrid();
-    if (this->number_of_times_seen.contains(hash))
-        ++this->number_of_times_seen[hash];
+    if (number_of_times_seen_.find(hash) != number_of_times_seen_.end())
+        ++number_of_times_seen_[hash];
     else
-        this->number_of_times_seen[hash] = 1;
+        number_of_times_seen_[hash] = 1;
 }
 
 /*
@@ -256,19 +256,19 @@ void ChineseCheckers::moveWithoutVerification(const uint_fast64_t &move) {
  */
 Result ChineseCheckers::state_of_game() {
     /* Check if player 0 won */
-    if ((this->bit_boards_.White & winning_positions_white_)
-           && !(((this->bit_boards_.White | this->bit_boards_.Black) & winning_positions_white_)
+    if ((bit_boards_.White & winning_positions_white_)
+           && !(((bit_boards_.White | bit_boards_.Black) & winning_positions_white_)
                 ^ winning_positions_white_))
         return WhiteWon;
 
     /* Check if Player 1 won */
-    if ((this->bit_boards_.Black & winning_positions_black_)
-        && !(((this->bit_boards_.White | this->bit_boards_.Black) & winning_positions_black_)
+    if ((bit_boards_.Black & winning_positions_black_)
+        && !(((bit_boards_.White | bit_boards_.Black) & winning_positions_black_)
              ^ winning_positions_black_))
         return BlackWon;
 
     /* Check for a draw */
-    if (this->number_of_times_seen[hashGrid()]
+    if (number_of_times_seen_[hashGrid()]
                                 == MAX_NUMBER_OF_CYCLES_FOR_DRAW_)
         return Draw;
     return NotFinished;
@@ -276,22 +276,22 @@ Result ChineseCheckers::state_of_game() {
 
 void ChineseCheckers::new_game() {
     /* Initialize the grid */
-    this->bit_boards_.White = this->winning_positions_black_;
-    this->bit_boards_.Black = this->winning_positions_white_;
+    bit_boards_.White = winning_positions_black_;
+    bit_boards_.Black = winning_positions_white_;
 
-    this->who_is_to_play_ = 0;
+    who_is_to_play_ = 0;
 
     /* init the history */
-    this->number_of_times_seen.clear();
-    this->number_of_times_seen[hashGrid()] = 1;
+    number_of_times_seen_.clear();
+    number_of_times_seen_[hashGrid()] = 1;
 }
 
 void ChineseCheckers::print_grid_() {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
-            if (this->bit_boards_.White & int_to_uint64_[i][j])
+            if (bit_boards_.White & int_to_uint64_[i][j])
                 std::cout << std::setw(2) << 1 << " ";
-            else if (this->bit_boards_.Black & int_to_uint64_[i][j])
+            else if (bit_boards_.Black & int_to_uint64_[i][j])
                 std::cout << std::setw(2) << -1 << " ";
             else
                 std::cout << std::setw(2) << 0 << " ";
@@ -301,16 +301,16 @@ void ChineseCheckers::print_grid_() {
 }
 
 void ChineseCheckers::print_who_is_to_play_() {
-    std::cout << this->who_is_to_play_ << "\n";
+    std::cout << who_is_to_play_ << "\n";
 }
 
 Player ChineseCheckers::get_who_is_to_play_() const {
-    return this->who_is_to_play_;
+    return who_is_to_play_;
 }
 
 boost::unordered_map<uint64_t, int>
-        ChineseCheckers::get_number_of_times_seen() const {
-    return this->number_of_times_seen;
+        ChineseCheckers::getNumberOfTimesSeen() const {
+    return number_of_times_seen_;
 }
 
 
@@ -333,7 +333,7 @@ void ChineseCheckers::loadIllegalPositions() {
         std::istringstream ss(line);
         ss >> std::hex >> hash;
 
-        this->illegalPositions[hash] = true;
+        illegal_positions_[hash] = true;
     }
     /* Close the file */
     inFile.close();
@@ -348,22 +348,22 @@ bool ChineseCheckers::isPositionIllegal() {
     /* First version of the code. It checks if the position *can* be illegal */
     for (i = 0; i < 6; ++i) {
         for (j = 0; j < 6 - i; ++j) {
-            if (this->bit_boards_.Black & int_to_uint64_[7 - i][7 - j])
+            if (bit_boards_.Black & int_to_uint64_[7 - i][7 - j])
                 code |= cantorPairing_[i][j];
         }
     }
 
-    if (this->illegalPositions.contains(code)) {
+    if (illegal_positions_.find(code) != illegal_positions_.end()) {
        /* full test */
         for (i = 7; i > 1; --i) {
             for (j = 7; j > 8 - i; --j) {
-                if (this->bit_boards_.Black & int_to_uint64_[7 - i][7 - j]) {
+                if (bit_boards_.Black & int_to_uint64_[7 - i][7 - j]) {
                     /*
                      * if the location is occupied with an enemy piece,
                      * the bit is set to 1
                      */
                     code |= cantorPairing_[i][j];
-                } else if (this->bit_boards_.White & int_to_uint64_[7 - i][7 - j]) {
+                } else if (bit_boards_.White & int_to_uint64_[7 - i][7 - j]) {
                     /*
                      *  if the location is occupied with an ally piece, there are two cases :
                      *  either the piece can move, therefore the bit is set to 0
@@ -371,7 +371,7 @@ bool ChineseCheckers::isPositionIllegal() {
                      */
                     code |= cantorPairing_[i][j];
                     for (const std::vector<int> &direction : valid_lines_illegal) {
-                        if (this->elementaryMove(
+                        if (elementaryMove(
                                 {7 - i, 7 - j},
                                 {7 - i - direction[0], 7 - j - direction[1]})
                             != Illegal) {
@@ -383,7 +383,7 @@ bool ChineseCheckers::isPositionIllegal() {
                 /* if the location is unoccupied, the bit is set to 0 */
             }
         }
-        if (this->illegalPositions.contains(code))
+        if (illegal_positions_.find(code) != illegal_positions_.end())
             return true;
     }
 
@@ -396,22 +396,22 @@ bool ChineseCheckers::isPositionIllegal() {
     /* First version of the code. It checks if the position *can* be illegal */
     for (i = 0; i < 6; ++i) {
         for (j = 0; j < 6 - i; ++j) {
-            if (this->bit_boards_.White & int_to_uint64_[i][j])
+            if (bit_boards_.White & int_to_uint64_[i][j])
                 code |= cantorPairing_[i][j];
         }
     }
 
-    if (this->illegalPositions.contains(code)) {
+    if (illegal_positions_.find(code) != illegal_positions_.end()) {
         /* full test */
         for (i = 0; i < 6; ++i) {
             for (j = 0; j < 6 - i; ++j) {
-                if (this->bit_boards_.White & int_to_uint64_[i][j]) {
+                if (bit_boards_.White & int_to_uint64_[i][j]) {
                     /*
                      * if the location is occupied with an enemy piece,
                      * the bit is set to 1
                      */
                     code |= cantorPairing_[i][j];
-                } else if (this->bit_boards_.Black & int_to_uint64_[i][j]) {
+                } else if (bit_boards_.Black & int_to_uint64_[i][j]) {
                     /*
                      *  if the location is occupied with an ally piece, there are two cases :
                      *  either the piece can move, therefore the bit is set to 0
@@ -419,7 +419,7 @@ bool ChineseCheckers::isPositionIllegal() {
                      */
                     code |= cantorPairing_[i][j];
                     for (const std::vector<int> &direction : valid_lines_illegal) {
-                        if (this->elementaryMove({i, j}, {i + direction[0],
+                        if (elementaryMove({i, j}, {i + direction[0],
                                                           j + direction[1]})
                             != Illegal) {
                             code &= (0b111111111111111111111
@@ -431,13 +431,13 @@ bool ChineseCheckers::isPositionIllegal() {
             }
         }
     }
-    return this->illegalPositions.contains(code);
+    return illegal_positions_.find(code) != illegal_positions_.end();
 }
 
 uint_fast64_t ChineseCheckers::get_bitBoardWhite() {
-    return this->bit_boards_.White;
+    return bit_boards_.White;
 }
 
 uint_fast64_t ChineseCheckers::get_bitBoardBlack() {
-    return this->bit_boards_.Black;
+    return bit_boards_.Black;
 }

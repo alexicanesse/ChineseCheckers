@@ -76,13 +76,13 @@ AlphaBeta::AlphaBeta() {
     }
 
     ctz[0] = 0;
-    for (uint_fast64_t i = un_64; i; i <<= 1) {
+    for (uint_fast64_t i = un_64_; i; i <<= 1) {
         ctz[i] = __builtin_ctzl(i);
     }
 
     /* Indicates if there is a jump from (i, j) to (k, l) */
     for (int i = 0; i < 64; ++i)
-        possible_elementary_move[un_64 << i] = std::vector<uint_fast64_t>(0);
+        possible_elementary_move[un_64_ << i] = std::vector<uint_fast64_t>(0);
 
     loadOpenings();
 }
@@ -102,13 +102,13 @@ AlphaBeta::AlphaBeta(const std::vector< std::vector<double> > &player_to_win_val
     }
 
     ctz[0] = 0;
-    for (uint_fast64_t i = un_64; i; i <<= 1) {
+    for (uint_fast64_t i = un_64_; i; i <<= 1) {
         ctz[i] = __builtin_ctzl(i);
     }
 
     /* Indicates if there is a jump from (i, j) to (k, l) */
     for (int i = 0; i < 64; ++i)
-        possible_elementary_move[un_64 << i] = std::vector<uint_fast64_t>(0);
+        possible_elementary_move[un_64_ << i] = std::vector<uint_fast64_t>(0);
 
     loadOpenings();
 }
@@ -203,7 +203,7 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
     heuristic_value_   = heuristicValue();
     fullDepth_         = depth;
 
-    if (0 && opening.contains(bit_boards_)) {
+    if (0 && opening.find(bit_boards_) != opening.end()) {
         std::cout << "here\n";
         return retrieveMoves(opening[bit_boards_]);
     }
@@ -272,7 +272,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     }
 
     uint_fast64_t hash = hashGrid();
-    if (number_of_times_seen[hash] == MAX_NUMBER_OF_CYCLES_FOR_DRAW_) { /* Is there a draw ? */
+    if (number_of_times_seen_[hash] == MAX_NUMBER_OF_CYCLES_FOR_DRAW_) { /* Is there a draw ? */
         return DRAW_VALUE;
     } else { /* the game is not over */
         if (depth == 0) {
@@ -355,7 +355,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
 
 double AlphaBeta::heuristicValue() {
     double result = 0;
-    for (uint_fast64_t pawnPosition = un_64; pawnPosition; pawnPosition <<= 1) {
+    for (uint_fast64_t pawnPosition = un_64_; pawnPosition; pawnPosition <<= 1) {
         if (pawnPosition & bit_boards_.White) {
             if (maximizing_player_)
                 result -= player_to_lose_value_map_white_[pawnPosition];
@@ -413,8 +413,8 @@ inline void AlphaBeta::updateHeuristicValueBack(const uint_fast64_t &move) {
 
 void AlphaBeta::reverseMove(const uint_fast64_t &move) {
     uint64_t hash = hashGrid();
-    if(number_of_times_seen.contains(hash))
-        --number_of_times_seen[hash];
+    if(number_of_times_seen_.find(hash) != number_of_times_seen_.end())
+        --number_of_times_seen_[hash];
 
     who_is_to_play_ ^= 1;
 
