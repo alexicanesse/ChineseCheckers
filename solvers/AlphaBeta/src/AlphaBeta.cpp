@@ -120,7 +120,7 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
     for (auto &x : possible_elementary_move)
         x.second.clear();
 
-    uint_fast64_t currentBitBoard = who_is_to_play_ ? bitBoardBlack : bitBoardWhite;
+    uint_fast64_t currentBitBoard = who_is_to_play_ ? bit_boards_.Black : bit_boards_.White;
 
     int i, j;
     /* Check the case of Jump moves */
@@ -154,8 +154,8 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
                 for (const auto &possibleJumps : k_neighbours_[v]) {
                     for (const auto &possibleJump : possibleJumps) {
                         /* Check if there is a pawn to jump over and if the jump is valid */
-                        if (((bitBoardWhite | bitBoardBlack) & possibleJump.first.first)
-                            && ! ((bitBoardWhite       | bitBoardBlack            )
+                        if (((bit_boards_.White | bit_boards_.Black) & possibleJump.first.first)
+                            && ! ((bit_boards_.White       | bit_boards_.Black            )
                                   & (possibleJump.second | possibleJump.first.second))) {
                             possible_elementary_move[v].push_back(possibleJump.first.second);
                             break;
@@ -192,7 +192,7 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
         pawnPositionMask ^= pawnPosition;
 
         for (const auto &neig : direct_neighbours_[pawnPosition]) {
-            if (!((bitBoardWhite | bitBoardBlack) & neig))
+            if (!((bit_boards_.White | bit_boards_.Black) & neig))
                 result.push_back(pawnPosition | neig);
         }
     }
@@ -242,6 +242,7 @@ uint_fast64_t AlphaBeta::getMove64(const int &depth) {
     fullDepth_         = depth;
 
     transTable.clear();
+    transTable.reserve(50*50*50*50);
 
     AlphaBetaEval(depth,
                   MINUS_INFTY,
@@ -259,13 +260,13 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
                              const bool &keepMove) {
     /* Check if the current node is a terminating node */
     if (who_is_to_play_
-                && (bitBoardWhite & winning_positions_white_) /* Did white win ? */
-                && ((bitBoardWhite | bitBoardBlack) & winning_positions_white_)
+                && (bit_boards_.White & winning_positions_white_) /* Did white win ? */
+                && ((bit_boards_.White | bit_boards_.Black) & winning_positions_white_)
                     == winning_positions_white_) {
         return maximizing_player_ ? PLUS_INFTY : MINUS_INFTY;
     } else if (!who_is_to_play_
-                && (bitBoardBlack & winning_positions_black_) /* Did white win ? */
-                && ((bitBoardWhite | bitBoardBlack) & winning_positions_black_)
+                && (bit_boards_.Black & winning_positions_black_) /* Did white win ? */
+                && ((bit_boards_.White | bit_boards_.Black) & winning_positions_black_)
                         == winning_positions_black_) {
         return maximizing_player_ ? MINUS_INFTY : PLUS_INFTY;
     }
@@ -276,11 +277,13 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     } else { /* the game is not over */
         if (depth == 0) {
             return heuristic_value_;
-        } else if (!keepMove) { /* Use a transposition table to boost performances */
-            it = transTable.find({bitBoardWhite, bitBoardBlack});
-            if (it != transTable.end() && it->second.second == depth) {
-                /* retrieve the value from the transposition table */
-                return it->second.first;
+        } else { /* Use a transposition table to boost performances */
+            if  (depth < fullDepth_ - 1) {
+                it = transTable.find(bit_boards_);
+                if (it != transTable.end() && it->second.second == depth) {
+                    /* retrieve the value from the transposition table */
+                    return it->second.first;
+                }
             }
         }
     }
@@ -344,7 +347,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     }
 
     /* store the value in the transposition table */
-    transTable[{bitBoardWhite, bitBoardBlack}] = {value, depth};
+    if (depth < fullDepth_ - 1) transTable[bit_boards_] = {value, depth};
 
     /* return value */
     return value;
@@ -353,12 +356,12 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
 double AlphaBeta::heuristicValue() {
     double result = 0;
     for (uint_fast64_t pawnPosition = un_64; pawnPosition; pawnPosition <<= 1) {
-        if (pawnPosition & bitBoardWhite) {
+        if (pawnPosition & bit_boards_.White) {
             if (maximizing_player_)
                 result -= player_to_lose_value_map_white_[pawnPosition];
             else
                 result +=player_to_win_value_map_white_[pawnPosition];
-        } else if (pawnPosition & bitBoardBlack) {
+        } else if (pawnPosition & bit_boards_.Black) {
             if (maximizing_player_)
                 result += player_to_win_value_map_black_[pawnPosition];
             else
@@ -371,19 +374,19 @@ double AlphaBeta::heuristicValue() {
 inline void AlphaBeta::updateHeuristicValue(const uint_fast64_t &move) {
     if (who_is_to_play_) {
         if (maximizing_player_) {
-            heuristic_value_ += player_to_win_value_map_black_[move & ~bitBoardBlack]
-                                - player_to_win_value_map_black_[move & bitBoardBlack];
+            heuristic_value_ += player_to_win_value_map_black_[move & ~bit_boards_.Black]
+                                - player_to_win_value_map_black_[move & bit_boards_.Black];
         } else {
-            heuristic_value_ += player_to_lose_value_map_black_[move & bitBoardBlack]
-                               - player_to_lose_value_map_black_[move & ~bitBoardBlack];
+            heuristic_value_ += player_to_lose_value_map_black_[move & bit_boards_.Black]
+                               - player_to_lose_value_map_black_[move & ~bit_boards_.Black];
         }
     } else {
         if (maximizing_player_) {
-            heuristic_value_ += player_to_lose_value_map_white_[move & bitBoardWhite]
-                                - player_to_lose_value_map_white_[move & ~bitBoardWhite];
+            heuristic_value_ += player_to_lose_value_map_white_[move & bit_boards_.White]
+                                - player_to_lose_value_map_white_[move & ~bit_boards_.White];
         } else {
-            heuristic_value_ += player_to_win_value_map_white_[move & ~bitBoardWhite]
-                                - player_to_win_value_map_white_[move & bitBoardWhite];
+            heuristic_value_ += player_to_win_value_map_white_[move & ~bit_boards_.White]
+                                - player_to_win_value_map_white_[move & bit_boards_.White];
         }
     }
 }
@@ -391,19 +394,19 @@ inline void AlphaBeta::updateHeuristicValue(const uint_fast64_t &move) {
 inline void AlphaBeta::updateHeuristicValueBack(const uint_fast64_t &move) {
     if (who_is_to_play_) {
         if (maximizing_player_) {
-            heuristic_value_ += player_to_win_value_map_black_[move & bitBoardBlack]
-                                - player_to_win_value_map_black_[move & ~bitBoardBlack];
+            heuristic_value_ += player_to_win_value_map_black_[move & bit_boards_.Black]
+                                - player_to_win_value_map_black_[move & ~bit_boards_.Black];
         } else {
-            heuristic_value_ += player_to_lose_value_map_black_[move & ~bitBoardBlack]
-                                - player_to_lose_value_map_black_[move & bitBoardBlack];
+            heuristic_value_ += player_to_lose_value_map_black_[move & ~bit_boards_.Black]
+                                - player_to_lose_value_map_black_[move & bit_boards_.Black];
         }
     } else {
         if (maximizing_player_) {
-            heuristic_value_ += player_to_lose_value_map_white_[move & ~bitBoardWhite]
-                                - player_to_lose_value_map_white_[move & bitBoardWhite];
+            heuristic_value_ += player_to_lose_value_map_white_[move & ~bit_boards_.White]
+                                - player_to_lose_value_map_white_[move & bit_boards_.White];
         } else {
-            heuristic_value_ += player_to_win_value_map_white_[move & bitBoardWhite]
-                                - player_to_win_value_map_white_[move & ~bitBoardWhite];
+            heuristic_value_ += player_to_win_value_map_white_[move & bit_boards_.White]
+                                - player_to_win_value_map_white_[move & ~bit_boards_.White];
         }
     }
 }
@@ -416,9 +419,9 @@ void AlphaBeta::reverseMove(const uint_fast64_t &move) {
     who_is_to_play_ ^= 1;
 
     if (who_is_to_play_)
-        bitBoardBlack ^= move;
+        bit_boards_.Black ^= move;
     else
-        bitBoardWhite ^= move;
+        bit_boards_.White ^= move;
 }
 
 Player AlphaBeta::get_maximizing_player_() const {
@@ -465,7 +468,7 @@ void AlphaBeta::loadOpenings() {
 
 /* FNV-1a hash function */
 inline uint64_t AlphaBeta::hashGrid() {
-    return (0x100000001b3 * (0xcbf29ce484222325 ^ bitBoardWhite) ^ bitBoardBlack);
+    return (0x100000001b3 * (0xcbf29ce484222325 ^ bit_boards_.White) ^ bit_boards_.Black);
 }
 
 ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
@@ -474,7 +477,7 @@ ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
     for (auto &x : possible_elementary_move)
         x.second.clear();
 
-    uint_fast64_t currentBitBoard = who_is_to_play_ ? bitBoardBlack : bitBoardWhite;
+    uint_fast64_t currentBitBoard = who_is_to_play_ ? bit_boards_.Black : bit_boards_.White;
 
     /* Check the case of notJump moves */
     for (const auto &neig : direct_neighbours_[currentBitBoard & move]) {
@@ -512,9 +515,9 @@ ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
             for (const auto &possibleJumps : k_neighbours_[v]) {
                 for (const auto &possibleJump : possibleJumps) {
                     /* Check if there is a pawn to jump over and if the jump is valid */
-                    if (((bitBoardWhite | bitBoardBlack) & possibleJump.first.first)
-                        && ! ((bitBoardWhite       | bitBoardBlack            )
-                              & (possibleJump.second | possibleJump.first.second))) {
+                    if (((bit_boards_.White | bit_boards_.Black) & possibleJump.first.first)
+                        && ! ((bit_boards_.White   | bit_boards_.Black        )
+                            & (possibleJump.second | possibleJump.first.second))) {
                         possible_elementary_move[v].push_back(possibleJump.first.second);
                         break;
                     }

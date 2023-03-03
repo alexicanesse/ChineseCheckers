@@ -94,8 +94,8 @@ class AlphaBeta : public ChineseCheckers{
     uint_fast64_t best_move_;
 
     /*! Transposition table used to store the results of previous searches */
-    boost::unordered_map<std::pair<uint_fast64_t, uint_fast64_t>, std::pair<double, int>> transTable;
-    boost::unordered_map<std::pair<uint_fast64_t, uint_fast64_t>, std::pair<double, int>>::iterator it;
+    boost::unordered_map<bitBoards_t, std::pair<double, int>, bitBoardsHasher, bitBoardsEqual> transTable;
+    boost::unordered_map<bitBoards_t, std::pair<double, int>>::iterator it;
 
     /*! Map of pre-computed optimal openings */
     boost::unordered_map<uint_fast64_t, uint_fast64_t> opening;
@@ -115,15 +115,15 @@ class AlphaBeta : public ChineseCheckers{
             [this](const uint_fast64_t &a,
                    const uint_fast64_t &b){
                 if (who_is_to_play_) {
-                    return player_to_win_value_map_black_[a & ~bitBoardBlack]
-                           + player_to_win_value_map_black_[b & bitBoardBlack]
-                           < player_to_win_value_map_black_[b & ~bitBoardBlack]
-                             + player_to_win_value_map_black_[a & bitBoardBlack];
+                    return player_to_win_value_map_black_[a & ~bit_boards_.Black]
+                           + player_to_win_value_map_black_[b & bit_boards_.Black]
+                           < player_to_win_value_map_black_[b & ~bit_boards_.Black]
+                             + player_to_win_value_map_black_[a & bit_boards_.Black];
                 } else {
-                    return player_to_win_value_map_white_[a & ~bitBoardWhite]
-                           + player_to_win_value_map_white_[b & bitBoardWhite]
-                           < player_to_win_value_map_white_[b & ~bitBoardWhite]
-                             + player_to_win_value_map_white_[a & bitBoardWhite];
+                    return player_to_win_value_map_white_[a & ~bit_boards_.White]
+                           + player_to_win_value_map_white_[b & bit_boards_.White]
+                           < player_to_win_value_map_white_[b & ~bit_boards_.White]
+                             + player_to_win_value_map_white_[a & bit_boards_.White];
                 }
             };
  public:

@@ -45,10 +45,7 @@ class ChineseCheckers {
     Player who_is_to_play_ = 0;
 
     /*! A data structure containing the grid */
-    uint_fast64_t bitBoardWhite;
-
-    /*! A data structure containing the grid */
-    uint_fast64_t bitBoardBlack;
+    bitBoards_t bit_boards_;
 
     /*! Indicates the number of times a position has been seen */
     boost::unordered_map<uint64_t , int> number_of_times_seen;
