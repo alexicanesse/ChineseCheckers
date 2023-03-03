@@ -75,14 +75,14 @@ AlphaBeta::AlphaBeta() {
         }
     }
 
-    ctz[0] = 0;
+    ctz_[0] = 0;
     for (uint_fast64_t i = un_64_; i; i <<= 1) {
-        ctz[i] = __builtin_ctzl(i);
+        ctz_[i] = __builtin_ctzl(i);
     }
 
     /* Indicates if there is a jump from (i, j) to (k, l) */
     for (int i = 0; i < 64; ++i)
-        possible_elementary_move[un_64_ << i] = std::vector<uint_fast64_t>(0);
+        possible_elementary_move_[un_64_ << i] = std::vector<uint_fast64_t>(0);
 
     loadOpenings();
 }
@@ -101,23 +101,23 @@ AlphaBeta::AlphaBeta(const std::vector< std::vector<double> > &player_to_win_val
         }
     }
 
-    ctz[0] = 0;
+    ctz_[0] = 0;
     for (uint_fast64_t i = un_64_; i; i <<= 1) {
-        ctz[i] = __builtin_ctzl(i);
+        ctz_[i] = __builtin_ctzl(i);
     }
 
     /* Indicates if there is a jump from (i, j) to (k, l) */
     for (int i = 0; i < 64; ++i)
-        possible_elementary_move[un_64_ << i] = std::vector<uint_fast64_t>(0);
+        possible_elementary_move_[un_64_ << i] = std::vector<uint_fast64_t>(0);
 
     loadOpenings();
 }
 
 void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
     result.reserve(50);
-    uint_fast64_t computed_possible_elementary_move = 0;
+    uint_fast64_t computed_possible_elementary_move_ = 0;
 
-    for (auto &x : possible_elementary_move)
+    for (auto &x : possible_elementary_move_)
         x.second.clear();
 
     uint_fast64_t currentBitBoard = who_is_to_play_ ? bit_boards_.Black : bit_boards_.White;
@@ -150,22 +150,22 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
 
             std::tie(i, j) = uint64_to_pair_[v];
 
-            if (!(computed_possible_elementary_move & v)) {
+            if (!(computed_possible_elementary_move_ & v)) {
                 for (const auto &possibleJumps : k_neighbours_[v]) {
                     for (const auto &possibleJump : possibleJumps) {
                         /* Check if there is a pawn to jump over and if the jump is valid */
                         if (((bit_boards_.White | bit_boards_.Black) & possibleJump.first.first)
                             && ! ((bit_boards_.White       | bit_boards_.Black            )
                                   & (possibleJump.second | possibleJump.first.second))) {
-                            possible_elementary_move[v].push_back(possibleJump.first.second);
+                            possible_elementary_move_[v].push_back(possibleJump.first.second);
                             break;
                         }
                     }
                 }
-                computed_possible_elementary_move |= v;
+                computed_possible_elementary_move_ |= v;
             }
 
-            for (uint_fast64_t neig : possible_elementary_move[v]) {
+            for (uint_fast64_t neig : possible_elementary_move_[v]) {
                 std::tie(i_neig, j_neig) = uint64_to_pair_[neig];
                 if (!(neig & explored)
                     /*
@@ -203,12 +203,12 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
     heuristic_value_   = heuristicValue();
     fullDepth_         = depth;
 
-    if (0 && opening.find(bit_boards_) != opening.end()) {
+    if (0 && opening_.find(bit_boards_) != opening_.end()) {
         std::cout << "here\n";
-        return retrieveMoves(opening[bit_boards_]);
+        return retrieveMoves(opening_[bit_boards_]);
     }
 
-    transTable.clear();
+    transposition_table_.clear();
 
     best_move_ = 0;
 
@@ -241,8 +241,8 @@ uint_fast64_t AlphaBeta::getMove64(const int &depth) {
     heuristic_value_   = heuristicValue();
     fullDepth_         = depth;
 
-    transTable.clear();
-    transTable.reserve(50*50*50*50);
+    transposition_table_.clear();
+    transposition_table_.reserve(50*50*50*50);
 
     AlphaBetaEval(depth,
                   MINUS_INFTY,
@@ -279,10 +279,10 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
             return heuristic_value_;
         } else { /* Use a transposition table to boost performances */
             if  ((depth < fullDepth_ - 1)) {
-                it = transTable.find(bit_boards_);
-                if (it != transTable.end() && it->second.second == depth) {
+                it_transposition_table_ = transposition_table_.find(bit_boards_);
+                if (it_transposition_table_ != transposition_table_.end() && it_transposition_table_->second.second == depth) {
                     /* retrieve the value from the transposition table */
-                    return it->second.first;
+                    return it_transposition_table_->second.first;
                 }
             }
         }
@@ -293,7 +293,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     availableMoves(possible_moves);
 
     /* Sort according to the value of the move in order to increase the number of cut-offs */
-    if (keepMove) std::sort(possible_moves.begin(), possible_moves.end(), compMoveVect);
+    if (keepMove) std::sort(possible_moves.begin(), possible_moves.end(), comp_move_);
 
     /* We do not consider all moves in order to have a speed up */
     //possible_moves.resize(std::min(10UL, possible_moves.size()));
@@ -347,7 +347,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     }
 
     /* store the value in the transposition table */
-    if ((depth < fullDepth_ - 1)) transTable[bit_boards_] = {value, depth};
+    if ((depth < fullDepth_ - 1)) transposition_table_[bit_boards_] = {value, depth};
 
     /* return value */
     return value;
@@ -424,28 +424,28 @@ void AlphaBeta::reverseMove(const uint_fast64_t &move) {
         bit_boards_.White ^= move;
 }
 
-Player AlphaBeta::get_maximizing_player_() const {
+Player AlphaBeta::getMaximizingPlayer() const {
     return maximizing_player_;
 }
 
-std::vector<std::vector<double> > AlphaBeta::get_player_to_lose_value_() {
+std::vector<std::vector<double> > AlphaBeta::getPlayerToLoseValue() {
     return player_to_lose_value_;
 }
 
-std::vector<std::vector<double> > AlphaBeta::get_player_to_win_value_() {
+std::vector<std::vector<double> > AlphaBeta::getPlayerToWinValue() {
     return player_to_win_value_;
 }
 
-void AlphaBeta::set_player_to_lose_value_(
+void AlphaBeta::setPlayerToLoseValue(
         std::vector< std::vector<double> > &player_to_lose_value_) {
     player_to_lose_value_ = player_to_lose_value_;
-    transTable.clear();
+    transposition_table_.clear();
 }
 
-void AlphaBeta::set_player_to_win_value_(
+void AlphaBeta::setPlayerToWinValue(
         std::vector< std::vector<double> > &player_to_win_value_  ) {
     player_to_win_value_ = player_to_win_value_;
-    transTable.clear();
+    transposition_table_.clear();
 }
 
 void AlphaBeta::loadOpenings() {
@@ -458,7 +458,7 @@ void AlphaBeta::loadOpenings() {
     while(std::getline(inFile, line)) {
         std::istringstream ss(line);
         ss >> bb.White >> bb.Black >> move;
-        opening[{bb.White, bb.Black}] = move;
+        opening_[{bb.White, bb.Black}] = move;
     }
 
     /* Close the file */
@@ -471,9 +471,9 @@ inline uint64_t AlphaBeta::hashGrid() {
 }
 
 ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
-    uint_fast64_t computed_possible_elementary_move = 0;
+    uint_fast64_t computed_possible_elementary_move_ = 0;
 
-    for (auto &x : possible_elementary_move)
+    for (auto &x : possible_elementary_move_)
         x.second.clear();
 
     uint_fast64_t currentBitBoard = who_is_to_play_ ? bit_boards_.Black : bit_boards_.White;
@@ -510,22 +510,22 @@ ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
 
         std::tie(i, j) = uint64_to_pair_[v];
 
-        if (!(computed_possible_elementary_move & v)) {
+        if (!(computed_possible_elementary_move_ & v)) {
             for (const auto &possibleJumps : k_neighbours_[v]) {
                 for (const auto &possibleJump : possibleJumps) {
                     /* Check if there is a pawn to jump over and if the jump is valid */
                     if (((bit_boards_.White | bit_boards_.Black) & possibleJump.first.first)
                         && ! ((bit_boards_.White   | bit_boards_.Black        )
                             & (possibleJump.second | possibleJump.first.second))) {
-                        possible_elementary_move[v].push_back(possibleJump.first.second);
+                        possible_elementary_move_[v].push_back(possibleJump.first.second);
                         break;
                     }
                 }
             }
-            computed_possible_elementary_move |= v;
+            computed_possible_elementary_move_ |= v;
         }
 
-        for (uint_fast64_t neig : possible_elementary_move[v]) {
+        for (uint_fast64_t neig : possible_elementary_move_[v]) {
             std::tie(i_neig, j_neig) = uint64_to_pair_[neig];
             if (!(neig & explored)
                 /*

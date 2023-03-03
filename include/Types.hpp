@@ -20,6 +20,7 @@
 /* The number of time a grid state can be seen before settling for a draw */
 #define MAX_NUMBER_OF_CYCLES_FOR_DRAW_ 3
 
+/*! \cond DO_NOT_DOCUMENT */
 struct bitBoards_s {
     uint_fast64_t White;
     uint_fast64_t Black;
@@ -37,6 +38,7 @@ struct bitBoardsEqual {
         return (b1.White == b2.White) && (b1.Black == b2.Black);
     }
 };
+/*! \endcond */
 
 /*! \enum Color
     \brief Used to denote the colors.

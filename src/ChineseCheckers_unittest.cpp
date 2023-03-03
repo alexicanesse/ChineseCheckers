@@ -22,6 +22,7 @@
 /* Other */
 #include <Types.hpp>
 
+/*! \cond DO_NOT_DOCUMENT */
 /*! @brief
  * The fixture for testing class ChineseCheckers
  */
@@ -1179,3 +1180,4 @@ int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
+/*! \endcond */

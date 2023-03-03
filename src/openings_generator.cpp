@@ -69,8 +69,8 @@ void OpeningsGenerator::generateOpeningsWhite(int depth, std::ofstream *outFile)
         return;
 
     uint_fast64_t move_0 = this->getMove64(DEPTH_ALPHABETA);
-    if (!this->opening.contains(bit_boards_)) {
-        this->opening[bit_boards_] = move_0;
+    if (!(this->opening_.find(bit_boards_) != opening_.end())) {
+        this->opening_[bit_boards_] = move_0;
 
         *outFile << bit_boards_.White << " " << bit_boards_.Black;
         *outFile << " " << move_0;
@@ -79,7 +79,7 @@ void OpeningsGenerator::generateOpeningsWhite(int depth, std::ofstream *outFile)
 
     this->moveWithoutVerification(move_0);
 
-    std::cout << "White : " << this->opening.size() << "\n";
+    std::cout << "White : " << this->opening_.size() << "\n";
     std::vector<uint_fast64_t> moves_1;
     this->availableMoves(moves_1);
     for (const auto &move_1 : moves_1) {
@@ -99,8 +99,8 @@ void OpeningsGenerator::generateOpeningsBlack(int depth, std::ofstream *outFile)
     if (depth != MAX_TREE_DEPTH + 1) {
         move_1 = this->getMove64(DEPTH_ALPHABETA);
 
-        if (!this->opening.contains(bit_boards_)) {
-            this->opening[bit_boards_] = move_1;
+        if (!(this->opening_.find(bit_boards_) != opening_.end())) {
+            this->opening_[bit_boards_] = move_1;
 
             *outFile << bit_boards_.White << " " << bit_boards_.Black;
             *outFile << " " << move_1;
@@ -110,7 +110,7 @@ void OpeningsGenerator::generateOpeningsBlack(int depth, std::ofstream *outFile)
         this->moveWithoutVerification(move_1);
     }
 
-    std::cout << "Black : " << this->opening.size() << "\n";
+    std::cout << "Black : " << this->opening_.size() << "\n";
 
     std::vector<uint_fast64_t> moves_0;
     this->availableMoves(moves_0);
