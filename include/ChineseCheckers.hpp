@@ -91,15 +91,15 @@ class ChineseCheckers {
      * @retval Illegal if the elementary move realized was of illegal.
      * @retval Jump if the elementary move realized was a jump.
      * @retval notJump if the elementary move realized was not a jump.
-     * @sa move(Player player, const ListOfPositionType &list_moves).
+     * @sa move
      */
     MoveType elementaryMove(const PositionType &original_position,
                             const PositionType &arrival_position);
     /*!
      * @brief Indicates whether the position is illegal or not.
      * @return Returns true iff the position is illegal.
-     * @sa cantorPairingFunction(const int &x, const int &y)
-     * @sa loadIllegalPositions()
+     * @sa cantorPairingFunction
+     * @sa loadIllegalPositions
      */
     bool isPositionIllegal();
 
@@ -107,22 +107,22 @@ class ChineseCheckers {
      * @brief Cantor's pairing function.
      * @param x first argument.
      * @param y second argument.
-     * @return cantor's pairing function applied to @ref x and @ref y.
-     * @sa isPositionIllegal()
-     * @sa loadIllegalPositions()
+     * @return cantor's pairing function applied to `x` and `y`.
+     * @sa isPositionIllegal
+     * @sa loadIllegalPositions
      */
     int cantorPairingFunction(const int &x, const int &y);
 
     /*!
      * @brief Loads illegal positions.
-     * @sa isPositionIllegal()
-     * @sa cantorPairingFunction(const int &x, const int &y)
+     * @sa isPositionIllegal
+     * @sa cantorPairingFunction
      */
     void loadIllegalPositions();
  public:
     /*! @brief
      * A simple constructor.
-     * @sa newGame()
+     * @sa newGame
      */
     ChineseCheckers();
     /*! @brief
@@ -138,7 +138,7 @@ class ChineseCheckers {
                                 and the arrival point).
      * @retval true if the move was legal.
      * @retval false if the move was not legal.
-     * @sa MoveType elementaryMove(const PositionType &original_position, const PositionType &arrival_position).
+     * @sa MoveType elementaryMove
      */
     bool move(const Player &player,
               const ListOfPositionType &list_moves);
@@ -149,7 +149,7 @@ class ChineseCheckers {
      * @retval whiteWon if white won the game.
      * @retval blackWon if black won the game.
      * @retval draw if a draw happened.
-     * @sa newGame().
+     * @sa newGame
      */
     Result stateOfGame();
     /*! @brief
@@ -162,40 +162,40 @@ class ChineseCheckers {
      * @param list_moves contains the list of intermediate positions.
                                 of a move (including the starting point
                                 and the arrival point).
-     * @sa elementaryMove(PositionType original_position, PositionType arrival_position)
-     * @sa move(Player player, const ListOfPositionType &list_moves).
+     * @sa elementaryMove
+     * @sa move
      */
     void moveWithoutVerification(const uint_fast64_t &move);
     /*! @brief
      * Hashes @ref the grid.
-     * @return A hash of @ref grid_.
+     * @return A hash of @ref grid_
      */
     inline uint64_t hashGrid();
 
     /*! @brief
-     * Returns @ref who_is_to_play_.
-     * @return @ref who_is_to_play_.
+     * Returns @ref who_is_to_play_
+     * @return @ref who_is_to_play_
      */
     Player getWhoIsToPlay() const;
     /*! @brief
-     * Returns @ref number_of_times_seen.
-     * @return @ref number_of_times_seen.
+     * Returns @ref number_of_times_seen
+     * @return @ref number_of_times_seen
      */
     boost::unordered_map<uint64_t, int> getNumberOfTimesSeen() const;
     /*! @brief
-     * Returns @ref bitBoards.White.
-     * @return @ref bitBoards.White.
+     * Returns @ref bitBoards.White
+     * @return @ref bitBoards.White
      */
     uint_fast64_t getBitBoardWhite();
     /*! @brief
-     * Returns @ref bitBoards.Black.
-     * @return @ref bitBoards.Black.
+     * Returns @ref bitBoards.Black
+     * @return @ref bitBoards.Black
      */
     uint_fast64_t getBitBoardBlack();
 
     /*! @brief Prints the grid. */
     void printGrid();
-    /*! @brief Prints @ref who_is_to_play_. */
+    /*! @brief Prints @ref who_is_to_play_ */
     void printWhoIsToPlay();
 };
 
