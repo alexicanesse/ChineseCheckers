@@ -212,12 +212,12 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
 
     int d = 1;
     do {
-        if (AlphaBetaEval(1,
+        if (AlphaBetaEval(d,
                       MINUS_INFTY,
                       MINUS_INFTY,
                       false,
                       true) == MINUS_INFTY)
-            won_[maximizing_player_] = true;
+            return retrieveMoves(best_move_);
         d += 2;
     }  while (won_[maximizing_player_] && (d <= depth + 2));
 
@@ -228,11 +228,8 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
                                true);
 
     std::cout << val << "\n";
-    if (!won_[maximizing_player_]
-        && (val == MINUS_INFTY)) {
-            won_[maximizing_player_] = true;
-    }
-
+    won_[maximizing_player_] = (!won_[maximizing_player_]
+                                    && (val == MINUS_INFTY));
 
     return retrieveMoves(best_move_);
 }
@@ -246,13 +243,13 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
 #warning use who_is_to_play to skip one check
     /* Check if the current node is a terminating node */
     uint_fast64_t hash = hashGrid();
-    if ((this->bitBoardWhite & winning_positions_white_) /* Did white win ? */
-        && !(((this->bitBoardWhite | this->bitBoardBlack) & winning_positions_white_)
-             ^ winning_positions_white_)) {
+    if ((bitBoardWhite & winning_positions_white_) /* Did white win ? */
+        && ((bitBoardWhite | bitBoardBlack) & winning_positions_white_)
+                == winning_positions_white_) {
         return maximizing_player_ ? PLUS_INFTY : MINUS_INFTY;
-    } else if ((this->bitBoardBlack & winning_positions_black_) /* Did white win ? */
-         && !(((this->bitBoardWhite | this->bitBoardBlack) & winning_positions_black_)
-                   ^ winning_positions_black_)) {
+    } else if ((bitBoardBlack & winning_positions_black_) /* Did white win ? */
+         && ((bitBoardWhite | bitBoardBlack) & winning_positions_black_)
+                == winning_positions_black_) {
         return maximizing_player_ ? MINUS_INFTY : PLUS_INFTY;
     } else if (number_of_times_seen[hash] == MAX_NUMBER_OF_CYCLES_FOR_DRAW_) { /* Is there a draw ? */
         return DRAW_VALUE;
@@ -260,8 +257,8 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
         if (depth == 0) {
             return heuristic_value_;
         } else if (!keepMove) { /* Use a transposition table to boost performances */
-            //it = transTable.find(hash);
-            if (0 && it != transTable.end() && it->second.second == depth) {
+            it = transTable.find(hash);
+            if (it != transTable.end() && it->second.second == depth) {
                 /* retrieve the value from the transposition table */
                 return it->second.first;
             }
