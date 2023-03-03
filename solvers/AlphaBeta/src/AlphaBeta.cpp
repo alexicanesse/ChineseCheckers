@@ -203,9 +203,9 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
     heuristic_value_   = heuristicValue();
     fullDepth_         = depth;
 
-    if (0 && opening.contains(hashGrid())) {
+    if (0 && opening.contains(bit_boards_)) {
         std::cout << "here\n";
-        return retrieveMoves(opening[hashGrid()]);
+        return retrieveMoves(opening[bit_boards_]);
     }
 
     transTable.clear();
@@ -278,7 +278,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
         if (depth == 0) {
             return heuristic_value_;
         } else { /* Use a transposition table to boost performances */
-            if  (depth < fullDepth_ - 1) {
+            if  ((depth < fullDepth_ - 1)) {
                 it = transTable.find(bit_boards_);
                 if (it != transTable.end() && it->second.second == depth) {
                     /* retrieve the value from the transposition table */
@@ -347,7 +347,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     }
 
     /* store the value in the transposition table */
-    if (depth < fullDepth_ - 1) transTable[bit_boards_] = {value, depth};
+    if ((depth < fullDepth_ - 1)) transTable[bit_boards_] = {value, depth};
 
     /* return value */
     return value;
@@ -453,13 +453,12 @@ void AlphaBeta::loadOpenings() {
 
     /* Iterate through the file and load each element through the file */
     std::string line;
-    uint64_t hash;
     uint_fast64_t move;
+    bitBoards_t bb;
     while(std::getline(inFile, line)) {
         std::istringstream ss(line);
-        ss >> hash >> move;
-        std::cout << std::bitset<64>(move) << "\n";
-        opening[hash] = move;
+        ss >> bb.White >> bb.Black >> move;
+        opening[{bb.White, bb.Black}] = move;
     }
 
     /* Close the file */

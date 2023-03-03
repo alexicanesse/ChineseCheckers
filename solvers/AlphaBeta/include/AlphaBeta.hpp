@@ -98,7 +98,7 @@ class AlphaBeta : public ChineseCheckers{
     boost::unordered_map<bitBoards_t, std::pair<double, int>>::iterator it;
 
     /*! Map of pre-computed optimal openings */
-    boost::unordered_map<uint_fast64_t, uint_fast64_t> opening;
+    boost::unordered_map<bitBoards_t, uint_fast64_t , bitBoardsHasher, bitBoardsEqual> opening;
 
     /*! Tensorflow model used by @ref tensorflowOrderMoves(ListOfMoves &possible_moves) */
     cppflow::model *model = new cppflow::model("./raw_data/model");
