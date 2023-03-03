@@ -29,7 +29,6 @@ endif()
 set(CXXFILES ./src/ChineseCheckers.cpp ./src/ChineseCheckersWrapper.cpp)
 set(CXXFILESALPHABETA ./solvers/AlphaBeta/src/AlphaBeta.cpp ./solvers/AlphaBeta/src/AlphaBetaWrapper.cpp)
 set(CXXFILESUNITTESTS ./src/ChineseCheckers_unittest.cpp)
-set(CXXFILESBENCHMARKS ./src/ChineseCheckers_benchmark.cpp)
 set(CXXFILESALPHABETABENCHMARKS ./solvers/AlphaBeta/src/AlphaBeta_benchmark.cpp)
 set(CXXFILESTOURNAMENT ./src/tournament.cpp)
 set(CXXFILESINTUITIONDATAGENERATOR ./src/intuition_data_generator.cpp)
@@ -50,21 +49,18 @@ add_library(AlphaBeta
 add_executable(unittests
                 ${CXXFILESUNITTESTS})
 
-add_executable(benchmarks
-                ${CXXFILESBENCHMARKS})
-
 add_executable(AlphaBeta_benchmarks
                 ${CXXFILESALPHABETABENCHMARKS})
 
-add_executable(Tournament ${CXXFILESTOURNAMENT})
-add_executable(Intuition_data_generator ${CXXFILESINTUITIONDATAGENERATOR})
+#add_executable(Tournament ${CXXFILESTOURNAMENT})
+#add_executable(Intuition_data_generator ${CXXFILESINTUITIONDATAGENERATOR})
 add_executable(Openings_generator ${CXXFILESOPENINGSGENERATOR})
 
 include_directories("./include")
 target_include_directories(AlphaBeta PRIVATE ./solvers/AlphaBeta/include/)
 target_include_directories(AlphaBeta_benchmarks PRIVATE ./solvers/AlphaBeta/include/)
-target_include_directories(Tournament PRIVATE ./solvers/AlphaBeta/include/)
-target_include_directories(Intuition_data_generator PRIVATE ./solvers/AlphaBeta/include/)
+#target_include_directories(Tournament PRIVATE ./solvers/AlphaBeta/include/)
+#target_include_directories(Intuition_data_generator PRIVATE ./solvers/AlphaBeta/include/)
 target_include_directories(Openings_generator PRIVATE ./solvers/AlphaBeta/include/)
 
 add_custom_target(run_unittests
@@ -74,12 +70,11 @@ add_custom_target(run_unittests
         SOURCES ${CXXFILESUNITTESTS}
         )
 
-add_dependencies(AlphaBeta run_unittests)
-add_dependencies(benchmarks run_unittests)
-add_dependencies(AlphaBeta_benchmarks run_unittests)
-add_dependencies(Tournament run_unittests)
-add_dependencies(Intuition_data_generator run_unittests)
-add_dependencies(Openings_generator run_unittests)
+#add_dependencies(AlphaBeta run_unittests)
+#add_dependencies(AlphaBeta_benchmarks run_unittests)
+#add_dependencies(Tournament run_unittests)
+#add_dependencies(Intuition_data_generator run_unittests)
+#add_dependencies(Openings_generator run_unittests)
 
 
 ###############################################################################
@@ -101,12 +96,12 @@ find_package(GTest REQUIRED)
 target_link_libraries(libChineseCheckers PUBLIC ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 target_link_libraries(unittests PUBLIC libChineseCheckers GTest::gtest)
 target_link_libraries(AlphaBeta PUBLIC libChineseCheckers ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} cppflow::cppflow)
-target_link_libraries(benchmarks PUBLIC libChineseCheckers benchmark::benchmark)
+
 target_link_libraries(AlphaBeta_benchmarks PUBLIC AlphaBeta libChineseCheckers benchmark::benchmark)
-target_link_libraries(Tournament PUBLIC AlphaBeta)
-target_link_libraries(Intuition_data_generator PUBLIC AlphaBeta cppflow::cppflow)
+#target_link_libraries(Tournament PUBLIC AlphaBeta)
+#target_link_libraries(Intuition_data_generator PUBLIC AlphaBeta cppflow::cppflow)
 target_link_libraries(Openings_generator PUBLIC AlphaBeta)
 
 target_include_directories(libChineseCheckers PUBLIC ${PYTHON_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
 target_include_directories(AlphaBeta PUBLIC ${PYTHON_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIR})
-target_include_directories(Intuition_data_generator PUBLIC ${EIGEN3_INCLUDE_DIR})
+#target_include_directories(Intuition_data_generator PUBLIC ${EIGEN3_INCLUDE_DIR})
