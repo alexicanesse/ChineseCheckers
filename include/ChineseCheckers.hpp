@@ -147,7 +147,7 @@ class ChineseCheckers {
      * @retval draw if a draw happened.
      * @sa new_game().
      */
-    const Result state_of_game();
+    Result state_of_game();
 
     /*! @brief
      * This member execute a move without checking if the move is legal.

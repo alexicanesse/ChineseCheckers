@@ -253,7 +253,7 @@ void ChineseCheckers::moveWithoutVerification(const uint_fast64_t &move) {
  * returns true or false to indicate if
  * the current position is a winning position
  */
-const Result ChineseCheckers::state_of_game() {
+Result ChineseCheckers::state_of_game() {
     /* Check if player 0 won */
     if ((this->bitBoardWhite & winning_positions_white_)
            && !(((this->bitBoardWhite | this->bitBoardBlack) & winning_positions_white_)
