@@ -1,5 +1,5 @@
 [![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/6677/badge)](https://bestpractices.coreinfrastructure.org/projects/6677)
-[![Documentation](https://img.shields.io/badge/Documentation-githubpages-blue)](https://alexicanesse.github.io/ChineseCheckers/index.html)
+[![Documentation](https://img.shields.io/badge/Documentation-githubpages-blue)](https://alexicanesse.github.io/ChineseCheckers/html/index.html)
 [![License](https://img.shields.io/badge/License-GPL--3.0%20license-ff69b4)](https://github.com/alexicanesse/ChineseCheckers/blob/main/LICENSE)
 # Chinese Checkers Solver using Alpha Beta pruning in C++
 
