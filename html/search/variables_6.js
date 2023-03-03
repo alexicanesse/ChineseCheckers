@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['opening_0',['opening',['../class_alpha_beta.html#a1f33c25e3d41b64bfa4ae2e1a76a38a6',1,'AlphaBeta']]]
+  ['k_5fneighbours_5f_0',['k_neighbours_',['../class_chinese_checkers.html#a1e00bb842e8295fad0676c2ce7159a6e',1,'ChineseCheckers']]]
 ];

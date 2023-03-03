@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['player_0',['Player',['../_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9',1,'Types.hpp']]],
-  ['positiontype_1',['PositionType',['../_types_8hpp.html#aa80fe4e9a559009407475c9587214b48',1,'Types.hpp']]]
+  ['tensor_5fdict_0',['tensor_dict',['../intuition__data__generator_8cpp.html#a17c8f43656775935a34bb39bdbd8819a',1,'intuition_data_generator.cpp']]]
 ];

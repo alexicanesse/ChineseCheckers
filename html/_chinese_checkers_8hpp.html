@@ -28,7 +28,7 @@
   <td id="projectalign">
    <div id="projectname">ChineseCheckers
    </div>
-   <div id="projectbrief">This is a python library to use a fast implementation of the chinese checkers in C++, a graphic interface in Python and various solvers. The version of the game is limited to the case where there are two players and two colors. We might extend it to the complete game latter on.</div>
+   <div id="projectbrief">This project is a solver for two players&#39; Chinese Checkers game using the Alpha Beta pruning algorithm. The program is written in C++ and uses a number of heuristics to improve the performance of the algorithm. Overall, the Chinese Checkers solver program has been built with performance in mind, and is designed to deliver fast and efficient game play. Whether you are playing against a bot or using the program as a library in your own project, you can be confident that the program will deliver high-performance results.</div>
   </td>
  </tr>
  </tbody>
@@ -105,6 +105,7 @@ $(document).ready(function(){initNavTree('_chinese_checkers_8hpp.html',''); init
 <code>#include &lt;utility&gt;</code><br />
 <code>#include &lt;map&gt;</code><br />
 <code>#include &lt;unordered_map&gt;</code><br />
+<code>#include &lt;boost/unordered_map.hpp&gt;</code><br />
 <code>#include &lt;boost/python.hpp&gt;</code><br />
 <code>#include &quot;<a class="el" href="_types_8hpp_source.html">Types.hpp</a>&quot;</code><br />
 </div>
@@ -113,12 +114,12 @@ $(document).ready(function(){initNavTree('_chinese_checkers_8hpp.html',''); init
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html">ChineseCheckers</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Core implementation of the game.  <a href="class_chinese_checkers.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This class represents a Chinese Checkers game The <a class="el" href="class_chinese_checkers.html" title="This class represents a Chinese Checkers game The ChineseCheckers class is responsible for representi...">ChineseCheckers</a> class is responsible for representing the game of Chinese Checkers and for providing functionalities such as checking if a move is legal, executing moves, printing the game state, returning the current state of the game, and creating a new game. It also stores information about the grid, the number of times a position has been seen, the winning positions, and the illegal positions.  <a href="class_chinese_checkers.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Core implementation of the game. </p>
-<p>Declaration of the <a class="el" href="class_chinese_checkers.html" title="Core implementation of the game.">ChineseCheckers</a> Class which is the core of the game </p>
+<p>Declaration of the <a class="el" href="class_chinese_checkers.html" title="This class represents a Chinese Checkers game The ChineseCheckers class is responsible for representi...">ChineseCheckers</a> Class which is the core of the game </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -1,7 +1,6 @@
 var _types_8hpp =
 [
     [ "MAX_NUMBER_OF_CYCLES_FOR_DRAW_", "_types_8hpp.html#a350f2b3fc03ccd66786675fce7ccbda6", null ],
-    [ "GridType", "_types_8hpp.html#a2323f67766c1d3ce0bbfafaa00c21a78", null ],
     [ "ListOfMoves", "_types_8hpp.html#a8598148c10b670d2dcd865d177f7f8d3", null ],
     [ "ListOfPositionType", "_types_8hpp.html#ac71100c33eb0cab30b54caf2736a8121", null ],
     [ "Player", "_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9", null ],

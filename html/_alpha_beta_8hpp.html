@@ -28,7 +28,7 @@
   <td id="projectalign">
    <div id="projectname">ChineseCheckers
    </div>
-   <div id="projectbrief">This is a python library to use a fast implementation of the chinese checkers in C++, a graphic interface in Python and various solvers. The version of the game is limited to the case where there are two players and two colors. We might extend it to the complete game latter on.</div>
+   <div id="projectbrief">This project is a solver for two players&#39; Chinese Checkers game using the Alpha Beta pruning algorithm. The program is written in C++ and uses a number of heuristics to improve the performance of the algorithm. Overall, the Chinese Checkers solver program has been built with performance in mind, and is designed to deliver fast and efficient game play. Whether you are playing against a bot or using the program as a library in your own project, you can be confident that the program will deliver high-performance results.</div>
   </td>
  </tr>
  </tbody>
@@ -106,6 +106,7 @@ $(document).ready(function(){initNavTree('_alpha_beta_8hpp.html',''); initResiza
 <code>#include &lt;map&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;unordered_map&gt;</code><br />
+<code>#include &lt;boost/unordered_map.hpp&gt;</code><br />
 <code>#include &quot;<a class="el" href="_types_8hpp_source.html">Types.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_chinese_checkers_8hpp_source.html">ChineseCheckers.hpp</a>&quot;</code><br />
 </div>
@@ -114,7 +115,7 @@ $(document).ready(function(){initNavTree('_alpha_beta_8hpp.html',''); initResiza
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html">AlphaBeta</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An implementation of the alpha-beta pruning algorithm for the chinese checkers.  <a href="class_alpha_beta.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_alpha_beta.html" title="The AlphaBeta class inherits from the ChineseCheckers class and provides an implementation of the alp...">AlphaBeta</a> class inherits from the <a class="el" href="class_chinese_checkers.html" title="This class represents a Chinese Checkers game The ChineseCheckers class is responsible for representi...">ChineseCheckers</a> class and provides an implementation of the alpha-beta algorithm with various optimizations for playing Chinese Checkers. The class provides several methods for evaluating the heuristic value of a position, ordering moves, and storing the results of previous searches in a transposition table.  <a href="class_alpha_beta.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -124,7 +125,7 @@ Macros</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Alpha-Beta algorithm declaration. </p>
-<p>Declaration of the <a class="el" href="class_alpha_beta.html" title="An implementation of the alpha-beta pruning algorithm for the chinese checkers.">AlphaBeta</a> Class which is an implementation of the alpha-beta pruning algorithm for the chinese checkers. </p>
+<p>Declaration of the <a class="el" href="class_alpha_beta.html" title="The AlphaBeta class inherits from the ChineseCheckers class and provides an implementation of the alp...">AlphaBeta</a> Class which is an implementation of the alpha-beta pruning algorithm for the chinese checkers. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a6c5bdf721d9fc0ed5b28a83f41498a27" name="a6c5bdf721d9fc0ed5b28a83f41498a27"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6c5bdf721d9fc0ed5b28a83f41498a27">&#9670;&#160;</a></span>TF_CPP_MIN_LOG_LEVEL</h2>

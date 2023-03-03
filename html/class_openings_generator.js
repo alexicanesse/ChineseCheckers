@@ -1,5 +1,5 @@
 var class_openings_generator =
 [
-    [ "generateOpenings", "class_openings_generator.html#a42cb8ab4ecb77d3b9e53eabceecbfe35", null ],
-    [ "saveOpenings", "class_openings_generator.html#af6089392b4189ee5567fef55b7b49df1", null ]
+    [ "generateOpeningsBlack", "class_openings_generator.html#a062da1f522544bbba8262096bf518be0", null ],
+    [ "generateOpeningsWhite", "class_openings_generator.html#a0fec69f099438951e1f669b693694749", null ]
 ];

@@ -1,10 +1,23 @@
 var searchData=
 [
-  ['rank_0',['rank',['../class_alpha_beta.html#a3d40c3729a5c385923d176e164ef8f62',1,'AlphaBeta']]],
-  ['readme_2emd_1',['README.md',['../_r_e_a_d_m_e_8md.html',1,'']]],
-  ['remove_5fpawn_2',['remove_pawn',['../class_chinese_checkers.html#a28bad38a657e580086605791f3f36625',1,'ChineseCheckers']]],
-  ['reset_5fpawn_3',['reset_pawn',['../class_chinese_checkers.html#ac8cef54f6a96a9d329ce1ce535aa3223',1,'ChineseCheckers']]],
-  ['result_4',['Result',['../_types_8hpp.html#a28287671eaf7406afd604bd055ba4066',1,'Types.hpp']]],
-  ['reversemove_5',['reverseMove',['../class_alpha_beta.html#a8ff7f8edc2634668aef96b4b959e8200',1,'AlphaBeta']]],
-  ['round_5flength_6',['ROUND_LENGTH',['../tournament_8cpp.html#a3bdd229b122f1f4401b5821d94a167a7',1,'tournament.cpp']]]
+  ['p_5fmutation_0',['P_MUTATION',['../tournament_8cpp.html#ad1d7b9efd831b763b6db9986dfb9e971',1,'tournament.cpp']]],
+  ['player_1',['Player',['../_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9',1,'Types.hpp']]],
+  ['player_5fto_5flose_5fvalue_5f_2',['player_to_lose_value_',['../class_alpha_beta.html#a3383fdd88e0af7e441195536b4a949a8',1,'AlphaBeta']]],
+  ['player_5fto_5flose_5fvalue_5fmap_5fblack_5f_3',['player_to_lose_value_map_black_',['../class_alpha_beta.html#ab3708615dd5de812c74adbec296449c7',1,'AlphaBeta']]],
+  ['player_5fto_5flose_5fvalue_5fmap_5fwhite_5f_4',['player_to_lose_value_map_white_',['../class_alpha_beta.html#af0444d94fa2518b4b060d1bdd85f4594',1,'AlphaBeta']]],
+  ['player_5fto_5fwin_5fvalue_5f_5',['player_to_win_value_',['../class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef',1,'AlphaBeta']]],
+  ['player_5fto_5fwin_5fvalue_5fmap_5fblack_5f_6',['player_to_win_value_map_black_',['../class_alpha_beta.html#a1c638fafb3e0981ba01156ce462c7f3a',1,'AlphaBeta']]],
+  ['player_5fto_5fwin_5fvalue_5fmap_5fwhite_5f_7',['player_to_win_value_map_white_',['../class_alpha_beta.html#a1bc9c4f91deb6738c243cd352fc3f47a',1,'AlphaBeta']]],
+  ['playgame_8',['playGame',['../class_game_player.html#adde54cb63bd1061878c41c6c311f2faa',1,'GamePlayer::playGame()'],['../tournament_8hpp.html#ad7176acce6400e6a3e0d2c8fc6f069e5',1,'playGame(AlphaBeta &amp;player0, AlphaBeta &amp;player1, const int &amp;depth):&#160;tournament.hpp']]],
+  ['plus_5finfty_9',['PLUS_INFTY',['../_alpha_beta_8cpp.html#ac4b5ee41053e48c95f4b505a79669bba',1,'AlphaBeta.cpp']]],
+  ['pop_5fsize_10',['POP_SIZE',['../tournament_8cpp.html#aea5b3e4c9df97408e95b67cdf3f992fb',1,'tournament.cpp']]],
+  ['positiontype_11',['PositionType',['../_types_8hpp.html#aa80fe4e9a559009407475c9587214b48',1,'Types.hpp']]],
+  ['possible_5felementary_5fmove_5f_12',['possible_elementary_move_',['../class_alpha_beta.html#a382e3c6f6133aaeab30f7f7e9fa914e1',1,'AlphaBeta']]],
+  ['print_5finfo_13',['print_info',['../class_solvers_individuals.html#a9e1e92d1e1705e8a847fe9fef58b6c39',1,'SolversIndividuals']]],
+  ['print_5finfo_5fas_5fmatrix_14',['print_info_as_matrix',['../class_solvers_individuals.html#aeec5469e44a4015612a7371281b125c4',1,'SolversIndividuals']]],
+  ['print_5finfo_5fas_5fmatrix_5fto_5ffile_15',['print_info_as_matrix_to_file',['../class_solvers_individuals.html#a2bdf79c38032471af805354a50ecd862',1,'SolversIndividuals']]],
+  ['print_5fmatrix_16',['print_matrix',['../tournament_8hpp.html#a7bd0de1998535cb0efd2633f88092b06',1,'print_matrix(const std::vector&lt; std::vector&lt; double &gt; &gt; &amp;matrix):&#160;tournament.cpp'],['../tournament_8cpp.html#a7bd0de1998535cb0efd2633f88092b06',1,'print_matrix(const std::vector&lt; std::vector&lt; double &gt; &gt; &amp;matrix):&#160;tournament.cpp']]],
+  ['print_5fplayers_5finfo_17',['print_players_info',['../class_game_player.html#a4d853ca48865526dac0b0ea8f0e550ae',1,'GamePlayer']]],
+  ['printgrid_18',['printGrid',['../class_chinese_checkers.html#a47574785bdb5920db7722a1630ab4f40',1,'ChineseCheckers']]],
+  ['printwhoistoplay_19',['printWhoIsToPlay',['../class_chinese_checkers.html#a893b1a49725415014b9fb94243fb64d5',1,'ChineseCheckers']]]
 ];

@@ -28,7 +28,7 @@
   <td id="projectalign">
    <div id="projectname">ChineseCheckers
    </div>
-   <div id="projectbrief">This is a python library to use a fast implementation of the chinese checkers in C++, a graphic interface in Python and various solvers. The version of the game is limited to the case where there are two players and two colors. We might extend it to the complete game latter on.</div>
+   <div id="projectbrief">This project is a solver for two players&#39; Chinese Checkers game using the Alpha Beta pruning algorithm. The program is written in C++ and uses a number of heuristics to improve the performance of the algorithm. Overall, the Chinese Checkers solver program has been built with performance in mind, and is designed to deliver fast and efficient game play. Whether you are playing against a bot or using the program as a library in your own project, you can be confident that the program will deliver high-performance results.</div>
   </td>
  </tr>
  </tbody>
@@ -102,6 +102,9 @@ $(document).ready(function(){initNavTree('_chinese_checkers_8cpp.html',''); init
 <div class="textblock"><code>#include &quot;<a class="el" href="_chinese_checkers_8hpp_source.html">ChineseCheckers.hpp</a>&quot;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;unordered_map&gt;</code><br />
+<code>#include &lt;fstream&gt;</code><br />
+<code>#include &lt;iomanip&gt;</code><br />
+<code>#include &lt;boost/unordered_map.hpp&gt;</code><br />
 <code>#include &lt;boost/python.hpp&gt;</code><br />
 <code>#include &lt;<a class="el" href="_types_8hpp_source.html">Types.hpp</a>&gt;</code><br />
 </div><table class="memberdecls">
@@ -113,7 +116,7 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Core implementation of the game. </p>
-<p>Implementation of the <a class="el" href="class_chinese_checkers.html" title="Core implementation of the game.">ChineseCheckers</a> Class which is an implementation of the core of the game </p>
+<p>Implementation of the <a class="el" href="class_chinese_checkers.html" title="This class represents a Chinese Checkers game The ChineseCheckers class is responsible for representi...">ChineseCheckers</a> Class which is an implementation of the core of the game </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a1ab31b90bc584c635ec159468ceed9b2" name="a1ab31b90bc584c635ec159468ceed9b2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1ab31b90bc584c635ec159468ceed9b2">&#9670;&#160;</a></span>sgn()</h2>

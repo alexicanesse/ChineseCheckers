@@ -28,7 +28,7 @@
   <td id="projectalign">
    <div id="projectname">ChineseCheckers
    </div>
-   <div id="projectbrief">This is a python library to use a fast implementation of the chinese checkers in C++, a graphic interface in Python and various solvers. The version of the game is limited to the case where there are two players and two colors. We might extend it to the complete game latter on.</div>
+   <div id="projectbrief">This project is a solver for two players&#39; Chinese Checkers game using the Alpha Beta pruning algorithm. The program is written in C++ and uses a number of heuristics to improve the performance of the algorithm. Overall, the Chinese Checkers solver program has been built with performance in mind, and is designed to deliver fast and efficient game play. Whether you are playing against a bot or using the program as a library in your own project, you can be confident that the program will deliver high-performance results.</div>
   </td>
  </tr>
  </tbody>
@@ -104,15 +104,16 @@ $(document).ready(function(){initNavTree('openings__generator_8cpp.html',''); in
 <code>#include &lt;unordered_map&gt;</code><br />
 <code>#include &lt;fstream&gt;</code><br />
 <code>#include &lt;sstream&gt;</code><br />
+<code>#include &lt;thread&gt;</code><br />
 <code>#include &lt;boost/python.hpp&gt;</code><br />
 <code>#include &quot;<a class="el" href="_types_8hpp_source.html">Types.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_alpha_beta_8hpp_source.html">AlphaBeta.hpp</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a571a1b97c4fa1e6b569a3af23db1eaf1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="openings__generator_8cpp.html#a571a1b97c4fa1e6b569a3af23db1eaf1">MAX_TREE_DEPTH</a>&#160;&#160;&#160;4</td></tr>
+<tr class="memitem:a571a1b97c4fa1e6b569a3af23db1eaf1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="openings__generator_8cpp.html#a571a1b97c4fa1e6b569a3af23db1eaf1">MAX_TREE_DEPTH</a>&#160;&#160;&#160;2</td></tr>
 <tr class="separator:a571a1b97c4fa1e6b569a3af23db1eaf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78e6fa2106a186a23141085baf9281a7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="openings__generator_8cpp.html#a78e6fa2106a186a23141085baf9281a7">DEPTH_ALPHABETA</a>&#160;&#160;&#160;3</td></tr>
+<tr class="memitem:a78e6fa2106a186a23141085baf9281a7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="openings__generator_8cpp.html#a78e6fa2106a186a23141085baf9281a7">DEPTH_ALPHABETA</a>&#160;&#160;&#160;5</td></tr>
 <tr class="separator:a78e6fa2106a186a23141085baf9281a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -130,7 +131,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define DEPTH_ALPHABETA&#160;&#160;&#160;3</td>
+          <td class="memname">#define DEPTH_ALPHABETA&#160;&#160;&#160;5</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -144,7 +145,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define MAX_TREE_DEPTH&#160;&#160;&#160;4</td>
+          <td class="memname">#define MAX_TREE_DEPTH&#160;&#160;&#160;2</td>
         </tr>
       </table>
 </div><div class="memdoc">

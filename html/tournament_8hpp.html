@@ -28,7 +28,7 @@
   <td id="projectalign">
    <div id="projectname">ChineseCheckers
    </div>
-   <div id="projectbrief">This is a python library to use a fast implementation of the chinese checkers in C++, a graphic interface in Python and various solvers. The version of the game is limited to the case where there are two players and two colors. We might extend it to the complete game latter on.</div>
+   <div id="projectbrief">This project is a solver for two players&#39; Chinese Checkers game using the Alpha Beta pruning algorithm. The program is written in C++ and uses a number of heuristics to improve the performance of the algorithm. Overall, the Chinese Checkers solver program has been built with performance in mind, and is designed to deliver fast and efficient game play. Whether you are playing against a bot or using the program as a library in your own project, you can be confident that the program will deliver high-performance results.</div>
   </td>
  </tr>
  </tbody>
@@ -97,14 +97,14 @@ $(document).ready(function(){initNavTree('tournament_8hpp.html',''); initResizab
   <div class="headertitle"><div class="title">tournament.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;vector&gt;</code><br />
+<div class="textblock"><code>#include &lt;numbers&gt;</code><br />
+<code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;random&gt;</code><br />
 <code>#include &lt;chrono&gt;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;iomanip&gt;</code><br />
 <code>#include &lt;limits&gt;</code><br />
-<code>#include &lt;numbers&gt;</code><br />
 <code>#include &lt;fstream&gt;</code><br />
 <code>#include &lt;boost/python.hpp&gt;</code><br />
 <code>#include &quot;<a class="el" href="_types_8hpp_source.html">Types.hpp</a>&quot;</code><br />
@@ -125,8 +125,8 @@ Functions</h2></td></tr>
 <tr class="separator:ad7176acce6400e6a3e0d2c8fc6f069e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bd0de1998535cb0efd2633f88092b06"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8hpp.html#a7bd0de1998535cb0efd2633f88092b06">print_matrix</a> (const std::vector&lt; std::vector&lt; double &gt; &gt; &amp;matrix)</td></tr>
 <tr class="separator:a7bd0de1998535cb0efd2633f88092b06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada9f6f08661170933c1c0ad496762dce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8hpp.html#ada9f6f08661170933c1c0ad496762dce">write_scores</a> (std::ofstream &amp;file, std::vector&lt; <a class="el" href="class_solvers_individuals.html">SolversIndividuals</a> &gt; &amp;population, <a class="el" href="class_solvers_individuals.html">SolversIndividuals</a> &amp;best_to_write, int &amp;gen)</td></tr>
-<tr class="separator:ada9f6f08661170933c1c0ad496762dce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3ac02038b98a7d1b39dbdc311f9ccaf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8hpp.html#aa3ac02038b98a7d1b39dbdc311f9ccaf">write_scores</a> (std::ofstream &amp;file, std::vector&lt; <a class="el" href="class_solvers_individuals.html">SolversIndividuals</a> &gt; &amp;population, <a class="el" href="class_solvers_individuals.html">SolversIndividuals</a> &amp;best_to_write, const int &amp;gen)</td></tr>
+<tr class="separator:aa3ac02038b98a7d1b39dbdc311f9ccaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19282ef4ab282b76796089de028db2b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8hpp.html#a19282ef4ab282b76796089de028db2b3">evol</a> (<a class="el" href="class_game_player.html">GamePlayer</a> *gp, std::vector&lt; <a class="el" href="class_solvers_individuals.html">SolversIndividuals</a> &gt; &amp;population, <a class="el" href="class_solvers_individuals.html">SolversIndividuals</a> *best_player, bool is_white_evolving)</td></tr>
 <tr class="separator:a19282ef4ab282b76796089de028db2b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -223,8 +223,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ada9f6f08661170933c1c0ad496762dce" name="ada9f6f08661170933c1c0ad496762dce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ada9f6f08661170933c1c0ad496762dce">&#9670;&#160;</a></span>write_scores()</h2>
+<a id="aa3ac02038b98a7d1b39dbdc311f9ccaf" name="aa3ac02038b98a7d1b39dbdc311f9ccaf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3ac02038b98a7d1b39dbdc311f9ccaf">&#9670;&#160;</a></span>write_scores()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -250,7 +250,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramtype">const int &amp;&#160;</td>
           <td class="paramname"><em>gen</em>&#160;</td>
         </tr>
         <tr>

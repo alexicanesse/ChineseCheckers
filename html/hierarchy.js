@@ -7,8 +7,5 @@ var hierarchy =
       ] ]
     ] ],
     [ "GamePlayer", "class_game_player.html", null ],
-    [ "SolversIndividuals", "class_solvers_individuals.html", null ],
-    [ "public::testing::Test", null, [
-      [ "ChineseCheckersTest", "class_chinese_checkers_test.html", null ]
-    ] ]
+    [ "SolversIndividuals", "class_solvers_individuals.html", null ]
 ];

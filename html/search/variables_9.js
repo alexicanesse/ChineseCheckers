@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['score_0',['score',['../class_solvers_individuals.html#a74abad79e318f5343356594267577d77',1,'SolversIndividuals']]],
-  ['seed_1',['seed',['../tournament_8cpp.html#acf74842513df74d6b7d338cac0c647fb',1,'tournament.cpp']]]
+  ['number_5fof_5fmoves_0',['number_of_moves',['../class_alpha_beta.html#a7dbc30dc178571d289c68aa8faa589a4',1,'AlphaBeta']]],
+  ['number_5fof_5ftimes_5fseen_5f_1',['number_of_times_seen_',['../class_chinese_checkers.html#a3738551e72ec70096f7b4f07a2d3f987',1,'ChineseCheckers']]]
 ];

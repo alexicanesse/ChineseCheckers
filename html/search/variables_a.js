@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['transtable_0',['transTable',['../class_alpha_beta.html#a51427b3355783abe3fce90c7745f700d',1,'AlphaBeta']]]
+  ['opening_5f_0',['opening_',['../class_alpha_beta.html#ae4d6a9def1ef6dd145c2922f92b2c666',1,'AlphaBeta']]]
 ];

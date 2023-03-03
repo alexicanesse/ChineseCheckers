@@ -28,7 +28,7 @@
   <td id="projectalign">
    <div id="projectname">ChineseCheckers
    </div>
-   <div id="projectbrief">This is a python library to use a fast implementation of the chinese checkers in C++, a graphic interface in Python and various solvers. The version of the game is limited to the case where there are two players and two colors. We might extend it to the complete game latter on.</div>
+   <div id="projectbrief">This project is a solver for two players&#39; Chinese Checkers game using the Alpha Beta pruning algorithm. The program is written in C++ and uses a number of heuristics to improve the performance of the algorithm. Overall, the Chinese Checkers solver program has been built with performance in mind, and is designed to deliver fast and efficient game play. Whether you are playing against a bot or using the program as a library in your own project, you can be confident that the program will deliver high-performance results.</div>
   </td>
  </tr>
  </tbody>
@@ -101,7 +101,7 @@ $(document).ready(function(){initNavTree('class_alpha_beta.html',''); initResiza
 </div><!--header-->
 <div class="contents">
 
-<p>An implementation of the alpha-beta pruning algorithm for the chinese checkers.  
+<p>The <a class="el" href="class_alpha_beta.html" title="The AlphaBeta class inherits from the ChineseCheckers class and provides an implementation of the alp...">AlphaBeta</a> class inherits from the <a class="el" href="class_chinese_checkers.html" title="This class represents a Chinese Checkers game The ChineseCheckers class is responsible for representi...">ChineseCheckers</a> class and provides an implementation of the alpha-beta algorithm with various optimizations for playing Chinese Checkers. The class provides several methods for evaluating the heuristic value of a position, ordering moves, and storing the results of previous searches in a transposition table.  
  <a href="class_alpha_beta.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_alpha_beta_8hpp_source.html">AlphaBeta.hpp</a>&gt;</code></p>
@@ -111,7 +111,7 @@ Inheritance diagram for AlphaBeta:</div>
  <div class="center">
   <img src="class_alpha_beta.png" usemap="#AlphaBeta_map" alt=""/>
   <map id="AlphaBeta_map" name="AlphaBeta_map">
-<area href="class_chinese_checkers.html" title="Core implementation of the game." alt="ChineseCheckers" shape="rect" coords="74,0,212,24"/>
+<area href="class_chinese_checkers.html" title="This class represents a Chinese Checkers game The ChineseCheckers class is responsible for representi..." alt="ChineseCheckers" shape="rect" coords="74,0,212,24"/>
 <area href="class_intuition_data_generator.html" title="This class is used to generate the data required for the intuition learning process." alt="IntuitionDataGenerator" shape="rect" coords="0,112,138,136"/>
 <area href="class_openings_generator.html" title="This class is used in order to generate the openings." alt="OpeningsGenerator" shape="rect" coords="148,112,286,136"/>
   </map>
@@ -122,79 +122,73 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4f1dd330857a88996d468a8883e0e0ee"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a4f1dd330857a88996d468a8883e0e0ee">AlphaBeta</a> ()</td></tr>
 <tr class="memdesc:a4f1dd330857a88996d468a8883e0e0ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple constructor.  <br /></td></tr>
 <tr class="separator:a4f1dd330857a88996d468a8883e0e0ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad26d455ceb10fd495c1d7c5b4a31780"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#aad26d455ceb10fd495c1d7c5b4a31780">AlphaBeta</a> (const std::vector&lt; std::vector&lt; double &gt; &gt; &amp;<a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a>, const std::vector&lt; std::vector&lt; double &gt; &gt; &amp;<a class="el" href="class_alpha_beta.html#a82d1d434488d087ec140e6fbc959879d">player_to_loose_value_</a>)</td></tr>
-<tr class="memdesc:aad26d455ceb10fd495c1d7c5b4a31780"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple constructor.  <br /></td></tr>
-<tr class="separator:aad26d455ceb10fd495c1d7c5b4a31780"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8bbacf89dc88ec7ad430d10dbedab8e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ad8bbacf89dc88ec7ad430d10dbedab8e">loadOpenings</a> ()</td></tr>
-<tr class="memdesc:ad8bbacf89dc88ec7ad430d10dbedab8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A member loading the pre-computed optimal openings into a map.  <br /></td></tr>
-<tr class="separator:ad8bbacf89dc88ec7ad430d10dbedab8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19354470203ccce3e23a96990f4228bc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#a8598148c10b670d2dcd865d177f7f8d3">ListOfMoves</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a19354470203ccce3e23a96990f4228bc">availableMoves</a> (const <a class="el" href="_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a> &amp;player, const bool &amp;full)</td></tr>
-<tr class="memdesc:a19354470203ccce3e23a96990f4228bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the list of available moves.  <br /></td></tr>
-<tr class="separator:a19354470203ccce3e23a96990f4228bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2378b78716287a3e37cf1e3cb22e4107"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a2378b78716287a3e37cf1e3cb22e4107">AlphaBeta</a> (const std::vector&lt; std::vector&lt; double &gt; &gt; &amp;<a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a>, const std::vector&lt; std::vector&lt; double &gt; &gt; &amp;<a class="el" href="class_alpha_beta.html#a3383fdd88e0af7e441195536b4a949a8">player_to_lose_value_</a>)</td></tr>
+<tr class="memdesc:a2378b78716287a3e37cf1e3cb22e4107"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple constructor.  <br /></td></tr>
+<tr class="separator:a2378b78716287a3e37cf1e3cb22e4107"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64e452c751abaafa705486a16860db3a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#ac71100c33eb0cab30b54caf2736a8121">ListOfPositionType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a64e452c751abaafa705486a16860db3a">getMove</a> (const int &amp;depth, const double &amp;alpha, const double &amp;beta)</td></tr>
 <tr class="memdesc:a64e452c751abaafa705486a16860db3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the best move according to the alpha beta algorithm.  <br /></td></tr>
 <tr class="separator:a64e452c751abaafa705486a16860db3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf765c611139e2b0a7c85cc6ba902c27"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#aaf765c611139e2b0a7c85cc6ba902c27">AlphaBetaEval</a> (const int &amp;depth, double alpha, double beta, const bool &amp;maximizingPlayer, const bool &amp;keepMove)</td></tr>
-<tr class="memdesc:aaf765c611139e2b0a7c85cc6ba902c27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a step of the alpha beta algorithm.  <br /></td></tr>
-<tr class="separator:aaf765c611139e2b0a7c85cc6ba902c27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ff7f8edc2634668aef96b4b959e8200"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a8ff7f8edc2634668aef96b4b959e8200">reverseMove</a> (const <a class="el" href="_types_8hpp.html#ac71100c33eb0cab30b54caf2736a8121">ListOfPositionType</a> &amp;<a class="el" href="class_chinese_checkers.html#a30b0208c019ac1348374ac9c34eb7f7a">move</a>)</td></tr>
-<tr class="memdesc:a8ff7f8edc2634668aef96b4b959e8200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cancel the last move.  <br /></td></tr>
-<tr class="separator:a8ff7f8edc2634668aef96b4b959e8200"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dd32c3a90d7ad7cc42e046773d94018"><td class="memItemLeft" align="right" valign="top">uint_fast64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a9dd32c3a90d7ad7cc42e046773d94018">getMove64</a> (const int &amp;depth)</td></tr>
+<tr class="memdesc:a9dd32c3a90d7ad7cc42e046773d94018"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the best move according to the alpha beta algorithm.  <br /></td></tr>
+<tr class="separator:a9dd32c3a90d7ad7cc42e046773d94018"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02add2f65f9b637e3131d1db1565c490"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a02add2f65f9b637e3131d1db1565c490">isHuman</a> ()</td></tr>
 <tr class="memdesc:a02add2f65f9b637e3131d1db1565c490"><td class="mdescLeft">&#160;</td><td class="mdescRight">A helper function for the python connexion.  <br /></td></tr>
 <tr class="separator:a02add2f65f9b637e3131d1db1565c490"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab3c59d12afcebf47029a5aec3c217e9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#aab3c59d12afcebf47029a5aec3c217e9">get_maximizing_player_</a> () const</td></tr>
-<tr class="memdesc:aab3c59d12afcebf47029a5aec3c217e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple get.  <br /></td></tr>
-<tr class="separator:aab3c59d12afcebf47029a5aec3c217e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada0b0c6f5edc795b33a6da49f5638011"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ada0b0c6f5edc795b33a6da49f5638011">get_player_to_loose_value_</a> ()</td></tr>
-<tr class="memdesc:ada0b0c6f5edc795b33a6da49f5638011"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple get.  <br /></td></tr>
-<tr class="separator:ada0b0c6f5edc795b33a6da49f5638011"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2540367e612c7d75c4a188d375d9cb9"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ae2540367e612c7d75c4a188d375d9cb9">get_player_to_win_value_</a> ()</td></tr>
-<tr class="memdesc:ae2540367e612c7d75c4a188d375d9cb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple get.  <br /></td></tr>
-<tr class="separator:ae2540367e612c7d75c4a188d375d9cb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0228f457ef8caf30bfb5836610cc959"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#aa0228f457ef8caf30bfb5836610cc959">set_player_to_loose_value_</a> (std::vector&lt; std::vector&lt; double &gt; &gt; &amp;<a class="el" href="class_alpha_beta.html#a82d1d434488d087ec140e6fbc959879d">player_to_loose_value_</a>)</td></tr>
-<tr class="memdesc:aa0228f457ef8caf30bfb5836610cc959"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple set.  <br /></td></tr>
-<tr class="separator:aa0228f457ef8caf30bfb5836610cc959"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23d54bb3c19537385058f2984e8b833b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a23d54bb3c19537385058f2984e8b833b">set_player_to_win_value_</a> (std::vector&lt; std::vector&lt; double &gt; &gt; &amp;<a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a>)</td></tr>
-<tr class="memdesc:a23d54bb3c19537385058f2984e8b833b"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple set.  <br /></td></tr>
-<tr class="separator:a23d54bb3c19537385058f2984e8b833b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8bbacf89dc88ec7ad430d10dbedab8e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ad8bbacf89dc88ec7ad430d10dbedab8e">loadOpenings</a> ()</td></tr>
+<tr class="memdesc:ad8bbacf89dc88ec7ad430d10dbedab8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A member loading the pre-computed optimal openings into <a class="el" href="class_alpha_beta.html#ae4d6a9def1ef6dd145c2922f92b2c666">opening_</a>.  <br /></td></tr>
+<tr class="separator:ad8bbacf89dc88ec7ad430d10dbedab8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb34cb102d139797f748ddd44c07eae0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#acb34cb102d139797f748ddd44c07eae0">getMaximizingPlayer</a> () const</td></tr>
+<tr class="memdesc:acb34cb102d139797f748ddd44c07eae0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns <a class="el" href="class_alpha_beta.html#a1c190bd8b8eceb1ee916915856228cfc">maximizing_player_</a>.  <br /></td></tr>
+<tr class="separator:acb34cb102d139797f748ddd44c07eae0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8a1c37b826e9c09cfd53e880f5d74f5"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ab8a1c37b826e9c09cfd53e880f5d74f5">getPlayerToLoseValue</a> ()</td></tr>
+<tr class="memdesc:ab8a1c37b826e9c09cfd53e880f5d74f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns <a class="el" href="class_alpha_beta.html#a3383fdd88e0af7e441195536b4a949a8">player_to_lose_value_</a>.  <br /></td></tr>
+<tr class="separator:ab8a1c37b826e9c09cfd53e880f5d74f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2dfce51de5c2c0f46c0a81637ee2ec5"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#af2dfce51de5c2c0f46c0a81637ee2ec5">getPlayerToWinValue</a> ()</td></tr>
+<tr class="memdesc:af2dfce51de5c2c0f46c0a81637ee2ec5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns <a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a>.  <br /></td></tr>
+<tr class="separator:af2dfce51de5c2c0f46c0a81637ee2ec5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc8d30b346fc4f0b12df3df4732741b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#acc8d30b346fc4f0b12df3df4732741b2">setPlayerToLoseValue</a> (std::vector&lt; std::vector&lt; double &gt; &gt; &amp;<a class="el" href="class_alpha_beta.html#a3383fdd88e0af7e441195536b4a949a8">player_to_lose_value_</a>)</td></tr>
+<tr class="memdesc:acc8d30b346fc4f0b12df3df4732741b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets <a class="el" href="class_alpha_beta.html#a3383fdd88e0af7e441195536b4a949a8">player_to_lose_value_</a>.  <br /></td></tr>
+<tr class="separator:acc8d30b346fc4f0b12df3df4732741b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1a690e7c56b7b0836d51b6fbc24c8be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#af1a690e7c56b7b0836d51b6fbc24c8be">setPlayerToWinValue</a> (std::vector&lt; std::vector&lt; double &gt; &gt; &amp;<a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a>)</td></tr>
+<tr class="memdesc:af1a690e7c56b7b0836d51b6fbc24c8be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets <a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a>.  <br /></td></tr>
+<tr class="separator:af1a690e7c56b7b0836d51b6fbc24c8be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_chinese_checkers"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_chinese_checkers')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_chinese_checkers.html">ChineseCheckers</a></td></tr>
 <tr class="memitem:a18089528ddbdb10b6e0f12495c1923ca inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a18089528ddbdb10b6e0f12495c1923ca">ChineseCheckers</a> ()</td></tr>
 <tr class="memdesc:a18089528ddbdb10b6e0f12495c1923ca inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple constructor.  <br /></td></tr>
 <tr class="separator:a18089528ddbdb10b6e0f12495c1923ca inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30b0208c019ac1348374ac9c34eb7f7a inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a30b0208c019ac1348374ac9c34eb7f7a">move</a> (<a class="el" href="_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a> player, const <a class="el" href="_types_8hpp.html#ac71100c33eb0cab30b54caf2736a8121">ListOfPositionType</a> &amp;list_moves)</td></tr>
-<tr class="memdesc:a30b0208c019ac1348374ac9c34eb7f7a inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">This member checks if a move is legal and executes it if it is legal.  <br /></td></tr>
-<tr class="separator:a30b0208c019ac1348374ac9c34eb7f7a inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9487f2b9a4d03ec63a08742be2103e4b inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#a28287671eaf7406afd604bd055ba4066">Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a9487f2b9a4d03ec63a08742be2103e4b">state_of_game</a> ()</td></tr>
-<tr class="memdesc:a9487f2b9a4d03ec63a08742be2103e4b inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates the current state of the game (ie, not finished, black won, white won or draw).  <br /></td></tr>
-<tr class="separator:a9487f2b9a4d03ec63a08742be2103e4b inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae26bfd9b34e8c60e0e8195e654fa4a66 inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#ae26bfd9b34e8c60e0e8195e654fa4a66">new_game</a> ()</td></tr>
-<tr class="memdesc:ae26bfd9b34e8c60e0e8195e654fa4a66 inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new game.  <br /></td></tr>
-<tr class="separator:ae26bfd9b34e8c60e0e8195e654fa4a66 inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b3cacc424216247710e89430336ad5c inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a4b3cacc424216247710e89430336ad5c">print_grid_</a> ()</td></tr>
-<tr class="memdesc:a4b3cacc424216247710e89430336ad5c inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints <a class="el" href="class_chinese_checkers.html#a680f263ed13c76a154eae56521302c97">grid_</a>.  <br /></td></tr>
-<tr class="separator:a4b3cacc424216247710e89430336ad5c inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa649942d0de9fe5291ab36477f49e0e4 inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#a2323f67766c1d3ce0bbfafaa00c21a78">GridType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#aa649942d0de9fe5291ab36477f49e0e4">get_grid_</a> () const</td></tr>
-<tr class="memdesc:aa649942d0de9fe5291ab36477f49e0e4 inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns <a class="el" href="class_chinese_checkers.html#a680f263ed13c76a154eae56521302c97">grid_</a>.  <br /></td></tr>
-<tr class="separator:aa649942d0de9fe5291ab36477f49e0e4 inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a137197aeb098fb349f76bde3d519c805 inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a137197aeb098fb349f76bde3d519c805">print_position_colors_players_</a> ()</td></tr>
-<tr class="memdesc:a137197aeb098fb349f76bde3d519c805 inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints <a class="el" href="class_chinese_checkers.html#ab008d35c0681791fa5d94669bb64bd0e">position_colors_players_</a>.  <br /></td></tr>
-<tr class="separator:a137197aeb098fb349f76bde3d519c805 inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb2320af5916053b9a46733735316f87 inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; <a class="el" href="_types_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#adb2320af5916053b9a46733735316f87">get_position_colors_players_</a> () const</td></tr>
-<tr class="memdesc:adb2320af5916053b9a46733735316f87 inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="class_chinese_checkers.html#ab008d35c0681791fa5d94669bb64bd0e">position_colors_players_</a>.  <br /></td></tr>
-<tr class="separator:adb2320af5916053b9a46733735316f87 inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1dc874ca498eaa8f06b588bc27ee5a60 inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a1dc874ca498eaa8f06b588bc27ee5a60">print_who_is_to_play_</a> ()</td></tr>
-<tr class="memdesc:a1dc874ca498eaa8f06b588bc27ee5a60 inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints <a class="el" href="class_chinese_checkers.html#a58000710730305c43b809d8a2f258432">who_is_to_play_</a>.  <br /></td></tr>
-<tr class="separator:a1dc874ca498eaa8f06b588bc27ee5a60 inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8fe6c3b2328ff3bd92a7ab3f98c28f83 inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a8fe6c3b2328ff3bd92a7ab3f98c28f83">get_who_is_to_play_</a> () const</td></tr>
-<tr class="memdesc:a8fe6c3b2328ff3bd92a7ab3f98c28f83 inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns <a class="el" href="class_chinese_checkers.html#a58000710730305c43b809d8a2f258432">who_is_to_play_</a>.  <br /></td></tr>
-<tr class="separator:a8fe6c3b2328ff3bd92a7ab3f98c28f83 inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a97c08066dfedc01087bd1c81c1217e9c inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; uint64_t, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a97c08066dfedc01087bd1c81c1217e9c">get_number_of_times_seen</a> () const</td></tr>
-<tr class="memdesc:a97c08066dfedc01087bd1c81c1217e9c inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns <a class="el" href="class_chinese_checkers.html#aed7e1ae2bc9d207e634fa8f9744131bd">number_of_times_seen</a>/.  <br /></td></tr>
-<tr class="separator:a97c08066dfedc01087bd1c81c1217e9c inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a158fb82aa9da15028ec9ec62ef6bd271 inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a158fb82aa9da15028ec9ec62ef6bd271">newGame</a> ()</td></tr>
+<tr class="memdesc:a158fb82aa9da15028ec9ec62ef6bd271 inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new game.  <br /></td></tr>
+<tr class="separator:a158fb82aa9da15028ec9ec62ef6bd271 inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95fcf9d29ed0358eb62f0ba82d70fa71 inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a95fcf9d29ed0358eb62f0ba82d70fa71">move</a> (const <a class="el" href="_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a> &amp;player, const <a class="el" href="_types_8hpp.html#ac71100c33eb0cab30b54caf2736a8121">ListOfPositionType</a> &amp;list_moves)</td></tr>
+<tr class="memdesc:a95fcf9d29ed0358eb62f0ba82d70fa71 inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">This member checks if a move is legal and executes it if it is legal.  <br /></td></tr>
+<tr class="separator:a95fcf9d29ed0358eb62f0ba82d70fa71 inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a917bd36429c79e4d4888ad6be3d8c092 inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#a28287671eaf7406afd604bd055ba4066">Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a917bd36429c79e4d4888ad6be3d8c092">stateOfGame</a> ()</td></tr>
+<tr class="memdesc:a917bd36429c79e4d4888ad6be3d8c092 inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates the current state of the game (ie, not finished, black won, white won or draw).  <br /></td></tr>
+<tr class="separator:a917bd36429c79e4d4888ad6be3d8c092 inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae2da4e76de472031422424f22b3e5cc inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#aae2da4e76de472031422424f22b3e5cc">moveWithoutVerification</a> (const uint_fast64_t &amp;<a class="el" href="class_chinese_checkers.html#a95fcf9d29ed0358eb62f0ba82d70fa71">move</a>)</td></tr>
+<tr class="memdesc:aae2da4e76de472031422424f22b3e5cc inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">This member execute a move without checking if the move is legal.  <br /></td></tr>
+<tr class="separator:aae2da4e76de472031422424f22b3e5cc inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05d6d8115cbdeff36a7d1fc197bf65fc inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a05d6d8115cbdeff36a7d1fc197bf65fc">hashGrid</a> ()</td></tr>
-<tr class="memdesc:a05d6d8115cbdeff36a7d1fc197bf65fc inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hashes <a class="el" href="class_chinese_checkers.html#a680f263ed13c76a154eae56521302c97">grid_</a> according to the fnv1a scheme.  <br /></td></tr>
+<tr class="memdesc:a05d6d8115cbdeff36a7d1fc197bf65fc inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hashes the grid.  <br /></td></tr>
 <tr class="separator:a05d6d8115cbdeff36a7d1fc197bf65fc inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8760f7775666826da88ab0d007c36efd inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a8760f7775666826da88ab0d007c36efd">getWhoIsToPlay</a> () const</td></tr>
+<tr class="memdesc:a8760f7775666826da88ab0d007c36efd inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns <a class="el" href="class_chinese_checkers.html#a58000710730305c43b809d8a2f258432">who_is_to_play_</a>.  <br /></td></tr>
+<tr class="separator:a8760f7775666826da88ab0d007c36efd inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1616e60f1208371766d0c5a4e00fff9 inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">boost::unordered_map&lt; uint64_t, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#ab1616e60f1208371766d0c5a4e00fff9">getNumberOfTimesSeen</a> () const</td></tr>
+<tr class="memdesc:ab1616e60f1208371766d0c5a4e00fff9 inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns number_of_times_seen.  <br /></td></tr>
+<tr class="separator:ab1616e60f1208371766d0c5a4e00fff9 inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb36a329965da11e9b4d9ba6e85683b9 inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">uint_fast64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#abb36a329965da11e9b4d9ba6e85683b9">getBitBoardWhite</a> ()</td></tr>
+<tr class="memdesc:abb36a329965da11e9b4d9ba6e85683b9 inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns bitBoards.White.  <br /></td></tr>
+<tr class="separator:abb36a329965da11e9b4d9ba6e85683b9 inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4c5cbe9d64f6494abf80981f048080d inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">uint_fast64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#ac4c5cbe9d64f6494abf80981f048080d">getBitBoardBlack</a> ()</td></tr>
+<tr class="memdesc:ac4c5cbe9d64f6494abf80981f048080d inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns bitBoards.Black.  <br /></td></tr>
+<tr class="separator:ac4c5cbe9d64f6494abf80981f048080d inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47574785bdb5920db7722a1630ab4f40 inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a47574785bdb5920db7722a1630ab4f40">printGrid</a> ()</td></tr>
+<tr class="memdesc:a47574785bdb5920db7722a1630ab4f40 inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints the grid.  <br /></td></tr>
+<tr class="separator:a47574785bdb5920db7722a1630ab4f40 inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a893b1a49725415014b9fb94243fb64d5 inherit pub_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a893b1a49725415014b9fb94243fb64d5">printWhoIsToPlay</a> ()</td></tr>
+<tr class="memdesc:a893b1a49725415014b9fb94243fb64d5 inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints <a class="el" href="class_chinese_checkers.html#a58000710730305c43b809d8a2f258432">who_is_to_play_</a>.  <br /></td></tr>
+<tr class="separator:a893b1a49725415014b9fb94243fb64d5 inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -208,73 +202,120 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a8bcc9a3133d85ac79f44e4db9f4f6504"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a8bcc9a3133d85ac79f44e4db9f4f6504">heuristicValue</a> ()</td></tr>
 <tr class="memdesc:a8bcc9a3133d85ac79f44e4db9f4f6504"><td class="mdescLeft">&#160;</td><td class="mdescRight">A member used to estimate the value of a position.  <br /></td></tr>
 <tr class="separator:a8bcc9a3133d85ac79f44e4db9f4f6504"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9194656eaf4eaa49ec4ce10273846ea6"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a9194656eaf4eaa49ec4ce10273846ea6">evaluate</a> (const <a class="el" href="_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a> &amp;player)</td></tr>
-<tr class="memdesc:a9194656eaf4eaa49ec4ce10273846ea6"><td class="mdescLeft">&#160;</td><td class="mdescRight">A member used to estimate the value of a position for a given player.  <br /></td></tr>
-<tr class="separator:a9194656eaf4eaa49ec4ce10273846ea6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac337120a5293eb546352e7e9d8638f89"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ac337120a5293eb546352e7e9d8638f89">updateHeuristicValue</a> (const uint_fast64_t &amp;<a class="el" href="class_chinese_checkers.html#a95fcf9d29ed0358eb62f0ba82d70fa71">move</a>)</td></tr>
+<tr class="memdesc:ac337120a5293eb546352e7e9d8638f89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates <a class="el" href="class_alpha_beta.html#a3e9eb1d69b18495c4d1eb48ea426a2f3">heuristic_value_</a> for a move.  <br /></td></tr>
+<tr class="separator:ac337120a5293eb546352e7e9d8638f89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7df037e15bdc721cbd4b4806147cf5ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a7df037e15bdc721cbd4b4806147cf5ed">updateHeuristicValueBack</a> (const uint_fast64_t &amp;<a class="el" href="class_chinese_checkers.html#a95fcf9d29ed0358eb62f0ba82d70fa71">move</a>)</td></tr>
+<tr class="memdesc:a7df037e15bdc721cbd4b4806147cf5ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates <a class="el" href="class_alpha_beta.html#a3e9eb1d69b18495c4d1eb48ea426a2f3">heuristic_value_</a> when a move is canceled.  <br /></td></tr>
+<tr class="separator:a7df037e15bdc721cbd4b4806147cf5ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77a9f85920a3f10c03d9003d78468e02"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a77a9f85920a3f10c03d9003d78468e02">tensorflowOrderMoves</a> (<a class="el" href="_types_8hpp.html#a8598148c10b670d2dcd865d177f7f8d3">ListOfMoves</a> &amp;possible_moves)</td></tr>
 <tr class="memdesc:a77a9f85920a3f10c03d9003d78468e02"><td class="mdescLeft">&#160;</td><td class="mdescRight">A member used to order the moves before exploring them.  <br /></td></tr>
 <tr class="separator:a77a9f85920a3f10c03d9003d78468e02"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fd407c52a3c0b85b90fb02f00e4a7a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a4fd407c52a3c0b85b90fb02f00e4a7a0">sortDepth1</a> (<a class="el" href="_types_8hpp.html#a8598148c10b670d2dcd865d177f7f8d3">ListOfMoves</a> &amp;possible_moves)</td></tr>
-<tr class="memdesc:a4fd407c52a3c0b85b90fb02f00e4a7a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">A member used to order the moves before exploring them.  <br /></td></tr>
-<tr class="separator:a4fd407c52a3c0b85b90fb02f00e4a7a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8dc0d94aa839f825e7ff1e97054888d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a8dc0d94aa839f825e7ff1e97054888d0">availableMoves</a> (std::vector&lt; uint_fast64_t &gt; &amp;result)</td></tr>
+<tr class="memdesc:a8dc0d94aa839f825e7ff1e97054888d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the list of available moves.  <br /></td></tr>
+<tr class="separator:a8dc0d94aa839f825e7ff1e97054888d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10d5f03431a4928d732ba0ab7f5307ee"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a10d5f03431a4928d732ba0ab7f5307ee">AlphaBetaEval</a> (const int &amp;depth, double alpha, double beta, const bool &amp;maximizingPlayer, const bool &amp;keepMove)</td></tr>
+<tr class="memdesc:a10d5f03431a4928d732ba0ab7f5307ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a step of the alpha beta algorithm.  <br /></td></tr>
+<tr class="separator:a10d5f03431a4928d732ba0ab7f5307ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acff36450bea77f8ed7298eae120fd798"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#acff36450bea77f8ed7298eae120fd798">reverseMove</a> (const uint_fast64_t &amp;<a class="el" href="class_chinese_checkers.html#a95fcf9d29ed0358eb62f0ba82d70fa71">move</a>)</td></tr>
+<tr class="memdesc:acff36450bea77f8ed7298eae120fd798"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cancel the last move.  <br /></td></tr>
+<tr class="separator:acff36450bea77f8ed7298eae120fd798"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b98cb4998a913298cea216f8d35b432"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#ac71100c33eb0cab30b54caf2736a8121">ListOfPositionType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a0b98cb4998a913298cea216f8d35b432">retrieveMoves</a> (const uint_fast64_t &amp;<a class="el" href="class_chinese_checkers.html#a95fcf9d29ed0358eb62f0ba82d70fa71">move</a>)</td></tr>
+<tr class="memdesc:a0b98cb4998a913298cea216f8d35b432"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the full path of a move from a simple bit mask.  <br /></td></tr>
+<tr class="separator:a0b98cb4998a913298cea216f8d35b432"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc83ccc2a943f321898cdebf29334951"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#afc83ccc2a943f321898cdebf29334951">hashGrid</a> ()</td></tr>
+<tr class="memdesc:afc83ccc2a943f321898cdebf29334951"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hashes the grid.  <br /></td></tr>
+<tr class="separator:afc83ccc2a943f321898cdebf29334951"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_class_chinese_checkers"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_class_chinese_checkers')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_chinese_checkers.html">ChineseCheckers</a></td></tr>
-<tr class="memitem:a64b4bc66e20170f44e6f30eb6a022c3e inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#ab152e38addc9865a033ed991583c1395">MoveType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a64b4bc66e20170f44e6f30eb6a022c3e">elementaryMove</a> (<a class="el" href="_types_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a> original_position, <a class="el" href="_types_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a> arrival_position)</td></tr>
-<tr class="memdesc:a64b4bc66e20170f44e6f30eb6a022c3e inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">A member returning the type of an elementary move (not a succession of jumps).  <br /></td></tr>
-<tr class="separator:a64b4bc66e20170f44e6f30eb6a022c3e inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28bad38a657e580086605791f3f36625 inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a28bad38a657e580086605791f3f36625">remove_pawn</a> (<a class="el" href="_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a> player, <a class="el" href="_types_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a> position)</td></tr>
-<tr class="memdesc:a28bad38a657e580086605791f3f36625 inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">A member used to indicate that a pawn should not be considered until further notice.  <br /></td></tr>
-<tr class="separator:a28bad38a657e580086605791f3f36625 inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8cef54f6a96a9d329ce1ce535aa3223 inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#ac8cef54f6a96a9d329ce1ce535aa3223">reset_pawn</a> (<a class="el" href="_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a> player, <a class="el" href="_types_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a> position)</td></tr>
-<tr class="separator:ac8cef54f6a96a9d329ce1ce535aa3223 inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f972b072fa6a0caeeebd60ada9e63e6 inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a7f972b072fa6a0caeeebd60ada9e63e6">moveWithoutVerification</a> (<a class="el" href="_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a> player, const <a class="el" href="_types_8hpp.html#ac71100c33eb0cab30b54caf2736a8121">ListOfPositionType</a> &amp;list_moves)</td></tr>
-<tr class="memdesc:a7f972b072fa6a0caeeebd60ada9e63e6 inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">This member execute a move without checking if the move is legal.  <br /></td></tr>
-<tr class="separator:a7f972b072fa6a0caeeebd60ada9e63e6 inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23dc79991d47a3fae6617f80ecc1ae26 inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a23dc79991d47a3fae6617f80ecc1ae26">fnv1aColor</a> (uint64_t h, const <a class="el" href="_types_8hpp.html#ab87bacfdad76e61b9412d7124be44c1c">Color</a> &amp;x)</td></tr>
-<tr class="memdesc:a23dc79991d47a3fae6617f80ecc1ae26 inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a color to a hash according to the fnv1a scheme.  <br /></td></tr>
-<tr class="separator:a23dc79991d47a3fae6617f80ecc1ae26 inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c9438821d5d3be4e12beae58ab33ef3 inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a5c9438821d5d3be4e12beae58ab33ef3">fnv1a</a> (uint64_t h, const int &amp;x)</td></tr>
-<tr class="memdesc:a5c9438821d5d3be4e12beae58ab33ef3 inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a color to a hash according to the fnv1a scheme.  <br /></td></tr>
-<tr class="separator:a5c9438821d5d3be4e12beae58ab33ef3 inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b2c02372e45024e2d27a87bd44dd37f inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a8b2c02372e45024e2d27a87bd44dd37f">hashMatrix</a> (const <a class="el" href="_types_8hpp.html#a2323f67766c1d3ce0bbfafaa00c21a78">GridType</a> &amp;matrix, const int &amp;player)</td></tr>
-<tr class="memdesc:a8b2c02372e45024e2d27a87bd44dd37f inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hashes a matrix according to the fnv1a scheme.  <br /></td></tr>
-<tr class="separator:a8b2c02372e45024e2d27a87bd44dd37f inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4eb6910280714739ee1a318fa46bfb6d inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a4eb6910280714739ee1a318fa46bfb6d">hashMove</a> (const <a class="el" href="_types_8hpp.html#ac71100c33eb0cab30b54caf2736a8121">ListOfPositionType</a> &amp;<a class="el" href="class_chinese_checkers.html#a30b0208c019ac1348374ac9c34eb7f7a">move</a>)</td></tr>
-<tr class="memdesc:a4eb6910280714739ee1a318fa46bfb6d inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hashes a move according to the fnv1a scheme.  <br /></td></tr>
-<tr class="separator:a4eb6910280714739ee1a318fa46bfb6d inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa258e6cbf34f763c9b9983c1f3aa1622 inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#aa258e6cbf34f763c9b9983c1f3aa1622">hashPosition</a> (const <a class="el" href="_types_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a> &amp;<a class="el" href="class_chinese_checkers.html#a30b0208c019ac1348374ac9c34eb7f7a">move</a>)</td></tr>
-<tr class="memdesc:aa258e6cbf34f763c9b9983c1f3aa1622 inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hashes a position according to the fnv1a scheme.  <br /></td></tr>
-<tr class="separator:aa258e6cbf34f763c9b9983c1f3aa1622 inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e0366b1b08e703507a7948c1439e026 inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#ab152e38addc9865a033ed991583c1395">MoveType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a4e0366b1b08e703507a7948c1439e026">elementaryMove</a> (const <a class="el" href="_types_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a> &amp;original_position, const <a class="el" href="_types_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a> &amp;arrival_position)</td></tr>
+<tr class="memdesc:a4e0366b1b08e703507a7948c1439e026 inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">A member returning the type of an elementary move (not a succession of jumps).  <br /></td></tr>
+<tr class="separator:a4e0366b1b08e703507a7948c1439e026 inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf3fee8d8c34b6f4ab67c9290ef63b5b inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#adf3fee8d8c34b6f4ab67c9290ef63b5b">isPositionIllegal</a> ()</td></tr>
+<tr class="memdesc:adf3fee8d8c34b6f4ab67c9290ef63b5b inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the position is illegal or not.  <br /></td></tr>
+<tr class="separator:adf3fee8d8c34b6f4ab67c9290ef63b5b inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a614ed943e26de29c232f381ada130cb7 inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a614ed943e26de29c232f381ada130cb7">cantorPairingFunction</a> (const int &amp;x, const int &amp;y)</td></tr>
+<tr class="memdesc:a614ed943e26de29c232f381ada130cb7 inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cantor's pairing function.  <br /></td></tr>
+<tr class="separator:a614ed943e26de29c232f381ada130cb7 inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe251e1b58dc7f9fef73132d38a4468e inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#abe251e1b58dc7f9fef73132d38a4468e">loadIllegalPositions</a> ()</td></tr>
+<tr class="memdesc:abe251e1b58dc7f9fef73132d38a4468e inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads illegal positions.  <br /></td></tr>
+<tr class="separator:abe251e1b58dc7f9fef73132d38a4468e inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a9103d74fc847bb3a24edc655036507ef"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a></td></tr>
+<tr class="memdesc:a9103d74fc847bb3a24edc655036507ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">This matrix indicates the values we will assign to each pawns when we compute the heuristic value for the player we are playing for.  <br /></td></tr>
 <tr class="separator:a9103d74fc847bb3a24edc655036507ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82d1d434488d087ec140e6fbc959879d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a82d1d434488d087ec140e6fbc959879d">player_to_loose_value_</a></td></tr>
-<tr class="separator:a82d1d434488d087ec140e6fbc959879d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bc9c4f91deb6738c243cd352fc3f47a"><td class="memItemLeft" align="right" valign="top">boost::unordered_map&lt; uint_fast64_t, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a1bc9c4f91deb6738c243cd352fc3f47a">player_to_win_value_map_white_</a></td></tr>
+<tr class="memdesc:a1bc9c4f91deb6738c243cd352fc3f47a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This map is used to get values without having to get indexes from bitmasks on <a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a>.  <br /></td></tr>
+<tr class="separator:a1bc9c4f91deb6738c243cd352fc3f47a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c638fafb3e0981ba01156ce462c7f3a"><td class="memItemLeft" align="right" valign="top">boost::unordered_map&lt; uint_fast64_t, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a1c638fafb3e0981ba01156ce462c7f3a">player_to_win_value_map_black_</a></td></tr>
+<tr class="memdesc:a1c638fafb3e0981ba01156ce462c7f3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This map is used to get values without having to get indexes from bitmasks on <a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a>.  <br /></td></tr>
+<tr class="separator:a1c638fafb3e0981ba01156ce462c7f3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3383fdd88e0af7e441195536b4a949a8"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a3383fdd88e0af7e441195536b4a949a8">player_to_lose_value_</a></td></tr>
+<tr class="memdesc:a3383fdd88e0af7e441195536b4a949a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">This matrix indicates the values we will assign to each pawns when we compute the heuristic value for the player we are playing for.  <br /></td></tr>
+<tr class="separator:a3383fdd88e0af7e441195536b4a949a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0444d94fa2518b4b060d1bdd85f4594"><td class="memItemLeft" align="right" valign="top">boost::unordered_map&lt; uint_fast64_t, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#af0444d94fa2518b4b060d1bdd85f4594">player_to_lose_value_map_white_</a></td></tr>
+<tr class="memdesc:af0444d94fa2518b4b060d1bdd85f4594"><td class="mdescLeft">&#160;</td><td class="mdescRight">This map is used to get values without having to get indexes from bitmasks on <a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a>.  <br /></td></tr>
+<tr class="separator:af0444d94fa2518b4b060d1bdd85f4594"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3708615dd5de812c74adbec296449c7"><td class="memItemLeft" align="right" valign="top">boost::unordered_map&lt; uint_fast64_t, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ab3708615dd5de812c74adbec296449c7">player_to_lose_value_map_black_</a></td></tr>
+<tr class="memdesc:ab3708615dd5de812c74adbec296449c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">This map is used to get values without having to get indexes from bitmasks on <a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a>.  <br /></td></tr>
+<tr class="separator:ab3708615dd5de812c74adbec296449c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c190bd8b8eceb1ee916915856228cfc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a1c190bd8b8eceb1ee916915856228cfc">maximizing_player_</a></td></tr>
 <tr class="separator:a1c190bd8b8eceb1ee916915856228cfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ed1bf3fd08f4c66535134cb94d91dbe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#ac71100c33eb0cab30b54caf2736a8121">ListOfPositionType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a2ed1bf3fd08f4c66535134cb94d91dbe">best_move_</a></td></tr>
-<tr class="separator:a2ed1bf3fd08f4c66535134cb94d91dbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a51427b3355783abe3fce90c7745f700d"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; uint64_t, std::pair&lt; double, int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a51427b3355783abe3fce90c7745f700d">transTable</a></td></tr>
-<tr class="separator:a51427b3355783abe3fce90c7745f700d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f33c25e3d41b64bfa4ae2e1a76a38a6"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; uint64_t, <a class="el" href="_types_8hpp.html#ac71100c33eb0cab30b54caf2736a8121">ListOfPositionType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a1f33c25e3d41b64bfa4ae2e1a76a38a6">opening</a></td></tr>
-<tr class="separator:a1f33c25e3d41b64bfa4ae2e1a76a38a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2a6d244b7e6baafc1a50afc2d8add6a"><td class="memItemLeft" align="right" valign="top">cppflow::model *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ab2a6d244b7e6baafc1a50afc2d8add6a">model</a> = new cppflow::model(&quot;./model&quot;)</td></tr>
+<tr class="memitem:ae23797aba814bc53892d8567e822488b"><td class="memItemLeft" align="right" valign="top">uint_fast64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ae23797aba814bc53892d8567e822488b">best_move_</a></td></tr>
+<tr class="separator:ae23797aba814bc53892d8567e822488b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75368e2c2c4b86ceab825ed0bc94c588"><td class="memItemLeft" align="right" valign="top">boost::unordered_map&lt; bitBoards_t, std::pair&lt; double, int &gt;, bitBoardsHasher, bitBoardsEqual &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a75368e2c2c4b86ceab825ed0bc94c588">transposition_table_</a></td></tr>
+<tr class="separator:a75368e2c2c4b86ceab825ed0bc94c588"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c497c4f5103a9edb75ef2691765760c"><td class="memItemLeft" align="right" valign="top">boost::unordered_map&lt; bitBoards_t, std::pair&lt; double, int &gt; &gt;::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a4c497c4f5103a9edb75ef2691765760c">it_transposition_table_</a></td></tr>
+<tr class="separator:a4c497c4f5103a9edb75ef2691765760c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4d6a9def1ef6dd145c2922f92b2c666"><td class="memItemLeft" align="right" valign="top">boost::unordered_map&lt; bitBoards_t, uint_fast64_t, bitBoardsHasher, bitBoardsEqual &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ae4d6a9def1ef6dd145c2922f92b2c666">opening_</a></td></tr>
+<tr class="separator:ae4d6a9def1ef6dd145c2922f92b2c666"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2a6d244b7e6baafc1a50afc2d8add6a"><td class="memItemLeft" align="right" valign="top">cppflow::model *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ab2a6d244b7e6baafc1a50afc2d8add6a">model</a> = new cppflow::model(&quot;./raw_data/model&quot;)</td></tr>
 <tr class="separator:ab2a6d244b7e6baafc1a50afc2d8add6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82abaf5b3233e162a30d72884157eef8"><td class="memItemLeft" align="right" valign="top">boost::unordered_map&lt; uint_fast64_t, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a82abaf5b3233e162a30d72884157eef8">ctz_</a></td></tr>
+<tr class="separator:a82abaf5b3233e162a30d72884157eef8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e9eb1d69b18495c4d1eb48ea426a2f3"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a3e9eb1d69b18495c4d1eb48ea426a2f3">heuristic_value_</a></td></tr>
+<tr class="separator:a3e9eb1d69b18495c4d1eb48ea426a2f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a322cd42babafcd689f7f58029a9f2991"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a322cd42babafcd689f7f58029a9f2991">fullDepth_</a></td></tr>
+<tr class="separator:a322cd42babafcd689f7f58029a9f2991"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5ded94a7bfe2fbc251492b09ee9f3f4"><td class="memItemLeft" align="right" valign="top">std::array&lt; bool, 2 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#aa5ded94a7bfe2fbc251492b09ee9f3f4">won_</a> = {false, false}</td></tr>
+<tr class="separator:aa5ded94a7bfe2fbc251492b09ee9f3f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a382e3c6f6133aaeab30f7f7e9fa914e1"><td class="memItemLeft" align="right" valign="top">boost::unordered_map&lt; uint_fast64_t, std::vector&lt; uint_fast64_t &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a382e3c6f6133aaeab30f7f7e9fa914e1">possible_elementary_move_</a></td></tr>
+<tr class="separator:a382e3c6f6133aaeab30f7f7e9fa914e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3f67772634a9f733a8c1297f5b2ed4a"><td class="memItemLeft" align="right" valign="top">std::function&lt; bool(const uint_fast64_t &amp;, const uint_fast64_t &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#aa3f67772634a9f733a8c1297f5b2ed4a">comp_move_</a></td></tr>
+<tr class="separator:aa3f67772634a9f733a8c1297f5b2ed4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_chinese_checkers"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_class_chinese_checkers')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_chinese_checkers.html">ChineseCheckers</a></td></tr>
+<tr class="memitem:acf788c62d94fa80e296c4fdb343aac04 inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">uint_fast64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#acf788c62d94fa80e296c4fdb343aac04">un_64_</a> = static_cast&lt;uint_fast64_t&gt;(1)</td></tr>
+<tr class="separator:acf788c62d94fa80e296c4fdb343aac04 inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58000710730305c43b809d8a2f258432 inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a58000710730305c43b809d8a2f258432">who_is_to_play_</a> = 0</td></tr>
 <tr class="separator:a58000710730305c43b809d8a2f258432 inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a680f263ed13c76a154eae56521302c97 inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#a2323f67766c1d3ce0bbfafaa00c21a78">GridType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a680f263ed13c76a154eae56521302c97">grid_</a></td></tr>
-<tr class="separator:a680f263ed13c76a154eae56521302c97 inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab008d35c0681791fa5d94669bb64bd0e inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; <a class="el" href="_types_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#ab008d35c0681791fa5d94669bb64bd0e">position_colors_players_</a></td></tr>
-<tr class="separator:ab008d35c0681791fa5d94669bb64bd0e inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed7e1ae2bc9d207e634fa8f9744131bd inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; uint64_t, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#aed7e1ae2bc9d207e634fa8f9744131bd">number_of_times_seen</a></td></tr>
-<tr class="separator:aed7e1ae2bc9d207e634fa8f9744131bd inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d4bd6001d829cd2443850d10e17a4e7 inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::pair&lt; int, int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a7d4bd6001d829cd2443850d10e17a4e7">winning_positions_</a></td></tr>
-<tr class="separator:a7d4bd6001d829cd2443850d10e17a4e7 inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9f0bc098fd84c22ac6df4ca615f0157 inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">bitBoards_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#ad9f0bc098fd84c22ac6df4ca615f0157">bit_boards_</a></td></tr>
+<tr class="separator:ad9f0bc098fd84c22ac6df4ca615f0157 inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3738551e72ec70096f7b4f07a2d3f987 inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">boost::unordered_map&lt; uint64_t, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a3738551e72ec70096f7b4f07a2d3f987">number_of_times_seen_</a></td></tr>
+<tr class="separator:a3738551e72ec70096f7b4f07a2d3f987 inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5dd68754500e4c808d50e9ff1fadad82 inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">const uint_fast64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a5dd68754500e4c808d50e9ff1fadad82">winning_positions_white_</a> = 0xF0E0C08000000000</td></tr>
+<tr class="separator:a5dd68754500e4c808d50e9ff1fadad82 inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c3e39112109ccc46b6616ccf365921c inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">const uint_fast64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a4c3e39112109ccc46b6616ccf365921c">winning_positions_black_</a> = 0x000000000103070F</td></tr>
+<tr class="separator:a4c3e39112109ccc46b6616ccf365921c inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc5501b982026001192b2c9c30f1cf33 inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">boost::unordered_map&lt; uint32_t, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#afc5501b982026001192b2c9c30f1cf33">illegal_positions_</a></td></tr>
+<tr class="separator:afc5501b982026001192b2c9c30f1cf33 inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad91495f8863643daccbe58c12c4e3fe4 inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">std::array&lt; std::array&lt; uint32_t, 8 &gt;, 8 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#ad91495f8863643daccbe58c12c4e3fe4">cantorPairing_</a></td></tr>
+<tr class="separator:ad91495f8863643daccbe58c12c4e3fe4 inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0d185a90a8793b5382cf3c1846921b7 inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#ad0d185a90a8793b5382cf3c1846921b7">valid_lines</a></td></tr>
+<tr class="separator:ad0d185a90a8793b5382cf3c1846921b7 inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae69c56a07a8b622689999ae410db0175 inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#ae69c56a07a8b622689999ae410db0175">valid_lines_illegal</a></td></tr>
+<tr class="separator:ae69c56a07a8b622689999ae410db0175 inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4fb0d54c923578d9d895659b7b72752 inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">boost::unordered_map&lt; uint_fast64_t, std::pair&lt; int, int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#ac4fb0d54c923578d9d895659b7b72752">uint64_to_pair_</a></td></tr>
+<tr class="separator:ac4fb0d54c923578d9d895659b7b72752 inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd386bc806bdee8b5da27c127035e0ac inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">std::array&lt; std::array&lt; uint_fast64_t, 8 &gt;, 8 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#acd386bc806bdee8b5da27c127035e0ac">int_to_uint64_</a></td></tr>
+<tr class="separator:acd386bc806bdee8b5da27c127035e0ac inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa95ef9813edd2b656cad12be87718b90 inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; uint_fast64_t, std::vector&lt; uint_fast64_t &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#aa95ef9813edd2b656cad12be87718b90">direct_neighbours_</a></td></tr>
+<tr class="separator:aa95ef9813edd2b656cad12be87718b90 inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e00bb842e8295fad0676c2ce7159a6e inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; uint_fast64_t, std::vector&lt; std::vector&lt; std::pair&lt; std::pair&lt; uint_fast64_t, uint_fast64_t &gt;, uint_fast64_t &gt; &gt; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a1e00bb842e8295fad0676c2ce7159a6e">k_neighbours_</a></td></tr>
+<tr class="separator:a1e00bb842e8295fad0676c2ce7159a6e inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>An implementation of the alpha-beta pruning algorithm for the chinese checkers. </p>
+<div class="textblock"><p>The <a class="el" href="class_alpha_beta.html" title="The AlphaBeta class inherits from the ChineseCheckers class and provides an implementation of the alp...">AlphaBeta</a> class inherits from the <a class="el" href="class_chinese_checkers.html" title="This class represents a Chinese Checkers game The ChineseCheckers class is responsible for representi...">ChineseCheckers</a> class and provides an implementation of the alpha-beta algorithm with various optimizations for playing Chinese Checkers. The class provides several methods for evaluating the heuristic value of a position, ordering moves, and storing the results of previous searches in a transposition table. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a4f1dd330857a88996d468a8883e0e0ee" name="a4f1dd330857a88996d468a8883e0e0ee"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4f1dd330857a88996d468a8883e0e0ee">&#9670;&#160;</a></span>AlphaBeta() <span class="overload">[1/2]</span></h2>
@@ -292,13 +333,13 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>A simple constructor. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#aad26d455ceb10fd495c1d7c5b4a31780" title="A simple constructor.">AlphaBeta(const std::vector&lt; std::vector&lt;double&gt; &gt; &amp;player_to_win_value_,
-      const std::vector&lt; std::vector&lt;double&gt; &gt; &amp;player_to_loose_value_)</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#a2378b78716287a3e37cf1e3cb22e4107" title="A simple constructor.">AlphaBeta(const std::vector&lt; std::vector&lt;double&gt; &gt; &amp;player_to_win_value_,
+      const std::vector&lt; std::vector&lt;double&gt; &gt; &amp;player_to_lose_value_)</a> </dd></dl>
 
 </div>
 </div>
-<a id="aad26d455ceb10fd495c1d7c5b4a31780" name="aad26d455ceb10fd495c1d7c5b4a31780"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aad26d455ceb10fd495c1d7c5b4a31780">&#9670;&#160;</a></span>AlphaBeta() <span class="overload">[2/2]</span></h2>
+<a id="a2378b78716287a3e37cf1e3cb22e4107" name="a2378b78716287a3e37cf1e3cb22e4107"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2378b78716287a3e37cf1e3cb22e4107">&#9670;&#160;</a></span>AlphaBeta() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -313,7 +354,7 @@ Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const std::vector&lt; std::vector&lt; double &gt; &gt; &amp;&#160;</td>
-          <td class="paramname"><em>player_to_loose_value_</em>&#160;</td>
+          <td class="paramname"><em>player_to_lose_value_</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -327,24 +368,26 @@ Protected Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">player_to_win_value_</td><td></td></tr>
-    <tr><td class="paramname">player_to_loose_value_</td><td></td></tr>
+    <tr><td class="paramname">player_to_lose_value_</td><td></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#aad26d455ceb10fd495c1d7c5b4a31780" title="A simple constructor.">AlphaBeta(const std::vector&lt; std::vector&lt;double&gt; &gt; &amp;player_to_win_value_,
-      const std::vector&lt; std::vector&lt;double&gt; &gt; &amp;player_to_loose_value_)</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#a4f1dd330857a88996d468a8883e0e0ee" title="A simple constructor.">AlphaBeta()</a> </dd></dl>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aaf765c611139e2b0a7c85cc6ba902c27" name="aaf765c611139e2b0a7c85cc6ba902c27"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaf765c611139e2b0a7c85cc6ba902c27">&#9670;&#160;</a></span>AlphaBetaEval()</h2>
+<a id="a10d5f03431a4928d732ba0ab7f5307ee" name="a10d5f03431a4928d732ba0ab7f5307ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10d5f03431a4928d732ba0ab7f5307ee">&#9670;&#160;</a></span>AlphaBetaEval()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double AlphaBeta::AlphaBetaEval </td>
+          <td class="memname">const double AlphaBeta::AlphaBetaEval </td>
           <td>(</td>
           <td class="paramtype">const int &amp;&#160;</td>
           <td class="paramname"><em>depth</em>, </td>
@@ -379,75 +422,37 @@ Protected Attributes</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Makes a step of the alpha beta algorithm. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">depth</td><td>Indicates how deep we should explore the tree </td></tr>
-    <tr><td class="paramname">alpha</td><td></td></tr>
-    <tr><td class="paramname">beta</td><td></td></tr>
-    <tr><td class="paramname">maximizingPlayer</td><td>Indicates if the current player if the maximizing player </td></tr>
-    <tr><td class="paramname">keepMove</td><td>indicates if the best move from the current depth should be kept </td></tr>
+    <tr><td class="paramname">depth</td><td>Indicates how deep we should explore the tree. </td></tr>
+    <tr><td class="paramname">alpha.</td><td></td></tr>
+    <tr><td class="paramname">beta.</td><td></td></tr>
+    <tr><td class="paramname">maximizingPlayer</td><td>Indicates if the current player if the maximizing player. </td></tr>
+    <tr><td class="paramname">keepMove</td><td>indicates if the best move from the current depth should be kept. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#a64e452c751abaafa705486a16860db3a" title="Gives the best move according to the alpha beta algorithm.">getMove(const int &amp;depth, const double &amp;alpha, const double &amp;beta)</a> </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#a64e452c751abaafa705486a16860db3a" title="Gives the best move according to the alpha beta algorithm.">getMove</a> </dd>
 <dd>
-<a class="el" href="class_alpha_beta.html#a19354470203ccce3e23a96990f4228bc" title="Gives the list of available moves.">availableMoves(const Player &amp;player, const bool &amp;full)</a> </dd>
+<a class="el" href="class_alpha_beta.html#a9dd32c3a90d7ad7cc42e046773d94018" title="Gives the best move according to the alpha beta algorithm.">getMove64</a> </dd>
 <dd>
-<a class="el" href="class_alpha_beta.html#a8bcc9a3133d85ac79f44e4db9f4f6504" title="A member used to estimate the value of a position.">heuristicValue()</a> </dd>
+<a class="el" href="class_alpha_beta.html#a8dc0d94aa839f825e7ff1e97054888d0" title="Gives the list of available moves.">availableMoves</a> </dd>
 <dd>
-<a class="el" href="class_alpha_beta.html#a9194656eaf4eaa49ec4ce10273846ea6" title="A member used to estimate the value of a position for a given player.">evaluate(const Player &amp;player)</a> </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>The value computed by the alpha beta algorithm. Sets the best move if asked to </dd></dl>
+<a class="el" href="class_alpha_beta.html#a8bcc9a3133d85ac79f44e4db9f4f6504" title="A member used to estimate the value of a position.">heuristicValue</a> </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The value computed by the alpha beta algorithm. Sets <a class="el" href="class_alpha_beta.html#ae23797aba814bc53892d8567e822488b">best_move_</a> if asked to. </dd></dl>
 
 </div>
 </div>
-<a id="a19354470203ccce3e23a96990f4228bc" name="a19354470203ccce3e23a96990f4228bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a19354470203ccce3e23a96990f4228bc">&#9670;&#160;</a></span>availableMoves()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="_types_8hpp.html#a8598148c10b670d2dcd865d177f7f8d3">ListOfMoves</a> AlphaBeta::availableMoves </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a> &amp;&#160;</td>
-          <td class="paramname"><em>player</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const bool &amp;&#160;</td>
-          <td class="paramname"><em>full</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Gives the list of available moves. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">player</td><td>Who is to play </td></tr>
-    <tr><td class="paramname">full</td><td>Indicates if we want the full move or only the first and last position </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#a64e452c751abaafa705486a16860db3a" title="Gives the best move according to the alpha beta algorithm.">getMove(const int &amp;depth, const double &amp;alpha, const double &amp;beta)</a> </dd>
-<dd>
-<a class="el" href="class_alpha_beta.html#a77a9f85920a3f10c03d9003d78468e02" title="A member used to order the moves before exploring them.">tensorflowOrderMoves(ListOfMoves &amp;possible_moves)</a> </dd>
-<dd>
-<a class="el" href="class_alpha_beta.html#a4fd407c52a3c0b85b90fb02f00e4a7a0" title="A member used to order the moves before exploring them.">sortDepth1(ListOfMoves &amp;possible_moves)</a> </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>The list of available moves </dd></dl>
-
-</div>
-</div>
-<a id="a9194656eaf4eaa49ec4ce10273846ea6" name="a9194656eaf4eaa49ec4ce10273846ea6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9194656eaf4eaa49ec4ce10273846ea6">&#9670;&#160;</a></span>evaluate()</h2>
+<a id="a8dc0d94aa839f825e7ff1e97054888d0" name="a8dc0d94aa839f825e7ff1e97054888d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8dc0d94aa839f825e7ff1e97054888d0">&#9670;&#160;</a></span>availableMoves()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -456,10 +461,10 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double AlphaBeta::evaluate </td>
+          <td class="memname">void AlphaBeta::availableMoves </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a> &amp;&#160;</td>
-          <td class="paramname"><em>player</em></td><td>)</td>
+          <td class="paramtype">std::vector&lt; uint_fast64_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>result</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -470,31 +475,22 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>A member used to estimate the value of a position for a given player. </p>
-<p>This heuristic value is computed using a linear function generated by genetic evolution</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">player</td><td>The player whose position we are evaluating </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#a8bcc9a3133d85ac79f44e4db9f4f6504" title="A member used to estimate the value of a position.">heuristicValue()</a> </dd>
+<p>Gives the list of available moves. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#a64e452c751abaafa705486a16860db3a" title="Gives the best move according to the alpha beta algorithm.">getMove</a> </dd>
 <dd>
-<a class="el" href="class_alpha_beta.html#a77a9f85920a3f10c03d9003d78468e02" title="A member used to order the moves before exploring them.">tensorflowOrderMoves(ListOfMoves &amp;possible_moves)</a> </dd>
-<dd>
-<a class="el" href="class_alpha_beta.html#a4fd407c52a3c0b85b90fb02f00e4a7a0" title="A member used to order the moves before exploring them.">sortDepth1(ListOfMoves &amp;possible_moves)</a> </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>The heuristic value of the current position for the given player </dd></dl>
+<a class="el" href="class_alpha_beta.html#a77a9f85920a3f10c03d9003d78468e02" title="A member used to order the moves before exploring them.">tensorflowOrderMoves</a> </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The list of available moves. </dd></dl>
 
 </div>
 </div>
-<a id="aab3c59d12afcebf47029a5aec3c217e9" name="aab3c59d12afcebf47029a5aec3c217e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab3c59d12afcebf47029a5aec3c217e9">&#9670;&#160;</a></span>get_maximizing_player_()</h2>
+<a id="acb34cb102d139797f748ddd44c07eae0" name="acb34cb102d139797f748ddd44c07eae0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb34cb102d139797f748ddd44c07eae0">&#9670;&#160;</a></span>getMaximizingPlayer()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a> AlphaBeta::get_maximizing_player_ </td>
+          <td class="memname"><a class="el" href="_types_8hpp.html#a9c8780378078e51e7c9041cbac392db9">Player</a> AlphaBeta::getMaximizingPlayer </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -502,48 +498,8 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>A simple get. </p>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_alpha_beta.html#a1c190bd8b8eceb1ee916915856228cfc">maximizing_player_</a> </dd></dl>
-
-</div>
-</div>
-<a id="ada0b0c6f5edc795b33a6da49f5638011" name="ada0b0c6f5edc795b33a6da49f5638011"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ada0b0c6f5edc795b33a6da49f5638011">&#9670;&#160;</a></span>get_player_to_loose_value_()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt; std::vector&lt; double &gt; &gt; AlphaBeta::get_player_to_loose_value_ </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>A simple get. </p>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_alpha_beta.html#a82d1d434488d087ec140e6fbc959879d">player_to_loose_value_</a> </dd></dl>
-
-</div>
-</div>
-<a id="ae2540367e612c7d75c4a188d375d9cb9" name="ae2540367e612c7d75c4a188d375d9cb9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae2540367e612c7d75c4a188d375d9cb9">&#9670;&#160;</a></span>get_player_to_win_value_()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt; std::vector&lt; double &gt; &gt; AlphaBeta::get_player_to_win_value_ </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>A simple get. </p>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a> </dd></dl>
+<p>Returns <a class="el" href="class_alpha_beta.html#a1c190bd8b8eceb1ee916915856228cfc">maximizing_player_</a>. </p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_alpha_beta.html#a1c190bd8b8eceb1ee916915856228cfc">maximizing_player_</a>. </dd></dl>
 
 </div>
 </div>
@@ -582,24 +538,130 @@ Protected Attributes</h2></td></tr>
 <p>Gives the best move according to the alpha beta algorithm. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">depth</td><td>Indicates how deep we should explore the tree </td></tr>
-    <tr><td class="paramname">alpha</td><td></td></tr>
-    <tr><td class="paramname">beta</td><td></td></tr>
+    <tr><td class="paramname">depth</td><td>Indicates how deep we should explore the tree. </td></tr>
+    <tr><td class="paramname">alpha.</td><td></td></tr>
+    <tr><td class="paramname">beta.</td><td></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#aaf765c611139e2b0a7c85cc6ba902c27" title="Makes a step of the alpha beta algorithm.">AlphaBetaEval(const int &amp;depth,
-               double alpha,
-               double beta,
-               const bool &amp;maximizingPlayer,
-               const bool &amp;keepMove)</a> </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#a9dd32c3a90d7ad7cc42e046773d94018" title="Gives the best move according to the alpha beta algorithm.">getMove64</a> </dd>
 <dd>
-<a class="el" href="class_alpha_beta.html#a19354470203ccce3e23a96990f4228bc" title="Gives the list of available moves.">availableMoves(const Player &amp;player, const bool &amp;full)</a> </dd>
+<a class="el" href="class_alpha_beta.html#a10d5f03431a4928d732ba0ab7f5307ee" title="Makes a step of the alpha beta algorithm.">AlphaBetaEval</a> </dd>
 <dd>
-<a class="el" href="class_alpha_beta.html#a8bcc9a3133d85ac79f44e4db9f4f6504" title="A member used to estimate the value of a position.">heuristicValue()</a> </dd>
+<a class="el" href="class_alpha_beta.html#a8dc0d94aa839f825e7ff1e97054888d0" title="Gives the list of available moves.">availableMoves</a> </dd>
 <dd>
-<a class="el" href="class_alpha_beta.html#a9194656eaf4eaa49ec4ce10273846ea6" title="A member used to estimate the value of a position for a given player.">evaluate(const Player &amp;player)</a> </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>The best move according to the alpha beta algorithm </dd></dl>
+<a class="el" href="class_alpha_beta.html#a8bcc9a3133d85ac79f44e4db9f4f6504" title="A member used to estimate the value of a position.">heuristicValue</a> </dd>
+<dd>
+<a class="el" href="class_alpha_beta.html#ac337120a5293eb546352e7e9d8638f89" title="Updates heuristic_value_ for a move.">updateHeuristicValue</a> </dd>
+<dd>
+<a class="el" href="class_alpha_beta.html#a7df037e15bdc721cbd4b4806147cf5ed" title="Updates heuristic_value_ when a move is canceled.">updateHeuristicValueBack</a> </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The best move according to the alpha beta algorithm. </dd></dl>
+
+</div>
+</div>
+<a id="a9dd32c3a90d7ad7cc42e046773d94018" name="a9dd32c3a90d7ad7cc42e046773d94018"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9dd32c3a90d7ad7cc42e046773d94018">&#9670;&#160;</a></span>getMove64()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint_fast64_t AlphaBeta::getMove64 </td>
+          <td>(</td>
+          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramname"><em>depth</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gives the best move according to the alpha beta algorithm. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">depth</td><td>Indicates how deep we should explore the tree. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#a64e452c751abaafa705486a16860db3a" title="Gives the best move according to the alpha beta algorithm.">getMove</a> </dd>
+<dd>
+<a class="el" href="class_alpha_beta.html#a10d5f03431a4928d732ba0ab7f5307ee" title="Makes a step of the alpha beta algorithm.">AlphaBetaEval</a> </dd>
+<dd>
+<a class="el" href="class_alpha_beta.html#a8dc0d94aa839f825e7ff1e97054888d0" title="Gives the list of available moves.">availableMoves</a> </dd>
+<dd>
+<a class="el" href="class_alpha_beta.html#a8bcc9a3133d85ac79f44e4db9f4f6504" title="A member used to estimate the value of a position.">heuristicValue</a> </dd>
+<dd>
+<a class="el" href="class_alpha_beta.html#ac337120a5293eb546352e7e9d8638f89" title="Updates heuristic_value_ for a move.">updateHeuristicValue</a> </dd>
+<dd>
+<a class="el" href="class_alpha_beta.html#a7df037e15bdc721cbd4b4806147cf5ed" title="Updates heuristic_value_ when a move is canceled.">updateHeuristicValueBack</a> </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The best move according to the alpha beta algorithm. </dd></dl>
+
+</div>
+</div>
+<a id="ab8a1c37b826e9c09cfd53e880f5d74f5" name="ab8a1c37b826e9c09cfd53e880f5d74f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab8a1c37b826e9c09cfd53e880f5d74f5">&#9670;&#160;</a></span>getPlayerToLoseValue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::vector&lt; double &gt; &gt; AlphaBeta::getPlayerToLoseValue </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns <a class="el" href="class_alpha_beta.html#a3383fdd88e0af7e441195536b4a949a8">player_to_lose_value_</a>. </p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_alpha_beta.html#a3383fdd88e0af7e441195536b4a949a8">player_to_lose_value_</a>. </dd></dl>
+
+</div>
+</div>
+<a id="af2dfce51de5c2c0f46c0a81637ee2ec5" name="af2dfce51de5c2c0f46c0a81637ee2ec5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2dfce51de5c2c0f46c0a81637ee2ec5">&#9670;&#160;</a></span>getPlayerToWinValue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::vector&lt; double &gt; &gt; AlphaBeta::getPlayerToWinValue </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns <a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a>. </p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a>. </dd></dl>
+
+</div>
+</div>
+<a id="afc83ccc2a943f321898cdebf29334951" name="afc83ccc2a943f321898cdebf29334951"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc83ccc2a943f321898cdebf29334951">&#9670;&#160;</a></span>hashGrid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t AlphaBeta::hashGrid </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Hashes the grid. </p>
+<dl class="section return"><dt>Returns</dt><dd>The hash of the grid. </dd></dl>
 
 </div>
 </div>
@@ -627,13 +689,8 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>A member used to estimate the value of a position. </p>
-<p>This heuristic value is computed using a linear function generated by genetic evolution</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#a9194656eaf4eaa49ec4ce10273846ea6" title="A member used to estimate the value of a position for a given player.">evaluate(const Player &amp;player)</a> </dd>
-<dd>
-<a class="el" href="class_alpha_beta.html#a77a9f85920a3f10c03d9003d78468e02" title="A member used to order the moves before exploring them.">tensorflowOrderMoves(ListOfMoves &amp;possible_moves)</a> </dd>
-<dd>
-<a class="el" href="class_alpha_beta.html#a4fd407c52a3c0b85b90fb02f00e4a7a0" title="A member used to order the moves before exploring them.">sortDepth1(ListOfMoves &amp;possible_moves)</a> </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>The heuristic value of the current position </dd></dl>
+<p>This heuristic value is computed using a linear function generated by genetic evolution. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#a77a9f85920a3f10c03d9003d78468e02" title="A member used to order the moves before exploring them.">tensorflowOrderMoves</a> </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The heuristic value of the current position. </dd></dl>
 
 </div>
 </div>
@@ -679,24 +736,67 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>A member loading the pre-computed optimal openings into a map. </p>
+<p>A member loading the pre-computed optimal openings into <a class="el" href="class_alpha_beta.html#ae4d6a9def1ef6dd145c2922f92b2c666">opening_</a>. </p>
 
 </div>
 </div>
-<a id="a8ff7f8edc2634668aef96b4b959e8200" name="a8ff7f8edc2634668aef96b4b959e8200"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ff7f8edc2634668aef96b4b959e8200">&#9670;&#160;</a></span>reverseMove()</h2>
+<a id="a0b98cb4998a913298cea216f8d35b432" name="a0b98cb4998a913298cea216f8d35b432"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b98cb4998a913298cea216f8d35b432">&#9670;&#160;</a></span>retrieveMoves()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void AlphaBeta::reverseMove </td>
+          <td class="memname"><a class="el" href="_types_8hpp.html#ac71100c33eb0cab30b54caf2736a8121">ListOfPositionType</a> AlphaBeta::retrieveMoves </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="_types_8hpp.html#ac71100c33eb0cab30b54caf2736a8121">ListOfPositionType</a> &amp;&#160;</td>
+          <td class="paramtype">const uint_fast64_t &amp;&#160;</td>
           <td class="paramname"><em>move</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Compute the full path of a move from a simple bit mask. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">move</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the full path of a move. </dd></dl>
+
+</div>
+</div>
+<a id="acff36450bea77f8ed7298eae120fd798" name="acff36450bea77f8ed7298eae120fd798"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acff36450bea77f8ed7298eae120fd798">&#9670;&#160;</a></span>reverseMove()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AlphaBeta::reverseMove </td>
+          <td>(</td>
+          <td class="paramtype">const uint_fast64_t &amp;&#160;</td>
+          <td class="paramname"><em>move</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Cancel the last move. </p>
@@ -709,40 +809,40 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aa0228f457ef8caf30bfb5836610cc959" name="aa0228f457ef8caf30bfb5836610cc959"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa0228f457ef8caf30bfb5836610cc959">&#9670;&#160;</a></span>set_player_to_loose_value_()</h2>
+<a id="acc8d30b346fc4f0b12df3df4732741b2" name="acc8d30b346fc4f0b12df3df4732741b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc8d30b346fc4f0b12df3df4732741b2">&#9670;&#160;</a></span>setPlayerToLoseValue()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void AlphaBeta::set_player_to_loose_value_ </td>
+          <td class="memname">void AlphaBeta::setPlayerToLoseValue </td>
           <td>(</td>
           <td class="paramtype">std::vector&lt; std::vector&lt; double &gt; &gt; &amp;&#160;</td>
-          <td class="paramname"><em>player_to_loose_value_</em></td><td>)</td>
+          <td class="paramname"><em>player_to_lose_value_</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>A simple set. </p>
+<p>Sets <a class="el" href="class_alpha_beta.html#a3383fdd88e0af7e441195536b4a949a8">player_to_lose_value_</a>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">player_to_loose_value_</td><td></td></tr>
+    <tr><td class="paramname">player_to_lose_value_.</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="a23d54bb3c19537385058f2984e8b833b" name="a23d54bb3c19537385058f2984e8b833b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a23d54bb3c19537385058f2984e8b833b">&#9670;&#160;</a></span>set_player_to_win_value_()</h2>
+<a id="af1a690e7c56b7b0836d51b6fbc24c8be" name="af1a690e7c56b7b0836d51b6fbc24c8be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1a690e7c56b7b0836d51b6fbc24c8be">&#9670;&#160;</a></span>setPlayerToWinValue()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void AlphaBeta::set_player_to_win_value_ </td>
+          <td class="memname">void AlphaBeta::setPlayerToWinValue </td>
           <td>(</td>
           <td class="paramtype">std::vector&lt; std::vector&lt; double &gt; &gt; &amp;&#160;</td>
           <td class="paramname"><em>player_to_win_value_</em></td><td>)</td>
@@ -751,55 +851,13 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>A simple set. </p>
+<p>Sets <a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">player_to_win_value_</td><td></td></tr>
+    <tr><td class="paramname">player_to_win_value_.</td><td></td></tr>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="a4fd407c52a3c0b85b90fb02f00e4a7a0" name="a4fd407c52a3c0b85b90fb02f00e4a7a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4fd407c52a3c0b85b90fb02f00e4a7a0">&#9670;&#160;</a></span>sortDepth1()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void AlphaBeta::sortDepth1 </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="_types_8hpp.html#a8598148c10b670d2dcd865d177f7f8d3">ListOfMoves</a> &amp;&#160;</td>
-          <td class="paramname"><em>possible_moves</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>A member used to order the moves before exploring them. </p>
-<p>The moves are ordered using a computation of the alpha-beta algorithm at depth 1</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">possible_moves</td><td>The list of moves we could play </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#a8bcc9a3133d85ac79f44e4db9f4f6504" title="A member used to estimate the value of a position.">heuristicValue()</a> </dd>
-<dd>
-<a class="el" href="class_alpha_beta.html#a9194656eaf4eaa49ec4ce10273846ea6" title="A member used to estimate the value of a position for a given player.">evaluate(const Player &amp;player)</a> </dd>
-<dd>
-<a class="el" href="class_alpha_beta.html#a4fd407c52a3c0b85b90fb02f00e4a7a0" title="A member used to order the moves before exploring them.">sortDepth1(ListOfMoves &amp;possible_moves)</a> </dd>
-<dd>
-<a class="el" href="class_alpha_beta.html#a19354470203ccce3e23a96990f4228bc" title="Gives the list of available moves.">availableMoves(const Player &amp;player, const bool &amp;full)</a> </dd></dl>
 
 </div>
 </div>
@@ -828,26 +886,20 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>A member used to order the moves before exploring them. </p>
-<p>The moves are ordered using a tensorflow model that estimates the value that the alpha-beta algorithm would assign to each move</p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>The moves are ordered using a tensorflow model that estimates the value that the alpha-beta algorithm would assign to each move. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">possible_moves</td><td>The list of moves we could play </td></tr>
+    <tr><td class="paramname">possible_moves</td><td>The list of moves we could play. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#a8bcc9a3133d85ac79f44e4db9f4f6504" title="A member used to estimate the value of a position.">heuristicValue()</a> </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#a8bcc9a3133d85ac79f44e4db9f4f6504" title="A member used to estimate the value of a position.">heuristicValue</a> </dd>
 <dd>
-<a class="el" href="class_alpha_beta.html#a9194656eaf4eaa49ec4ce10273846ea6" title="A member used to estimate the value of a position for a given player.">evaluate(const Player &amp;player)</a> </dd>
-<dd>
-<a class="el" href="class_alpha_beta.html#a4fd407c52a3c0b85b90fb02f00e4a7a0" title="A member used to order the moves before exploring them.">sortDepth1(ListOfMoves &amp;possible_moves)</a> </dd>
-<dd>
-<a class="el" href="class_alpha_beta.html#a19354470203ccce3e23a96990f4228bc" title="Gives the list of available moves.">availableMoves(const Player &amp;player, const bool &amp;full)</a> </dd></dl>
+<a class="el" href="class_alpha_beta.html#a8dc0d94aa839f825e7ff1e97054888d0" title="Gives the list of available moves.">availableMoves</a> </dd></dl>
 
 </div>
 </div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="a2ed1bf3fd08f4c66535134cb94d91dbe" name="a2ed1bf3fd08f4c66535134cb94d91dbe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2ed1bf3fd08f4c66535134cb94d91dbe">&#9670;&#160;</a></span>best_move_</h2>
+<a id="ac337120a5293eb546352e7e9d8638f89" name="ac337120a5293eb546352e7e9d8638f89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac337120a5293eb546352e7e9d8638f89">&#9670;&#160;</a></span>updateHeuristicValue()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -856,7 +908,76 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="_types_8hpp.html#ac71100c33eb0cab30b54caf2736a8121">ListOfPositionType</a> AlphaBeta::best_move_</td>
+          <td class="memname">void AlphaBeta::updateHeuristicValue </td>
+          <td>(</td>
+          <td class="paramtype">const uint_fast64_t &amp;&#160;</td>
+          <td class="paramname"><em>move</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Updates <a class="el" href="class_alpha_beta.html#a3e9eb1d69b18495c4d1eb48ea426a2f3">heuristic_value_</a> for a move. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">move</td><td>Said move. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a7df037e15bdc721cbd4b4806147cf5ed" name="a7df037e15bdc721cbd4b4806147cf5ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7df037e15bdc721cbd4b4806147cf5ed">&#9670;&#160;</a></span>updateHeuristicValueBack()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AlphaBeta::updateHeuristicValueBack </td>
+          <td>(</td>
+          <td class="paramtype">const uint_fast64_t &amp;&#160;</td>
+          <td class="paramname"><em>move</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Updates <a class="el" href="class_alpha_beta.html#a3e9eb1d69b18495c4d1eb48ea426a2f3">heuristic_value_</a> when a move is canceled. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">move</td><td>Said move. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="ae23797aba814bc53892d8567e822488b" name="ae23797aba814bc53892d8567e822488b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae23797aba814bc53892d8567e822488b">&#9670;&#160;</a></span>best_move_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint_fast64_t AlphaBeta::best_move_</td>
         </tr>
       </table>
   </td>
@@ -865,7 +986,141 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Contains the best move we found so far </p>
+<p>Contains the best move we found so far. </p>
+
+</div>
+</div>
+<a id="aa3f67772634a9f733a8c1297f5b2ed4a" name="aa3f67772634a9f733a8c1297f5b2ed4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3f67772634a9f733a8c1297f5b2ed4a">&#9670;&#160;</a></span>comp_move_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::function&lt;bool(const uint_fast64_t&amp;, const uint_fast64_t&amp;)&gt; AlphaBeta::comp_move_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">            [<span class="keyword">this</span>](<span class="keyword">const</span> uint_fast64_t &amp;a,</div>
+<div class="line">                   <span class="keyword">const</span> uint_fast64_t &amp;b){</div>
+<div class="line">                <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_chinese_checkers.html#a58000710730305c43b809d8a2f258432">who_is_to_play_</a>) {</div>
+<div class="line">                    <span class="keywordflow">return</span> <a class="code hl_variable" href="class_alpha_beta.html#a1c638fafb3e0981ba01156ce462c7f3a">player_to_win_value_map_black_</a>[a &amp; ~bit_boards_.Black]</div>
+<div class="line">                           + <a class="code hl_variable" href="class_alpha_beta.html#a1c638fafb3e0981ba01156ce462c7f3a">player_to_win_value_map_black_</a>[b &amp; <a class="code hl_variable" href="class_chinese_checkers.html#ad9f0bc098fd84c22ac6df4ca615f0157">bit_boards_</a>.Black]</div>
+<div class="line">                           &lt; <a class="code hl_variable" href="class_alpha_beta.html#a1c638fafb3e0981ba01156ce462c7f3a">player_to_win_value_map_black_</a>[b &amp; ~bit_boards_.Black]</div>
+<div class="line">                             + <a class="code hl_variable" href="class_alpha_beta.html#a1c638fafb3e0981ba01156ce462c7f3a">player_to_win_value_map_black_</a>[a &amp; <a class="code hl_variable" href="class_chinese_checkers.html#ad9f0bc098fd84c22ac6df4ca615f0157">bit_boards_</a>.Black];</div>
+<div class="line">                } <span class="keywordflow">else</span> {</div>
+<div class="line">                    <span class="keywordflow">return</span> <a class="code hl_variable" href="class_alpha_beta.html#a1bc9c4f91deb6738c243cd352fc3f47a">player_to_win_value_map_white_</a>[a &amp; ~bit_boards_.White]</div>
+<div class="line">                           + <a class="code hl_variable" href="class_alpha_beta.html#a1bc9c4f91deb6738c243cd352fc3f47a">player_to_win_value_map_white_</a>[b &amp; <a class="code hl_variable" href="class_chinese_checkers.html#ad9f0bc098fd84c22ac6df4ca615f0157">bit_boards_</a>.White]</div>
+<div class="line">                           &lt; <a class="code hl_variable" href="class_alpha_beta.html#a1bc9c4f91deb6738c243cd352fc3f47a">player_to_win_value_map_white_</a>[b &amp; ~bit_boards_.White]</div>
+<div class="line">                             + <a class="code hl_variable" href="class_alpha_beta.html#a1bc9c4f91deb6738c243cd352fc3f47a">player_to_win_value_map_white_</a>[a &amp; <a class="code hl_variable" href="class_chinese_checkers.html#ad9f0bc098fd84c22ac6df4ca615f0157">bit_boards_</a>.White];</div>
+<div class="line">                }</div>
+<div class="line">            }</div>
+<div class="ttc" id="aclass_alpha_beta_html_a1bc9c4f91deb6738c243cd352fc3f47a"><div class="ttname"><a href="class_alpha_beta.html#a1bc9c4f91deb6738c243cd352fc3f47a">AlphaBeta::player_to_win_value_map_white_</a></div><div class="ttdeci">boost::unordered_map&lt; uint_fast64_t, double &gt; player_to_win_value_map_white_</div><div class="ttdoc">This map is used to get values without having to get indexes from bitmasks on player_to_win_value_.</div><div class="ttdef"><b>Definition:</b> AlphaBeta.hpp:55</div></div>
+<div class="ttc" id="aclass_alpha_beta_html_a1c638fafb3e0981ba01156ce462c7f3a"><div class="ttname"><a href="class_alpha_beta.html#a1c638fafb3e0981ba01156ce462c7f3a">AlphaBeta::player_to_win_value_map_black_</a></div><div class="ttdeci">boost::unordered_map&lt; uint_fast64_t, double &gt; player_to_win_value_map_black_</div><div class="ttdoc">This map is used to get values without having to get indexes from bitmasks on player_to_win_value_.</div><div class="ttdef"><b>Definition:</b> AlphaBeta.hpp:60</div></div>
+<div class="ttc" id="aclass_chinese_checkers_html_a58000710730305c43b809d8a2f258432"><div class="ttname"><a href="class_chinese_checkers.html#a58000710730305c43b809d8a2f258432">ChineseCheckers::who_is_to_play_</a></div><div class="ttdeci">Player who_is_to_play_</div><div class="ttdef"><b>Definition:</b> ChineseCheckers.hpp:51</div></div>
+<div class="ttc" id="aclass_chinese_checkers_html_ad9f0bc098fd84c22ac6df4ca615f0157"><div class="ttname"><a href="class_chinese_checkers.html#ad9f0bc098fd84c22ac6df4ca615f0157">ChineseCheckers::bit_boards_</a></div><div class="ttdeci">bitBoards_t bit_boards_</div><div class="ttdef"><b>Definition:</b> ChineseCheckers.hpp:53</div></div>
+</div><!-- fragment --><p>Function used to compare moves for sorting. </p>
+
+</div>
+</div>
+<a id="a82abaf5b3233e162a30d72884157eef8" name="a82abaf5b3233e162a30d72884157eef8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82abaf5b3233e162a30d72884157eef8">&#9670;&#160;</a></span>ctz_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">boost::unordered_map&lt;uint_fast64_t, int&gt; AlphaBeta::ctz_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>A map used to get the number of trailing zeroes of uint_64. It is used to get index from bit masks. </p>
+
+</div>
+</div>
+<a id="a322cd42babafcd689f7f58029a9f2991" name="a322cd42babafcd689f7f58029a9f2991"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a322cd42babafcd689f7f58029a9f2991">&#9670;&#160;</a></span>fullDepth_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int AlphaBeta::fullDepth_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The depth asked for. </p>
+
+</div>
+</div>
+<a id="a3e9eb1d69b18495c4d1eb48ea426a2f3" name="a3e9eb1d69b18495c4d1eb48ea426a2f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e9eb1d69b18495c4d1eb48ea426a2f3">&#9670;&#160;</a></span>heuristic_value_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double AlphaBeta::heuristic_value_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The current heuristic value. It avoids to compute it from scratch at each terminating node. </p>
+
+</div>
+</div>
+<a id="a4c497c4f5103a9edb75ef2691765760c" name="a4c497c4f5103a9edb75ef2691765760c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c497c4f5103a9edb75ef2691765760c">&#9670;&#160;</a></span>it_transposition_table_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">boost::unordered_map&lt;bitBoards_t,std::pair&lt;double,int&gt;&gt;::iterator AlphaBeta::it_transposition_table_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Iterator used to find elements through the transposition table. </p>
 
 </div>
 </div>
@@ -888,7 +1143,7 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Indicates which plyaer we are playing for </p>
+<p>Indicates which player we are playing for. </p>
 
 </div>
 </div>
@@ -902,7 +1157,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">cppflow::model* AlphaBeta::model = new cppflow::model(&quot;./model&quot;)</td>
+          <td class="memname">cppflow::model* AlphaBeta::model = new cppflow::model(&quot;./raw_data/model&quot;)</td>
         </tr>
       </table>
   </td>
@@ -911,7 +1166,7 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Tensorflow model used by <a class="el" href="class_alpha_beta.html#a77a9f85920a3f10c03d9003d78468e02">tensorflowOrderMoves(ListOfMoves &amp;possible_moves)</a> </p>
+<p>Tensorflow model used by <a class="el" href="class_alpha_beta.html#a77a9f85920a3f10c03d9003d78468e02">tensorflowOrderMoves</a>. </p>
 
 </div>
 </div>
@@ -929,8 +1184,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a1f33c25e3d41b64bfa4ae2e1a76a38a6" name="a1f33c25e3d41b64bfa4ae2e1a76a38a6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f33c25e3d41b64bfa4ae2e1a76a38a6">&#9670;&#160;</a></span>opening</h2>
+<a id="ae4d6a9def1ef6dd145c2922f92b2c666" name="ae4d6a9def1ef6dd145c2922f92b2c666"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4d6a9def1ef6dd145c2922f92b2c666">&#9670;&#160;</a></span>opening_</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -939,7 +1194,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unordered_map&lt;uint64_t, <a class="el" href="_types_8hpp.html#ac71100c33eb0cab30b54caf2736a8121">ListOfPositionType</a>&gt; AlphaBeta::opening</td>
+          <td class="memname">boost::unordered_map&lt;bitBoards_t, uint_fast64_t , bitBoardsHasher, bitBoardsEqual&gt; AlphaBeta::opening_</td>
         </tr>
       </table>
   </td>
@@ -948,12 +1203,12 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Map of pre-computed optimal openings </p>
+<p>Map of pre-computed optimal openings. </p>
 
 </div>
 </div>
-<a id="a82d1d434488d087ec140e6fbc959879d" name="a82d1d434488d087ec140e6fbc959879d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a82d1d434488d087ec140e6fbc959879d">&#9670;&#160;</a></span>player_to_loose_value_</h2>
+<a id="a3383fdd88e0af7e441195536b4a949a8" name="a3383fdd88e0af7e441195536b4a949a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3383fdd88e0af7e441195536b4a949a8">&#9670;&#160;</a></span>player_to_lose_value_</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -962,7 +1217,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;std::vector&lt;double&gt; &gt; AlphaBeta::player_to_loose_value_</td>
+          <td class="memname">std::vector&lt;std::vector&lt;double&gt; &gt; AlphaBeta::player_to_lose_value_</td>
         </tr>
       </table>
   </td>
@@ -971,7 +1226,56 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>This matrix indicates the values we will assign to each pawns when we compute the heuristic value for the player we are playing against </p>
+
+<p>This matrix indicates the values we will assign to each pawns when we compute the heuristic value for the player we are playing for. </p>
+
+</div>
+</div>
+<a id="ab3708615dd5de812c74adbec296449c7" name="ab3708615dd5de812c74adbec296449c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3708615dd5de812c74adbec296449c7">&#9670;&#160;</a></span>player_to_lose_value_map_black_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">boost::unordered_map&lt;uint_fast64_t, double&gt; AlphaBeta::player_to_lose_value_map_black_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This map is used to get values without having to get indexes from bitmasks on <a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a>. </p>
+
+</div>
+</div>
+<a id="af0444d94fa2518b4b060d1bdd85f4594" name="af0444d94fa2518b4b060d1bdd85f4594"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0444d94fa2518b4b060d1bdd85f4594">&#9670;&#160;</a></span>player_to_lose_value_map_white_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">boost::unordered_map&lt;uint_fast64_t, double&gt; AlphaBeta::player_to_lose_value_map_white_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This map is used to get values without having to get indexes from bitmasks on <a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a>. </p>
 
 </div>
 </div>
@@ -994,7 +1298,79 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>This matrix indicates the values we will assign to each pawns when we compute the heuristic value for the player we are playing for </p>
+
+<p>This matrix indicates the values we will assign to each pawns when we compute the heuristic value for the player we are playing for. </p>
+
+</div>
+</div>
+<a id="a1c638fafb3e0981ba01156ce462c7f3a" name="a1c638fafb3e0981ba01156ce462c7f3a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c638fafb3e0981ba01156ce462c7f3a">&#9670;&#160;</a></span>player_to_win_value_map_black_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">boost::unordered_map&lt;uint_fast64_t, double&gt; AlphaBeta::player_to_win_value_map_black_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This map is used to get values without having to get indexes from bitmasks on <a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a>. </p>
+
+</div>
+</div>
+<a id="a1bc9c4f91deb6738c243cd352fc3f47a" name="a1bc9c4f91deb6738c243cd352fc3f47a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bc9c4f91deb6738c243cd352fc3f47a">&#9670;&#160;</a></span>player_to_win_value_map_white_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">boost::unordered_map&lt;uint_fast64_t, double&gt; AlphaBeta::player_to_win_value_map_white_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This map is used to get values without having to get indexes from bitmasks on <a class="el" href="class_alpha_beta.html#a9103d74fc847bb3a24edc655036507ef">player_to_win_value_</a>. </p>
+
+</div>
+</div>
+<a id="a382e3c6f6133aaeab30f7f7e9fa914e1" name="a382e3c6f6133aaeab30f7f7e9fa914e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a382e3c6f6133aaeab30f7f7e9fa914e1">&#9670;&#160;</a></span>possible_elementary_move_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">boost::unordered_map&lt;uint_fast64_t, std::vector&lt;uint_fast64_t&gt; &gt; AlphaBeta::possible_elementary_move_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Indicates if there is a jump from (i, j) to (k, l). </p>
 
 </div>
 </div>
@@ -1012,8 +1388,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a51427b3355783abe3fce90c7745f700d" name="a51427b3355783abe3fce90c7745f700d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a51427b3355783abe3fce90c7745f700d">&#9670;&#160;</a></span>transTable</h2>
+<a id="a75368e2c2c4b86ceab825ed0bc94c588" name="a75368e2c2c4b86ceab825ed0bc94c588"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75368e2c2c4b86ceab825ed0bc94c588">&#9670;&#160;</a></span>transposition_table_</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1022,7 +1398,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unordered_map&lt;uint64_t, std::pair&lt;double, int&gt; &gt; AlphaBeta::transTable</td>
+          <td class="memname">boost::unordered_map&lt;bitBoards_t, std::pair&lt;double, int&gt;, bitBoardsHasher, bitBoardsEqual&gt; AlphaBeta::transposition_table_</td>
         </tr>
       </table>
   </td>
@@ -1031,7 +1407,30 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Transposition table used to store the results of previous searches </p>
+<p>Transposition table used to store the results of previous searches. </p>
+
+</div>
+</div>
+<a id="aa5ded94a7bfe2fbc251492b09ee9f3f4" name="aa5ded94a7bfe2fbc251492b09ee9f3f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5ded94a7bfe2fbc251492b09ee9f3f4">&#9670;&#160;</a></span>won_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt;bool, 2&gt; AlphaBeta::won_ = {false, false}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Indicates if according to previous searches, a player can be sure to win. It is used to compute shortest path to win in late game. </p>
 
 </div>
 </div>

@@ -25,22 +25,26 @@
 var NAVTREE =
 [
   [ "ChineseCheckers", "index.html", [
-    [ "Chinese Checkers", "index.html#autotoc_md21", [
-      [ "Table of contents", "index.html#autotoc_md22", null ],
-      [ "Building status", "index.html#autotoc_md23", null ],
-      [ "Getting Started", "index.html#autotoc_md24", [
-        [ "Prerequisites", "index.html#autotoc_md25", null ],
-        [ "Installing", "index.html#autotoc_md26", [
-          [ "Installing prerequisites", "index.html#autotoc_md27", null ],
-          [ "Building", "index.html#autotoc_md28", null ]
+    [ "Chinese Checkers Solver using Alpha Beta pruning in C++", "index.html#autotoc_md21", [
+      [ "Overview", "index.html#autotoc_md22", null ],
+      [ "Table of contents", "index.html#autotoc_md23", null ],
+      [ "Building status", "index.html#autotoc_md24", null ],
+      [ "Rules of the game", "index.html#autotoc_md25", null ],
+      [ "Getting Started", "index.html#autotoc_md26", [
+        [ "Prerequisites", "index.html#autotoc_md27", null ],
+        [ "Installing", "index.html#autotoc_md28", [
+          [ "Installing prerequisites", "index.html#autotoc_md29", null ],
+          [ "Building", "index.html#autotoc_md30", null ]
         ] ]
       ] ],
-      [ "Usage", "index.html#autotoc_md29", null ],
-      [ "Documentation", "index.html#autotoc_md30", null ],
-      [ "Built With", "index.html#autotoc_md31", null ],
-      [ "Contributing", "index.html#autotoc_md32", null ],
-      [ "Code of conduct", "index.html#autotoc_md33", null ],
-      [ "License", "index.html#autotoc_md34", null ]
+      [ "Usage", "index.html#autotoc_md31", null ],
+      [ "Usage for developers", "index.html#autotoc_md32", null ],
+      [ "Optimisations", "index.html#autotoc_md33", null ],
+      [ "Documentation", "index.html#autotoc_md34", null ],
+      [ "Built With", "index.html#autotoc_md35", null ],
+      [ "Contributing", "index.html#autotoc_md36", null ],
+      [ "Code of conduct", "index.html#autotoc_md37", null ],
+      [ "License", "index.html#autotoc_md38", null ]
     ] ],
     [ "Contributor Covenant Code of Conduct", "md_code_of_conduct.html", [
       [ "Our Pledge", "md_code_of_conduct.html#autotoc_md1", null ],
@@ -97,7 +101,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_alpha_beta_8cpp.html",
-"tournament_8cpp.html#ada04279ecb24d6f2e5a35f0dca958b97"
+"tournament_8hpp.html#aa3ac02038b98a7d1b39dbdc311f9ccaf"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
