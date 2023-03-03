@@ -33,7 +33,7 @@ class ChineseCheckersTest : public::testing::Test {
  * Each test suit correspond to a method. */
 
 /*
- * Tests for state_of_game
+ * Tests for stateOfGame
  */
 
 TEST(StateOfGame, WinIsDeclaredForBlackWithoutWinBBaseAndWithoutWInBase) {
@@ -100,7 +100,7 @@ TEST(StateOfGame, WinIsDeclaredForBlackWithoutWinBBaseAndWithoutWInBase) {
     cc.move(1, {{2, 2}, {2, 1}});
 
     /* Assert */
-    EXPECT_EQ(cc.state_of_game(), BlackWon);
+    EXPECT_EQ(cc.stateOfGame(), BlackWon);
 }
 
 TEST(StateOfGame, WinIsDeclaredForBlackWithoutWinBBaseAndWithWInBase) {
@@ -167,7 +167,7 @@ TEST(StateOfGame, WinIsDeclaredForBlackWithoutWinBBaseAndWithWInBase) {
     cc.move(1, {{2, 2}, {2, 1}});
 
     /* Assert */
-    EXPECT_EQ(cc.state_of_game(), BlackWon);
+    EXPECT_EQ(cc.stateOfGame(), BlackWon);
 }
 
 TEST(StateOfGame, WinIsDeclaredForBlackWithWinBBaseAndWithoutWInBase) {
@@ -234,7 +234,7 @@ TEST(StateOfGame, WinIsDeclaredForBlackWithWinBBaseAndWithoutWInBase) {
     cc.move(1, {{2, 2}, {2, 1}});
 
     /* Assert */
-    EXPECT_EQ(cc.state_of_game(), BlackWon);
+    EXPECT_EQ(cc.stateOfGame(), BlackWon);
 }
 
 TEST(StateOfGame, WinIsDeclaredForBlackWithWinBBaseAndWithWInBase) {
@@ -297,7 +297,7 @@ TEST(StateOfGame, WinIsDeclaredForBlackWithWinBBaseAndWithWInBase) {
     cc.move(1, {{3, 1}, {2, 1}});
 
     /* Assert */
-    EXPECT_EQ(cc.state_of_game(), BlackWon);
+    EXPECT_EQ(cc.stateOfGame(), BlackWon);
 }
 
 TEST(StateOfGame, WinIsDeclaredForWhiteWithoutBinWBaseAndWithoutBInBase) {
@@ -370,7 +370,7 @@ TEST(StateOfGame, WinIsDeclaredForWhiteWithoutBinWBaseAndWithoutBInBase) {
     cc.move(1, {{0, 3}, {1, 3}});
     cc.move(0, {{6, 4}, {6, 5}});
     /* Assert */
-    EXPECT_EQ(cc.state_of_game(), WhiteWon);
+    EXPECT_EQ(cc.stateOfGame(), WhiteWon);
 }
 
 TEST(StateOfGame, WinIsDeclaredForWhiteWithoutBinWBaseAndWithBInBase) {
@@ -441,7 +441,7 @@ TEST(StateOfGame, WinIsDeclaredForWhiteWithoutBinWBaseAndWithBInBase) {
     cc.move(1, {{0, 3}, {1, 3}});
     cc.move(0, {{6, 4}, {6, 5}});
     /* Assert */
-    EXPECT_EQ(cc.state_of_game(), WhiteWon);
+    EXPECT_EQ(cc.stateOfGame(), WhiteWon);
 }
 
 TEST(StateOfGame, WinIsDeclaredForWhiteWithBinWBaseAndWithoutBInBase) {
@@ -515,7 +515,7 @@ TEST(StateOfGame, WinIsDeclaredForWhiteWithBinWBaseAndWithoutBInBase) {
     cc.move(0, {{4, 5}, {4, 7}});
 
     /* Assert */
-    EXPECT_EQ(cc.state_of_game(), WhiteWon);
+    EXPECT_EQ(cc.stateOfGame(), WhiteWon);
 }
 
 TEST(StateOfGame, WinIsDeclaredForWhiteWithBinWBaseAndBBase) {
@@ -587,7 +587,7 @@ TEST(StateOfGame, WinIsDeclaredForWhiteWithBinWBaseAndBBase) {
     cc.move(0, {{6, 4}, {6, 5}});
 
     /* Assert */
-    EXPECT_EQ(cc.state_of_game(), WhiteWon);
+    EXPECT_EQ(cc.stateOfGame(), WhiteWon);
 }
 
 TEST(StateOfGame, WinIsNotDeclaredEarlyForWhiteWithBinWBase) {
@@ -658,7 +658,7 @@ TEST(StateOfGame, WinIsNotDeclaredEarlyForWhiteWithBinWBase) {
     cc.move(1, {{1, 4}, {2, 4}});
 
     /* Assert */
-    EXPECT_EQ(cc.state_of_game(), NotFinished);
+    EXPECT_EQ(cc.stateOfGame(), NotFinished);
 }
 
 TEST(StateOfGame, WinIsNotDeclaredEarlyForWithoutWithBinWBase) {
@@ -729,7 +729,7 @@ TEST(StateOfGame, WinIsNotDeclaredEarlyForWithoutWithBinWBase) {
     cc.move(1, {{0, 3}, {1, 3}});
 
     /* Assert */
-    EXPECT_EQ(cc.state_of_game(), NotFinished);
+    EXPECT_EQ(cc.stateOfGame(), NotFinished);
 }
 
 TEST(StateOfGame, DrawIsNotDeclaredEarlyFromWhite) {
@@ -752,7 +752,7 @@ TEST(StateOfGame, DrawIsNotDeclaredEarlyFromWhite) {
     }
 
     /* Assert */
-    EXPECT_EQ(cc.state_of_game(), false);
+    EXPECT_EQ(cc.stateOfGame(), false);
 }
 
 TEST(StateOfGame, DrawIsNotDeclaredEarlyFromBlack) {
@@ -776,7 +776,7 @@ TEST(StateOfGame, DrawIsNotDeclaredEarlyFromBlack) {
     }
 
     /* Assert */
-    EXPECT_EQ(cc.state_of_game(), false);
+    EXPECT_EQ(cc.stateOfGame(), false);
 }
 
 TEST(StateOfGame, DrawIsDeclaredFromWhite) {
@@ -799,7 +799,7 @@ TEST(StateOfGame, DrawIsDeclaredFromWhite) {
     }
 
     /* Assert */
-    EXPECT_EQ(cc.state_of_game(), true);
+    EXPECT_EQ(cc.stateOfGame(), true);
 }
 
 TEST(StateOfGame, DrawIsDeclaredFromBlack) {
@@ -823,12 +823,12 @@ TEST(StateOfGame, DrawIsDeclaredFromBlack) {
     }
 
     /* Assert */
-    EXPECT_EQ(cc.state_of_game(), true);
+    EXPECT_EQ(cc.stateOfGame(), true);
 }
 
 
 /*
- * Tests for new_game
+ * Tests for neGgame
  */
 TEST(newGame, bitBoardWhiteIsCorrecltyInitialized) {
     /* Arrange */
@@ -837,8 +837,8 @@ TEST(newGame, bitBoardWhiteIsCorrecltyInitialized) {
 
     /* Act */
     cc.move(0, {{0, 2}, {0, 4}});
-    cc.new_game();
-    uint_fast64_t obtainedValue = cc.get_bitBoardWhite();
+    cc.newGame();
+    uint_fast64_t obtainedValue = cc.getBitBoardWhite();
 
     /* Assert */
     EXPECT_EQ(expectedValue, obtainedValue);
@@ -851,8 +851,8 @@ TEST(newGame, bitBoardBlackIsCorrecltyInitialized) {
 
     /* Act */
     cc.move(0, {{0, 2}, {0, 4}});
-    cc.new_game();
-    uint_fast64_t obtainedValue = cc.get_bitBoardBlack();
+    cc.newGame();
+    uint_fast64_t obtainedValue = cc.getBitBoardBlack();
 
     /* Assert */
     EXPECT_EQ(expectedValue, obtainedValue);
@@ -861,13 +861,13 @@ TEST(newGame, bitBoardBlackIsCorrecltyInitialized) {
 
 
 /*
- * Tests for get_bitBoardWhite
+ * Tests for getBitBoardWhite
  */
 
 TEST(GetBitBoardWhite, IsCorrecltyInitialized) {
     /* Arrange */
     ChineseCheckers cc;
-    uint_fast64_t obtainedValue = cc.get_bitBoardWhite();
+    uint_fast64_t obtainedValue = cc.getBitBoardWhite();
     uint_fast64_t expectedValue = 0b0000000000000000000000000000000000000001000000110000011100001111;
 
     /* Act */
@@ -883,7 +883,7 @@ TEST(GetBitBoardWhite, IsCorrecltyChangedAfterAMove) {
 
     /* Act */
     cc.move(0, {{0, 2}, {0, 4}});
-    uint_fast64_t obtainedValue = cc.get_bitBoardWhite();
+    uint_fast64_t obtainedValue = cc.getBitBoardWhite();
 
     /* Assert */
     EXPECT_EQ(expectedValue, obtainedValue);
@@ -897,7 +897,7 @@ TEST(GetBitBoardWhite, IsCorrecltyChangedAfterTwoMoves) {
     /* Act */
     cc.move(0, {{0, 2}, {0, 4}});
     cc.move(1, {{4, 7}, {3, 7}});
-    uint_fast64_t obtainedValue = cc.get_bitBoardWhite();
+    uint_fast64_t obtainedValue = cc.getBitBoardWhite();
 
 
     /* Assert */
@@ -911,20 +911,20 @@ TEST(GetBitBoardWhite, IsCorrecltyChangedAfterIllegalMove) {
 
     /* Act */
     cc.move(1, {{0, 2}, {0, 4}});
-    uint_fast64_t obtainedValue = cc.get_bitBoardWhite();
+    uint_fast64_t obtainedValue = cc.getBitBoardWhite();
 
     /* Assert */
     EXPECT_EQ(expectedValue, obtainedValue);
 }
 
 /*
- * Tests for get_bitBoardBlack
+ * Tests for getBitBoardBlack
  */
 
 TEST(GetBitBoardBlack, IsCorrecltyInitialized) {
     /* Arrange */
     ChineseCheckers cc;
-    uint_fast64_t obtainedValue = cc.get_bitBoardBlack();
+    uint_fast64_t obtainedValue = cc.getBitBoardBlack();
     uint_fast64_t expectedValue = 0b1111000011100000110000001000000000000000000000000000000000000000;
 
     /* Act */
@@ -940,7 +940,7 @@ TEST(GetBitBoardBlack, IsCorrecltyChangedAfterAMove) {
 
     /* Act */
     cc.move(0, {{0, 2}, {0, 4}});
-    uint_fast64_t obtainedValue = cc.get_bitBoardBlack();
+    uint_fast64_t obtainedValue = cc.getBitBoardBlack();
 
     /* Assert */
     EXPECT_EQ(expectedValue, obtainedValue);
@@ -954,7 +954,7 @@ TEST(GetBitBoardBlack, IsCorrecltyChangedAfterTwoMoves) {
     /* Act */
     cc.move(0, {{0, 2}, {0, 4}});
     cc.move(1, {{4, 7}, {3, 7}});
-    uint_fast64_t obtainedValue = cc.get_bitBoardBlack();
+    uint_fast64_t obtainedValue = cc.getBitBoardBlack();
 
 
     /* Assert */
@@ -969,14 +969,14 @@ TEST(GetBitBoardBlack, IsCorrecltyChangedAfterTwoIllegalMoves) {
     /* Act */
     cc.move(0, {{0, 2}, {0, 4}});
     cc.move(0, {{4, 7}, {3, 7}});
-    uint_fast64_t obtainedValue = cc.get_bitBoardBlack();
+    uint_fast64_t obtainedValue = cc.getBitBoardBlack();
 
     /* Assert */
     EXPECT_EQ(expectedValue, obtainedValue);
 }
 
 /*
- * Tests for get_who_is_to_play_()
+ * Tests for getWhoIsToPlay()
  */
 
 TEST(GetWhoIsToPlay, IsSetToZero) {
@@ -986,7 +986,7 @@ TEST(GetWhoIsToPlay, IsSetToZero) {
     /* Act */
 
     /* Assert */
-    EXPECT_EQ(cc.get_who_is_to_play_(), 0);
+    EXPECT_EQ(cc.getWhoIsToPlay(), 0);
 }
 
 TEST(GetWhoIsToPlay, IsSetToOneAfterAMove) {
@@ -997,7 +997,7 @@ TEST(GetWhoIsToPlay, IsSetToOneAfterAMove) {
     cc.move(0, {{3, 0}, {4, 0}});
 
     /* Assert */
-    EXPECT_EQ(cc.get_who_is_to_play_(), 1);
+    EXPECT_EQ(cc.getWhoIsToPlay(), 1);
 }
 
 TEST(GetWhoIsToPlay, IsSetToTwoAfterTwoMoves) {
@@ -1009,7 +1009,7 @@ TEST(GetWhoIsToPlay, IsSetToTwoAfterTwoMoves) {
     cc.move(1, {{5, 7}, {4, 7}});
 
     /* Assert */
-    EXPECT_EQ(cc.get_who_is_to_play_(), 1);
+    EXPECT_EQ(cc.getWhoIsToPlay(), 1);
 }
 
 TEST(GetWhoIsToPlay, DoesntChangeWhenMoveIsIllegal) {
@@ -1020,7 +1020,7 @@ TEST(GetWhoIsToPlay, DoesntChangeWhenMoveIsIllegal) {
     cc.move(0, {{0, 0}, {1, 0}});
 
     /* Assert */
-    EXPECT_EQ(cc.get_who_is_to_play_(), 0);
+    EXPECT_EQ(cc.getWhoIsToPlay(), 0);
 }
 
 TEST(IllegalPositions, WhiteSideNotIllegal) {

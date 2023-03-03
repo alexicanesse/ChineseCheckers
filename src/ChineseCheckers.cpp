@@ -158,15 +158,15 @@ ChineseCheckers::ChineseCheckers() {
         }
     }
 
-    new_game();
+    newGame();
     loadIllegalPositions();
 }
 
 bool ChineseCheckers::move(const Player &player,
                            const ListOfPositionType &list_moves) {
     /* Check if the game is over */
-    if (state_of_game() != NotFinished) {
-        std::cout << "Game is over! " << state_of_game() << "\n";
+    if (stateOfGame() != NotFinished) {
+        std::cout << "Game is over! " << stateOfGame() << "\n";
         return false;
     }
 
@@ -254,7 +254,7 @@ void ChineseCheckers::moveWithoutVerification(const uint_fast64_t &move) {
  * returns true or false to indicate if
  * the current position is a winning position
  */
-Result ChineseCheckers::state_of_game() {
+Result ChineseCheckers::stateOfGame() {
     /* Check if player 0 won */
     if ((bit_boards_.White & winning_positions_white_)
            && !(((bit_boards_.White | bit_boards_.Black) & winning_positions_white_)
@@ -274,7 +274,7 @@ Result ChineseCheckers::state_of_game() {
     return NotFinished;
 }
 
-void ChineseCheckers::new_game() {
+void ChineseCheckers::newGame() {
     /* Initialize the grid */
     bit_boards_.White = winning_positions_black_;
     bit_boards_.Black = winning_positions_white_;
@@ -286,7 +286,7 @@ void ChineseCheckers::new_game() {
     number_of_times_seen_[hashGrid()] = 1;
 }
 
-void ChineseCheckers::print_grid_() {
+void ChineseCheckers::printGrid() {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             if (bit_boards_.White & int_to_uint64_[i][j])
@@ -300,11 +300,11 @@ void ChineseCheckers::print_grid_() {
     }
 }
 
-void ChineseCheckers::print_who_is_to_play_() {
+void ChineseCheckers::printWhoIsToPlay() {
     std::cout << who_is_to_play_ << "\n";
 }
 
-Player ChineseCheckers::get_who_is_to_play_() const {
+Player ChineseCheckers::getWhoIsToPlay() const {
     return who_is_to_play_;
 }
 
@@ -434,10 +434,10 @@ bool ChineseCheckers::isPositionIllegal() {
     return illegal_positions_.find(code) != illegal_positions_.end();
 }
 
-uint_fast64_t ChineseCheckers::get_bitBoardWhite() {
+uint_fast64_t ChineseCheckers::getBitBoardWhite() {
     return bit_boards_.White;
 }
 
-uint_fast64_t ChineseCheckers::get_bitBoardBlack() {
+uint_fast64_t ChineseCheckers::getBitBoardBlack() {
     return bit_boards_.Black;
 }

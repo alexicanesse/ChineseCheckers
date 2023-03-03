@@ -116,11 +116,11 @@ BOOST_PYTHON_MODULE(libChineseCheckers) {
 
     boost::python::class_<ChineseCheckers>("Game", boost::python::init<>())
         .def("move", &ChineseCheckers::move)
-        .def("state_of_game", &ChineseCheckers::state_of_game)
-        .def("new_game", &ChineseCheckers::new_game)
-        .def("print_grid_", &ChineseCheckers::print_grid_)
-        .def("print_who_is_to_play_", &ChineseCheckers::print_who_is_to_play_)
-        .def("get_who_is_to_play_", &ChineseCheckers::get_who_is_to_play_);
+        .def("state_of_game", &ChineseCheckers::stateOfGame)
+        .def("new_game", &ChineseCheckers::newGame)
+        .def("print_grid_", &ChineseCheckers::printGrid)
+        .def("print_who_is_to_play_", &ChineseCheckers::printWhoIsToPlay)
+        .def("get_who_is_to_play_", &ChineseCheckers::getWhoIsToPlay);
 }
 
 

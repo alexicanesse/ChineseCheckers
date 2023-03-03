@@ -121,9 +121,14 @@ class ChineseCheckers {
     void loadIllegalPositions();
  public:
     /*! @brief
-     * A simple constructor
+     * A simple constructor.
+     * @sa newGame()
      */
     ChineseCheckers();
+    /*! @brief
+    * Creates a new game.
+    */
+    void newGame();
 
     /*! @brief
      * This member checks if a move is legal and executes it if it is legal.
@@ -137,76 +142,61 @@ class ChineseCheckers {
      */
     bool move(const Player &player,
               const ListOfPositionType &list_moves);
-
     /*! @brief
-     * Indicates the current state of the game (ie, not finished, black won, white won or draw).
-     */
-    /*!
+     * Indicates the current state of the game
+     * (ie, not finished, black won, white won or draw).
      * @retval notFinished if the game is not finished.
      * @retval whiteWon if white won the game.
      * @retval blackWon if black won the game.
      * @retval draw if a draw happened.
-     * @sa new_game().
+     * @sa newGame().
      */
-    Result state_of_game();
-
+    Result stateOfGame();
     /*! @brief
      * This member execute a move without checking if the move is legal.
      * @details
      * This function is not made to be used by the end user. It has been engineered to
      * be used by solvers. It bypasses usual verifications and hence allows illegal moves to be
      * played. This function should be used with great care.
-     */
-    /*!
      * @param player indicates which player made the move.
      * @param list_moves contains the list of intermediate positions.
                                 of a move (including the starting point
                                 and the arrival point).
-     * @sa elementaryMove(PositionType original_position
-     * @sa PositionType arrival_position)
+     * @sa elementaryMove(PositionType original_position, PositionType arrival_position)
      * @sa move(Player player, const ListOfPositionType &list_moves).
      */
     void moveWithoutVerification(const uint_fast64_t &move);
-
     /*! @brief
-     * Creates a new game.
+     * Hashes @ref the grid.
+     * @return A hash of @ref grid_.
      */
-    void new_game();
-
-    /*! @brief
-     * Prints \ref grid_.
-     */
-    void print_grid_();
-
-    /*! @brief
-     * Prints @ref who_is_to_play_.
-     */
-    void print_who_is_to_play_();
+    inline uint64_t hashGrid();
 
     /*! @brief
      * Returns @ref who_is_to_play_.
-     */
-    /*!
      * @return @ref who_is_to_play_.
      */
-    Player get_who_is_to_play_() const;
-
+    Player getWhoIsToPlay() const;
     /*! @brief
-     * Returns @ref number_of_times_seen/
-     * @return @ref number_of_times_seen
+     * Returns @ref number_of_times_seen.
+     * @return @ref number_of_times_seen.
      */
     boost::unordered_map<uint64_t, int> getNumberOfTimesSeen() const;
-
-    uint_fast64_t get_bitBoardWhite();
-    uint_fast64_t get_bitBoardBlack();
-
     /*! @brief
-     * Hashes @ref grid_ according to the fnv1a scheme
+     * Returns @ref bitBoards.White.
+     * @return @ref bitBoards.White.
      */
-    /*!
-     * @return A hash of @ref grid_
+    uint_fast64_t getBitBoardWhite();
+    /*! @brief
+     * Returns @ref bitBoards.Black.
+     * @return @ref bitBoards.Black.
      */
-    inline uint64_t hashGrid();
+    uint_fast64_t getBitBoardBlack();
+
+    /*! @brief Prints the grid. */
+    void printGrid();
+    /*! @brief Prints @ref who_is_to_play_. */
+    void printWhoIsToPlay();
 };
 
 

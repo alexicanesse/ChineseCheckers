@@ -179,8 +179,8 @@ BOOST_PYTHON_MODULE(AlphaBeta) {
 
     boost::python::class_<AlphaBeta>("Solver", boost::python::init<>())
         .def("getMove", &AlphaBeta::getMove)
-        .def("state_of_game", &AlphaBeta::state_of_game)
-        .def("print_grid_", &AlphaBeta::print_grid_)
+        .def("state_of_game", &AlphaBeta::stateOfGame)
+        .def("print_grid_", &AlphaBeta::printGrid)
         .def("move", &AlphaBeta::move)
         .def("isHuman", &AlphaBeta::isHuman);
 }
