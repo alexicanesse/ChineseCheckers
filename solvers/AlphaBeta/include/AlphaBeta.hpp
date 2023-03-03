@@ -94,12 +94,11 @@ class AlphaBeta : public ChineseCheckers{
     uint_fast64_t best_move_;
 
     /*! Transposition table used to store the results of previous searches */
-    boost::unordered_map<uint64_t, std::pair<double, int>> transTable;
-
-    boost::unordered_map<uint64_t, std::pair<double, int>>::iterator it;
+    boost::unordered_map<std::pair<uint_fast64_t, uint_fast64_t>, std::pair<double, int>> transTable;
+    boost::unordered_map<std::pair<uint_fast64_t, uint_fast64_t>, std::pair<double, int>>::iterator it;
 
     /*! Map of pre-computed optimal openings */
-    boost::unordered_map<uint64_t, ListOfPositionType> opening;
+    boost::unordered_map<uint_fast64_t, uint_fast64_t> opening;
 
     /*! Tensorflow model used by @ref tensorflowOrderMoves(ListOfMoves &possible_moves) */
     cppflow::model *model = new cppflow::model("./raw_data/model");
@@ -194,6 +193,7 @@ class AlphaBeta : public ChineseCheckers{
      * @return The best move according to the alpha beta algorithm
      */
     ListOfPositionType getMove(const int &depth, const double &alpha, const double &beta);
+    uint_fast64_t getMove64(const int &depth);
 
     /*! @brief
      * Makes a step of the alpha beta algorithm
@@ -273,7 +273,7 @@ class AlphaBeta : public ChineseCheckers{
     int rank;
     int number_of_moves;
 
-    inline const uint64_t hashGrid();
+    inline uint64_t hashGrid();
     ListOfPositionType retrieveMoves(const uint_fast64_t &move);
     std::array<bool, 2> won_ = {false, false};
 };

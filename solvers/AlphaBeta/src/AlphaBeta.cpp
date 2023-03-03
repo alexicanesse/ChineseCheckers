@@ -203,8 +203,10 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
     heuristic_value_   = heuristicValue();
     fullDepth_         = depth;
 
-    //if (opening.contains(hashGrid()))
-        //return opening[hashGrid()];
+    if (0 && opening.contains(hashGrid())) {
+        std::cout << "here\n";
+        return retrieveMoves(opening[hashGrid()]);
+    }
 
     transTable.clear();
 
@@ -234,6 +236,22 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
     return retrieveMoves(best_move_);
 }
 
+uint_fast64_t AlphaBeta::getMove64(const int &depth) {
+    maximizing_player_ = who_is_to_play_;
+    heuristic_value_   = heuristicValue();
+    fullDepth_         = depth;
+
+    transTable.clear();
+
+    AlphaBetaEval(depth,
+                  MINUS_INFTY,
+                  PLUS_INFTY,
+                  false,
+                  true);
+
+    return best_move_;
+}
+
 const double AlphaBeta::AlphaBetaEval(const int &depth,
                              double alpha,
                              double beta,
@@ -259,7 +277,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
         if (depth == 0) {
             return heuristic_value_;
         } else if (!keepMove) { /* Use a transposition table to boost performances */
-            it = transTable.find(hash);
+            it = transTable.find({bitBoardWhite, bitBoardBlack});
             if (it != transTable.end() && it->second.second == depth) {
                 /* retrieve the value from the transposition table */
                 return it->second.first;
@@ -326,7 +344,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     }
 
     /* store the value in the transposition table */
-    transTable[hash] = {value, depth};
+    transTable[{bitBoardWhite, bitBoardBlack}] = {value, depth};
 
     /* return value */
     return value;
@@ -433,15 +451,11 @@ void AlphaBeta::loadOpenings() {
     /* Iterate through the file and load each element through the file */
     std::string line;
     uint64_t hash;
-    int position0, position1;
-    ListOfPositionType move;
+    uint_fast64_t move;
     while(std::getline(inFile, line)) {
-        move.clear();
         std::istringstream ss(line);
-        ss >> hash;
-        while(ss >> position0 >> position1)
-            move.push_back({position0, position1});
-
+        ss >> hash >> move;
+        std::cout << std::bitset<64>(move) << "\n";
         opening[hash] = move;
     }
 
@@ -450,7 +464,7 @@ void AlphaBeta::loadOpenings() {
 }
 
 /* FNV-1a hash function */
-inline const uint64_t AlphaBeta::hashGrid() {
+inline uint64_t AlphaBeta::hashGrid() {
     return (0x100000001b3 * (0xcbf29ce484222325 ^ bitBoardWhite) ^ bitBoardBlack);
 }
 
