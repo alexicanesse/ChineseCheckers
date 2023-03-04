@@ -187,6 +187,8 @@ The shared libraries `libChineseCheckers` and `AlphaBeta` can be used to interfa
 respectively, in other projects (in C++ and Python). These libraries have been carefully designed to provide efficient and reliable 
 functionality that can be integrated into a wide range of projects.
 
+There are unittests for `libChineseCheckers` available. To use them, add the option `-DTEST_ENABLED=ON` to `cmake`.
+
 Here are the other components:
  - `AlphaBeta_benchmarks`: This executable can be used to run benchmarks on the Alpha Beta pruning solver. 
 You can use this tool to measure the performance of the solver in various scenarios, and to identify 
