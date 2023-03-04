@@ -67,6 +67,9 @@ target_include_directories(Openings_generator PRIVATE ./solvers/AlphaBeta/includ
 
 if(TEST_ENABLED)
     add_custom_command(TARGET unittests POST_BUILD
+            COMMAND cp -R ../raw_data ./raw_data
+            )
+    add_custom_command(TARGET unittests POST_BUILD
             COMMAND unittests
             )
 endif()
