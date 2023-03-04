@@ -51,17 +51,27 @@ if(TEST_ENABLED)
                 ${CXXFILESUNITTESTS})
 endif()
 
-add_executable(AlphaBeta_benchmarks
+if(BENCHMARK_ENABLED)
+    add_executable(AlphaBeta_benchmarks
                 ${CXXFILESALPHABETABENCHMARKS})
+endif()
 
-#add_executable(Tournament ${CXXFILESTOURNAMENT})
+if(TOURNAMENT_ENABLED)
+    add_executable(Tournament ${CXXFILESTOURNAMENT})
+endif()
 #add_executable(Intuition_data_generator ${CXXFILESINTUITIONDATAGENERATOR})
 add_executable(Openings_generator ${CXXFILESOPENINGSGENERATOR})
 
 include_directories("./include")
 target_include_directories(AlphaBeta PRIVATE ./solvers/AlphaBeta/include/)
-target_include_directories(AlphaBeta_benchmarks PRIVATE ./solvers/AlphaBeta/include/)
-#target_include_directories(Tournament PRIVATE ./solvers/AlphaBeta/include/)
+
+if(BENCHMARK_ENABLED)
+    target_include_directories(AlphaBeta_benchmarks PRIVATE ./solvers/AlphaBeta/include/)
+endif()
+
+if(TOURNAMENT_ENABLED)
+    target_include_directories(Tournament PRIVATE ./solvers/AlphaBeta/include/)
+endif()
 #target_include_directories(Intuition_data_generator PRIVATE ./solvers/AlphaBeta/include/)
 target_include_directories(Openings_generator PRIVATE ./solvers/AlphaBeta/include/)
 
@@ -85,20 +95,26 @@ list(GET VERSION_LIST 1 PYTHONLIBS_VERSION_MINOR)
 
 #enable_testing()
 find_package(Boost COMPONENTS python${PYTHONLIBS_VERSION_MAJOR}${PYTHONLIBS_VERSION_MINOR} REQUIRED)
-find_package(benchmark REQUIRED)
+
 find_package(Eigen3 REQUIRED)
 find_package(cppflow REQUIRED)
 
 target_link_libraries(libChineseCheckers PUBLIC ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 target_link_libraries(AlphaBeta PUBLIC libChineseCheckers ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} cppflow::cppflow)
 
+if(BENCHMARK_ENABLED)
+    find_package(benchmark REQUIRED)
+    target_link_libraries(AlphaBeta_benchmarks PUBLIC AlphaBeta libChineseCheckers benchmark::benchmark)
+endif()
+
 if(TEST_ENABLED)
     find_package(GTest REQUIRED)
     target_link_libraries(unittests PUBLIC libChineseCheckers GTest::gtest)
 endif()
 
-target_link_libraries(AlphaBeta_benchmarks PUBLIC AlphaBeta libChineseCheckers benchmark::benchmark)
-#target_link_libraries(Tournament PUBLIC AlphaBeta)
+if(TOURNAMENT_ENABLED)
+    target_link_libraries(Tournament PUBLIC AlphaBeta)
+endif()
 #target_link_libraries(Intuition_data_generator PUBLIC AlphaBeta cppflow::cppflow)
 target_link_libraries(Openings_generator PUBLIC AlphaBeta)
 
