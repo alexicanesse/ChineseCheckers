@@ -63,7 +63,7 @@ class ChineseCheckers {
     /*! Stores the illegal positions. */
     boost::unordered_map<uint32_t, bool> illegal_positions_;
     /*! Stores results of cantor pairing to make the check for illegal positions faster. */
-    std::array<std::array<uint32_t, 8>, 8> cantorPairing_;
+    std::array<std::array<uint32_t, 8>, 8> cantor_pairing_;
     /* Stores the valid directions to find if a move is valid faster. */
     std::vector<std::vector<int>> valid_lines = {{-1,  0}, {-1,  1}, {0 , -1},
                                                  {0 ,  1}, {1 , -1}, {1 ,  0}};
