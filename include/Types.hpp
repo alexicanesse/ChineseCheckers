@@ -16,6 +16,7 @@
 #define INCLUDE_TYPES_HPP_
 
 #include <vector>
+#include <boost/functional/hash.hpp>
 
 /* The number of time a grid state can be seen before settling for a draw */
 #define MAX_NUMBER_OF_CYCLES_FOR_DRAW_ 3
