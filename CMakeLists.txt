@@ -60,7 +60,12 @@ if(TOURNAMENT_ENABLED)
     add_executable(Tournament ${CXXFILESTOURNAMENT})
 endif()
 #add_executable(Intuition_data_generator ${CXXFILESINTUITIONDATAGENERATOR})
-add_executable(Openings_generator ${CXXFILESOPENINGSGENERATOR})
+
+if(OPENINGS_GENERATOR_ENABLED)
+    add_executable(Openings_generator ${CXXFILESOPENINGSGENERATOR})
+endif()
+
+
 
 include_directories("./include")
 target_include_directories(AlphaBeta PRIVATE ./solvers/AlphaBeta/include/)
@@ -73,7 +78,10 @@ if(TOURNAMENT_ENABLED)
     target_include_directories(Tournament PRIVATE ./solvers/AlphaBeta/include/)
 endif()
 #target_include_directories(Intuition_data_generator PRIVATE ./solvers/AlphaBeta/include/)
-target_include_directories(Openings_generator PRIVATE ./solvers/AlphaBeta/include/)
+
+if(OPENINGS_GENERATOR_ENABLED)
+    target_include_directories(Openings_generator PRIVATE ./solvers/AlphaBeta/include/)
+endif()
 
 if(TEST_ENABLED)
     add_custom_command(TARGET unittests POST_BUILD
@@ -93,9 +101,8 @@ string(REPLACE "." ";" VERSION_LIST ${PYTHONLIBS_VERSION_STRING})
 list(GET VERSION_LIST 0 PYTHONLIBS_VERSION_MAJOR)
 list(GET VERSION_LIST 1 PYTHONLIBS_VERSION_MINOR)
 
-#enable_testing()
-find_package(Boost COMPONENTS python${PYTHONLIBS_VERSION_MAJOR}${PYTHONLIBS_VERSION_MINOR} REQUIRED)
 
+find_package(Boost COMPONENTS python${PYTHONLIBS_VERSION_MAJOR}${PYTHONLIBS_VERSION_MINOR} REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(cppflow REQUIRED)
 
@@ -116,7 +123,9 @@ if(TOURNAMENT_ENABLED)
     target_link_libraries(Tournament PUBLIC AlphaBeta)
 endif()
 #target_link_libraries(Intuition_data_generator PUBLIC AlphaBeta cppflow::cppflow)
-target_link_libraries(Openings_generator PUBLIC AlphaBeta)
+if(OPENINGS_GENERATOR_ENABLED)
+    target_link_libraries(Openings_generator PUBLIC AlphaBeta)
+endif()
 
 target_include_directories(libChineseCheckers PUBLIC ${PYTHON_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
 target_include_directories(AlphaBeta PUBLIC ${PYTHON_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIR})
