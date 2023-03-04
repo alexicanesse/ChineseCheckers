@@ -46,8 +46,10 @@ add_library(AlphaBeta
                 SHARED
                 ${CXXFILESALPHABETA})
 
-add_executable(unittests
+if(TEST_ENABLED)
+    add_executable(unittests
                 ${CXXFILESUNITTESTS})
+endif()
 
 add_executable(AlphaBeta_benchmarks
                 ${CXXFILESALPHABETABENCHMARKS})
@@ -63,19 +65,11 @@ target_include_directories(AlphaBeta_benchmarks PRIVATE ./solvers/AlphaBeta/incl
 #target_include_directories(Intuition_data_generator PRIVATE ./solvers/AlphaBeta/include/)
 target_include_directories(Openings_generator PRIVATE ./solvers/AlphaBeta/include/)
 
-add_custom_target(run_unittests
-        COMMAND unittests
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        COMMENT "Run generated unittests in ${CMAKE_CURRENT_SOURCE_DIR}"
-        SOURCES ${CXXFILESUNITTESTS}
-        )
-
-#add_dependencies(AlphaBeta run_unittests)
-#add_dependencies(AlphaBeta_benchmarks run_unittests)
-#add_dependencies(Tournament run_unittests)
-#add_dependencies(Intuition_data_generator run_unittests)
-#add_dependencies(Openings_generator run_unittests)
-
+if(TEST_ENABLED)
+    add_custom_command(TARGET unittests POST_BUILD
+            COMMAND unittests
+            )
+endif()
 
 ###############################################################################
 ## dependencies ###############################################################
@@ -86,16 +80,19 @@ string(REPLACE "." ";" VERSION_LIST ${PYTHONLIBS_VERSION_STRING})
 list(GET VERSION_LIST 0 PYTHONLIBS_VERSION_MAJOR)
 list(GET VERSION_LIST 1 PYTHONLIBS_VERSION_MINOR)
 
-enable_testing()
+#enable_testing()
 find_package(Boost COMPONENTS python${PYTHONLIBS_VERSION_MAJOR}${PYTHONLIBS_VERSION_MINOR} REQUIRED)
 find_package(benchmark REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(cppflow REQUIRED)
-find_package(GTest REQUIRED)
 
 target_link_libraries(libChineseCheckers PUBLIC ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
-target_link_libraries(unittests PUBLIC libChineseCheckers GTest::gtest)
 target_link_libraries(AlphaBeta PUBLIC libChineseCheckers ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} cppflow::cppflow)
+
+if(TEST_ENABLED)
+    find_package(GTest REQUIRED)
+    target_link_libraries(unittests PUBLIC libChineseCheckers GTest::gtest)
+endif()
 
 target_link_libraries(AlphaBeta_benchmarks PUBLIC AlphaBeta libChineseCheckers benchmark::benchmark)
 #target_link_libraries(Tournament PUBLIC AlphaBeta)
