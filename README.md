@@ -192,10 +192,12 @@ There are unittests for `libChineseCheckers` available. To use them, add the opt
 Here are the other components:
  - `AlphaBeta_benchmarks`: This executable can be used to run benchmarks on the Alpha Beta pruning solver. 
 You can use this tool to measure the performance of the solver in various scenarios, and to identify 
-areas for optimization.
- - `Tournament`: This executable can be used to improve solvers using a genetic algorithm. 
+areas for optimization. Use `cmake -B ./bin -S . -DBENCHMARK_ENABLED=ON`to activate its compilation.
+ - `Tournament`: This executable can be used to improve solvers using a genetic algorithm. Use 
+`cmake -B ./bin -S . -DTOURNAMENT_ENABLED=ON`to activate its compilation.
  - `Intuition_data_generator`: This executable can be used to generate intuition data for the Alpha Beta pruning solver. 
-You can use this tool to generate training data that can be used to improve the performance of the solver.
+You can use this tool to generate training data that can be used to improve the performance of the solver. Use 
+`cmake -B ./bin -S . -DINTUITION_DATA_GENERATOR_ENABLED=ON`to activate its compilation.
 
 Use the [documentation](#documentation) for details about the use of those libraries.
 
