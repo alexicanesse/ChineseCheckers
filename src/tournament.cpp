@@ -72,15 +72,15 @@
 /* Depth for AlphaBeta */
 #define AB_DEPTH 1
 
-/*Mean for initialisation*/
+/* Mean for initialisation */
 #define MEAN_INIT 0
-/*Mean for initialisation*/
+/* Mean for initialisation */
 #define SIGMA_INIT 0.1
 
 
-// Creating distribution generators
-const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-//const unsigned seed = 818934826;
+/* Creating distribution generators */
+//const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+const unsigned seed = 818934826;
 /* Use std::random_device generator; for true randomness */
 std::mt19937 generator(seed);
 std::bernoulli_distribution b_distrib(P_MUTATION);
@@ -138,11 +138,11 @@ int main() {
 
     GamePlayer gp(AB_DEPTH);
 
-    std::vector< SolversIndividuals > pop_white(POP_SIZE);
-    std::vector< SolversIndividuals > pop_black(POP_SIZE);
+    std::vector<SolversIndividuals> pop_white(POP_SIZE);
+    std::vector<SolversIndividuals> pop_black(POP_SIZE);
 
     /* Initialisation of the population */
-    std::vector< double > zeros(64, 0);
+    std::vector<double> zeros(64, 0);
     for (int i = 0; i != POP_SIZE; ++i) {
         pop_white[i].init_at_random();
         pop_black[i].init_at_random();
@@ -151,13 +151,16 @@ int main() {
     /* Initialisation of working variables */
     SolversIndividuals best_white;
     SolversIndividuals best_black;
-    gp.set_black_player(best_black);  /* Evolving white player at first */
+
+    /* Evolving white player at first */
+    gp.set_black_player(best_black);
+
     double score = -2;  /* Minimum possible score */
     best_white.set_score(score);
     best_black.set_score(score);
+
     bool is_white_evolving = true;
     int count = 0;
-
     for (int gen = 0; gen != NUM_GENERATION ; ++gen) {
         if (count == ROUND_LENGTH) {  /* Swaping who is evolving */
             is_white_evolving = !is_white_evolving;
@@ -200,10 +203,10 @@ int main() {
         ++count;
     }
 
-    std::cout <<"Best white so far:" << std::endl;
+    std::cout <<"Best white so far:\n";
     best_white.print_info();
 
-    std::cout <<"Best black so far:" << std::endl;
+    std::cout <<"Best black so far:\n";
     best_black.print_info();
 
     if (!is_white_evolving) {
@@ -222,7 +225,7 @@ int main() {
     return 0;
 }
 
-// writing SolversIndividuals class
+/* Defining SolversIndividuals class */
 SolversIndividuals::SolversIndividuals() :
 win(std::vector<double> ({
      0.0/98,  1.0/98,  4.0/98,  9.0/98, 16.0/98, 25.0/98, 36.0/98, 49.0/98,
@@ -245,14 +248,10 @@ lose(std::vector<double> ({
 score(0) {}
 
 void SolversIndividuals::init_at_random() {
-    std::vector< double > zeros(64, 0);
-    this->set_lose(zeros);
-    this->set_win(zeros);
     for (int i = 0; i != 64; ++i) {
         this->win[i] = std::min(1.0, std::max(0.0, initiator_()));
         this->lose[i] = std::min(1.0, std::max(0.0, initiator_()));
     }
-
 }
 
 SolversIndividuals::SolversIndividuals(std::vector<double> &win_,
@@ -267,26 +266,26 @@ bool operator<(SolversIndividuals const& s1, SolversIndividuals const& s2) {
      * We sort by the probability of dying i.e
      * we want to keep solvers with the highest score
      */
-    return(s1.score > s2.score);
+    return (s1.score > s2.score);
 }
 
 SolversIndividuals& SolversIndividuals::operator=(
-        const SolversIndividuals & other) {
+        const SolversIndividuals &other) {
     if (this == &other)
         return *this;
 
-    this->win = other.win;
-    this->lose = other.lose;
-    this->score = other.score;
+    win = other.win;
+    lose = other.lose;
+    score = other.score;
     return *this;
 }
 
 std::vector<double> SolversIndividuals::get_win() {
-    return(this->win);
+    return this->win;
 }
 
 std::vector<double> SolversIndividuals::get_lose() {
-    return(this->lose);
+    return this->lose;
 }
 
 void SolversIndividuals::set_win(const std::vector<double> &win_) {
@@ -302,18 +301,17 @@ void SolversIndividuals::set_score(const double &score_) {
 }
 
 double SolversIndividuals::get_score() {
-    return(this->score);
+    return this->score;
 }
 
 
 void SolversIndividuals::mutate() {
     double normalisation_factor = 0;
     for (int i = 0; i != 64; ++i) {
-        if (mutates()) this->win[i] += variation();
-        if (mutates()) this->lose[i] += variation();
-        this->win[i] = std::min(1.0, std::max(0.0, this->win[i]));
-        this->lose[i] = std::min(1.0, std::max(0.0, this->win[i]));
+        if (mutates()) win[i]  = std::min(1.0, std::max(0.0, win[i]  + variation()));
+        if (mutates()) lose[i] = std::min(1.0, std::max(0.0, lose[i] + variation()));
     }
+
 
     /*
     const auto [min0, max0] = std::minmax_element(this->win.begin(),
@@ -340,27 +338,29 @@ void SolversIndividuals::print_info() {
     constexpr auto max_precision {
         std::numeric_limits<long double>::digits10 + 1
     };
-    std::cout << "Win data:" << std::endl << "{";
+
+    std::cout << "Win data:\n{";
     for (int i = 0; i != 64; ++i) {
-        std::cout << std::setprecision(max_precision) << this->win[i];
+        std::cout << std::setprecision(max_precision) << win[i];
         if (i != 63)
             std::cout << ", ";
     }
 
-    std::cout << "}" << std::endl << "lose data:" << std::endl << "{";
+    std::cout << "}\nlose data:\n{";
     for (int i = 0; i != 64; ++i) {
-        std::cout << std::setprecision(max_precision) << this->lose[i];
+        std::cout << std::setprecision(max_precision) << lose[i];
         if (i != 63)
             std::cout << ", ";
     }
-    std::cout << "}" << std::endl;
+    std::cout << "}\n";
 }
 
 void SolversIndividuals::print_info_as_matrix() {
     constexpr auto max_precision {
         std::numeric_limits<long double>::digits10 + 2
     };
-    std::cout << "Win data:" << std::endl << "{";
+
+    std::cout << "Win data:\n{";
     for (int i = 0; i != 8; ++i) {
         std::cout << "{";
         for (auto j = 0; j != 8; ++j) {
@@ -369,12 +369,12 @@ void SolversIndividuals::print_info_as_matrix() {
                 std::cout << ", ";
         }
         if (i != 7)
-            std::cout << "}," << std::endl;
+            std::cout << "},\n";
         else
             std::cout << "}";
     }
 
-    std::cout << "}" << std::endl << "lose data:" << std::endl << "{";
+    std::cout << "}\nlose data:\n{";
     for (int i = 0; i != 8; ++i) {
         std::cout << "{";
         for (auto j = 0; j != 8; ++j) {
@@ -384,7 +384,7 @@ void SolversIndividuals::print_info_as_matrix() {
                 std::cout << ", ";
         }
         if (i != 7)
-            std::cout << "}," << std::endl;
+            std::cout << "},\n";
         else
             std::cout << "}";
     }
@@ -396,7 +396,7 @@ void SolversIndividuals::print_info_as_matrix_to_file(std::ofstream & file) {
         std::numeric_limits<long double>::digits10 + 2
     };
 
-    file << "Win data:" << std::endl << "{";
+    file << "Win data:\n{";
     for (int i = 0; i != 8; ++i) {
         file << "{";
         for (auto j = 0; j != 8; ++j) {
@@ -405,12 +405,12 @@ void SolversIndividuals::print_info_as_matrix_to_file(std::ofstream & file) {
                 file << ", ";
         }
         if (i != 7)
-            file << "}," << std::endl;
+            file << "},\n";
         else
             file << "}";
     }
 
-    file << "}" << std::endl << "lose data:" << std::endl << "{";
+    file << "}\nlose data:\n{";
     for (int i = 0; i != 8; ++i) {
         file << "{";
         for (auto j = 0; j != 8; ++j) {
@@ -419,23 +419,23 @@ void SolversIndividuals::print_info_as_matrix_to_file(std::ofstream & file) {
                 file << ", ";
         }
         if (i != 7)
-            file << "}," << std::endl;
+            file << "},\n";
         else
             file << "}";
     }
-    file << "}" << std::endl << std::endl;
+    file << "}\n\n";
 }
 
-void print_matrix(const std::vector< std::vector<double> > &matrix) {
+void print_matrix(const std::vector<double> &matrix) {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j)
-            std::cout << matrix[i][j] << " ";
+            std::cout << matrix[i*8 + j] << " ";
         std::cout << "\n";
     }
 }
 
 
-/* Writing GamePlayer class */
+/* Defining GamePlayer class */
 
 GamePlayer::GamePlayer() : white_player(AlphaBeta()),
                            black_player(AlphaBeta()),
@@ -448,47 +448,19 @@ GamePlayer::GamePlayer(int depth_) : white_player(AlphaBeta()),
 GamePlayer::GamePlayer(SolversIndividuals &solver1,
                        SolversIndividuals &solver2,
                        int depth_) {
-    this->set_white_player(solver1);
-    this->set_black_player(solver2);
-    this->depth = depth_;
+    set_white_player(solver1);
+    set_black_player(solver2);
+    depth = depth_;
 }
 
 void GamePlayer::set_white_player(SolversIndividuals &solver) {
-    std::vector<double> win_ = solver.get_win();
-    std::vector<double> lose_ = solver.get_lose();
-    std::vector< std::vector<double> > matrix1(8, std::vector<double>(8, 0));
-    std::vector< std::vector<double> > matrix2(8, std::vector<double>(8, 0));
-    for (int i = 0; i != 8; ++i) {
-        for (int j = 0; j != 8; ++j) {
-            matrix1[i][j] = win_[i*8 + j];
-            matrix2[i][j] = lose_[i*8 + j];
-        }
-    }
-    //print_matrix(matrix1);
-    //print_matrix(matrix2);
-    //std::cout << std::endl;
-    this->white_player.setPlayerToWinValue(matrix1);
-    this->white_player.setPlayerToLoseValue(matrix2);
-    matrix1 = this->white_player.getPlayerToWinValue();
-    matrix2 = this->white_player.getPlayerToLoseValue();
-    //std::cout << std::endl;
-    //print_matrix(matrix1);
-    //print_matrix(matrix2);
+    white_player.setPlayerToWinValue(solver.get_win());
+    white_player.setPlayerToLoseValue(solver.get_lose());
 }
 
 void GamePlayer::set_black_player(SolversIndividuals &solver) {
-    std::vector<double> win_ = solver.get_win();
-    std::vector<double> lose_ = solver.get_lose();
-    std::vector< std::vector<double> > matrix1(8, std::vector<double>(8, 0));
-    std::vector< std::vector<double> > matrix2(8, std::vector<double>(8, 0));
-    for (int i = 0; i != 8; ++i) {
-        for (int j = 0; j != 8; ++j) {
-            matrix1[i][j] = win_[i*8 + j];
-            matrix2[i][j] = lose_[i*8 + j];
-        }
-    }
-    this->black_player.setPlayerToWinValue(matrix1);
-    this->black_player.setPlayerToLoseValue(matrix2);
+    black_player.setPlayerToWinValue(solver.get_win());
+    black_player.setPlayerToLoseValue(solver.get_lose());
 }
 
 void GamePlayer::set_depth(const int &depth_) {
@@ -497,29 +469,30 @@ void GamePlayer::set_depth(const int &depth_) {
 
 double GamePlayer::playGame() {
     int remaining_moves = MAX_NUM_MOVES;
-    this->white_player.newGame();
-    this->black_player.newGame();
+
+    white_player.newGame();
+    black_player.newGame();
+
+    uint_fast64_t move;
     while ((this->white_player.stateOfGame() == NotFinished)
             && (remaining_moves > 0)) {
-        auto move = this->white_player.getMove(this->depth, -100000, 100000);
-        this->white_player.move(0, move);
-        this->black_player.move(0, move);
+        move = white_player.getMove64(this->depth);
+        white_player.moveWithoutVerification(move);
+        black_player.moveWithoutVerification(move);
         --remaining_moves;
 
-        if (this->white_player.stateOfGame() != NotFinished)
+        if (white_player.stateOfGame() != NotFinished)
             break;
 
-        move = this->black_player.getMove(this->depth, -100000, 100000);
-        this->white_player.move(1, move);
-        this->black_player.move(1, move);
+        move = black_player.getMove64(this->depth);
+        this->white_player.moveWithoutVerification(move);
+        this->black_player.moveWithoutVerification(move);
         --remaining_moves;
     }
 
-    Result result = this->white_player.stateOfGame();
-    std::vector<std::vector<Color> > end_grid;
     double score = 0.0;
     // std::cout << " remaining moves: " << remaining_moves<< std::endl;
-    switch (result) {
+    switch (white_player.stateOfGame()) {
         case NotFinished:
             score -= std::bitset<64>((white_player.getBitBoardWhite() | white_player.getBitBoardBlack()) & 0x000000000103070F).count();
             score += std::bitset<64>((white_player.getBitBoardWhite() | white_player.getBitBoardBlack()) & 0xF0E0C08000000000).count();
@@ -547,40 +520,38 @@ double GamePlayer::playGame() {
 }
 
 void GamePlayer::print_players_info() {
-    std::cout << std::endl;
+    std::cout << "\n";
     auto matrix11 = this->white_player.getPlayerToWinValue();
     auto matrix12 = this->white_player.getPlayerToLoseValue();
-    std::cout << "White player info:" << std::endl << "Win value:" << std::endl;
+    std::cout << "White player info:\nWin value:\n";
     print_matrix(matrix11);
-    std::cout << std::endl;
-    std::cout << "lose value:" << std::endl;
+    std::cout << "\nlose value:\n";
     print_matrix(matrix12);
 
-    std::cout << std::endl;
+    std::cout << "\n";
     auto matrix21 = this->black_player.getPlayerToWinValue();
     auto matrix22 = this->black_player.getPlayerToLoseValue();
-    std::cout << "Black player info:" << std::endl << "Win value:" << std::endl;
+    std::cout << "Black player info:\nWin value:\n";
     print_matrix(matrix21);
-    std::cout << std::endl;
-    std::cout << "lose value:" << std::endl;
+    std::cout << "\nlose value:\n" << std::endl;
     print_matrix(matrix22);
 }
 
 int GamePlayer::constructor_test() {
     AlphaBeta testPlayer;
-    auto matrix11 = this->white_player.getPlayerToWinValue();
-    auto matrix12 = this->white_player.getPlayerToLoseValue();
+    auto matrix11 = white_player.getPlayerToWinValue();
+    auto matrix12 = white_player.getPlayerToLoseValue();
     auto matrix21 = testPlayer.getPlayerToWinValue();
     auto matrix22 = testPlayer.getPlayerToLoseValue();
 
     for (int i = 0; i != 8; ++i) {
         for (int j = 0; j != 8; ++j) {
-            if (matrix11[i][j] != matrix21[i][j]) {
-                std::cout << "ko" << i << " " << j << "case 1" << std::endl;
+            if (matrix11[i*8 + j] != matrix21[i*8 + j]) {
+                std::cout << "ko" << i << " " << j << "case 1\n";
                 return(0);
             }
-            if (matrix12[i][j] != matrix22[i][j]) {
-                std::cout << "ko" << i << " " << j << "case 1" << std::endl;
+            if (matrix12[i*8 + j] != matrix22[i*8 + j]) {
+                std::cout << "ko" << i << " " << j << "case 1\n";
                 return(0);
             }
         }
@@ -607,59 +578,60 @@ void evol(GamePlayer *gp,
           std::vector<SolversIndividuals> &population,
           SolversIndividuals *best_player,
           bool is_white_evolving) {
-        double score = -2;
+    double score = -2;
 
-        /* Do every games */
-        for (int i = 0; i != POP_SIZE; ++i)  {
-            if (is_white_evolving) {
-                //std::cout << " -------------------------"<< std::endl;
-                gp->set_white_player(population[i]);
-                //std::cout << " -------------------------"<<std::endl;
-                score = gp->playGame();
-            } else {
-                gp->set_black_player(population[i]);
-                score = -gp->playGame();
-            }
-            population[i].set_score(score);
+    /* Do every games */
+    for (int i = 0; i != POP_SIZE; ++i)  {
+        if (is_white_evolving) {
+            //std::cout << " -------------------------"<< std::endl;
+            gp->set_white_player(population[i]);
+            //std::cout << " -------------------------"<<std::endl;
+            score = gp->playGame();
+        } else {
+            gp->set_black_player(population[i]);
+            score = -gp->playGame();
         }
+        population[i].set_score(score);
+    }
 
-        /* Sort the population by their scores */
-        std::sort(population.begin(), population.end());
+    /* Sorts the population by their scores */
+    std::sort(population.begin(), population.end());
 
-        /* Saving best solver */
-        if (population[0].get_score() > best_player->get_score())
-            *best_player = population[0];
+    /* Saves the best solver */
+    if (population[0].get_score() > best_player->get_score())
+        *best_player = population[0];
 
-        /*Selection*/
-        
-        std::vector<double> cum_scores_normalized(POP_SIZE);
-        double worst_score = population[POP_SIZE - 1].get_score();
-        cum_scores_normalized[0] = population[0].get_score() - worst_score;
-        for (int i = 1; i != POP_SIZE; ++i) {
-            cum_scores_normalized[i] = cum_scores_normalized[i-1] + population[i].get_score() - worst_score;
-        }
-        
-        double step_length = cum_scores_normalized[POP_SIZE -1]*SELECTION_RATIO /((double) POP_SIZE);
-        double position = 0.0;
-        int j = 0;//current solver taken for next gen
-        for (int i = POP_SIZE - 2; i != 0; --i) {//start at 1 to set population[0] to best player so far
-            if (position > cum_scores_normalized[j])
-                ++j;
-            population[i] = population[j];
-            position += step_length;
-        }
-        population[POP_SIZE - 1] = *best_player;
-        
-        /*
-        population[POP_SIZE/2 -1] = *best_player;//best player always reproduce
-        for (int i =  POP_SIZE/2; i != POP_SIZE; ++i) {
-            population[i] = population[i - POP_SIZE/2];
-        }
-        */
-        /*Reproduction*/
+    /* Selection */
+    std::vector<double> cum_scores_normalized(POP_SIZE);
+    double worst_score = population[POP_SIZE - 1].get_score();
+    cum_scores_normalized[0] = population[0].get_score() - worst_score;
+    for (int i = 1; i != POP_SIZE; ++i)
+        cum_scores_normalized[i] = cum_scores_normalized[i-1]
+                                    + population[i].get_score()
+                                    - worst_score;
 
-        /*Mutation*/
-        for (int i = 0; i != POP_SIZE; ++i) {
-            population[i].mutate();
-        }
+    double step_length = cum_scores_normalized[POP_SIZE -1]*SELECTION_RATIO /((double) POP_SIZE);
+    double position    = 0.0;
+    int j              = 0;  /* Current solver taken for next gen */
+    /* Starts at 1 to set population[0] to be the best player so far */
+    for (int i = POP_SIZE - 2; i != 0; --i) {
+        if (position > cum_scores_normalized[j])
+            ++j;
+        population[i] = population[j];
+        position     += step_length;
+    }
+    population[POP_SIZE - 1] = *best_player;
+
+    /*
+    population[POP_SIZE/2 -1] = *best_player;//best player always reproduce
+    for (int i =  POP_SIZE/2; i != POP_SIZE; ++i) {
+        population[i] = population[i - POP_SIZE/2];
+    }
+    */
+    /*Reproduction*/
+
+    /*Mutation*/
+    for (int i = 0; i != POP_SIZE; ++i) {
+        population[i].mutate();
+    }
 }

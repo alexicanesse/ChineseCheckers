@@ -47,7 +47,14 @@ class AlphaBeta : public ChineseCheckers{
      * pawns when we compute the heuristic value for the player
      * we are playing for.
      */
-    std::vector<std::vector<double> > player_to_win_value_;
+    std::vector<double> player_to_win_value_;
+    /*!
+     * @brief
+     * This matrix indicates the values we will assign to each
+     * pawns when we compute the heuristic value for the player
+     * we are playing for.
+     */
+    std::vector<double> player_to_lose_value_;
     /*! @brief
      * This map is used to get values without having to get indexes from bitmasks
      * on \ref player_to_win_value_.
@@ -58,13 +65,6 @@ class AlphaBeta : public ChineseCheckers{
      * on \ref player_to_win_value_.
      */
     boost::unordered_map<uint_fast64_t, double> player_to_win_value_map_black_;
-    /*!
-     * @brief
-     * This matrix indicates the values we will assign to each
-     * pawns when we compute the heuristic value for the player
-     * we are playing for.
-     */
-    std::vector<std::vector<double> > player_to_lose_value_;
     /*! @brief
      * This map is used to get values without having to get indexes from bitmasks
      * on \ref player_to_win_value_.
@@ -206,8 +206,8 @@ class AlphaBeta : public ChineseCheckers{
      * @param player_to_lose_value_
      * @sa  AlphaBeta()
      */
-    AlphaBeta(const std::vector< std::vector<double> > &player_to_win_value_,
-              const std::vector< std::vector<double> > &player_to_lose_value_);
+    AlphaBeta(const std::vector<double> &player_to_win_value_,
+              const std::vector<double> &player_to_lose_value_);
 
     /*! @brief
      * Gives the best move according to the alpha beta algorithm.
@@ -253,22 +253,22 @@ class AlphaBeta : public ChineseCheckers{
      * @brief Returns \ref player_to_lose_value_.
      * @return @ref player_to_lose_value_.
      */
-    std::vector<std::vector<double> > getPlayerToLoseValue();
+    std::vector<double> getPlayerToLoseValue();
     /*!
      * @brief Returns \ref player_to_win_value_.
      * @return @ref player_to_win_value_.
      */
-    std::vector<std::vector<double> > getPlayerToWinValue();
+    std::vector<double> getPlayerToWinValue();
     /*!
      * @brief Sets \ref player_to_lose_value_.
      * @param player_to_lose_value_.
      */
-    void setPlayerToLoseValue(std::vector< std::vector<double> > &player_to_lose_value_);
+    void setPlayerToLoseValue(const std::vector<double> &player_to_lose_value_);
     /*!
      * @brief Sets \ref player_to_win_value_.
      * @param player_to_win_value_.
      */
-    void setPlayerToWinValue(  std::vector< std::vector<double> > &player_to_win_value_);
+    void setPlayerToWinValue(const std::vector<double> &player_to_win_value_);
 
 //temp
     int rank;

@@ -44,34 +44,34 @@
 AlphaBeta::AlphaBeta() {
     /* this is meant to be seen from black perspective: white should
      * use symmetries to use this matrix. */
-    player_to_win_value_ = std::vector< std::vector<double> >({
-        {0.0/98,  1.0/98,  4.0/98,  9.0/98, 16.0/98, 25.0/98, 36.0/98, 49.0/98},
-        {1.0/98,  2.0/98,  5.0/98, 10.0/98, 17.0/98, 26.0/98, 37.0/98, 50.0/98},
-        {4.0/98,  5.0/98,  8.0/98, 13.0/98, 20.0/98, 29.0/98, 40.0/98, 53.0/98},
-        {9.0/98, 10.0/98, 13.0/98, 18.0/98, 25.0/98, 34.0/98, 45.0/98, 58.0/98},
-        {16.0/98, 17.0/98, 20.0/98, 25.0/98, 32.0/98, 41.0/98, 52.0/98, 65.0/98},
-        {25.0/98, 26.0/98, 29.0/98, 34.0/98, 41.0/98, 50.0/98, 62.0/98, 74.0/98},
-        {36.0/98, 37.0/98, 40.0/98, 45.0/98, 52.0/98, 62.0/98, 72.0/98, 85.0/98},
-        {49.0/98, 50.0/98, 53.0/98, 58.0/98, 65.0/98, 74.0/98, 85.0/98, 98.0/98}  });
+    player_to_win_value_ = std::vector<double>({
+        0.0/98,  1.0/98,  4.0/98,  9.0/98, 16.0/98, 25.0/98, 36.0/98, 49.0/98,
+        1.0/98,  2.0/98,  5.0/98, 10.0/98, 17.0/98, 26.0/98, 37.0/98, 50.0/98,
+        4.0/98,  5.0/98,  8.0/98, 13.0/98, 20.0/98, 29.0/98, 40.0/98, 53.0/98,
+        9.0/98, 10.0/98, 13.0/98, 18.0/98, 25.0/98, 34.0/98, 45.0/98, 58.0/98,
+        16.0/98, 17.0/98, 20.0/98, 25.0/98, 32.0/98, 41.0/98, 52.0/98, 65.0/98,
+        25.0/98, 26.0/98, 29.0/98, 34.0/98, 41.0/98, 50.0/98, 62.0/98, 74.0/98,
+        36.0/98, 37.0/98, 40.0/98, 45.0/98, 52.0/98, 62.0/98, 72.0/98, 85.0/98,
+        49.0/98, 50.0/98, 53.0/98, 58.0/98, 65.0/98, 74.0/98, 85.0/98, 98.0/98});
 
     /* this is meant to be seen from black perspective: white should
      * use symmetries to use this matrix. */
-    player_to_lose_value_ = std::vector< std::vector<double> >({
-        {0.0/588,  1.0/588,  4.0/588,  9.0/588, 16.0/588, 25.0/588, 36.0/588, 49.0/588},
-        {1.0/588,  2.0/588,  5.0/588, 10.0/588, 17.0/588, 26.0/588, 37.0/588, 50.0/588},
-        {4.0/588,  5.0/588,  8.0/588, 13.0/588, 20.0/588, 29.0/588, 40.0/588, 53.0/588},
-        {9.0/588, 10.0/588, 13.0/588, 18.0/588, 25.0/588, 34.0/588, 45.0/588, 58.0/588},
-        {16.0/588, 17.0/588, 20.0/588, 25.0/588, 32.0/588, 41.0/588, 52.0/588, 65.0/588},
-        {25.0/588, 26.0/588, 29.0/588, 34.0/588, 41.0/588, 50.0/588, 62.0/588, 74.0/588},
-        {36.0/588, 37.0/588, 40.0/588, 45.0/588, 52.0/588, 62.0/588, 72.0/588, 85.0/588},
-        {49.0/588, 50.0/588, 53.0/588, 58.0/588, 65.0/588, 74.0/588, 85.0/588, 98.0/588}  });
+    player_to_lose_value_ = std::vector<double>({
+        0.0/588,  1.0/588,  4.0/588,  9.0/588, 16.0/588, 25.0/588, 36.0/588, 49.0/588,
+        1.0/588,  2.0/588,  5.0/588, 10.0/588, 17.0/588, 26.0/588, 37.0/588, 50.0/588,
+        4.0/588,  5.0/588,  8.0/588, 13.0/588, 20.0/588, 29.0/588, 40.0/588, 53.0/588,
+        9.0/588, 10.0/588, 13.0/588, 18.0/588, 25.0/588, 34.0/588, 45.0/588, 58.0/588,
+        16.0/588, 17.0/588, 20.0/588, 25.0/588, 32.0/588, 41.0/588, 52.0/588, 65.0/588,
+        25.0/588, 26.0/588, 29.0/588, 34.0/588, 41.0/588, 50.0/588, 62.0/588, 74.0/588,
+        36.0/588, 37.0/588, 40.0/588, 45.0/588, 52.0/588, 62.0/588, 72.0/588, 85.0/588,
+        49.0/588, 50.0/588, 53.0/588, 58.0/588, 65.0/588, 74.0/588, 85.0/588, 98.0/588});
 
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
-            player_to_lose_value_map_white_[int_to_uint64_[i][j]] = player_to_lose_value_[7 - i][7 - j];
-            player_to_lose_value_map_black_[int_to_uint64_[i][j]] = player_to_lose_value_[i][j];
-            player_to_win_value_map_white_[int_to_uint64_[i][j]]  = player_to_win_value_[7 - i][7 - j];
-            player_to_win_value_map_black_[int_to_uint64_[i][j]]  = player_to_win_value_[i][j];
+            player_to_lose_value_map_white_[int_to_uint64_[i][j]] = player_to_lose_value_[(7 - i)*8 + 7 - j];
+            player_to_lose_value_map_black_[int_to_uint64_[i][j]] = player_to_lose_value_[i*8 + j];
+            player_to_win_value_map_white_[int_to_uint64_[i][j]]  = player_to_win_value_[(7 - i)*8 + 7 - j];
+            player_to_win_value_map_black_[int_to_uint64_[i][j]]  = player_to_win_value_[i*8 + j];
         }
     }
 
@@ -87,17 +87,17 @@ AlphaBeta::AlphaBeta() {
     loadOpenings();
 }
 
-AlphaBeta::AlphaBeta(const std::vector< std::vector<double> > &player_to_win_value_,
-                     const std::vector< std::vector<double> > &player_to_lose_value_) {
+AlphaBeta::AlphaBeta(const std::vector<double> &player_to_win_value_,
+                     const std::vector<double> &player_to_lose_value_) {
     this->player_to_win_value_ = player_to_win_value_;
     this->player_to_lose_value_ = player_to_lose_value_;
 
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
-            player_to_lose_value_map_white_[int_to_uint64_[i][j]] = this->player_to_lose_value_[7 - i][7 - j];
-            player_to_lose_value_map_black_[int_to_uint64_[i][j]] = this->player_to_lose_value_[i][j];
-            player_to_win_value_map_white_[int_to_uint64_[i][j]]  = this->player_to_win_value_[7 - i][7 - j];
-            player_to_win_value_map_black_[int_to_uint64_[i][j]]  = this->player_to_win_value_[i][j];
+            player_to_lose_value_map_white_[int_to_uint64_[i][j]] = player_to_lose_value_[(7 - i)*8 + 7 - j];
+            player_to_lose_value_map_black_[int_to_uint64_[i][j]] = player_to_lose_value_[i*8 + j];
+            player_to_win_value_map_white_[int_to_uint64_[i][j]]  = player_to_win_value_[(7 - i)*8 + 7 - j];
+            player_to_win_value_map_black_[int_to_uint64_[i][j]]  = player_to_win_value_[i*8 + j];
         }
     }
 
@@ -207,6 +207,7 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
         return retrieveMoves(opening_[bit_boards_]);
 
     transposition_table_.clear();
+    transposition_table_.reserve(50*50*50);
 
     best_move_ = 0;
 
@@ -241,11 +242,27 @@ uint_fast64_t AlphaBeta::getMove64(const int &depth) {
     transposition_table_.clear();
     transposition_table_.reserve(50*50*50*50);
 
-    AlphaBetaEval(depth,
-                  MINUS_INFTY,
-                  PLUS_INFTY,
-                  false,
-                  true);
+    best_move_ = 0;
+
+    int d = 1;
+    do {
+        if (AlphaBetaEval(d,
+                          MINUS_INFTY,
+                          MINUS_INFTY,
+                          false,
+                          true) == MINUS_INFTY)
+            return best_move_;
+        d += 2;
+    }  while (won_[maximizing_player_] && (d <= depth + 2));
+
+    double val = AlphaBetaEval(depth,
+                               MINUS_INFTY,
+                               PLUS_INFTY,
+                               false,
+                               true);
+
+    won_[maximizing_player_] = (!won_[maximizing_player_]
+                                && (val == MINUS_INFTY));
 
     return best_move_;
 }
@@ -425,36 +442,34 @@ Player AlphaBeta::getMaximizingPlayer() const {
     return maximizing_player_;
 }
 
-std::vector<std::vector<double> > AlphaBeta::getPlayerToLoseValue() {
+std::vector<double> AlphaBeta::getPlayerToLoseValue() {
     return player_to_lose_value_;
 }
 
-std::vector<std::vector<double> > AlphaBeta::getPlayerToWinValue() {
+std::vector<double> AlphaBeta::getPlayerToWinValue() {
     return player_to_win_value_;
 }
 
-void AlphaBeta::setPlayerToLoseValue(
-        std::vector< std::vector<double> > &player_to_lose_value_) {
-    player_to_lose_value_ = player_to_lose_value_;
+void AlphaBeta::setPlayerToLoseValue(const std::vector<double> &player_to_lose_value_) {
+    this->player_to_lose_value_ = player_to_lose_value_;
 
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
-            player_to_lose_value_map_white_[int_to_uint64_[i][j]] = player_to_lose_value_[7 - i][7 - j];
-            player_to_lose_value_map_black_[int_to_uint64_[i][j]] = player_to_lose_value_[i][j];
+            player_to_lose_value_map_white_[int_to_uint64_[i][j]] = player_to_lose_value_[(7 - i)*8 + 7 - j];
+            player_to_lose_value_map_black_[int_to_uint64_[i][j]] = player_to_lose_value_[i*8 + j];
         }
     }
 
     transposition_table_.clear();
 }
 
-void AlphaBeta::setPlayerToWinValue(
-        std::vector< std::vector<double> > &player_to_win_value_  ) {
-    player_to_win_value_ = player_to_win_value_;
+void AlphaBeta::setPlayerToWinValue(const std::vector<double> &player_to_win_value_) {
+    this->player_to_win_value_ = player_to_win_value_;
 
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
-            player_to_win_value_map_white_[int_to_uint64_[i][j]]  = player_to_win_value_[7 - i][7 - j];
-            player_to_win_value_map_black_[int_to_uint64_[i][j]]  = player_to_win_value_[i][j];
+            player_to_win_value_map_white_[int_to_uint64_[i][j]]  = player_to_win_value_[(7 - i)*8 + 7 - j];
+            player_to_win_value_map_black_[int_to_uint64_[i][j]]  = player_to_win_value_[i*8 + j];
         }
     }
 
