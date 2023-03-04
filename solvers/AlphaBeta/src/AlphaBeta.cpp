@@ -203,8 +203,8 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
     heuristic_value_   = heuristicValue();
     fullDepth_         = depth;
 
-    if (0 && opening_.find(bit_boards_) != opening_.end()) {
-        std::cout << "here\n";
+    if (opening_.find(bit_boards_) != opening_.end()) {
+        std::cout << "Opening found.\n";
         return retrieveMoves(opening_[bit_boards_]);
     }
 
@@ -229,7 +229,6 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
                                false,
                                true);
 
-    std::cout << val << "\n";
     won_[maximizing_player_] = (!won_[maximizing_player_]
                                     && (val == MINUS_INFTY));
 
@@ -457,8 +456,8 @@ void AlphaBeta::loadOpenings() {
     bitBoards_t bb;
     while(std::getline(inFile, line)) {
         std::istringstream ss(line);
-        ss >> bb.White >> bb.Black >> move;
-        opening_[{bb.White, bb.Black}] = move;
+        ss >> std::hex >> bb.White >> std::hex >> bb.Black >> std::hex >> move;
+        opening_[bb] = move;
     }
 
     /* Close the file */

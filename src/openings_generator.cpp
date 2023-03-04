@@ -32,12 +32,14 @@
 #include "Types.hpp"
 #include "AlphaBeta.hpp"
 
-#define MAX_TREE_DEPTH 2
-#define DEPTH_ALPHABETA 5
+#define MAX_TREE_DEPTH 5
+#define DEPTH_ALPHABETA 10
 
 
 int main() {
-    auto white_openings = []() {
+    bool white = true;
+    bool black = true;
+    if (white) {
         OpeningsGenerator og_white;
         og_white.loadOpenings();
 
@@ -45,7 +47,7 @@ int main() {
         og_white.generateOpeningsWhite(MAX_TREE_DEPTH, &outFile);
         outFile.close();
     };
-    auto black_openings = []() {
+    if (black) {
         OpeningsGenerator og_black;
         og_black.loadOpenings();
 
@@ -54,11 +56,11 @@ int main() {
         outFile.close();
     };
 
-    std::thread white(white_openings);
-    std::thread black(black_openings);
+    //std::thread white(white_openings);
+    //std::thread black(black_openings);
 
-    white.join();
-    black.join();
+    //white.join();
+    //black.join();
 
 
     return 0;
@@ -68,27 +70,25 @@ void OpeningsGenerator::generateOpeningsWhite(int depth, std::ofstream *outFile)
     if (depth == 0)
         return;
 
-    uint_fast64_t move_0 = this->getMove64(DEPTH_ALPHABETA);
+    uint_fast64_t move_0 = getMove64(DEPTH_ALPHABETA);
     if (!(this->opening_.find(bit_boards_) != opening_.end())) {
-        this->opening_[bit_boards_] = move_0;
-
-        *outFile << bit_boards_.White << " " << bit_boards_.Black;
-        *outFile << " " << move_0;
-        *outFile << std::endl;
+        opening_[bit_boards_] = move_0;
+        *outFile << std::hex << bit_boards_.White << " " << std::hex << bit_boards_.Black << " " << std::hex << move_0
+                 << "\n";
     }
-
-    this->moveWithoutVerification(move_0);
+    moveWithoutVerification(move_0);
 
     std::cout << "White : " << this->opening_.size() << "\n";
     std::vector<uint_fast64_t> moves_1;
-    this->availableMoves(moves_1);
+    availableMoves(moves_1);
     for (const auto &move_1 : moves_1) {
-        this->moveWithoutVerification(move_1);
-        this->generateOpeningsWhite(depth - 1, outFile);
-        this->reverseMove(move_1);
+        moveWithoutVerification(move_1);
+        if (!this->isPositionIllegal())
+            generateOpeningsWhite(depth - 1, outFile);
+        reverseMove(move_1);
     }
 
-    this->reverseMove(move_0);
+    reverseMove(move_0);
 }
 
 void OpeningsGenerator::generateOpeningsBlack(int depth, std::ofstream *outFile) {
@@ -101,10 +101,8 @@ void OpeningsGenerator::generateOpeningsBlack(int depth, std::ofstream *outFile)
 
         if (!(this->opening_.find(bit_boards_) != opening_.end())) {
             this->opening_[bit_boards_] = move_1;
-
-            *outFile << bit_boards_.White << " " << bit_boards_.Black;
-            *outFile << " " << move_1;
-            *outFile << std::endl;
+            *outFile << std::hex << bit_boards_.White << " " << std::hex << bit_boards_.Black << " " << std::hex << move_1
+                     << "\n";
         }
 
         this->moveWithoutVerification(move_1);

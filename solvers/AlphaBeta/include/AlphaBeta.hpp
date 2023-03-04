@@ -153,9 +153,8 @@ class AlphaBeta : public ChineseCheckers{
     void tensorflowOrderMoves(ListOfMoves &possible_moves);
     /*! @brief
      * Gives the list of available moves.
-     * @sa  getMove
+     * @sa getMove
      * @sa tensorflowOrderMoves
-     * @return The list of available moves.
      */
     void availableMoves(std::vector<uint_fast64_t> &result);
 
