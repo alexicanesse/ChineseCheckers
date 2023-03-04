@@ -203,10 +203,8 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
     heuristic_value_   = heuristicValue();
     fullDepth_         = depth;
 
-    if (opening_.find(bit_boards_) != opening_.end()) {
-        std::cout << "Opening found.\n";
+    if (opening_.find(bit_boards_) != opening_.end())
         return retrieveMoves(opening_[bit_boards_]);
-    }
 
     transposition_table_.clear();
 
