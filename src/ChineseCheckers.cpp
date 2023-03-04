@@ -120,9 +120,9 @@ ChineseCheckers::ChineseCheckers() {
                    && j + direction[1] >= 0
                    && i + direction[0]  < 8
                    && j + direction[1]  < 8) {
-                if (!((bit_boards_.White | bit_boards_.Black) & int_to_uint64_[i + direction[0]][j + direction[1]])) {
+                //if (!((bit_boards_.White | bit_boards_.Black) & int_to_uint64_[i + direction[0]][j + direction[1]])) {
                     direct_neighbours_[pawnPosition].push_back(int_to_uint64_[i + direction[0]][j + direction[1]]);
-                }
+                //}
             }
         }
     }
