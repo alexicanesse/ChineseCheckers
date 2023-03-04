@@ -232,8 +232,6 @@ bool ChineseCheckers::move(const Player &player,
     return true;
 }
 
-
-#warning remove
 void ChineseCheckers::moveWithoutVerification(const uint_fast64_t &move) {
     if (who_is_to_play_)
         bit_boards_.Black ^= move;
