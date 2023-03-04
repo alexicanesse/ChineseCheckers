@@ -436,12 +436,28 @@ std::vector<std::vector<double> > AlphaBeta::getPlayerToWinValue() {
 void AlphaBeta::setPlayerToLoseValue(
         std::vector< std::vector<double> > &player_to_lose_value_) {
     player_to_lose_value_ = player_to_lose_value_;
+
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            player_to_lose_value_map_white_[int_to_uint64_[i][j]] = player_to_lose_value_[7 - i][7 - j];
+            player_to_lose_value_map_black_[int_to_uint64_[i][j]] = player_to_lose_value_[i][j];
+        }
+    }
+
     transposition_table_.clear();
 }
 
 void AlphaBeta::setPlayerToWinValue(
         std::vector< std::vector<double> > &player_to_win_value_  ) {
     player_to_win_value_ = player_to_win_value_;
+
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            player_to_win_value_map_white_[int_to_uint64_[i][j]]  = player_to_win_value_[7 - i][7 - j];
+            player_to_win_value_map_black_[int_to_uint64_[i][j]]  = player_to_win_value_[i][j];
+        }
+    }
+
     transposition_table_.clear();
 }
 
