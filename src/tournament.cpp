@@ -56,9 +56,9 @@
 #define SELECTION_RATIO 1
 
 /* Number of solvers in the evolution */
-#define POP_SIZE 20
+#define POP_SIZE 200
 /* Number of generations in the evolution */
-#define NUM_GENERATION 2000
+#define NUM_GENERATION 1000
 /* Number of generation training white or black players */
 #define ROUND_LENGTH 2000
 /* Maximum number of moves authorized in a evolution game */
@@ -464,8 +464,16 @@ void GamePlayer::set_white_player(SolversIndividuals &solver) {
             matrix2[i][j] = lose_[i*8 + j];
         }
     }
+    //print_matrix(matrix1);
+    //print_matrix(matrix2);
+    //std::cout << std::endl;
     this->white_player.setPlayerToWinValue(matrix1);
     this->white_player.setPlayerToLoseValue(matrix2);
+    matrix1 = this->white_player.getPlayerToWinValue();
+    matrix2 = this->white_player.getPlayerToLoseValue();
+    //std::cout << std::endl;
+    //print_matrix(matrix1);
+    //print_matrix(matrix2);
 }
 
 void GamePlayer::set_black_player(SolversIndividuals &solver) {
@@ -527,7 +535,6 @@ double GamePlayer::playGame() {
             break;
 
         case BlackWon:
-            std::cout <<remaining_moves << std::endl;
             return(-1.0 - static_cast<double>(remaining_moves)/MAX_NUM_MOVES);
             break;
 
@@ -605,7 +612,9 @@ void evol(GamePlayer *gp,
         /* Do every games */
         for (int i = 0; i != POP_SIZE; ++i)  {
             if (is_white_evolving) {
+                //std::cout << " -------------------------"<< std::endl;
                 gp->set_white_player(population[i]);
+                //std::cout << " -------------------------"<<std::endl;
                 score = gp->playGame();
             } else {
                 gp->set_black_player(population[i]);
