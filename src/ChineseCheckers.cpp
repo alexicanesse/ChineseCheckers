@@ -227,7 +227,7 @@ bool ChineseCheckers::move(const Player &player,
     if (number_of_times_seen_.find(hash) != number_of_times_seen_.end())
         number_of_times_seen_[hash]++;
     else
-        number_of_times_seen_.insert({hash, 1});
+        number_of_times_seen_.emplace(hash, 1);
 
     return true;
 }
@@ -245,7 +245,7 @@ void ChineseCheckers::moveWithoutVerification(const uint_fast64_t &move) {
     if (number_of_times_seen_.find(hash) != number_of_times_seen_.end())
         ++number_of_times_seen_[hash];
     else
-        number_of_times_seen_[hash] = 1;
+        number_of_times_seen_.emplace(hash, 1);
 }
 
 /*
@@ -281,6 +281,7 @@ void ChineseCheckers::newGame() {
 
     /* init the history */
     number_of_times_seen_.clear();
+    number_of_times_seen_.reserve(63);
     number_of_times_seen_[hashGrid()] = 1;
 }
 

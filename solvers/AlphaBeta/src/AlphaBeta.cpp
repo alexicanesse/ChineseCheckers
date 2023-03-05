@@ -84,6 +84,8 @@ AlphaBeta::AlphaBeta() {
     for (int i = 0; i < 64; ++i)
         possible_elementary_move_[un_64_ << i] = std::vector<uint_fast64_t>(0);
 
+    transposition_table_.reserve(50*50*50);
+
     loadOpenings();
 }
 
@@ -110,15 +112,14 @@ AlphaBeta::AlphaBeta(const std::vector<double> &player_to_win_value_,
     for (int i = 0; i < 64; ++i)
         possible_elementary_move_[un_64_ << i] = std::vector<uint_fast64_t>(0);
 
+    transposition_table_.reserve(50*50*50);
+
     loadOpenings();
 }
 
 void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
     result.reserve(50);
     uint_fast64_t computed_possible_elementary_move_ = 0;
-
-    for (auto &x : possible_elementary_move_)
-        x.second.clear();
 
     uint_fast64_t currentBitBoard = who_is_to_play_ ? bit_boards_.Black : bit_boards_.White;
 
@@ -144,6 +145,8 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
         explored = root;
 
         std::tie(i_root, j_root) = uint64_to_pair_[root];
+        std::vector<uint_fast64_t> temp_elementary_move;
+        temp_elementary_move.reserve(20);
         while (queue) {
             v = queue & -queue;
             queue ^= v;
@@ -151,17 +154,19 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
             std::tie(i, j) = uint64_to_pair_[v];
 
             if (!(computed_possible_elementary_move_ & v)) {
+                temp_elementary_move.clear();
                 for (const auto &possibleJumps : k_neighbours_[v]) {
                     for (const auto &possibleJump : possibleJumps) {
                         /* Check if there is a pawn to jump over and if the jump is valid */
                         if (((bit_boards_.White | bit_boards_.Black) & possibleJump.first.first)
-                            && ! ((bit_boards_.White       | bit_boards_.Black            )
+                            && ! ((bit_boards_.White     | bit_boards_.Black        )
                                   & (possibleJump.second | possibleJump.first.second))) {
-                            possible_elementary_move_[v].push_back(possibleJump.first.second);
+                            temp_elementary_move.push_back(possibleJump.first.second);
                             break;
                         }
                     }
                 }
+                possible_elementary_move_[v] = temp_elementary_move;
                 computed_possible_elementary_move_ |= v;
             }
 
@@ -207,7 +212,6 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
         return retrieveMoves(opening_[bit_boards_]);
 
     transposition_table_.clear();
-    transposition_table_.reserve(50*50*50);
 
     best_move_ = 0;
 
@@ -294,7 +298,8 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
         } else { /* Use a transposition table to boost performances */
             if  ((depth < fullDepth_ - 1)) {
                 it_transposition_table_ = transposition_table_.find(bit_boards_);
-                if (it_transposition_table_ != transposition_table_.end() && it_transposition_table_->second.second == depth) {
+                if (it_transposition_table_ != transposition_table_.end()
+                    && it_transposition_table_->second.second == depth) {
                     /* retrieve the value from the transposition table */
                     return it_transposition_table_->second.first;
                 }
@@ -361,7 +366,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     }
 
     /* store the value in the transposition table */
-    if ((depth < fullDepth_ - 1)) transposition_table_[bit_boards_] = {value, depth};
+    if ((depth < fullDepth_ - 1)) transposition_table_.emplace(bit_boards_, std::make_pair(value, depth));
 
     /* return value */
     return value;
@@ -530,7 +535,8 @@ ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
 
     paths[root] = {root};
 
-
+    std::vector<uint_fast64_t> temp_elementary_move;
+    temp_elementary_move.reserve(20);
     std::tie(i_root, j_root) = uint64_to_pair_[root];
     while (!queue.empty()) {
         v = queue.front();
@@ -539,17 +545,19 @@ ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
         std::tie(i, j) = uint64_to_pair_[v];
 
         if (!(computed_possible_elementary_move_ & v)) {
+            temp_elementary_move.clear();
             for (const auto &possibleJumps : k_neighbours_[v]) {
                 for (const auto &possibleJump : possibleJumps) {
                     /* Check if there is a pawn to jump over and if the jump is valid */
                     if (((bit_boards_.White | bit_boards_.Black) & possibleJump.first.first)
                         && ! ((bit_boards_.White   | bit_boards_.Black        )
                             & (possibleJump.second | possibleJump.first.second))) {
-                        possible_elementary_move_[v].push_back(possibleJump.first.second);
+                        temp_elementary_move.push_back(possibleJump.first.second);
                         break;
                     }
                 }
             }
+            possible_elementary_move_[v] = temp_elementary_move;
             computed_possible_elementary_move_ |= v;
         }
 
