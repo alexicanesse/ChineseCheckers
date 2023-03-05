@@ -17,7 +17,7 @@ var class_chinese_checkers =
     [ "printWhoIsToPlay", "class_chinese_checkers.html#a893b1a49725415014b9fb94243fb64d5", null ],
     [ "stateOfGame", "class_chinese_checkers.html#a917bd36429c79e4d4888ad6be3d8c092", null ],
     [ "bit_boards_", "class_chinese_checkers.html#ad9f0bc098fd84c22ac6df4ca615f0157", null ],
-    [ "cantorPairing_", "class_chinese_checkers.html#ad91495f8863643daccbe58c12c4e3fe4", null ],
+    [ "cantor_pairing_", "class_chinese_checkers.html#a0b538392ad178176ba66e8cf597f34dc", null ],
     [ "direct_neighbours_", "class_chinese_checkers.html#aa95ef9813edd2b656cad12be87718b90", null ],
     [ "illegal_positions_", "class_chinese_checkers.html#afc5501b982026001192b2c9c30f1cf33", null ],
     [ "int_to_uint64_", "class_chinese_checkers.html#acd386bc806bdee8b5da27c127035e0ac", null ],

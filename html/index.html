@@ -94,7 +94,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
   <div class="headertitle"><div class="title"><a class="el" href="class_chinese_checkers.html" title="This class represents a Chinese Checkers game The ChineseCheckers class is responsible for representi...">ChineseCheckers</a> </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a> <a href="https://bestpractices.coreinfrastructure.org/projects/6677"><img src="https://bestpractices.coreinfrastructure.org/projects/6677/badge" alt="OpenSSF Best Practices" class="inline"/></a> <a href="https://alexicanesse.github.io/ChineseCheckers/index.html"><img src="https://img.shields.io/badge/Documentation-githubpages-blue" alt="Documentation" class="inline"/></a> <a href="https://github.com/alexicanesse/ChineseCheckers/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0%20license-ff69b4" alt="License" class="inline"/></a> </p>
+<div class="textblock"><p><a class="anchor" id="md_README"></a> <a href="https://bestpractices.coreinfrastructure.org/projects/6677"><img src="https://bestpractices.coreinfrastructure.org/projects/6677/badge" alt="OpenSSF Best Practices" class="inline"/></a> <a href="https://alexicanesse.github.io/ChineseCheckers/html/index.html"><img src="https://img.shields.io/badge/Documentation-githubpages-blue" alt="Documentation" class="inline"/></a> <a href="https://github.com/alexicanesse/ChineseCheckers/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0%20license-ff69b4" alt="License" class="inline"/></a> </p>
 <h1><a class="anchor" id="autotoc_md21"></a>
 Chinese Checkers Solver using Alpha Beta pruning in C++</h1>
 <h2><a class="anchor" id="autotoc_md22"></a>
@@ -243,10 +243,12 @@ Usage</h2>
 Usage for developers</h2>
 <p>If you are a developer, you can make use of several components of the Chinese Checkers solver program in your own projects.</p>
 <p>The shared libraries <code>libChineseCheckers</code> and <code><a class="el" href="class_alpha_beta.html" title="The AlphaBeta class inherits from the ChineseCheckers class and provides an implementation of the alp...">AlphaBeta</a></code> can be used to interface with the main game logic and solver, respectively, in other projects (in C++ and Python). These libraries have been carefully designed to provide efficient and reliable functionality that can be integrated into a wide range of projects.</p>
+<p>There are unittests for <code>libChineseCheckers</code> available. To use them, add the option <code>-DTEST_ENABLED=ON</code> to <code>cmake</code>.</p>
 <p>Here are the other components:</p><ul>
-<li><code>AlphaBeta_benchmarks</code>: This executable can be used to run benchmarks on the Alpha Beta pruning solver. You can use this tool to measure the performance of the solver in various scenarios, and to identify areas for optimization.</li>
-<li><code>Tournament</code>: This executable can be used to improve solvers using a genetic algorithm.</li>
-<li><code>Intuition_data_generator</code>: This executable can be used to generate intuition data for the Alpha Beta pruning solver. You can use this tool to generate training data that can be used to improve the performance of the solver.</li>
+<li><code>AlphaBeta_benchmarks</code>: This executable can be used to run benchmarks on the Alpha Beta pruning solver. You can use this tool to measure the performance of the solver in various scenarios, and to identify areas for optimization. Use <code>cmake -B ./bin -S . -DBENCHMARK_ENABLED=ON</code>to activate its compilation.</li>
+<li><code>Tournament</code>: This executable can be used to improve solvers using a genetic algorithm. Use <code>cmake -B ./bin -S . -DTOURNAMENT_ENABLED=ON</code>to activate its compilation.</li>
+<li><code>Intuition_data_generator</code>: This executable can be used to generate intuition data for the Alpha Beta pruning solver. You can use this tool to generate training data that can be used to improve the performance of the solver. Use <code>cmake -B ./bin -S . -DINTUITION_DATA_GENERATOR_ENABLED=ON</code>to activate its compilation.</li>
+<li><code>Openings_generator</code>: This executable can be used to generate openings. Pre-computing openings at higher depth helps increasing performances and increase the playing level at the same time. Use <code>-DOPENINGS_GENERATOR_ENABLED=ON</code> to activate its compilation.</li>
 </ul>
 <p>Use the documentation for details about the use of those libraries.</p>
 <p>Overall, the Chinese Checkers solver program has been built with performance in mind, and is designed to deliver fast and efficient game play. Whether you are using the shared libraries in your own project or running the executables to measure and optimize performance, you can be confident that the program will deliver high-performance results.</p>

@@ -8,8 +8,8 @@ var searchData=
   ['set_5fscore_5',['set_score',['../class_solvers_individuals.html#a2ef437b0adc9778e2668b7a29a491415',1,'SolversIndividuals']]],
   ['set_5fwhite_5fplayer_6',['set_white_player',['../class_game_player.html#a21a274e81a2d89c84ee3bc30943db5c3',1,'GamePlayer']]],
   ['set_5fwin_7',['set_win',['../class_solvers_individuals.html#a9c0e2bfe7a92bed5116b5f1276572b88',1,'SolversIndividuals']]],
-  ['setplayertolosevalue_8',['setPlayerToLoseValue',['../class_alpha_beta.html#acc8d30b346fc4f0b12df3df4732741b2',1,'AlphaBeta']]],
-  ['setplayertowinvalue_9',['setPlayerToWinValue',['../class_alpha_beta.html#af1a690e7c56b7b0836d51b6fbc24c8be',1,'AlphaBeta']]],
+  ['setplayertolosevalue_8',['setPlayerToLoseValue',['../class_alpha_beta.html#a746777d974cb04409290dc413956a148',1,'AlphaBeta']]],
+  ['setplayertowinvalue_9',['setPlayerToWinValue',['../class_alpha_beta.html#ad979002ac3b5a442cb6e01bdaffc42ae',1,'AlphaBeta']]],
   ['sgn_10',['sgn',['../_chinese_checkers_8cpp.html#a1ab31b90bc584c635ec159468ceed9b2',1,'ChineseCheckers.cpp']]],
   ['solversindividuals_11',['SolversIndividuals',['../class_solvers_individuals.html#a25ba5290ea541cd9680a64b0075c3124',1,'SolversIndividuals::SolversIndividuals()'],['../class_solvers_individuals.html#a65dec433c7988291cd6be7069772863e',1,'SolversIndividuals::SolversIndividuals(std::vector&lt; double &gt; &amp;win_, std::vector&lt; double &gt; &amp;lose_)']]],
   ['stateofgame_12',['stateOfGame',['../class_chinese_checkers.html#a917bd36429c79e4d4888ad6be3d8c092',1,'ChineseCheckers']]]

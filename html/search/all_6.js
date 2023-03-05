@@ -13,7 +13,7 @@ var searchData=
   ['getmove_10',['getMove',['../class_alpha_beta.html#a64e452c751abaafa705486a16860db3a',1,'AlphaBeta']]],
   ['getmove64_11',['getMove64',['../class_alpha_beta.html#a9dd32c3a90d7ad7cc42e046773d94018',1,'AlphaBeta']]],
   ['getnumberoftimesseen_12',['getNumberOfTimesSeen',['../class_chinese_checkers.html#ab1616e60f1208371766d0c5a4e00fff9',1,'ChineseCheckers']]],
-  ['getplayertolosevalue_13',['getPlayerToLoseValue',['../class_alpha_beta.html#ab8a1c37b826e9c09cfd53e880f5d74f5',1,'AlphaBeta']]],
-  ['getplayertowinvalue_14',['getPlayerToWinValue',['../class_alpha_beta.html#af2dfce51de5c2c0f46c0a81637ee2ec5',1,'AlphaBeta']]],
+  ['getplayertolosevalue_13',['getPlayerToLoseValue',['../class_alpha_beta.html#a60c0884b5f977f22c6c82b486388765e',1,'AlphaBeta']]],
+  ['getplayertowinvalue_14',['getPlayerToWinValue',['../class_alpha_beta.html#a35d3e5b28e40ab6d76e00af7c54158e3',1,'AlphaBeta']]],
   ['getwhoistoplay_15',['getWhoIsToPlay',['../class_chinese_checkers.html#a8760f7775666826da88ab0d007c36efd',1,'ChineseCheckers']]]
 ];

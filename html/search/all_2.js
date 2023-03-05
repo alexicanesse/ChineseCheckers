@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['cantorpairing_5f_0',['cantorPairing_',['../class_chinese_checkers.html#ad91495f8863643daccbe58c12c4e3fe4',1,'ChineseCheckers']]],
+  ['cantor_5fpairing_5f_0',['cantor_pairing_',['../class_chinese_checkers.html#a0b538392ad178176ba66e8cf597f34dc',1,'ChineseCheckers']]],
   ['cantorpairingfunction_1',['cantorPairingFunction',['../class_chinese_checkers.html#a614ed943e26de29c232f381ada130cb7',1,'ChineseCheckers']]],
   ['chinesecheckers_2',['ChineseCheckers',['../class_chinese_checkers.html',1,'ChineseCheckers'],['../class_chinese_checkers.html#a18089528ddbdb10b6e0f12495c1923ca',1,'ChineseCheckers::ChineseCheckers()'],['../index.html',1,'(Global Namespace)']]],
   ['chinesecheckers_2ecpp_3',['ChineseCheckers.cpp',['../_chinese_checkers_8cpp.html',1,'']]],
