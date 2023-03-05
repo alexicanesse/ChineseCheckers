@@ -37,7 +37,7 @@
 #include "AlphaBeta.hpp"
 
 #define DEPTH (3)
-#define NUMBER_OF_GAMES (100)
+#define NUMBER_OF_GAMES (256)
 
 typedef std::vector<std::pair<std::string, tensorflow::Tensor>> tensor_dict;
 
@@ -57,7 +57,7 @@ int main() {
             generator.saveVectorOfBitBoardsToFiles(result.first, "./raw_data/white.dat", "./raw_data/black.dat");
 
 
-            if (rand() % 10 <= 8) {
+            if (rand() % 10 <= 7) {
                 generator.moveWithoutVerification(generator.getMove64(DEPTH));
             } else {
                 moves.clear();
@@ -66,7 +66,7 @@ int main() {
                         moves[rand() % static_cast<int>(moves.size())]);
             }
 
-            if (rand() % 10 <= 8) {
+            if (rand() % 10 <= 7) {
                 generator.moveWithoutVerification(generator.getMove64(DEPTH));
             } else {
                 moves.clear();
