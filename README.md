@@ -198,6 +198,9 @@ areas for optimization. Use `cmake -B ./bin -S . -DBENCHMARK_ENABLED=ON`to activ
  - `Intuition_data_generator`: This executable can be used to generate intuition data for the Alpha Beta pruning solver. 
 You can use this tool to generate training data that can be used to improve the performance of the solver. Use 
 `cmake -B ./bin -S . -DINTUITION_DATA_GENERATOR_ENABLED=ON`to activate its compilation.
+ - `Openings_generator`: This executable can be used to generate openings. Pre-computing openings at higher depth helps
+increasing performances and increase the playing level at the same time. Use `-DOPENINGS_GENERATOR_ENABLED=ON` to activate 
+its compilation.
 
 Use the [documentation](#documentation) for details about the use of those libraries.
 
