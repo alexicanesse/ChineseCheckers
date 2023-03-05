@@ -161,8 +161,8 @@ class AlphaBeta : public ChineseCheckers{
     /*! @brief
      * Makes a step of the alpha beta algorithm.
      * @param depth Indicates how deep we should explore the tree.
-     * @param alpha.
-     * @param beta.
+     * @param alpha Check the Alpha-Beta algorithm to know what this is.
+     * @param beta Check the Alpha-Beta algorithm to know what this is.
      * @param maximizingPlayer Indicates if the current player if the maximizing player.
      * @param keepMove indicates if the best move from the current depth should be kept.
      * @sa getMove
@@ -212,8 +212,8 @@ class AlphaBeta : public ChineseCheckers{
     /*! @brief
      * Gives the best move according to the alpha beta algorithm.
      * @param depth Indicates how deep we should explore the tree.
-     * @param alpha.
-     * @param beta.
+     * @param alpha Check the Alpha-Beta algorithm to know what this is.
+     * @param beta Check the Alpha-Beta algorithm to know what this is.
      * @sa getMove64
      * @sa AlphaBetaEval
      * @sa availableMoves
@@ -261,12 +261,12 @@ class AlphaBeta : public ChineseCheckers{
     std::vector<double> getPlayerToWinValue();
     /*!
      * @brief Sets \ref player_to_lose_value_.
-     * @param player_to_lose_value_.
+     * @param player_to_lose_value_ The value to set.
      */
     void setPlayerToLoseValue(const std::vector<double> &player_to_lose_value_);
     /*!
      * @brief Sets \ref player_to_win_value_.
-     * @param player_to_win_value_.
+     * @param player_to_win_value_ The value to set.
      */
     void setPlayerToWinValue(const std::vector<double> &player_to_win_value_);
 

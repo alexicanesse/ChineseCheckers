@@ -158,17 +158,15 @@ class ChineseCheckers {
      * This function is not made to be used by the end user. It has been engineered to
      * be used by solvers. It bypasses usual verifications and hence allows illegal moves to be
      * played. This function should be used with great care.
-     * @param player indicates which player made the move.
-     * @param list_moves contains the list of intermediate positions.
-                                of a move (including the starting point
-                                and the arrival point).
+     * @param move indicates the move do execute. This is a 64 bit type. Only two bits must be set : the original
+     * position and the arrival position.
      * @sa elementaryMove
      * @sa move
      */
     void moveWithoutVerification(const uint_fast64_t &move);
     /*! @brief
-     * Hashes @ref the grid.
-     * @return A hash of @ref grid_
+     * Hashes the grid (@ref bit_boards_).
+     * @return A hash of the gird (@ref bit_boards_).
      */
     inline uint64_t hashGrid();
 
@@ -178,18 +176,18 @@ class ChineseCheckers {
      */
     Player getWhoIsToPlay() const;
     /*! @brief
-     * Returns @ref number_of_times_seen
-     * @return @ref number_of_times_seen
+     * Returns @ref number_of_times_seen_
+     * @return @ref number_of_times_seen_
      */
     boost::unordered_map<uint64_t, int> getNumberOfTimesSeen() const;
     /*! @brief
-     * Returns @ref bitBoards.White
-     * @return @ref bitBoards.White
+     * Returns @ref bit_boards_.White
+     * @return @ref bit_boards_.White
      */
     uint_fast64_t getBitBoardWhite();
     /*! @brief
-     * Returns @ref bitBoards.Black
-     * @return @ref bitBoards.Black
+     * Returns @ref bit_boards_.Black
+     * @return @ref bit_boards_.Black
      */
     uint_fast64_t getBitBoardBlack();
 

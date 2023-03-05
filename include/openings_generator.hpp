@@ -31,25 +31,23 @@
 
 /*!
  * @brief
- * This class is used in order to generate the openings
+ * This class is used in order to generate the openings.
  */
 class OpeningsGenerator : public AlphaBeta {
  private:
  public:
     /*!
-     * @brief Generates the openings up to a given depth
-     * @param depth Defines the length of the openings we will compute
-     * @param outFile Defines the file on which the openings must be written
-     * @sa saveOpenings()
+     * @brief Generates the openings up to a given depth.
+     * @param depth Defines the length of the openings we will compute.
+     * @param outFile Defines the file on which the openings must be written.
      */
     void generateOpeningsWhite(int depth, std::ofstream *outFile);
 
     /*!
-  * @brief Generates the openings up to a given depth
-  * @param depth Defines the length of the openings we will compute
-  * @param outFile Defines the file on which the openings must be written
-  * @sa saveOpenings()
-  */
+     * @brief Generates the openings up to a given depth.
+     * @param depth Defines the length of the openings we will compute.
+     * @param outFile Defines the file on which the openings must be written.
+     */
     void generateOpeningsBlack(int depth, std::ofstream *outFile);
 };
 
