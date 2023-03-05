@@ -151,31 +151,7 @@ class AlphaBeta : public ChineseCheckers{
      * @sa availableMoves
      */
     void tensorflowOrderMoves(ListOfMoves &possible_moves);
-    /*! @brief
-     * Gives the list of available moves.
-     * @sa getMove
-     * @sa tensorflowOrderMoves
-     */
-    void availableMoves(std::vector<uint_fast64_t> &result);
 
-    /*! @brief
-     * Makes a step of the alpha beta algorithm.
-     * @param depth Indicates how deep we should explore the tree.
-     * @param alpha Check the Alpha-Beta algorithm to know what this is.
-     * @param beta Check the Alpha-Beta algorithm to know what this is.
-     * @param maximizingPlayer Indicates if the current player if the maximizing player.
-     * @param keepMove indicates if the best move from the current depth should be kept.
-     * @sa getMove
-     * @sa getMove64
-     * @sa availableMoves
-     * @sa heuristicValue
-     * @return The value computed by the alpha beta algorithm. Sets \ref best_move_ if asked to.
-     */
-    const double AlphaBetaEval(const int &depth,
-                               double alpha,
-                               double beta,
-                               const bool &maximizingPlayer,
-                               const bool &keepMove);
     /*! @brief
      * Cancel the last move
      * @param move The move to cancel
@@ -235,6 +211,31 @@ class AlphaBeta : public ChineseCheckers{
      * @return The best move according to the alpha beta algorithm.
      */
     uint_fast64_t getMove64(const int &depth);
+    /*! @brief
+     * Gives the list of available moves.
+     * @sa getMove
+     * @sa tensorflowOrderMoves
+     */
+    void availableMoves(std::vector<uint_fast64_t> &result);
+
+    /*! @brief
+     * Makes a step of the alpha beta algorithm.
+     * @param depth Indicates how deep we should explore the tree.
+     * @param alpha Check the Alpha-Beta algorithm to know what this is.
+     * @param beta Check the Alpha-Beta algorithm to know what this is.
+     * @param maximizingPlayer Indicates if the current player if the maximizing player.
+     * @param keepMove indicates if the best move from the current depth should be kept.
+     * @sa getMove
+     * @sa getMove64
+     * @sa availableMoves
+     * @sa heuristicValue
+     * @return The value computed by the alpha beta algorithm. Sets \ref best_move_ if asked to.
+     */
+    const double AlphaBetaEval(const int &depth,
+                               double alpha,
+                               double beta,
+                               const bool &maximizingPlayer,
+                               const bool &keepMove);
 
     /*! @brief A helper function for the python connexion */
     bool isHuman() { return false; }
