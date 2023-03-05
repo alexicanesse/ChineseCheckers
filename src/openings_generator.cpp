@@ -32,8 +32,8 @@
 #include "Types.hpp"
 #include "AlphaBeta.hpp"
 
-#define MAX_TREE_DEPTH 5
-#define DEPTH_ALPHABETA 10
+#define MAX_TREE_DEPTH 3
+#define DEPTH_ALPHABETA 7
 
 
 int main() {
@@ -74,7 +74,7 @@ void OpeningsGenerator::generateOpeningsWhite(int depth, std::ofstream *outFile)
     if (!(this->opening_.find(bit_boards_) != opening_.end())) {
         opening_[bit_boards_] = move_0;
         *outFile << std::hex << bit_boards_.White << " " << std::hex << bit_boards_.Black << " " << std::hex << move_0
-                 << "\n";
+                 << std::endl;
     }
     moveWithoutVerification(move_0);
 
@@ -102,7 +102,7 @@ void OpeningsGenerator::generateOpeningsBlack(int depth, std::ofstream *outFile)
         if (!(this->opening_.find(bit_boards_) != opening_.end())) {
             this->opening_[bit_boards_] = move_1;
             *outFile << std::hex << bit_boards_.White << " " << std::hex << bit_boards_.Black << " " << std::hex << move_1
-                     << "\n";
+                     << std::endl;
         }
 
         this->moveWithoutVerification(move_1);
