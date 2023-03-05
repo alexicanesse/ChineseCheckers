@@ -46,7 +46,7 @@ int main() {
         IntuitionDataGenerator generator;
         generator.fillTransTable();
         srand(time(NULL));
-        while (generator.state_of_game() == NotFinished) {
+        while (generator.stateOfGame() == NotFinished) {
             auto result = generator.evalAllMoves(3);
 
             generator.saveVectorToFile(result.second, "values.txt");
@@ -58,16 +58,17 @@ int main() {
             } else {
                 std::vector<uint_fast64_t> moves;
                 generator.availableMoves(moves);
-                generator.move(0, moves[rand()
-                        % static_cast<int>(moves.size())]);
+                generator.moveWithoutVerification(
+                        moves[rand() % static_cast<int>(moves.size())]);
             }
 
             if (rand() % 10 <= 7) {
-                generator.move(1, generator.getMove(3, -100000, 100000));
+                generator.moveWithoutVerification(generator.getMove64(DEPTH));
             } else {
-                ListOfMoves moves = generator.availableMoves(1, false);
-                generator.move(1, moves[rand()
-                        % static_cast<int>(moves.size())]);
+                std::vector<uint_fast64_t> moves;
+                generator.availableMoves(moves);
+                generator.moveWithoutVerification(
+                        moves[rand() % static_cast<int>(moves.size())]);
             }
         }
     }
