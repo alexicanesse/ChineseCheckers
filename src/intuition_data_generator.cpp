@@ -36,6 +36,8 @@
 #include "Types.hpp"
 #include "AlphaBeta.hpp"
 
+#define DEPTH (3)
+
 typedef std::vector<std::pair<std::string, tensorflow::Tensor>> tensor_dict;
 
 int main() {
@@ -51,10 +53,11 @@ int main() {
             generator.saveVectorOfVectorToFile(result.first, "grids.txt");
 
 
-            if (rand() % 10 <= 4) {
-                generator.move(0, generator.getMove(3, -100000, 100000));
+            if (rand() % 10 <= 7) {
+                generator.moveWithoutVerification(generator.getMove64(DEPTH));
             } else {
-                ListOfMoves moves = generator.availableMoves(0, false);
+                std::vector<uint_fast64_t> moves;
+                generator.availableMoves(moves);
                 generator.move(0, moves[rand()
                         % static_cast<int>(moves.size())]);
             }
@@ -138,35 +141,21 @@ std::pair<std::vector<std::vector<int>>, std::vector<double>>
 }
 
 void IntuitionDataGenerator::fillTransTable() {
-    std::ifstream is("values.txt");
+    std::ifstream is_w("white.dat");
+    std::istream_iterator<uint_fast64_t> start_w(is_w), end_w;
+    std::vector<uint_fast64_t> white(start_w, end_w);
+    is_w.close();
+
+    std::ifstream is_b("black.dat");
+    std::istream_iterator<uint_fast64_t> start_b(is_b), end_b;
+    std::vector<uint_fast64_t> black(start_b, end_b);
+    is_b.close();
+
+    std::ifstream is("values.dat");
     std::istream_iterator<double> start(is), end;
     std::vector<double> values(start, end);
     is.close();
 
-    std::vector<GridType> rs;
-    std::ifstream grid_file("grids.txt");
-    std::string str;
-    while (getline(grid_file, str, '\n')) {
-        std::stringstream ss;
-        ss << str;
-
-        GridType buff = std::vector<std::vector<Color>>(8,
-                                        std::vector<Color>(8, Empty));
-        for (int i = 0; i < 8; ++i) {
-            for (int j = 0; j < 8; ++j) {
-                std::string temp;
-                ss >> temp;
-
-                buff[i][j] = static_cast<Color>(stoi(temp));
-            }
-        }
-        rs.push_back(buff);
-    }
-    grid_file.close();
-
-    uint64_t hash;
-    for (int i = 0; i < rs.size(); ++i) {
-        hash = this->hashMatrix(rs[i], 1);
-        this->transTable[hash] = std::make_pair(values[i], 2);
-    }
+    for (int i = 0; i < white.size(); ++i)
+        transposition_table_[{white[i], black[i]}] = {values[i], DEPTH - 1};
 }
