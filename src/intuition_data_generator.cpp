@@ -37,35 +37,39 @@
 #include "AlphaBeta.hpp"
 
 #define DEPTH (3)
+#define NUMBER_OF_GAMES (100)
 
 typedef std::vector<std::pair<std::string, tensorflow::Tensor>> tensor_dict;
 
 int main() {
-    for (int i = 0; i < 100; ++i) {
-        std::cout << i << "\n";
+    std::vector<uint_fast64_t> moves;
+    std::cout << std::fixed;
+    std::cout << std::setprecision(2);
+    for (int i = 0; i < NUMBER_OF_GAMES; ++i) {
+        std::cout << std::setw(5) << 100 * static_cast<double>(i)/NUMBER_OF_GAMES << "%\n";
         IntuitionDataGenerator generator;
         generator.fillTransTable();
         srand(time(NULL));
         while (generator.stateOfGame() == NotFinished) {
-            auto result = generator.evalAllMoves(3);
+            auto result = generator.evalAllMoves(DEPTH);
 
-            generator.saveVectorToFile(result.second, "values.txt");
-            generator.saveVectorOfVectorToFile(result.first, "grids.txt");
+            generator.saveVectorToFile(result.second, "./raw_data/values.dat");
+            generator.saveVectorOfBitBoardsToFiles(result.first, "./raw_data/white.dat", "./raw_data/black.dat");
 
 
-            if (rand() % 10 <= 7) {
+            if (rand() % 10 <= 8) {
                 generator.moveWithoutVerification(generator.getMove64(DEPTH));
             } else {
-                std::vector<uint_fast64_t> moves;
+                moves.clear();
                 generator.availableMoves(moves);
                 generator.moveWithoutVerification(
                         moves[rand() % static_cast<int>(moves.size())]);
             }
 
-            if (rand() % 10 <= 7) {
+            if (rand() % 10 <= 8) {
                 generator.moveWithoutVerification(generator.getMove64(DEPTH));
             } else {
-                std::vector<uint_fast64_t> moves;
+                moves.clear();
                 generator.availableMoves(moves);
                 generator.moveWithoutVerification(
                         moves[rand() % static_cast<int>(moves.size())]);
@@ -87,76 +91,80 @@ void IntuitionDataGenerator::saveVectorToFile(
     output_file.close();
 }
 
-template<typename T>
-void IntuitionDataGenerator::saveVectorOfVectorToFile(
-        const std::vector<std::vector<T>> &input,
-        const std::string &outputFileName) {
-    std::ofstream output_file(outputFileName, std::ios_base::app);
+void IntuitionDataGenerator::saveVectorOfBitBoardsToFiles(
+        const std::vector<bitBoards_t> &input,
+        const std::string &outputFileNameW,
+        const std::string &outputFileNameB) {
+    std::ofstream output_fileW(outputFileNameW, std::ios_base::app);
+    std::ofstream output_fileB(outputFileNameB, std::ios_base::app);
 
-    for (const auto &line : input) {
-        std::ostream_iterator <T> output_iterator(output_file, " ");
-        std::copy(std::begin(line), std::end(line), output_iterator);
-        output_file << "\n";
+    for (const auto &bb : input) {
+        output_fileW << std::hex << bb.White << "\n";
+        output_fileB << std::hex << bb.Black << "\n";
     }
-    output_file.close();
+
+    output_fileW.close();
+    output_fileB.close();
 }
 
-std::pair<std::vector<std::vector<int>>, std::vector<double>>
+std::pair<std::vector<bitBoards_t>, std::vector<double>>
                 IntuitionDataGenerator::evalAllMoves(int depth) {
-    this->maximizing_player_ = this->who_is_to_play_;
-    ListOfMoves moves = this->availableMoves(this->who_is_to_play_, false);
+    maximizing_player_ = who_is_to_play_;
+    std::vector<uint_fast64_t> moves;
+    availableMoves(moves);
+
     std::vector<double> evals;
-    std::vector<std::vector<int>> flatten_grids;
-
-    for (const ListOfPositionType &move : moves) {
+    std::vector<bitBoards_t> all_bit_boards;
+    double buff;
+    for (const uint_fast64_t &move : moves) {
         /* Apply the move */
-        this->moveWithoutVerification(this->who_is_to_play_, move);
+        this->moveWithoutVerification(move);
 
-        if (this->transTable.contains(this->hashMatrix(this->grid_, 1))) {
+        /* Check if we already have informations about this position */
+        if (transposition_table_permanent_.find(bit_boards_)
+                != transposition_table_permanent_.end()) {
+            this->reverseMove(move);
+            continue;
+        }
+
+        if (this->isPositionIllegal()) {
+            /* cancel the move */
             this->reverseMove(move);
             continue;
         }
 
         /* evaluate the move */
-        double buff = AlphaBetaEval(depth - 1,
-                                 -100000,
-                                 100000,
-                                 true,
-                                 true);
+        buff = AlphaBetaEval(depth - 1,
+                             -20,
+                             20,
+                             true,
+                             false);
 
-        std::vector<int> flatten_grid;
-        for (const auto &line : this->get_grid_()) {
-            for (const auto &val : line)
-                flatten_grid.push_back(val);
-        }
-        flatten_grids.push_back(flatten_grid);
+        all_bit_boards.push_back(bit_boards_);
         evals.push_back(buff);
-
-        std::cout << buff << "\n";
 
         /* cancel the move */
         this->reverseMove(move);
     }
 
-    return std::make_pair(flatten_grids, evals);
+    return std::make_pair(all_bit_boards, evals);
 }
 
 void IntuitionDataGenerator::fillTransTable() {
-    std::ifstream is_w("white.dat");
-    std::istream_iterator<uint_fast64_t> start_w(is_w), end_w;
-    std::vector<uint_fast64_t> white(start_w, end_w);
+    bitBoards_t bb;
+    double value;
+
+    std::ifstream is_w("./raw_data/white.dat");
+    std::ifstream is_b("./raw_data/black.dat");
+    std::ifstream is_v("./raw_data/values.dat");
+
+    while(is_w >> std::hex >> bb.White
+       && is_b >> std::hex >> bb.Black
+       && is_v >>std::hex >>  value)
+        transposition_table_permanent_[bb] = value;
+
+
     is_w.close();
-
-    std::ifstream is_b("black.dat");
-    std::istream_iterator<uint_fast64_t> start_b(is_b), end_b;
-    std::vector<uint_fast64_t> black(start_b, end_b);
     is_b.close();
-
-    std::ifstream is("values.dat");
-    std::istream_iterator<double> start(is), end;
-    std::vector<double> values(start, end);
-    is.close();
-
-    for (int i = 0; i < white.size(); ++i)
-        transposition_table_[{white[i], black[i]}] = {values[i], DEPTH - 1};
+    is_v.close();
 }
