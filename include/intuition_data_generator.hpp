@@ -19,6 +19,7 @@
 #include <vector>
 #include <string>
 #include <utility>
+#include <boost/unordered_map.hpp>
 /* The following pragma are used to removed depraction warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
  */
@@ -32,46 +33,41 @@
 #include "AlphaBeta.hpp"
 
 /*!
- * @brief This class is used to generate the data required for the intuition learning process
+ * @brief This class is used to generate the data required for the intuition learning process.
  */
 class IntuitionDataGenerator : public AlphaBeta {
+ protected:
+    boost::unordered_map<bitBoards_t, uint_fast64_t, bitBoardsHasher, bitBoardsEqual> transposition_table_permanent_;
  public:
     /*!
-     * @brief this function is used to eval all possible moves
+     * @brief this function is used to eval all possible moves.
+     * @param depth The depth used by the alpha beta algorithm.
+     * @return The evaluation associated with each move and the grid obtained after each move.
      */
-    /*!
-     * @param depth The depth used by the alpha beta algorithm
-     * @return The evaluation associated with each move and the grid obtained after each move
-     */
-    std::pair<std::vector<std::vector<int>>, std::vector<double>>
+    std::pair<std::vector<bitBoards_t>, std::vector<double>>
                                                 evalAllMoves(int depth);
 
     /*!
-     * @brief Save a vector to a file
-     */
-    /*!
+     * @brief Save a vector to a file.
      * @tparam T
-     * @param input The vector to save
-     * @param outputFileName The name of the file we need to save the data to
+     * @param input The vector to save.
+     * @param outputFileName The name of the file we need to save the data to.
      */
     template<typename T>
     void saveVectorToFile(const std::vector<T> &input,
                           const std::string &outputFileName);
 
     /*!
-     * @brief Save a matrix to a file
+     * @brief Save a matrix to a file.
+     * @param input The matrix to save.
+     * @param outputFileName The name of the file we need to save the data to.
      */
-    /*!
-     * @tparam T
-     * @param input The matrix to save
-     * @param outputFileName The name of the file we need to save the data to
-     */
-    template<typename T>
-    void saveVectorOfVectorToFile(const std::vector<std::vector<T>> &input,
-                                  const std::string &outputFileName);
+    void saveVectorOfBitBoardsToFiles(const std::vector<bitBoards_t> &input,
+                                      const std::string &outputFileNameW,
+                                      const std::string &outputFileNameB);
 
     /*!
-     * @brief Fill the @ref transTable with the data we already calculated
+     * @brief Fill the @ref transposition_table_ with the data we already calculated.
      */
     void fillTransTable();
 };
