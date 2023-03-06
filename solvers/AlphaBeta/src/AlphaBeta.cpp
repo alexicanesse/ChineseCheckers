@@ -120,10 +120,9 @@ AlphaBeta::AlphaBeta(const std::vector<double> &player_to_win_value_,
 void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
     result.reserve(100);
     uint_fast64_t computed_possible_elementary_move_ = 0;
-
+    uint_fast64_t bit_boards_all  = (bit_boards_.White | bit_boards_.Black);
     uint_fast64_t currentBitBoard = who_is_to_play_ ? bit_boards_.Black : bit_boards_.White;
 
-    int i, j;
     /* Check the case of Jump moves */
     /*
      * Do a BFS to list all possible jumps.
@@ -132,12 +131,14 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
     uint_fast64_t queue;
     uint_fast64_t explored = 0;
     uint_fast64_t v;
-    int i_neig, j_neig, i_root, j_root;
+    int i, j, i_neig, j_neig, i_root_times_2, j_root_times_2;
+
     /* When another root is chosen, the queue is already empty */
     uint_fast64_t root;
     uint_fast64_t pawnPositionMask = currentBitBoard;
+
     std::vector<uint_fast64_t> temp_elementary_move;
-    temp_elementary_move.reserve(20);
+    temp_elementary_move.reserve(12);
     
     for (root = pawnPositionMask & -pawnPositionMask;
          pawnPositionMask & -pawnPositionMask;
@@ -147,7 +148,10 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
         queue    = root;
         explored = root;
 
-        std::tie(i_root, j_root) = uint64_to_pair_[root];
+        std::tie(i_root_times_2, j_root_times_2) = uint64_to_pair_[root];
+        i_root_times_2 <<= 1;
+        j_root_times_2 <<= 1;
+
         while (queue) {
             v = queue & -queue;
             queue ^= v;
@@ -159,8 +163,8 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
                 for (const auto &possibleJumps : k_neighbours_[v]) {
                     for (const auto &possibleJump : possibleJumps) {
                         /* Check if there is a pawn to jump over and if the jump is valid */
-                        if (((bit_boards_.White | bit_boards_.Black) & possibleJump.first.first)
-                            && ! ((bit_boards_.White     | bit_boards_.Black        )
+                        if ((bit_boards_all & possibleJump.first.first)
+                            && ! (bit_boards_all
                                   & (possibleJump.second | possibleJump.first.second))) {
                             temp_elementary_move.push_back(possibleJump.first.second);
                             break;
@@ -178,8 +182,8 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
                      * Checks that we are not jumping over the root
                      * (it has moved)
                      */
-                    && !(((i + i_neig) >> 1) == i_root
-                         &&   ((j + j_neig) >> 1) == j_root)) {
+                    && !((i + i_neig) == i_root_times_2
+                         &&   (j + j_neig) == j_root_times_2)) {
                     queue    |= neig;
                     explored |= neig;
 
@@ -277,13 +281,14 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
                              const bool &maximizingPlayer,
                              const bool &keepMove) {
     /* Check if the current node is a terminating node */
-    if (who_is_to_play_
-                && (bit_boards_.White & winning_positions_white_) /* Did white win ? */
-                && ((bit_boards_.White | bit_boards_.Black) & winning_positions_white_)
+    if (who_is_to_play_) {
+        if ((bit_boards_.White & winning_positions_white_) /* Did white win ? */
+            && ((bit_boards_.White | bit_boards_.Black) & winning_positions_white_)
                     == winning_positions_white_) {
-        return maximizing_player_ ? PLUS_INFTY : MINUS_INFTY;
+            return maximizing_player_ ? PLUS_INFTY : MINUS_INFTY;
+        }
     } else if (!who_is_to_play_
-                && (bit_boards_.Black & winning_positions_black_) /* Did white win ? */
+                && (bit_boards_.Black & winning_positions_black_) /* Did black win ? */
                 && ((bit_boards_.White | bit_boards_.Black) & winning_positions_black_)
                         == winning_positions_black_) {
         return maximizing_player_ ? MINUS_INFTY : PLUS_INFTY;
@@ -293,17 +298,15 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     if (number_of_times_seen_[hash] == MAX_NUMBER_OF_CYCLES_FOR_DRAW_) { /* Is there a draw ? */
         return DRAW_VALUE;
     } else { /* the game is not over */
-        if (depth == 0) {
+        if (depth == 0)
             return heuristic_value_;
-        } else { /* Use a transposition table to boost performances */
-            if  ((depth < fullDepth_ - 1)) {
-                it_transposition_table_ = transposition_table_.find(bit_boards_);
-                if (it_transposition_table_ != transposition_table_.end()
-                    && it_transposition_table_->second.second == depth) {
-                    /* retrieve the value from the transposition table */
-                    return it_transposition_table_->second.first;
-                }
-            }
+
+        /* Use a transposition table to boost performances */
+        it_transposition_table_ = transposition_table_.find(bit_boards_);
+        if (it_transposition_table_ != transposition_table_.end()
+            && it_transposition_table_->second.second == depth) {
+            /* retrieve the value from the transposition table */
+            return it_transposition_table_->second.first;
         }
     }
 
@@ -316,7 +319,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     else std::sort(possible_moves.begin(), possible_moves.end(), comp_move_);
 
     /* We do not consider all moves in order to have a speed up */
-    if (alpha != beta) possible_moves.resize(std::min(15UL, possible_moves.size()));
+    if (MINUS_INFTY != beta) possible_moves.resize(std::min(15UL, possible_moves.size()));
 
 
     double value = maximizingPlayer ? MINUS_INFTY - 1 : PLUS_INFTY + 1;
@@ -338,10 +341,8 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
 
         /* indicates that this position has been seen another time */
         uint64_t hash = hashGrid();
-        if (number_of_times_seen_.find(hash) != number_of_times_seen_.end())
-            ++number_of_times_seen_[hash];
-        else
-            number_of_times_seen_.emplace(hash, 1);
+        ++number_of_times_seen_[hash];
+
 
         /* Checks for an illegal position */
         if (isPositionIllegal()) {
@@ -362,12 +363,12 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
         updateHeuristicValueBack(move);
 
         if (maximizingPlayer && buff > value) {
-            alpha = std::max(alpha, buff);
+            alpha = std::max(buff, alpha);
             value = buff;
             if (value >= beta)
                 break; /* beta cutoff */
         } else if (buff < value) {
-            beta = std::min(beta, buff);
+            beta  = std::min(buff, beta);
             value = buff;
             if (keepMove) {
                 best_move_ = move;
@@ -379,8 +380,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     }
 
     /* store the value in the transposition table */
-    if ((depth < fullDepth_ - 1)) transposition_table_.emplace(bit_boards_, std::make_pair(value, depth));
-    //if ((depth < fullDepth_ - 1)) transposition_table_.emplace(bit_boards_, std::make_pair(value, depth));
+    transposition_table_.emplace(bit_boards_, std::make_pair(value, depth));
 
     /* return value */
     return value;
