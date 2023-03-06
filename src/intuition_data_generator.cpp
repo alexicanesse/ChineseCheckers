@@ -36,8 +36,8 @@
 #include "Types.hpp"
 #include "AlphaBeta.hpp"
 
-#define DEPTH (3)
-#define NUMBER_OF_GAMES (256)
+#define DEPTH (1)
+#define NUMBER_OF_GAMES (500)
 
 typedef std::vector<std::pair<std::string, tensorflow::Tensor>> tensor_dict;
 
@@ -110,6 +110,8 @@ void IntuitionDataGenerator::saveVectorOfBitBoardsToFiles(
 std::pair<std::vector<bitBoards_t>, std::vector<double>>
                 IntuitionDataGenerator::evalAllMoves(int depth) {
     maximizing_player_ = who_is_to_play_;
+    fullDepth_         = depth;
+
     std::vector<uint_fast64_t> moves;
     availableMoves(moves);
 
@@ -117,8 +119,10 @@ std::pair<std::vector<bitBoards_t>, std::vector<double>>
     std::vector<bitBoards_t> all_bit_boards;
     double buff;
     for (const uint_fast64_t &move : moves) {
+        transposition_table_.clear();
         /* Apply the move */
         this->moveWithoutVerification(move);
+        heuristic_value_   = heuristicValue();
 
         /* Check if we already have informations about this position */
         if (transposition_table_permanent_.find(bit_boards_)
