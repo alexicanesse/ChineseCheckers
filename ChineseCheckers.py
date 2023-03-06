@@ -204,6 +204,11 @@ class Board(Tk,Areas):
         # create a parametersArea hitbox to trigger update events
         self.bind("<ButtonRelease-1>", lambda event : self.updateClassicButtons(event))
         self.bind("<KeyRelease>", lambda event : self.updateClassicButtons(event))
+
+        # save current game parameters to show them on UI
+        self.current_params = {"playerW" : None,
+                               "playerB" : None,
+                               "turn" : "White"}
     
 
     def updateClassicButtons(self, event):
@@ -235,8 +240,15 @@ class Board(Tk,Areas):
             self.cancelmove_b.set_state("grayed")
         elif self.cancelmove_b.get_state() == "grayed":
             self.cancelmove_b.set_state("normal")
+        
+    def updateGameInfos(self):
+        ''' update the visual indications that show who plays what, and whose turn it is '''
 
-
+        self.current_params["turn"] = self.__boardArea.get_color_playing()
+        turn = self.current_params["turn"]
+        playerW = self.current_params["playerW"]
+        playerB = self.current_params["playerB"]
+        print(f"White {playerW} plays against Black {playerB}\nIt's {turn}'s turn")
 
     def press_NextTurn(self, event):
         ''' next turn '''
@@ -244,6 +256,7 @@ class Board(Tk,Areas):
         if self.nextturn_b.get_state() != "grayed":
             self.__boardArea.jouerIA()
             self.nextturn_b.set_state("pressed")
+            self.updateGameInfos()
 
     def press_CancelMove(self, event):
         ''' next turn '''
@@ -268,11 +281,17 @@ class Board(Tk,Areas):
         if self.playerB_menu.has_valid_configuration() and self.playerW_menu.has_valid_configuration(): # if human has chosen both
             self.nextturn_b.set_state("normal") # enable next turn button
 
-            playerW = AI_cpp(depthW) if choice_playerW == "C++ AI" else Human() # TODO ckoicebordel
+            playerW = AI_cpp(depthW) if choice_playerW == "C++ AI" else Human()
             playerB = AI_cpp(depthB) if choice_playerB == "C++ AI" else Human()
             self.__boardArea.reset(playerW,playerB)
+
+            self.current_params["playerW"] = choice_playerW
+            self.current_params["playerB"] = choice_playerB
+            self.current_params["turn"] = "White"
         else:
             print("No choice of players has been made")
+        
+        self.updateGameInfos()
             
     
     def release_pawn(self, event):

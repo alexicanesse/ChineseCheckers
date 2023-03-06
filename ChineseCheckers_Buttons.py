@@ -316,7 +316,7 @@ class ChoiceDepth(Areas):
 
 
 class ChoiceMenu(Areas):
-    # for the player choices on the left
+    # for the player choices on the left (AI or human...)
     def __init__(self, parent : Canvas, width : int, height : int, x : int, y : int, labels : list[str], gap, selected = -1):# no choice is selected by default
         self.choice_buttons = []
 

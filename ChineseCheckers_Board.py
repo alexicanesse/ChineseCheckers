@@ -298,6 +298,13 @@ class BoardArea(Areas):
             self.whoistoplay = self.playerB
         else:
             self.whoistoplay = self.playerW
+    
+
+    def get_color_playing(self):
+        if self.whoistoplay == self.playerW:
+            return "White"
+        else:
+            return "Black"
             
                         
     def _plat2canv(self,i : int,j : int):
