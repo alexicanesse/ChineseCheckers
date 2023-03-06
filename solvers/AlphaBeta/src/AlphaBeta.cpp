@@ -118,7 +118,7 @@ AlphaBeta::AlphaBeta(const std::vector<double> &player_to_win_value_,
 }
 
 void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
-    result.reserve(50);
+    result.reserve(100);
     uint_fast64_t computed_possible_elementary_move_ = 0;
 
     uint_fast64_t currentBitBoard = who_is_to_play_ ? bit_boards_.Black : bit_boards_.White;
@@ -136,6 +136,9 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
     /* When another root is chosen, the queue is already empty */
     uint_fast64_t root;
     uint_fast64_t pawnPositionMask = currentBitBoard;
+    std::vector<uint_fast64_t> temp_elementary_move;
+    temp_elementary_move.reserve(20);
+    
     for (root = pawnPositionMask & -pawnPositionMask;
          pawnPositionMask & -pawnPositionMask;
          root = pawnPositionMask & -pawnPositionMask) {
@@ -145,8 +148,6 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
         explored = root;
 
         std::tie(i_root, j_root) = uint64_to_pair_[root];
-        std::vector<uint_fast64_t> temp_elementary_move;
-        temp_elementary_move.reserve(20);
         while (queue) {
             v = queue & -queue;
             queue ^= v;
@@ -177,8 +178,8 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
                      * Checks that we are not jumping over the root
                      * (it has moved)
                      */
-                    && !((i + i_neig) / 2 == i_root
-                         &&   (j + j_neig)/ 2 == j_root)) {
+                    && !(((i + i_neig) >> 1) == i_root
+                         &&   ((j + j_neig) >> 1) == j_root)) {
                     queue    |= neig;
                     explored |= neig;
 
@@ -234,7 +235,7 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
 
     won_[maximizing_player_] = (!won_[maximizing_player_]
                                     && (val == MINUS_INFTY));
-
+    std::cout << std::setw(2) << rank << " / " << number_of_moves << "\n";
     return retrieveMoves(best_move_);
 }
 
@@ -267,7 +268,6 @@ uint_fast64_t AlphaBeta::getMove64(const int &depth) {
 
     won_[maximizing_player_] = (!won_[maximizing_player_]
                                 && (val == MINUS_INFTY));
-
     return best_move_;
 }
 
@@ -312,27 +312,36 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     availableMoves(possible_moves);
 
     /* Sort according to the value of the move in order to increase the number of cut-offs */
-    if (keepMove) std::sort(possible_moves.begin(), possible_moves.end(), comp_move_);
+    if (keepMove) tensorflowSortMoves(possible_moves);
+    else std::sort(possible_moves.begin(), possible_moves.end(), comp_move_);
 
     /* We do not consider all moves in order to have a speed up */
-    //possible_moves.resize(std::min(10UL, possible_moves.size()));
+    if (alpha != beta) possible_moves.resize(std::min(15UL, possible_moves.size()));
 
-    //if (0 && keepMove)
-    //    tensorflowOrderMoves(possible_moves);
-    //else
-    //    sortDepth1Light(moves);
 
     double value = maximizingPlayer ? MINUS_INFTY - 1 : PLUS_INFTY + 1;
     double buff;
 
 //temp
-    // int r = 0;
-    // number_of_moves = possible_moves.size();
+    if (keepMove) {
+        number_of_moves = possible_moves.size();
+        rank  = number_of_moves;
+    }
+    int r = 0;
     for (const auto &move:possible_moves) {
 //temp
-        // ++r;
+        ++r;
         updateHeuristicValue(move);
-        moveWithoutVerification(move);
+        //moveWithoutVerification(move);
+        who_is_to_play_ ? bit_boards_.Black ^= move : bit_boards_.White ^= move;
+        who_is_to_play_ ^= 1;
+
+        /* indicates that this position has been seen another time */
+        uint64_t hash = hashGrid();
+        if (number_of_times_seen_.find(hash) != number_of_times_seen_.end())
+            ++number_of_times_seen_[hash];
+        else
+            number_of_times_seen_.emplace(hash, 1);
 
         /* Checks for an illegal position */
         if (isPositionIllegal()) {
@@ -347,19 +356,23 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
                              !maximizingPlayer,
                              false);
 
-        reverseMove(move);
+        --number_of_times_seen_[hash];
+        who_is_to_play_ ^= 1;
+        who_is_to_play_ ? bit_boards_.Black ^= move : bit_boards_.White ^= move;
         updateHeuristicValueBack(move);
 
-        if (maximizingPlayer && buff >= value) {
+        if (maximizingPlayer && buff > value) {
             alpha = std::max(alpha, buff);
             value = buff;
             if (value >= beta)
                 break; /* beta cutoff */
-        } else if (buff <= value) {
+        } else if (buff < value) {
             beta = std::min(beta, buff);
             value = buff;
-            if (keepMove) best_move_ = move;
-            // if (keepMove) rank = r;
+            if (keepMove) {
+                best_move_ = move;
+                rank = r;
+            }
             if (value <= alpha)
                 break; /* alpha cutoff */
         }
@@ -367,6 +380,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
 
     /* store the value in the transposition table */
     if ((depth < fullDepth_ - 1)) transposition_table_.emplace(bit_boards_, std::make_pair(value, depth));
+    //if ((depth < fullDepth_ - 1)) transposition_table_.emplace(bit_boards_, std::make_pair(value, depth));
 
     /* return value */
     return value;
@@ -431,16 +445,9 @@ inline void AlphaBeta::updateHeuristicValueBack(const uint_fast64_t &move) {
 }
 
 void AlphaBeta::reverseMove(const uint_fast64_t &move) {
-    uint64_t hash = hashGrid();
-    if(number_of_times_seen_.find(hash) != number_of_times_seen_.end())
-        --number_of_times_seen_[hash];
-
+    --number_of_times_seen_[hashGrid()];
     who_is_to_play_ ^= 1;
-
-    if (who_is_to_play_)
-        bit_boards_.Black ^= move;
-    else
-        bit_boards_.White ^= move;
+    who_is_to_play_ ? bit_boards_.Black ^= move : bit_boards_.White ^= move;
 }
 
 Player AlphaBeta::getMaximizingPlayer() const {
@@ -593,4 +600,69 @@ ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
     }
 
     return {};
+}
+
+void AlphaBeta::tensorflowSortMoves(std::vector<uint_fast64_t> &possible_moves) {
+    /* We create a tensor for tensorFlow to evaluate all moves at once */
+    std::vector<uint8_t> bb_temp;
+    std::vector<float> data_;
+    data_.reserve(128 * possible_moves.size());
+
+    /* We get the right representation of each move */
+    bitBoards_t bb;
+    for (const uint_fast64_t &move : possible_moves) {
+        bb = bit_boards_;
+        if (who_is_to_play_) bb.Black ^= move;
+        else                 bb.White ^= move;
+
+        bb_temp = bitBoardsAsVector(bb);
+        data_.insert(data_.end(), bb_temp.begin(), bb_temp.end());
+    }
+
+    cppflow::tensor tensor_data_ = cppflow::tensor(data_, {static_cast<int>(possible_moves.size()), 128});
+    std::vector<cppflow::tensor> output = (*model)({{"serving_default_dense_input:0", tensor_data_}},
+                                                    {"StatefulPartitionedCall:0"});
+
+    std::unordered_map<uint_fast64_t, double> res;
+    auto output_data_ = output[0].get_data<double>();
+    for (int d = 0; d < possible_moves.size(); ++d)
+        res[possible_moves[d]] = output_data_[d];
+
+    auto compMoveW = [&](const uint_fast64_t &a, const uint_fast64_t &b) {
+        return res[a] < res[b];
+    };
+
+    auto compMoveB = [&](const uint_fast64_t &a, const uint_fast64_t &b) {
+        return res[a] > res[b];
+    };
+
+    if (who_is_to_play_) std::sort(possible_moves.begin(), possible_moves.end(), compMoveB);
+    else                 std::sort(possible_moves.begin(), possible_moves.end(), compMoveW);
+}
+
+std::vector<uint8_t> AlphaBeta::bitBoardsAsVector(const bitBoards_t &bb) {
+    /*
+     * Copy the grid to a vector and reverse it if black is playing.
+     * We need to reverse it if black is playing because the intuition
+     * has been trained for white only.
+     */
+    std::vector<uint8_t> grid_temp(128, 0);
+    int i;
+    for (i = 0; i < 64; ++i) {
+        if (bb.White & (un_64_ << i)) grid_temp[63  - i] = 1;
+        if (bb.Black & (un_64_ << i)) grid_temp[127 - i] = 1;
+    }
+    /*if (who_is_to_play_) {
+        for (i = 0; i < 64; ++i) {
+            if (bb.Black & (un_64_ << i)) grid_temp[     i] = 1;
+            if (bb.White & (un_64_ << i)) grid_temp[64 + i] = 1;
+        }
+    } else {
+        for (i = 0; i < 64; ++i) {
+            if (bb.White & (un_64_ << i)) grid_temp[63  - i] = 1;
+            if (bb.Black & (un_64_ << i)) grid_temp[127 - i] = 1;
+        }
+    }*/
+
+    return grid_temp;
 }

@@ -88,7 +88,7 @@ class AlphaBeta : public ChineseCheckers{
     /*! Map of pre-computed optimal openings. */
     boost::unordered_map<bitBoards_t, uint_fast64_t , bitBoardsHasher, bitBoardsEqual> opening_;
     /*! Tensorflow model used by @ref tensorflowOrderMoves. */
-    cppflow::model *model = new cppflow::model("./raw_data/model");
+    cppflow::model *model = new cppflow::model("model");
 
     /*! A map used to get the number of trailing zeroes of uint_64. It is used to get index from bit masks. */
     boost::unordered_map<uint_fast64_t, int> ctz_;
@@ -150,7 +150,13 @@ class AlphaBeta : public ChineseCheckers{
      * @sa heuristicValue
      * @sa availableMoves
      */
-    void tensorflowOrderMoves(ListOfMoves &possible_moves);
+    void tensorflowSortMoves(std::vector<uint_fast64_t> &possible_moves);
+    /*!
+     * @brief Returns a representation of a given bit board as a vector.
+     * @param bb The bit boards considered.
+     * @return A representation of @ref bb as a vector.
+     */
+    std::vector<uint8_t> bitBoardsAsVector(const bitBoards_t &bb);
 
     /*! @brief
      * Cancel the last move
