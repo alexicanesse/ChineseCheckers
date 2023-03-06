@@ -7,33 +7,8 @@ from ChineseCheckers_Buttons import *
 class Board(Tk,Areas):
 
     def __init__(self, width, height):
-
-        # TODO :
-        # [DONE] fix cross centering when resizing
-        # [DONE] fix black pawn position when resized
-        # [DONE] fix plot2canv
-        # [DONE] activate arrows by default
-        # [DONE] fix arrow color 
-        # [DONE] gray buttons to choose players during game
-        # [DONE] add player choice in the UI
-        # [DONE] re do "Play AI" button
-        # [DONE] split this file into several
-        # [MOSTLY DONE] ends of games
-        # [DONE] relaunch game
-        # [DONE] show possible moves when clicking on a pawn even if it is AI
-        # [MAYBE DONE I THINK??] bug where u can drag black pawns even if black player is not human
-        # [DONE] pb when changing player, does not work 
-        # [DONE] allow user to specify depth for AI
         
         # new window that shows weights
-        # [DONE] when disabling then enabling "show arrows" checkbox, show arrows that were previously shown before disabling
-        # [DONE] print current state : who VS who, whose turn
-        # [DONE] button to cancel current move as human
-        # [DONE] fix classicbuttons colors when pressed
-        # [DONE] fix a bug where cancelling a move (human side) doesn't gray out the "Next Turn" button
-        # [DONE] gray buttons when "new game" hasn't been pressed at all
-        # [DONE MOSTLY] make in-depth tests of "new game" button
-        # [DONE] fix bug that allow human to move several pawns
         # clean code
 
         Tk.__init__(self)
@@ -246,10 +221,10 @@ class Board(Tk,Areas):
         # it must be grayed if human has no current move
         if self.__boardArea.whoistoplay != None and \
             self.__boardArea.whoistoplay.getHumanity() and \
-            self.__boardArea.coup_courant == []:
-            self.cancelmove_b.set_state("grayed")
-        elif self.cancelmove_b.get_state() == "grayed":
+            self.__boardArea.coup_courant != []:
             self.cancelmove_b.set_state("normal")
+        else:
+            self.cancelmove_b.set_state("grayed")
         
     def updateGameInfos(self):
         ''' update the visual indications that show who plays what, and whose turn it is '''

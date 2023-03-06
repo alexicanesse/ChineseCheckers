@@ -463,10 +463,6 @@ class BoardArea(Areas):
         self.pawn_radius = self.case_radius_hit / 2.5 # radius of a pawn
     
     # All of the following functions in the class are TEST
-  
-
-    def can_play(self):
-        return self.joueurajouer
 
     def jouerIA(self):
         
