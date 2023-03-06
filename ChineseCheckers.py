@@ -3,6 +3,7 @@ from ChineseCheckers_Areas import *
 from ChineseCheckers_Board import *
 from ChineseCheckers_Buttons import *
 
+
 class Board(Tk,Areas):
 
     def __init__(self, width, height):
@@ -26,7 +27,7 @@ class Board(Tk,Areas):
         
         # new window that shows weights
         # [DONE] when disabling then enabling "show arrows" checkbox, show arrows that were previously shown before disabling
-        # print current state : who VS who, whose turn
+        # [DONE] print current state : who VS who, whose turn
         # [DONE] button to cancel current move as human
         # [DONE] fix classicbuttons colors when pressed
         # [DONE] fix a bug where cancelling a move (human side) doesn't gray out the "Next Turn" button
@@ -151,6 +152,15 @@ class Board(Tk,Areas):
                                         choices, 
                                         self.DECO_WIDTH,
                                         default_selectedB)
+
+        self.text_info_players = self.__parametersArea.create_text(parameters_width // 2,
+                                                                menu_height // 3,
+                                                                text="Choose the \nparameters", 
+                                                                font=self.get_font(13), 
+                                                                justify=CENTER,
+                                                                fill=self.get_color("white"))
+
+
         
         # "New Game" button
         self.NEW_GAME_WIDTH = control_width // 2
@@ -248,7 +258,9 @@ class Board(Tk,Areas):
         turn = self.current_params["turn"]
         playerW = self.current_params["playerW"]
         playerB = self.current_params["playerB"]
-        print(f"White {playerW} plays against Black {playerB}\nIt's {turn}'s turn")
+
+        self.__parametersArea.itemconfig(self.text_info_players, text=f"White {playerW} VS Black {playerB}\nIt's {turn}'s turn")
+
 
     def press_NextTurn(self, event):
         ''' next turn '''
@@ -327,6 +339,9 @@ class Board(Tk,Areas):
             self.__parametersArea.moveto(self.deco_elts[0], (parameters_width - text_width) // 2, y + (menu_height - text_height) // 2)
             self.__parametersArea.moveto(self.deco_elts[1], x - 2 * self.DECO_WIDTH, y)
             self.__parametersArea.moveto(self.deco_elts[2], 2 * x + 2 * self.ITEM_WIDTH + self.DECO_WIDTH, y) 
+            a, b, c, d = self.__parametersArea.bbox(self.text_info_players)
+            text_width, text_height = c - a, d - b
+            self.__parametersArea.moveto(self.text_info_players, (parameters_width - text_width) // 2, menu_height // 3 - text_height // 2)
 
             # fix buttons positions
             self.new_game_button.moveto((control_width - self.NEW_GAME_WIDTH) // 2, event.height // 4 - self.NEW_GAME_HEIGHT // 2) 
