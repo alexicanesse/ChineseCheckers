@@ -239,7 +239,7 @@ ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, con
 
     won_[maximizing_player_] = (!won_[maximizing_player_]
                                     && (val == MINUS_INFTY));
-    std::cout << std::setw(2) << rank << " / " << number_of_moves << "\n";
+    //std::cout << std::setw(2) << rank << " / " << number_of_moves << "\n";
     return retrieveMoves(best_move_);
 }
 
@@ -315,7 +315,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     availableMoves(possible_moves);
 
     /* Sort according to the value of the move in order to increase the number of cut-offs */
-    if (keepMove) tensorflowSortMoves(possible_moves);
+    if (0 && keepMove) tensorflowSortMoves(possible_moves);
     else std::sort(possible_moves.begin(), possible_moves.end(), comp_move_);
 
     /* We do not consider all moves in order to have a speed up */
@@ -335,7 +335,8 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
 //temp
         ++r;
         updateHeuristicValue(move);
-        //moveWithoutVerification(move);
+
+        /* Applying the move */
         who_is_to_play_ ? bit_boards_.Black ^= move : bit_boards_.White ^= move;
         who_is_to_play_ ^= 1;
 
@@ -360,6 +361,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
         --number_of_times_seen_[hash];
         who_is_to_play_ ^= 1;
         who_is_to_play_ ? bit_boards_.Black ^= move : bit_boards_.White ^= move;
+
         updateHeuristicValueBack(move);
 
         if (maximizingPlayer && buff > value) {
@@ -652,17 +654,5 @@ std::vector<uint8_t> AlphaBeta::bitBoardsAsVector(const bitBoards_t &bb) {
         if (bb.White & (un_64_ << i)) grid_temp[63  - i] = 1;
         if (bb.Black & (un_64_ << i)) grid_temp[127 - i] = 1;
     }
-    /*if (who_is_to_play_) {
-        for (i = 0; i < 64; ++i) {
-            if (bb.Black & (un_64_ << i)) grid_temp[     i] = 1;
-            if (bb.White & (un_64_ << i)) grid_temp[64 + i] = 1;
-        }
-    } else {
-        for (i = 0; i < 64; ++i) {
-            if (bb.White & (un_64_ << i)) grid_temp[63  - i] = 1;
-            if (bb.Black & (un_64_ << i)) grid_temp[127 - i] = 1;
-        }
-    }*/
-
     return grid_temp;
 }
