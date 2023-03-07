@@ -3,36 +3,12 @@ from ChineseCheckers_Areas import *
 from ChineseCheckers_Board import *
 from ChineseCheckers_Buttons import *
 
+
 class Board(Tk,Areas):
 
     def __init__(self, width, height):
-
-        # TODO :
-        # [DONE] fix cross centering when resizing
-        # [DONE] fix black pawn position when resized
-        # [DONE] fix plot2canv
-        # [DONE] activate arrows by default
-        # [DONE] fix arrow color 
-        # [DONE] gray buttons to choose players during game
-        # [DONE] add player choice in the UI
-        # [DONE] re do "Play AI" button
-        # [DONE] split this file into several
-        # [MOSTLY DONE] ends of games
-        # [DONE] relaunch game
-        # [DONE] show possible moves when clicking on a pawn even if it is AI
-        # [MAYBE DONE I THINK??] bug where u can drag black pawns even if black player is not human
-        # [DONE] pb when changing player, does not work 
-        # [DONE] allow user to specify depth for AI
         
         # new window that shows weights
-        # [DONE] when disabling then enabling "show arrows" checkbox, show arrows that were previously shown before disabling
-        # print current state : who VS who, whose turn
-        # [DONE] button to cancel current move as human
-        # [DONE] fix classicbuttons colors when pressed
-        # [DONE] fix a bug where cancelling a move (human side) doesn't gray out the "Next Turn" button
-        # [DONE] gray buttons when "new game" hasn't been pressed at all
-        # [DONE MOSTLY] make in-depth tests of "new game" button
-        # [DONE] fix bug that allow human to move several pawns
         # clean code
 
         Tk.__init__(self)
@@ -151,6 +127,15 @@ class Board(Tk,Areas):
                                         choices, 
                                         self.DECO_WIDTH,
                                         default_selectedB)
+
+        self.text_info_players = self.__parametersArea.create_text(parameters_width // 2,
+                                                                menu_height // 3,
+                                                                text="Choose the \nparameters", 
+                                                                font=self.get_font(13), 
+                                                                justify=CENTER,
+                                                                fill=self.get_color("white"))
+
+
         
         # "New Game" button
         self.NEW_GAME_WIDTH = control_width // 2
@@ -236,10 +221,10 @@ class Board(Tk,Areas):
         # it must be grayed if human has no current move
         if self.__boardArea.whoistoplay != None and \
             self.__boardArea.whoistoplay.getHumanity() and \
-            self.__boardArea.coup_courant == []:
-            self.cancelmove_b.set_state("grayed")
-        elif self.cancelmove_b.get_state() == "grayed":
+            self.__boardArea.coup_courant != []:
             self.cancelmove_b.set_state("normal")
+        else:
+            self.cancelmove_b.set_state("grayed")
         
     def updateGameInfos(self):
         ''' update the visual indications that show who plays what, and whose turn it is '''
@@ -248,7 +233,9 @@ class Board(Tk,Areas):
         turn = self.current_params["turn"]
         playerW = self.current_params["playerW"]
         playerB = self.current_params["playerB"]
-        print(f"White {playerW} plays against Black {playerB}\nIt's {turn}'s turn")
+
+        self.__parametersArea.itemconfig(self.text_info_players, text=f"White {playerW} VS Black {playerB}\nIt's {turn}'s turn")
+
 
     def press_NextTurn(self, event):
         ''' next turn '''
@@ -327,6 +314,9 @@ class Board(Tk,Areas):
             self.__parametersArea.moveto(self.deco_elts[0], (parameters_width - text_width) // 2, y + (menu_height - text_height) // 2)
             self.__parametersArea.moveto(self.deco_elts[1], x - 2 * self.DECO_WIDTH, y)
             self.__parametersArea.moveto(self.deco_elts[2], 2 * x + 2 * self.ITEM_WIDTH + self.DECO_WIDTH, y) 
+            a, b, c, d = self.__parametersArea.bbox(self.text_info_players)
+            text_width, text_height = c - a, d - b
+            self.__parametersArea.moveto(self.text_info_players, (parameters_width - text_width) // 2, menu_height // 3 - text_height // 2)
 
             # fix buttons positions
             self.new_game_button.moveto((control_width - self.NEW_GAME_WIDTH) // 2, event.height // 4 - self.NEW_GAME_HEIGHT // 2) 
