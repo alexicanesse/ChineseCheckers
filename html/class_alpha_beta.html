@@ -131,6 +131,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9dd32c3a90d7ad7cc42e046773d94018"><td class="memItemLeft" align="right" valign="top">uint_fast64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a9dd32c3a90d7ad7cc42e046773d94018">getMove64</a> (const int &amp;depth)</td></tr>
 <tr class="memdesc:a9dd32c3a90d7ad7cc42e046773d94018"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the best move according to the alpha beta algorithm.  <br /></td></tr>
 <tr class="separator:a9dd32c3a90d7ad7cc42e046773d94018"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8dc0d94aa839f825e7ff1e97054888d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a8dc0d94aa839f825e7ff1e97054888d0">availableMoves</a> (std::vector&lt; uint_fast64_t &gt; &amp;result)</td></tr>
+<tr class="memdesc:a8dc0d94aa839f825e7ff1e97054888d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the list of available moves.  <br /></td></tr>
+<tr class="separator:a8dc0d94aa839f825e7ff1e97054888d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10d5f03431a4928d732ba0ab7f5307ee"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a10d5f03431a4928d732ba0ab7f5307ee">AlphaBetaEval</a> (const int &amp;depth, double alpha, double beta, const bool &amp;maximizingPlayer, const bool &amp;keepMove)</td></tr>
+<tr class="memdesc:a10d5f03431a4928d732ba0ab7f5307ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a step of the alpha beta algorithm.  <br /></td></tr>
+<tr class="separator:a10d5f03431a4928d732ba0ab7f5307ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02add2f65f9b637e3131d1db1565c490"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a02add2f65f9b637e3131d1db1565c490">isHuman</a> ()</td></tr>
 <tr class="memdesc:a02add2f65f9b637e3131d1db1565c490"><td class="mdescLeft">&#160;</td><td class="mdescRight">A helper function for the python connexion.  <br /></td></tr>
 <tr class="separator:a02add2f65f9b637e3131d1db1565c490"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -208,15 +214,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a7df037e15bdc721cbd4b4806147cf5ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a7df037e15bdc721cbd4b4806147cf5ed">updateHeuristicValueBack</a> (const uint_fast64_t &amp;<a class="el" href="class_chinese_checkers.html#a95fcf9d29ed0358eb62f0ba82d70fa71">move</a>)</td></tr>
 <tr class="memdesc:a7df037e15bdc721cbd4b4806147cf5ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates <a class="el" href="class_alpha_beta.html#a3e9eb1d69b18495c4d1eb48ea426a2f3">heuristic_value_</a> when a move is canceled.  <br /></td></tr>
 <tr class="separator:a7df037e15bdc721cbd4b4806147cf5ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77a9f85920a3f10c03d9003d78468e02"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a77a9f85920a3f10c03d9003d78468e02">tensorflowOrderMoves</a> (<a class="el" href="_types_8hpp.html#a8598148c10b670d2dcd865d177f7f8d3">ListOfMoves</a> &amp;possible_moves)</td></tr>
-<tr class="memdesc:a77a9f85920a3f10c03d9003d78468e02"><td class="mdescLeft">&#160;</td><td class="mdescRight">A member used to order the moves before exploring them.  <br /></td></tr>
-<tr class="separator:a77a9f85920a3f10c03d9003d78468e02"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8dc0d94aa839f825e7ff1e97054888d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a8dc0d94aa839f825e7ff1e97054888d0">availableMoves</a> (std::vector&lt; uint_fast64_t &gt; &amp;result)</td></tr>
-<tr class="memdesc:a8dc0d94aa839f825e7ff1e97054888d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the list of available moves.  <br /></td></tr>
-<tr class="separator:a8dc0d94aa839f825e7ff1e97054888d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10d5f03431a4928d732ba0ab7f5307ee"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a10d5f03431a4928d732ba0ab7f5307ee">AlphaBetaEval</a> (const int &amp;depth, double alpha, double beta, const bool &amp;maximizingPlayer, const bool &amp;keepMove)</td></tr>
-<tr class="memdesc:a10d5f03431a4928d732ba0ab7f5307ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a step of the alpha beta algorithm.  <br /></td></tr>
-<tr class="separator:a10d5f03431a4928d732ba0ab7f5307ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bf6b4190b5d1042fc667933f2d7f535"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a2bf6b4190b5d1042fc667933f2d7f535">tensorflowSortMoves</a> (std::vector&lt; uint_fast64_t &gt; &amp;possible_moves)</td></tr>
+<tr class="memdesc:a2bf6b4190b5d1042fc667933f2d7f535"><td class="mdescLeft">&#160;</td><td class="mdescRight">A member used to order the moves before exploring them.  <br /></td></tr>
+<tr class="separator:a2bf6b4190b5d1042fc667933f2d7f535"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae767c8767aae649aa519d7d13b46f1b4"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ae767c8767aae649aa519d7d13b46f1b4">bitBoardsAsVector</a> (const bitBoards_t &amp;bb)</td></tr>
+<tr class="memdesc:ae767c8767aae649aa519d7d13b46f1b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a representation of a given bit board as a vector.  <br /></td></tr>
+<tr class="separator:ae767c8767aae649aa519d7d13b46f1b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acff36450bea77f8ed7298eae120fd798"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#acff36450bea77f8ed7298eae120fd798">reverseMove</a> (const uint_fast64_t &amp;<a class="el" href="class_chinese_checkers.html#a95fcf9d29ed0358eb62f0ba82d70fa71">move</a>)</td></tr>
 <tr class="memdesc:acff36450bea77f8ed7298eae120fd798"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cancel the last move.  <br /></td></tr>
 <tr class="separator:acff36450bea77f8ed7298eae120fd798"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -270,7 +273,7 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a4c497c4f5103a9edb75ef2691765760c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4d6a9def1ef6dd145c2922f92b2c666"><td class="memItemLeft" align="right" valign="top">boost::unordered_map&lt; bitBoards_t, uint_fast64_t, bitBoardsHasher, bitBoardsEqual &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ae4d6a9def1ef6dd145c2922f92b2c666">opening_</a></td></tr>
 <tr class="separator:ae4d6a9def1ef6dd145c2922f92b2c666"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2a6d244b7e6baafc1a50afc2d8add6a"><td class="memItemLeft" align="right" valign="top">cppflow::model *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ab2a6d244b7e6baafc1a50afc2d8add6a">model</a> = new cppflow::model(&quot;./raw_data/model&quot;)</td></tr>
+<tr class="memitem:ab2a6d244b7e6baafc1a50afc2d8add6a"><td class="memItemLeft" align="right" valign="top">cppflow::model *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ab2a6d244b7e6baafc1a50afc2d8add6a">model</a> = new cppflow::model(&quot;model&quot;)</td></tr>
 <tr class="separator:ab2a6d244b7e6baafc1a50afc2d8add6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82abaf5b3233e162a30d72884157eef8"><td class="memItemLeft" align="right" valign="top">boost::unordered_map&lt; uint_fast64_t, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a82abaf5b3233e162a30d72884157eef8">ctz_</a></td></tr>
 <tr class="separator:a82abaf5b3233e162a30d72884157eef8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -382,9 +385,6 @@ Protected Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">const double AlphaBeta::AlphaBetaEval </td>
@@ -422,11 +422,6 @@ Protected Attributes</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Makes a step of the alpha beta algorithm. </p>
@@ -456,15 +451,38 @@ Protected Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void AlphaBeta::availableMoves </td>
           <td>(</td>
           <td class="paramtype">std::vector&lt; uint_fast64_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>result</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gives the list of available moves. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#a64e452c751abaafa705486a16860db3a" title="Gives the best move according to the alpha beta algorithm.">getMove</a> </dd>
+<dd>
+tensorflowOrderMoves </dd></dl>
+
+</div>
+</div>
+<a id="ae767c8767aae649aa519d7d13b46f1b4" name="ae767c8767aae649aa519d7d13b46f1b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae767c8767aae649aa519d7d13b46f1b4">&#9670;&#160;</a></span>bitBoardsAsVector()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; uint8_t &gt; AlphaBeta::bitBoardsAsVector </td>
+          <td>(</td>
+          <td class="paramtype">const bitBoards_t &amp;&#160;</td>
+          <td class="paramname"><em>bb</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -475,10 +493,14 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gives the list of available moves. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#a64e452c751abaafa705486a16860db3a" title="Gives the best move according to the alpha beta algorithm.">getMove</a> </dd>
-<dd>
-<a class="el" href="class_alpha_beta.html#a77a9f85920a3f10c03d9003d78468e02" title="A member used to order the moves before exploring them.">tensorflowOrderMoves</a> </dd></dl>
+<p>Returns a representation of a given bit board as a vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bb</td><td>The bit boards considered. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A representation of bb as a vector. </dd></dl>
 
 </div>
 </div>
@@ -688,7 +710,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>A member used to estimate the value of a position. </p>
-<p>This heuristic value is computed using a linear function generated by genetic evolution. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="class_alpha_beta.html#a77a9f85920a3f10c03d9003d78468e02" title="A member used to order the moves before exploring them.">tensorflowOrderMoves</a> </dd></dl>
+<p>This heuristic value is computed using a linear function generated by genetic evolution. </p><dl class="section see"><dt>See also</dt><dd>tensorflowOrderMoves </dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>The heuristic value of the current position. </dd></dl>
 
 </div>
@@ -860,8 +882,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a77a9f85920a3f10c03d9003d78468e02" name="a77a9f85920a3f10c03d9003d78468e02"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a77a9f85920a3f10c03d9003d78468e02">&#9670;&#160;</a></span>tensorflowOrderMoves()</h2>
+<a id="a2bf6b4190b5d1042fc667933f2d7f535" name="a2bf6b4190b5d1042fc667933f2d7f535"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bf6b4190b5d1042fc667933f2d7f535">&#9670;&#160;</a></span>tensorflowSortMoves()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -870,9 +892,9 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void AlphaBeta::tensorflowOrderMoves </td>
+          <td class="memname">void AlphaBeta::tensorflowSortMoves </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="_types_8hpp.html#a8598148c10b670d2dcd865d177f7f8d3">ListOfMoves</a> &amp;&#160;</td>
+          <td class="paramtype">std::vector&lt; uint_fast64_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>possible_moves</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1156,7 +1178,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">cppflow::model* AlphaBeta::model = new cppflow::model(&quot;./raw_data/model&quot;)</td>
+          <td class="memname">cppflow::model* AlphaBeta::model = new cppflow::model(&quot;model&quot;)</td>
         </tr>
       </table>
   </td>
@@ -1165,7 +1187,7 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Tensorflow model used by <a class="el" href="class_alpha_beta.html#a77a9f85920a3f10c03d9003d78468e02">tensorflowOrderMoves</a>. </p>
+<p>Tensorflow model used by tensorflowOrderMoves. </p>
 
 </div>
 </div>

@@ -93,6 +93,7 @@ $(document).ready(function(){initNavTree('class_intuition_data_generator.html','
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_intuition_data_generator-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">IntuitionDataGenerator Class Reference</div></div>
 </div><!--header-->
@@ -115,19 +116,18 @@ Inheritance diagram for IntuitionDataGenerator:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac1090ada9fec835dd3ccaeeb56141a65"><td class="memItemLeft" align="right" valign="top">std::pair&lt; std::vector&lt; std::vector&lt; int &gt; &gt;, std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_intuition_data_generator.html#ac1090ada9fec835dd3ccaeeb56141a65">evalAllMoves</a> (int depth)</td></tr>
-<tr class="memdesc:ac1090ada9fec835dd3ccaeeb56141a65"><td class="mdescLeft">&#160;</td><td class="mdescRight">this function is used to eval all possible moves  <br /></td></tr>
-<tr class="separator:ac1090ada9fec835dd3ccaeeb56141a65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72326a30064eaf18a50ab97fd30c1ab2"><td class="memItemLeft" align="right" valign="top">std::pair&lt; std::vector&lt; bitBoards_t &gt;, std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_intuition_data_generator.html#a72326a30064eaf18a50ab97fd30c1ab2">evalAllMoves</a> (int depth)</td></tr>
+<tr class="memdesc:a72326a30064eaf18a50ab97fd30c1ab2"><td class="mdescLeft">&#160;</td><td class="mdescRight">this function is used to eval all possible moves.  <br /></td></tr>
+<tr class="separator:a72326a30064eaf18a50ab97fd30c1ab2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b2be184906d16ef42b4f512b08e43ec"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a4b2be184906d16ef42b4f512b08e43ec"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_intuition_data_generator.html#a4b2be184906d16ef42b4f512b08e43ec">saveVectorToFile</a> (const std::vector&lt; T &gt; &amp;input, const std::string &amp;outputFileName)</td></tr>
 <tr class="memdesc:a4b2be184906d16ef42b4f512b08e43ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a vector to a file.  <br /></td></tr>
 <tr class="separator:a4b2be184906d16ef42b4f512b08e43ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aceeab2ca277f1744070bb2810088f740"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:aceeab2ca277f1744070bb2810088f740"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_intuition_data_generator.html#aceeab2ca277f1744070bb2810088f740">saveVectorOfVectorToFile</a> (const std::vector&lt; std::vector&lt; T &gt; &gt; &amp;input, const std::string &amp;outputFileName)</td></tr>
-<tr class="memdesc:aceeab2ca277f1744070bb2810088f740"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a matrix to a file.  <br /></td></tr>
-<tr class="separator:aceeab2ca277f1744070bb2810088f740"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0538aa8822b0d6038fd9b107188e3cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_intuition_data_generator.html#ae0538aa8822b0d6038fd9b107188e3cc">saveVectorOfBitBoardsToFiles</a> (const std::vector&lt; bitBoards_t &gt; &amp;input, const std::string &amp;outputFileNameW, const std::string &amp;outputFileNameB)</td></tr>
+<tr class="memdesc:ae0538aa8822b0d6038fd9b107188e3cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a matrix to a file.  <br /></td></tr>
+<tr class="separator:ae0538aa8822b0d6038fd9b107188e3cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1834c47d89877e2a349c231cc5094cae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_intuition_data_generator.html#a1834c47d89877e2a349c231cc5094cae">fillTransTable</a> ()</td></tr>
-<tr class="memdesc:a1834c47d89877e2a349c231cc5094cae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill the transTable with the data we already calculated.  <br /></td></tr>
+<tr class="memdesc:a1834c47d89877e2a349c231cc5094cae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill the <a class="el" href="class_alpha_beta.html#a75368e2c2c4b86ceab825ed0bc94c588">transposition_table_</a> with the data we already calculated.  <br /></td></tr>
 <tr class="separator:a1834c47d89877e2a349c231cc5094cae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_alpha_beta"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_alpha_beta')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_alpha_beta.html">AlphaBeta</a></td></tr>
 <tr class="memitem:a4f1dd330857a88996d468a8883e0e0ee inherit pub_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a4f1dd330857a88996d468a8883e0e0ee">AlphaBeta</a> ()</td></tr>
@@ -142,6 +142,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9dd32c3a90d7ad7cc42e046773d94018 inherit pub_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">uint_fast64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a9dd32c3a90d7ad7cc42e046773d94018">getMove64</a> (const int &amp;depth)</td></tr>
 <tr class="memdesc:a9dd32c3a90d7ad7cc42e046773d94018 inherit pub_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the best move according to the alpha beta algorithm.  <br /></td></tr>
 <tr class="separator:a9dd32c3a90d7ad7cc42e046773d94018 inherit pub_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8dc0d94aa839f825e7ff1e97054888d0 inherit pub_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a8dc0d94aa839f825e7ff1e97054888d0">availableMoves</a> (std::vector&lt; uint_fast64_t &gt; &amp;result)</td></tr>
+<tr class="memdesc:a8dc0d94aa839f825e7ff1e97054888d0 inherit pub_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the list of available moves.  <br /></td></tr>
+<tr class="separator:a8dc0d94aa839f825e7ff1e97054888d0 inherit pub_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10d5f03431a4928d732ba0ab7f5307ee inherit pub_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a10d5f03431a4928d732ba0ab7f5307ee">AlphaBetaEval</a> (const int &amp;depth, double alpha, double beta, const bool &amp;maximizingPlayer, const bool &amp;keepMove)</td></tr>
+<tr class="memdesc:a10d5f03431a4928d732ba0ab7f5307ee inherit pub_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a step of the alpha beta algorithm.  <br /></td></tr>
+<tr class="separator:a10d5f03431a4928d732ba0ab7f5307ee inherit pub_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02add2f65f9b637e3131d1db1565c490 inherit pub_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a02add2f65f9b637e3131d1db1565c490">isHuman</a> ()</td></tr>
 <tr class="memdesc:a02add2f65f9b637e3131d1db1565c490 inherit pub_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">A helper function for the python connexion.  <br /></td></tr>
 <tr class="separator:a02add2f65f9b637e3131d1db1565c490 inherit pub_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -201,54 +207,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a893b1a49725415014b9fb94243fb64d5 inherit pub_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints <a class="el" href="class_chinese_checkers.html#a58000710730305c43b809d8a2f258432">who_is_to_play_</a>.  <br /></td></tr>
 <tr class="separator:a893b1a49725415014b9fb94243fb64d5 inherit pub_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pub_attribs_class_alpha_beta"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_class_alpha_beta')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_alpha_beta.html">AlphaBeta</a></td></tr>
-<tr class="memitem:a3d40c3729a5c385923d176e164ef8f62 inherit pub_attribs_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a3d40c3729a5c385923d176e164ef8f62">rank</a></td></tr>
-<tr class="separator:a3d40c3729a5c385923d176e164ef8f62 inherit pub_attribs_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7dbc30dc178571d289c68aa8faa589a4 inherit pub_attribs_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a7dbc30dc178571d289c68aa8faa589a4">number_of_moves</a></td></tr>
-<tr class="separator:a7dbc30dc178571d289c68aa8faa589a4 inherit pub_attribs_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_methods_class_alpha_beta"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_class_alpha_beta')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_alpha_beta.html">AlphaBeta</a></td></tr>
-<tr class="memitem:a8bcc9a3133d85ac79f44e4db9f4f6504 inherit pro_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a8bcc9a3133d85ac79f44e4db9f4f6504">heuristicValue</a> ()</td></tr>
-<tr class="memdesc:a8bcc9a3133d85ac79f44e4db9f4f6504 inherit pro_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">A member used to estimate the value of a position.  <br /></td></tr>
-<tr class="separator:a8bcc9a3133d85ac79f44e4db9f4f6504 inherit pro_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac337120a5293eb546352e7e9d8638f89 inherit pro_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ac337120a5293eb546352e7e9d8638f89">updateHeuristicValue</a> (const uint_fast64_t &amp;<a class="el" href="class_chinese_checkers.html#a95fcf9d29ed0358eb62f0ba82d70fa71">move</a>)</td></tr>
-<tr class="memdesc:ac337120a5293eb546352e7e9d8638f89 inherit pro_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates <a class="el" href="class_alpha_beta.html#a3e9eb1d69b18495c4d1eb48ea426a2f3">heuristic_value_</a> for a move.  <br /></td></tr>
-<tr class="separator:ac337120a5293eb546352e7e9d8638f89 inherit pro_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7df037e15bdc721cbd4b4806147cf5ed inherit pro_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a7df037e15bdc721cbd4b4806147cf5ed">updateHeuristicValueBack</a> (const uint_fast64_t &amp;<a class="el" href="class_chinese_checkers.html#a95fcf9d29ed0358eb62f0ba82d70fa71">move</a>)</td></tr>
-<tr class="memdesc:a7df037e15bdc721cbd4b4806147cf5ed inherit pro_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates <a class="el" href="class_alpha_beta.html#a3e9eb1d69b18495c4d1eb48ea426a2f3">heuristic_value_</a> when a move is canceled.  <br /></td></tr>
-<tr class="separator:a7df037e15bdc721cbd4b4806147cf5ed inherit pro_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77a9f85920a3f10c03d9003d78468e02 inherit pro_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a77a9f85920a3f10c03d9003d78468e02">tensorflowOrderMoves</a> (<a class="el" href="_types_8hpp.html#a8598148c10b670d2dcd865d177f7f8d3">ListOfMoves</a> &amp;possible_moves)</td></tr>
-<tr class="memdesc:a77a9f85920a3f10c03d9003d78468e02 inherit pro_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">A member used to order the moves before exploring them.  <br /></td></tr>
-<tr class="separator:a77a9f85920a3f10c03d9003d78468e02 inherit pro_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8dc0d94aa839f825e7ff1e97054888d0 inherit pro_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a8dc0d94aa839f825e7ff1e97054888d0">availableMoves</a> (std::vector&lt; uint_fast64_t &gt; &amp;result)</td></tr>
-<tr class="memdesc:a8dc0d94aa839f825e7ff1e97054888d0 inherit pro_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the list of available moves.  <br /></td></tr>
-<tr class="separator:a8dc0d94aa839f825e7ff1e97054888d0 inherit pro_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10d5f03431a4928d732ba0ab7f5307ee inherit pro_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a10d5f03431a4928d732ba0ab7f5307ee">AlphaBetaEval</a> (const int &amp;depth, double alpha, double beta, const bool &amp;maximizingPlayer, const bool &amp;keepMove)</td></tr>
-<tr class="memdesc:a10d5f03431a4928d732ba0ab7f5307ee inherit pro_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a step of the alpha beta algorithm.  <br /></td></tr>
-<tr class="separator:a10d5f03431a4928d732ba0ab7f5307ee inherit pro_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acff36450bea77f8ed7298eae120fd798 inherit pro_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#acff36450bea77f8ed7298eae120fd798">reverseMove</a> (const uint_fast64_t &amp;<a class="el" href="class_chinese_checkers.html#a95fcf9d29ed0358eb62f0ba82d70fa71">move</a>)</td></tr>
-<tr class="memdesc:acff36450bea77f8ed7298eae120fd798 inherit pro_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cancel the last move.  <br /></td></tr>
-<tr class="separator:acff36450bea77f8ed7298eae120fd798 inherit pro_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b98cb4998a913298cea216f8d35b432 inherit pro_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#ac71100c33eb0cab30b54caf2736a8121">ListOfPositionType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a0b98cb4998a913298cea216f8d35b432">retrieveMoves</a> (const uint_fast64_t &amp;<a class="el" href="class_chinese_checkers.html#a95fcf9d29ed0358eb62f0ba82d70fa71">move</a>)</td></tr>
-<tr class="memdesc:a0b98cb4998a913298cea216f8d35b432 inherit pro_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the full path of a move from a simple bit mask.  <br /></td></tr>
-<tr class="separator:a0b98cb4998a913298cea216f8d35b432 inherit pro_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc83ccc2a943f321898cdebf29334951 inherit pro_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#afc83ccc2a943f321898cdebf29334951">hashGrid</a> ()</td></tr>
-<tr class="memdesc:afc83ccc2a943f321898cdebf29334951 inherit pro_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hashes the grid.  <br /></td></tr>
-<tr class="separator:afc83ccc2a943f321898cdebf29334951 inherit pro_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_methods_class_chinese_checkers"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_class_chinese_checkers')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_chinese_checkers.html">ChineseCheckers</a></td></tr>
-<tr class="memitem:a4e0366b1b08e703507a7948c1439e026 inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#ab152e38addc9865a033ed991583c1395">MoveType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a4e0366b1b08e703507a7948c1439e026">elementaryMove</a> (const <a class="el" href="_types_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a> &amp;original_position, const <a class="el" href="_types_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a> &amp;arrival_position)</td></tr>
-<tr class="memdesc:a4e0366b1b08e703507a7948c1439e026 inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">A member returning the type of an elementary move (not a succession of jumps).  <br /></td></tr>
-<tr class="separator:a4e0366b1b08e703507a7948c1439e026 inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf3fee8d8c34b6f4ab67c9290ef63b5b inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#adf3fee8d8c34b6f4ab67c9290ef63b5b">isPositionIllegal</a> ()</td></tr>
-<tr class="memdesc:adf3fee8d8c34b6f4ab67c9290ef63b5b inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the position is illegal or not.  <br /></td></tr>
-<tr class="separator:adf3fee8d8c34b6f4ab67c9290ef63b5b inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a614ed943e26de29c232f381ada130cb7 inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a614ed943e26de29c232f381ada130cb7">cantorPairingFunction</a> (const int &amp;x, const int &amp;y)</td></tr>
-<tr class="memdesc:a614ed943e26de29c232f381ada130cb7 inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cantor's pairing function.  <br /></td></tr>
-<tr class="separator:a614ed943e26de29c232f381ada130cb7 inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe251e1b58dc7f9fef73132d38a4468e inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#abe251e1b58dc7f9fef73132d38a4468e">loadIllegalPositions</a> ()</td></tr>
-<tr class="memdesc:abe251e1b58dc7f9fef73132d38a4468e inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads illegal positions.  <br /></td></tr>
-<tr class="separator:abe251e1b58dc7f9fef73132d38a4468e inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:afa533a06eb948b5394498f55b6e94131"><td class="memItemLeft" align="right" valign="top">boost::unordered_map&lt; bitBoards_t, uint_fast64_t, bitBoardsHasher, bitBoardsEqual &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_intuition_data_generator.html#afa533a06eb948b5394498f55b6e94131">transposition_table_permanent_</a></td></tr>
+<tr class="separator:afa533a06eb948b5394498f55b6e94131"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_alpha_beta"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_class_alpha_beta')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_alpha_beta.html">AlphaBeta</a></td></tr>
 <tr class="memitem:a78f49fcff5ed718a9f200b7a9413ea58 inherit pro_attribs_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a78f49fcff5ed718a9f200b7a9413ea58">player_to_win_value_</a></td></tr>
 <tr class="memdesc:a78f49fcff5ed718a9f200b7a9413ea58 inherit pro_attribs_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">This matrix indicates the values we will assign to each pawns when we compute the heuristic value for the player we are playing for.  <br /></td></tr>
@@ -278,7 +240,7 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a4c497c4f5103a9edb75ef2691765760c inherit pro_attribs_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4d6a9def1ef6dd145c2922f92b2c666 inherit pro_attribs_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">boost::unordered_map&lt; bitBoards_t, uint_fast64_t, bitBoardsHasher, bitBoardsEqual &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ae4d6a9def1ef6dd145c2922f92b2c666">opening_</a></td></tr>
 <tr class="separator:ae4d6a9def1ef6dd145c2922f92b2c666 inherit pro_attribs_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2a6d244b7e6baafc1a50afc2d8add6a inherit pro_attribs_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">cppflow::model *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ab2a6d244b7e6baafc1a50afc2d8add6a">model</a> = new cppflow::model(&quot;./raw_data/model&quot;)</td></tr>
+<tr class="memitem:ab2a6d244b7e6baafc1a50afc2d8add6a inherit pro_attribs_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">cppflow::model *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ab2a6d244b7e6baafc1a50afc2d8add6a">model</a> = new cppflow::model(&quot;model&quot;)</td></tr>
 <tr class="separator:ab2a6d244b7e6baafc1a50afc2d8add6a inherit pro_attribs_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82abaf5b3233e162a30d72884157eef8 inherit pro_attribs_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">boost::unordered_map&lt; uint_fast64_t, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a82abaf5b3233e162a30d72884157eef8">ctz_</a></td></tr>
 <tr class="separator:a82abaf5b3233e162a30d72884157eef8 inherit pro_attribs_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -321,18 +283,64 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:aa95ef9813edd2b656cad12be87718b90 inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e00bb842e8295fad0676c2ce7159a6e inherit pro_attribs_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; uint_fast64_t, std::vector&lt; std::vector&lt; std::pair&lt; std::pair&lt; uint_fast64_t, uint_fast64_t &gt;, uint_fast64_t &gt; &gt; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a1e00bb842e8295fad0676c2ce7159a6e">k_neighbours_</a></td></tr>
 <tr class="separator:a1e00bb842e8295fad0676c2ce7159a6e inherit pro_attribs_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_attribs_class_alpha_beta"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_class_alpha_beta')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_alpha_beta.html">AlphaBeta</a></td></tr>
+<tr class="memitem:a3d40c3729a5c385923d176e164ef8f62 inherit pub_attribs_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a3d40c3729a5c385923d176e164ef8f62">rank</a></td></tr>
+<tr class="separator:a3d40c3729a5c385923d176e164ef8f62 inherit pub_attribs_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7dbc30dc178571d289c68aa8faa589a4 inherit pub_attribs_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a7dbc30dc178571d289c68aa8faa589a4">number_of_moves</a></td></tr>
+<tr class="separator:a7dbc30dc178571d289c68aa8faa589a4 inherit pub_attribs_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_class_alpha_beta"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_class_alpha_beta')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_alpha_beta.html">AlphaBeta</a></td></tr>
+<tr class="memitem:a8bcc9a3133d85ac79f44e4db9f4f6504 inherit pro_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a8bcc9a3133d85ac79f44e4db9f4f6504">heuristicValue</a> ()</td></tr>
+<tr class="memdesc:a8bcc9a3133d85ac79f44e4db9f4f6504 inherit pro_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">A member used to estimate the value of a position.  <br /></td></tr>
+<tr class="separator:a8bcc9a3133d85ac79f44e4db9f4f6504 inherit pro_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac337120a5293eb546352e7e9d8638f89 inherit pro_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ac337120a5293eb546352e7e9d8638f89">updateHeuristicValue</a> (const uint_fast64_t &amp;<a class="el" href="class_chinese_checkers.html#a95fcf9d29ed0358eb62f0ba82d70fa71">move</a>)</td></tr>
+<tr class="memdesc:ac337120a5293eb546352e7e9d8638f89 inherit pro_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates <a class="el" href="class_alpha_beta.html#a3e9eb1d69b18495c4d1eb48ea426a2f3">heuristic_value_</a> for a move.  <br /></td></tr>
+<tr class="separator:ac337120a5293eb546352e7e9d8638f89 inherit pro_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7df037e15bdc721cbd4b4806147cf5ed inherit pro_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a7df037e15bdc721cbd4b4806147cf5ed">updateHeuristicValueBack</a> (const uint_fast64_t &amp;<a class="el" href="class_chinese_checkers.html#a95fcf9d29ed0358eb62f0ba82d70fa71">move</a>)</td></tr>
+<tr class="memdesc:a7df037e15bdc721cbd4b4806147cf5ed inherit pro_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates <a class="el" href="class_alpha_beta.html#a3e9eb1d69b18495c4d1eb48ea426a2f3">heuristic_value_</a> when a move is canceled.  <br /></td></tr>
+<tr class="separator:a7df037e15bdc721cbd4b4806147cf5ed inherit pro_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bf6b4190b5d1042fc667933f2d7f535 inherit pro_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a2bf6b4190b5d1042fc667933f2d7f535">tensorflowSortMoves</a> (std::vector&lt; uint_fast64_t &gt; &amp;possible_moves)</td></tr>
+<tr class="memdesc:a2bf6b4190b5d1042fc667933f2d7f535 inherit pro_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">A member used to order the moves before exploring them.  <br /></td></tr>
+<tr class="separator:a2bf6b4190b5d1042fc667933f2d7f535 inherit pro_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae767c8767aae649aa519d7d13b46f1b4 inherit pro_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#ae767c8767aae649aa519d7d13b46f1b4">bitBoardsAsVector</a> (const bitBoards_t &amp;bb)</td></tr>
+<tr class="memdesc:ae767c8767aae649aa519d7d13b46f1b4 inherit pro_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a representation of a given bit board as a vector.  <br /></td></tr>
+<tr class="separator:ae767c8767aae649aa519d7d13b46f1b4 inherit pro_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acff36450bea77f8ed7298eae120fd798 inherit pro_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#acff36450bea77f8ed7298eae120fd798">reverseMove</a> (const uint_fast64_t &amp;<a class="el" href="class_chinese_checkers.html#a95fcf9d29ed0358eb62f0ba82d70fa71">move</a>)</td></tr>
+<tr class="memdesc:acff36450bea77f8ed7298eae120fd798 inherit pro_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cancel the last move.  <br /></td></tr>
+<tr class="separator:acff36450bea77f8ed7298eae120fd798 inherit pro_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b98cb4998a913298cea216f8d35b432 inherit pro_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#ac71100c33eb0cab30b54caf2736a8121">ListOfPositionType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#a0b98cb4998a913298cea216f8d35b432">retrieveMoves</a> (const uint_fast64_t &amp;<a class="el" href="class_chinese_checkers.html#a95fcf9d29ed0358eb62f0ba82d70fa71">move</a>)</td></tr>
+<tr class="memdesc:a0b98cb4998a913298cea216f8d35b432 inherit pro_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the full path of a move from a simple bit mask.  <br /></td></tr>
+<tr class="separator:a0b98cb4998a913298cea216f8d35b432 inherit pro_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc83ccc2a943f321898cdebf29334951 inherit pro_methods_class_alpha_beta"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_alpha_beta.html#afc83ccc2a943f321898cdebf29334951">hashGrid</a> ()</td></tr>
+<tr class="memdesc:afc83ccc2a943f321898cdebf29334951 inherit pro_methods_class_alpha_beta"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hashes the grid.  <br /></td></tr>
+<tr class="separator:afc83ccc2a943f321898cdebf29334951 inherit pro_methods_class_alpha_beta"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_class_chinese_checkers"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_class_chinese_checkers')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_chinese_checkers.html">ChineseCheckers</a></td></tr>
+<tr class="memitem:a4e0366b1b08e703507a7948c1439e026 inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8hpp.html#ab152e38addc9865a033ed991583c1395">MoveType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a4e0366b1b08e703507a7948c1439e026">elementaryMove</a> (const <a class="el" href="_types_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a> &amp;original_position, const <a class="el" href="_types_8hpp.html#aa80fe4e9a559009407475c9587214b48">PositionType</a> &amp;arrival_position)</td></tr>
+<tr class="memdesc:a4e0366b1b08e703507a7948c1439e026 inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">A member returning the type of an elementary move (not a succession of jumps).  <br /></td></tr>
+<tr class="separator:a4e0366b1b08e703507a7948c1439e026 inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf3fee8d8c34b6f4ab67c9290ef63b5b inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#adf3fee8d8c34b6f4ab67c9290ef63b5b">isPositionIllegal</a> ()</td></tr>
+<tr class="memdesc:adf3fee8d8c34b6f4ab67c9290ef63b5b inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the position is illegal or not.  <br /></td></tr>
+<tr class="separator:adf3fee8d8c34b6f4ab67c9290ef63b5b inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a614ed943e26de29c232f381ada130cb7 inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#a614ed943e26de29c232f381ada130cb7">cantorPairingFunction</a> (const int &amp;x, const int &amp;y)</td></tr>
+<tr class="memdesc:a614ed943e26de29c232f381ada130cb7 inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cantor's pairing function.  <br /></td></tr>
+<tr class="separator:a614ed943e26de29c232f381ada130cb7 inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe251e1b58dc7f9fef73132d38a4468e inherit pro_methods_class_chinese_checkers"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chinese_checkers.html#abe251e1b58dc7f9fef73132d38a4468e">loadIllegalPositions</a> ()</td></tr>
+<tr class="memdesc:abe251e1b58dc7f9fef73132d38a4468e inherit pro_methods_class_chinese_checkers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads illegal positions.  <br /></td></tr>
+<tr class="separator:abe251e1b58dc7f9fef73132d38a4468e inherit pro_methods_class_chinese_checkers"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This class is used to generate the data required for the intuition learning process. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac1090ada9fec835dd3ccaeeb56141a65" name="ac1090ada9fec835dd3ccaeeb56141a65"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac1090ada9fec835dd3ccaeeb56141a65">&#9670;&#160;</a></span>evalAllMoves()</h2>
+<a id="a72326a30064eaf18a50ab97fd30c1ab2" name="a72326a30064eaf18a50ab97fd30c1ab2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72326a30064eaf18a50ab97fd30c1ab2">&#9670;&#160;</a></span>evalAllMoves()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::pair&lt; std::vector&lt; std::vector&lt; int &gt; &gt;, std::vector&lt; double &gt; &gt; IntuitionDataGenerator::evalAllMoves </td>
+          <td class="memname">std::pair&lt; std::vector&lt; bitBoards_t &gt;, std::vector&lt; double &gt; &gt; IntuitionDataGenerator::evalAllMoves </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>depth</em></td><td>)</td>
@@ -341,14 +349,14 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>this function is used to eval all possible moves </p>
+<p>this function is used to eval all possible moves. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">depth</td><td>The depth used by the alpha beta algorithm </td></tr>
+    <tr><td class="paramname">depth</td><td>The depth used by the alpha beta algorithm. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The evaluation associated with each move and the grid obtained after each move </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The evaluation associated with each move and the grid obtained after each move. </dd></dl>
 
 </div>
 </div>
@@ -367,29 +375,33 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Fill the transTable with the data we already calculated. </p>
+<p>Fill the <a class="el" href="class_alpha_beta.html#a75368e2c2c4b86ceab825ed0bc94c588">transposition_table_</a> with the data we already calculated. </p>
 
 </div>
 </div>
-<a id="aceeab2ca277f1744070bb2810088f740" name="aceeab2ca277f1744070bb2810088f740"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aceeab2ca277f1744070bb2810088f740">&#9670;&#160;</a></span>saveVectorOfVectorToFile()</h2>
+<a id="ae0538aa8822b0d6038fd9b107188e3cc" name="ae0538aa8822b0d6038fd9b107188e3cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0538aa8822b0d6038fd9b107188e3cc">&#9670;&#160;</a></span>saveVectorOfBitBoardsToFiles()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void IntuitionDataGenerator::saveVectorOfVectorToFile </td>
+          <td class="memname">void IntuitionDataGenerator::saveVectorOfBitBoardsToFiles </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; std::vector&lt; T &gt; &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; bitBoards_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>input</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>outputFileName</em>&#160;</td>
+          <td class="paramname"><em>outputFileNameW</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>outputFileNameB</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -400,16 +412,10 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Save a matrix to a file. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">input</td><td>The matrix to save </td></tr>
-    <tr><td class="paramname">outputFileName</td><td>The name of the file we need to save the data to </td></tr>
+    <tr><td class="paramname">input</td><td>The matrix to save. </td></tr>
+    <tr><td class="paramname">outputFileName</td><td>The name of the file we need to save the data to. </td></tr>
   </table>
   </dd>
 </dl>
@@ -453,11 +459,34 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">input</td><td>The vector to save </td></tr>
-    <tr><td class="paramname">outputFileName</td><td>The name of the file we need to save the data to </td></tr>
+    <tr><td class="paramname">input</td><td>The vector to save. </td></tr>
+    <tr><td class="paramname">outputFileName</td><td>The name of the file we need to save the data to. </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="afa533a06eb948b5394498f55b6e94131" name="afa533a06eb948b5394498f55b6e94131"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa533a06eb948b5394498f55b6e94131">&#9670;&#160;</a></span>transposition_table_permanent_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">boost::unordered_map&lt;bitBoards_t, uint_fast64_t, bitBoardsHasher, bitBoardsEqual&gt; IntuitionDataGenerator::transposition_table_permanent_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

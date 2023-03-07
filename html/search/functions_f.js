@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['tensorflowordermoves_0',['tensorflowOrderMoves',['../class_alpha_beta.html#a77a9f85920a3f10c03d9003d78468e02',1,'AlphaBeta']]]
+  ['tensorflowsortmoves_0',['tensorflowSortMoves',['../class_alpha_beta.html#a2bf6b4190b5d1042fc667933f2d7f535',1,'AlphaBeta']]]
 ];

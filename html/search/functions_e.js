@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['savevectorofvectortofile_0',['saveVectorOfVectorToFile',['../class_intuition_data_generator.html#aceeab2ca277f1744070bb2810088f740',1,'IntuitionDataGenerator']]],
+  ['savevectorofbitboardstofiles_0',['saveVectorOfBitBoardsToFiles',['../class_intuition_data_generator.html#ae0538aa8822b0d6038fd9b107188e3cc',1,'IntuitionDataGenerator']]],
   ['savevectortofile_1',['saveVectorToFile',['../class_intuition_data_generator.html#a4b2be184906d16ef42b4f512b08e43ec',1,'IntuitionDataGenerator']]],
   ['set_5fblack_5fplayer_2',['set_black_player',['../class_game_player.html#a0f5d4585309cfee63a1d19e45352c391',1,'GamePlayer']]],
   ['set_5fdepth_3',['set_depth',['../class_game_player.html#a9519ea3171115631df6f5bac00a6ed1c',1,'GamePlayer']]],

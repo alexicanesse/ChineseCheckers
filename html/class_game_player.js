@@ -10,8 +10,6 @@ var class_game_player =
     [ "set_depth", "class_game_player.html#a9519ea3171115631df6f5bac00a6ed1c", null ],
     [ "set_white_player", "class_game_player.html#a21a274e81a2d89c84ee3bc30943db5c3", null ],
     [ "black_player", "class_game_player.html#a4f3dc77f70306d697e5c887d614c54d3", null ],
-    [ "black_triangle", "class_game_player.html#a8cee2fc4e7dd30ab7e7a321fa24734e7", null ],
     [ "depth", "class_game_player.html#addc2d46e9812c43d20d760ff0d8dd781", null ],
-    [ "white_player", "class_game_player.html#a2b4f89007469d5de593bd392bd6580aa", null ],
-    [ "white_triangle", "class_game_player.html#a1366dc7b368b44fa4b0c9dab94fef159", null ]
+    [ "white_player", "class_game_player.html#a2b4f89007469d5de593bd392bd6580aa", null ]
 ];

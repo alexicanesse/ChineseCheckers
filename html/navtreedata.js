@@ -101,7 +101,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_alpha_beta_8cpp.html",
-"tournament_8hpp.html#aa3ac02038b98a7d1b39dbdc311f9ccaf"
+"tournament_8hpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['savevectorofvectortofile_0',['saveVectorOfVectorToFile',['../class_intuition_data_generator.html#aceeab2ca277f1744070bb2810088f740',1,'IntuitionDataGenerator']]],
+  ['savevectorofbitboardstofiles_0',['saveVectorOfBitBoardsToFiles',['../class_intuition_data_generator.html#ae0538aa8822b0d6038fd9b107188e3cc',1,'IntuitionDataGenerator']]],
   ['savevectortofile_1',['saveVectorToFile',['../class_intuition_data_generator.html#a4b2be184906d16ef42b4f512b08e43ec',1,'IntuitionDataGenerator']]],
   ['score_2',['score',['../class_solvers_individuals.html#a74abad79e318f5343356594267577d77',1,'SolversIndividuals']]],
   ['seed_3',['seed',['../tournament_8cpp.html#acf74842513df74d6b7d338cac0c647fb',1,'tournament.cpp']]],
