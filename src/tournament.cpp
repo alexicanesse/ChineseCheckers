@@ -56,9 +56,9 @@
 #define SELECTION_RATIO 1
 
 /* Number of solvers in the evolution */
-#define POP_SIZE 200
+#define POP_SIZE 10
 /* Number of generations in the evolution */
-#define NUM_GENERATION 1000
+#define NUM_GENERATION 10
 /* Number of generation training white or black players */
 #define ROUND_LENGTH 2000
 /* Maximum number of moves authorized in a evolution game */
