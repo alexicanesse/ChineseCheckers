@@ -35,6 +35,7 @@
 #include <unordered_map>
 #include <utility>
 #include <fstream>
+#include <iomanip>
 #include <boost/unordered_map.hpp>
 
 /* Other */
@@ -319,7 +320,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     else std::sort(possible_moves.begin(), possible_moves.end(), comp_move_);
 
     /* We do not consider all moves in order to have a speed up */
-    if (MINUS_INFTY != beta) possible_moves.resize(std::min(15UL, possible_moves.size()));
+    //if (MINUS_INFTY != beta) possible_moves.resize(std::min(15UL, possible_moves.size()));
 
 
     double value = maximizingPlayer ? MINUS_INFTY - 1 : PLUS_INFTY + 1;
@@ -382,7 +383,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     }
 
     /* store the value in the transposition table */
-    transposition_table_.emplace(bit_boards_, std::make_pair(value, depth));
+    if (depth < fullDepth_ - 1) transposition_table_.emplace(bit_boards_, std::make_pair(value, depth));
 
     /* return value */
     return value;
