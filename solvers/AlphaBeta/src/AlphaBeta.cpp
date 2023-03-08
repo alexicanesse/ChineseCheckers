@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <iomanip>
 #include <cppflow/cppflow.h>
 
 /* C++ Libraries */
@@ -294,15 +295,14 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
         return maximizing_player_ ? MINUS_INFTY : PLUS_INFTY;
     }
 
-    uint_fast64_t hash = hashGrid();
-    if (number_of_times_seen_[hash] == MAX_NUMBER_OF_CYCLES_FOR_DRAW_) { /* Is there a draw ? */
+    if (number_of_times_seen_[zobrist_hash_] == MAX_NUMBER_OF_CYCLES_FOR_DRAW_) { /* Is there a draw ? */
         return DRAW_VALUE;
     } else { /* the game is not over */
         if (depth == 0)
             return heuristic_value_;
 
         /* Use a transposition table to boost performances */
-        it_transposition_table_ = transposition_table_.find(bit_boards_);
+        it_transposition_table_ = transposition_table_.find(zobrist_hash_);
         if (it_transposition_table_ != transposition_table_.end()
             && it_transposition_table_->second.second == depth) {
             /* retrieve the value from the transposition table */
@@ -319,7 +319,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     else std::sort(possible_moves.begin(), possible_moves.end(), comp_move_);
 
     /* We do not consider all moves in order to have a speed up */
-    if (MINUS_INFTY != beta) possible_moves.resize(std::min(15UL, possible_moves.size()));
+    //if (MINUS_INFTY != beta) possible_moves.resize(std::min(15UL, possible_moves.size()));
 
 
     double value = maximizingPlayer ? MINUS_INFTY - 1 : PLUS_INFTY + 1;
@@ -335,14 +335,14 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
 //temp
         ++r;
         updateHeuristicValue(move);
+        zobrist_hash_ ^= zobrist_keys_moves_[who_is_to_play_][move];
 
         /* Applying the move */
         who_is_to_play_ ? bit_boards_.Black ^= move : bit_boards_.White ^= move;
         who_is_to_play_ ^= 1;
 
         /* indicates that this position has been seen another time */
-        uint64_t hash = hashGrid();
-        ++number_of_times_seen_[hash];
+        ++number_of_times_seen_[zobrist_hash_];
 
 
         /* Checks for an illegal position */
@@ -358,8 +358,10 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
                              !maximizingPlayer,
                              false);
 
-        --number_of_times_seen_[hash];
+        --number_of_times_seen_[zobrist_hash_];
         who_is_to_play_ ^= 1;
+
+        zobrist_hash_ ^= zobrist_keys_moves_[who_is_to_play_][move];
         who_is_to_play_ ? bit_boards_.Black ^= move : bit_boards_.White ^= move;
 
         updateHeuristicValueBack(move);
@@ -382,7 +384,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     }
 
     /* store the value in the transposition table */
-    transposition_table_.emplace(bit_boards_, std::make_pair(value, depth));
+    if (depth < fullDepth_ - 1) transposition_table_.emplace(zobrist_hash_, std::make_pair(value, depth));
 
     /* return value */
     return value;
@@ -447,8 +449,10 @@ inline void AlphaBeta::updateHeuristicValueBack(const uint_fast64_t &move) {
 }
 
 void AlphaBeta::reverseMove(const uint_fast64_t &move) {
-    --number_of_times_seen_[hashGrid()];
+    --number_of_times_seen_[zobrist_hash_];
     who_is_to_play_ ^= 1;
+
+    zobrist_hash_ ^= zobrist_keys_moves_[who_is_to_play_][move];
     who_is_to_play_ ? bit_boards_.Black ^= move : bit_boards_.White ^= move;
 }
 

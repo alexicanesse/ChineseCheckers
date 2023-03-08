@@ -20,6 +20,8 @@
 #include <unordered_map>
 #include <fstream>
 #include <iomanip>
+#include <random>
+#include <chrono>
 #include <boost/unordered_map.hpp>
 /* The following pragma are used to removed deprecation warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
@@ -160,6 +162,7 @@ ChineseCheckers::ChineseCheckers() {
 
     newGame();
     loadIllegalPositions();
+    generateZobristKeys();
 }
 
 bool ChineseCheckers::move(const Player &player,
@@ -220,14 +223,13 @@ bool ChineseCheckers::move(const Player &player,
         return false;
     }
 
+    zobrist_hash_ ^= zobrist_keys_moves_[who_is_to_play_][
+              (un_64_ << (list_moves[  0][0]*8 + list_moves[  0][1]))
+            | (un_64_ << (list_moves[n-1][0]*8 + list_moves[n-1][1]))];
     who_is_to_play_ ^= 1;
 
     /* indicates that this position has been seen another time */
-    uint64_t hash = hashGrid();
-    if (number_of_times_seen_.find(hash) != number_of_times_seen_.end())
-        number_of_times_seen_[hash]++;
-    else
-        number_of_times_seen_.emplace(hash, 1);
+    ++number_of_times_seen_[zobrist_hash_];
 
     return true;
 }
@@ -238,14 +240,12 @@ void ChineseCheckers::moveWithoutVerification(const uint_fast64_t &move) {
     else
         bit_boards_.White ^= move;
 
+    zobrist_hash_ ^= zobrist_keys_moves_[who_is_to_play_][move];
+
     who_is_to_play_ ^= 1;
 
     /* indicates that this position has been seen another time */
-    uint64_t hash = hashGrid();
-    if (number_of_times_seen_.find(hash) != number_of_times_seen_.end())
-        ++number_of_times_seen_[hash];
-    else
-        number_of_times_seen_.emplace(hash, 1);
+    ++number_of_times_seen_[zobrist_hash_];
 }
 
 /*
@@ -266,7 +266,7 @@ Result ChineseCheckers::stateOfGame() {
         return BlackWon;
 
     /* Check for a draw */
-    if (number_of_times_seen_[hashGrid()]
+    if (number_of_times_seen_[zobrist_hash_]
                                 == MAX_NUMBER_OF_CYCLES_FOR_DRAW_)
         return Draw;
     return NotFinished;
@@ -279,10 +279,13 @@ void ChineseCheckers::newGame() {
 
     who_is_to_play_ = 0;
 
+    /* Initialize the Zobrist hash value */
+    computeAndSetZobristHash();
+
     /* init the history */
     number_of_times_seen_.clear();
     number_of_times_seen_.reserve(63);
-    number_of_times_seen_[hashGrid()] = 1;
+    number_of_times_seen_[zobrist_hash_] = 1;
 }
 
 void ChineseCheckers::printGrid() {
@@ -305,11 +308,6 @@ void ChineseCheckers::printWhoIsToPlay() {
 
 Player ChineseCheckers::getWhoIsToPlay() const {
     return who_is_to_play_;
-}
-
-boost::unordered_map<uint64_t, int>
-        ChineseCheckers::getNumberOfTimesSeen() const {
-    return number_of_times_seen_;
 }
 
 
@@ -437,4 +435,35 @@ uint_fast64_t ChineseCheckers::getBitBoardWhite() {
 
 uint_fast64_t ChineseCheckers::getBitBoardBlack() {
     return bit_boards_.Black;
+}
+
+
+void ChineseCheckers::generateZobristKeys() {
+    /* get a seed from system's clock */
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::mt19937_64 mt(seed);
+
+    for (uint_fast64_t i = un_64_; i; i <<= 1) {
+        zobrist_keys_[0][i] = mt();
+        zobrist_keys_[1][i] = mt();
+    }
+
+    for (int i = 0; i < 64; ++i) {
+        for (int j = 0; j < i; ++j){
+            zobrist_keys_moves_[0][(un_64_ << i) | (un_64_ << j)] =
+                    zobrist_keys_[0][(un_64_ << i)] ^ zobrist_keys_[0][(un_64_ << j)];
+            zobrist_keys_moves_[1][(un_64_ << i) | (un_64_ << j)] =
+                    zobrist_keys_[1][(un_64_ << i)] ^ zobrist_keys_[1][(un_64_ << j)];
+        }
+    }
+}
+
+void ChineseCheckers::computeAndSetZobristHash() {
+    zobrist_hash_ = 0xFFFFFFFFFFFFFFFF;
+    for (uint_fast64_t i = un_64_; i; i <<= 1) {
+        if (bit_boards_.White & i)
+            zobrist_hash_ ^= zobrist_keys_[0][i];
+        if (bit_boards_.Black & i)
+            zobrist_hash_ ^= zobrist_keys_[1][i];
+    }
 }
