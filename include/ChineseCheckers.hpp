@@ -51,14 +51,6 @@ class ChineseCheckers {
     Player who_is_to_play_ = 0;
     /*! A data structure containing the grid. */
     bitBoards_t bit_boards_;
-    /*! The hash of the current grid. */
-    uint_fast64_t  zobrist_hash_;
-    /*! Zobrist keys associated with each positions. */
-    std::vector<boost::unordered_map<uint_fast64_t, uint_fast64_t> > zobrist_keys_ =
-            std::vector<boost::unordered_map<uint_fast64_t, uint_fast64_t> >(2);
-    /*! Zobrist keys associated to a move. */
-    std::vector<boost::unordered_map<uint_fast64_t, uint_fast64_t> > zobrist_keys_moves_ =
-            std::vector<boost::unordered_map<uint_fast64_t, uint_fast64_t> >(2);
     /*!
      * Indicates the number of times a position has been seen.
      * It is used to check for draws.
@@ -127,17 +119,6 @@ class ChineseCheckers {
      * @sa cantorPairingFunction
      */
     void loadIllegalPositions();
-
-    /*!
-     * @brief Generates @ref zobrist_keys_.
-     * @sa computeAndSetZobristHash
-     */
-    void generateZobristKeys();
-    /*!
-     * @brief Computes and sets @ref zobrist_hash_.
-     * @sa generateZobristKeys
-     */
-    void computeAndSetZobristHash();
  public:
     /*! @brief
      * A simple constructor.
@@ -194,6 +175,11 @@ class ChineseCheckers {
      * @return @ref who_is_to_play_
      */
     Player getWhoIsToPlay() const;
+    /*! @brief
+     * Returns @ref number_of_times_seen_
+     * @return @ref number_of_times_seen_
+     */
+    boost::unordered_map<uint64_t, int> getNumberOfTimesSeen() const;
     /*! @brief
      * Returns @ref bit_boards_.White
      * @return @ref bit_boards_.White

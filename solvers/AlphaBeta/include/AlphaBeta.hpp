@@ -82,9 +82,9 @@ class AlphaBeta : public ChineseCheckers{
     uint_fast64_t best_move_;
 
     /*! Transposition table used to store the results of previous searches. */
-    boost::unordered_map<uint_fast64_t, std::pair<double, int>> transposition_table_;
+    boost::unordered_map<bitBoards_t, std::pair<double, int>, bitBoardsHasher, bitBoardsEqual> transposition_table_;
     /*! Iterator used to find elements through the transposition table. */
-    boost::unordered_map<uint_fast64_t, std::pair<double, int>>::iterator it_transposition_table_;
+    boost::unordered_map<bitBoards_t, std::pair<double, int>>::iterator it_transposition_table_;
     /*! Map of pre-computed optimal openings. */
     boost::unordered_map<bitBoards_t, uint_fast64_t , bitBoardsHasher, bitBoardsEqual> opening_;
     /*! Tensorflow model used by @ref tensorflowOrderMoves. */
