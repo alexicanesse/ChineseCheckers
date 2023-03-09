@@ -26,6 +26,7 @@
 #include <iomanip>
 #include <limits>
 #include <fstream>
+#include <thread>
 
 /* The following pragma are used to removed deprecation warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
@@ -56,7 +57,7 @@
 #define SELECTION_RATIO 1
 
 /* Number of solvers in the evolution */
-#define POP_SIZE 10
+#define POP_SIZE 800
 /* Number of generations in the evolution */
 #define NUM_GENERATION 10
 /* Number of generation training white or black players */
@@ -77,6 +78,7 @@
 /* Mean for initialisation */
 #define SIGMA_INIT 0.1
 
+#define N_THREADS 4
 
 /* Creating distribution generators */
 //const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -84,11 +86,15 @@ const unsigned seed = 818934826;
 /* Use std::random_device generator; for true randomness */
 std::mt19937 generator(seed);
 std::bernoulli_distribution b_distrib(P_MUTATION);
+std::bernoulli_distribution unif_b_distrib(0.5);
 std::normal_distribution<double> n_distrib(0, SIGMA_MUTATION);
 std::normal_distribution<double> n_distrib_for_initialisation(MEAN_INIT, SIGMA_INIT);
+std::uniform_int_distribution<> int_distrib(0, 100*POP_SIZE );
 auto mutates   = std::bind(b_distrib, generator);
 auto variation = std::bind(n_distrib, generator);
 auto initiator_ = std::bind(n_distrib_for_initialisation,generator);
+auto unif_bernouilli = std::bind(unif_b_distrib,generator);
+auto unif_int = std::bind(int_distrib,generator);
 
 
 #warning TODO: Do cross over
@@ -136,7 +142,8 @@ int main() {
                        << NUM_GENERATION << ","
                        << ROUND_LENGTH << "\n";
 
-    GamePlayer gp(AB_DEPTH);
+    //GamePlayer gp(AB_DEPTH); /*single thread*/
+    std::vector<ThreadGamePlayer> gps(N_THREADS);
 
     std::vector<SolversIndividuals> pop_white(POP_SIZE);
     std::vector<SolversIndividuals> pop_black(POP_SIZE);
@@ -153,7 +160,14 @@ int main() {
     SolversIndividuals best_black;
 
     /* Evolving white player at first */
-    gp.set_black_player(best_black);
+
+    //gp.set_black_player(best_black);/*single thread*/
+    for (int i = 0; i != N_THREADS; ++i) {
+        gps[i].start = i* POP_SIZE/N_THREADS;
+        gps[i].end = (i+1)* POP_SIZE/N_THREADS -1;
+        gps[i].gp.set_black_player(best_black);
+        gps[i].gp.set_depth(AB_DEPTH);
+    }
 
     double score = -2;  /* Minimum possible score */
     best_white.set_score(score);
@@ -166,20 +180,26 @@ int main() {
             is_white_evolving = !is_white_evolving;
             count = 0;
             if (is_white_evolving) {
-                gp.set_white_player(best_white);
+                //gp.set_white_player(best_white);/*single thread*/
+                for (int i = 0; i != N_THREADS; ++i)
+                    gps[i].gp.set_white_player(best_white);
                 best_white.print_info_as_matrix_to_file(white_best_players);
             } else {
-                gp.set_black_player(best_black);
+                //gp.set_black_player(best_black);/*single thread*/
+                for (int i = 0; i != N_THREADS; ++i)
+                    gps[i].gp.set_black_player(best_black);
                 best_black.print_info_as_matrix_to_file(black_best_players);
             }
         }
 
 
         if (is_white_evolving) {
-            evol(&gp, pop_white, &best_white, is_white_evolving);
+            //evol(gp, pop_white, &best_white, is_white_evolving);/*single thread*/
+            evol_thread(gps, pop_white, &best_white, is_white_evolving);
             write_scores(white_evol, pop_white, best_white, gen);
         } else {
-            evol(&gp, pop_black, &best_black, is_white_evolving);
+            //evol(gp, pop_black, &best_black, is_white_evolving);/*single thread*/
+            evol_thread(gps, pop_black, &best_black, is_white_evolving);
             write_scores(black_evol, pop_black, best_black, gen);
         }
 
@@ -210,10 +230,14 @@ int main() {
     best_black.print_info();
 
     if (!is_white_evolving) {
-        gp.set_white_player(best_white);
+        //gp.set_white_player(best_white);/*single thread*/
+        for (int i = 0; i != N_THREADS; ++i)
+            gps[i].gp.set_white_player(best_white);
         best_white.print_info_as_matrix_to_file(white_best_players);
     } else {
-        gp.set_black_player(best_black);
+        //gp.set_black_player(best_black);/*single thread*/
+        for (int i = 0; i != N_THREADS; ++i)
+            gps[i].gp.set_black_player(best_black);
         best_black.print_info_as_matrix_to_file(black_best_players);
     }
 
@@ -426,6 +450,17 @@ void SolversIndividuals::print_info_as_matrix_to_file(std::ofstream & file) {
     file << "}\n\n";
 }
 
+void SolversIndividuals::crossOver(const SolversIndividuals & Parent1, const SolversIndividuals & Parent2) {
+    auto p1w = Parent1.win;
+    auto p1l = Parent1.lose;
+    auto p2w = Parent2.win;
+    auto p2l = Parent2.lose;
+    for (int i = 0; i != 64; ++i) {
+        (unif_bernouilli()) ? this->win[i] = p1w[i] : this->win[i] = p2w[i];
+        (unif_bernouilli()) ? this->lose[i] = p1l[i] : this->win[i] = p2l[i];
+    }
+}
+
 void print_matrix(const std::vector<double> &matrix) {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j)
@@ -574,13 +609,15 @@ void write_scores(std::ofstream &file,
     }
 }
 
+
 void evol(GamePlayer *gp,
           std::vector<SolversIndividuals> &population,
           SolversIndividuals *best_player,
           bool is_white_evolving) {
-    double score = -2;
 
     /* Do every games */
+
+    double score = -2;
     for (int i = 0; i != POP_SIZE; ++i)  {
         if (is_white_evolving) {
             //std::cout << " -------------------------"<< std::endl;
@@ -601,37 +638,137 @@ void evol(GamePlayer *gp,
     if (population[0].get_score() > best_player->get_score())
         *best_player = population[0];
 
-    /* Selection */
+    /* Selection and reproduction */
     std::vector<double> cum_scores_normalized(POP_SIZE);
     double worst_score = population[POP_SIZE - 1].get_score();
     cum_scores_normalized[0] = population[0].get_score() - worst_score;
+    //Find m such that 
     for (int i = 1; i != POP_SIZE; ++i)
         cum_scores_normalized[i] = cum_scores_normalized[i-1]
                                     + population[i].get_score()
                                     - worst_score;
 
-    double step_length = cum_scores_normalized[POP_SIZE -1]*SELECTION_RATIO /((double) POP_SIZE);
+    double step_length = cum_scores_normalized[POP_SIZE -1]*SELECTION_RATIO /((double) POP_SIZE - 3);
     double position    = 0.0;
     int j              = 0;  /* Current solver taken for next gen */
     /* Starts at 1 to set population[0] to be the best player so far */
+    int m = 0;//last parent to reproduce
+    for (int i = POP_SIZE - 2; i != 0; --i) {
+        if (position > cum_scores_normalized[j])
+            ++m;
+        position += step_length;
+    }
+    //std::cout << "Last parent " << m << ":" << std::endl;
+    position = 0.0;
+    int other_parent = 0;
     for (int i = POP_SIZE - 2; i != 0; --i) {
         if (position > cum_scores_normalized[j])
             ++j;
-        population[i] = population[j];
+        other_parent = unif_int() % m;
+        //std::cout << "(" << j << " " << other_parent << ")";
+        if (other_parent == j) {
+            population[i] = population[j];
+        } else {
+            population[i] = population[j];
+            //population[i].crossOver(population[j],population[other_parent]);
+        } 
         position     += step_length;
     }
+    std::cout << std::endl;
     population[POP_SIZE - 1] = *best_player;
-
-    /*
-    population[POP_SIZE/2 -1] = *best_player;//best player always reproduce
-    for (int i =  POP_SIZE/2; i != POP_SIZE; ++i) {
-        population[i] = population[i - POP_SIZE/2];
-    }
-    */
-    /*Reproduction*/
 
     /*Mutation*/
     for (int i = 0; i != POP_SIZE; ++i) {
         population[i].mutate();
     }
 }
+
+
+void evol_thread(const std::vector<ThreadGamePlayer> & gps,
+          std::vector<SolversIndividuals> &population,
+          SolversIndividuals *best_player,
+          bool is_white_evolving) {
+    
+    /*Do every games */
+
+    std::vector<std::thread> threads;
+    for (int i = 0; i != N_THREADS; ++i) {
+        threads.push_back(std::thread(gps[i],std::ref(population),is_white_evolving));
+    }
+    for (int i = 0; i != N_THREADS; ++i) {
+        threads[i].join();
+    }
+    /* Sorts the population by their scores */
+    std::sort(population.begin(), population.end());
+
+    /* Saves the best solver */
+    if (population[0].get_score() > best_player->get_score())
+        *best_player = population[0];
+
+    /* Selection and reproduction */
+    std::vector<double> cum_scores_normalized(POP_SIZE);
+    double worst_score = population[POP_SIZE - 1].get_score();
+    cum_scores_normalized[0] = population[0].get_score() - worst_score;
+    //Find m such that 
+    for (int i = 1; i != POP_SIZE; ++i)
+        cum_scores_normalized[i] = cum_scores_normalized[i-1]
+                                    + population[i].get_score()
+                                    - worst_score;
+
+    double step_length = cum_scores_normalized[POP_SIZE -1]*SELECTION_RATIO /((double) POP_SIZE - 3);
+    double position    = 0.0;
+    int j              = 0;  /* Current solver taken for next gen */
+    /* Starts at 1 to set population[0] to be the best player so far */
+    int m = 0;//last parent to reproduce
+    for (int i = POP_SIZE - 2; i != 0; --i) {
+        if (position > cum_scores_normalized[j])
+            ++m;
+        position += step_length;
+    }
+    //std::cout << "Last parent " << m << ":" << std::endl;
+    position = 0.0;
+    int other_parent = 0;
+    for (int i = POP_SIZE - 2; i != 0; --i) {
+        if (position > cum_scores_normalized[j])
+            ++j;
+        other_parent = unif_int() % m;
+        //std::cout << "(" << j << " " << other_parent << ")";
+        if (other_parent == j) {
+            population[i] = population[j];
+        } else {
+            population[i] = population[j];
+            //population[i].crossOver(population[j],population[other_parent]);
+        } 
+        position     += step_length;
+    }
+    std::cout << std::endl;
+    population[POP_SIZE - 1] = *best_player;
+
+    /*Mutation*/
+    for (int i = 0; i != POP_SIZE; ++i) {
+        population[i].mutate();
+    }
+}
+
+
+
+//Building ThreadGamePlayer class
+
+ThreadGamePlayer::ThreadGamePlayer() {};
+
+
+void ThreadGamePlayer::operator()(std::vector<SolversIndividuals> &population,bool is_white_evolving) {
+    double score = -2;
+    for (int i = start; i <= end; ++i) {
+        if (is_white_evolving) {
+            this->gp.set_white_player(population[i]);
+            score = this->gp.playGame();
+        } else {
+            this->gp.set_black_player(population[i]);
+            score = -this->gp.playGame();
+        }
+        population[i].set_score(score);
+    }
+    
+}
+

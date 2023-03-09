@@ -27,6 +27,7 @@
 #include <iomanip>
 #include <limits>
 #include <fstream>
+#include <thread>
 
 /* The following pragma are used to removed depraction warning from boost
  * header files. Using them avoid to remove this warning from the entire project.
@@ -178,6 +179,8 @@ class SolversIndividuals {
      * @sa print_info_as_matrix
      */
     void print_info_as_matrix_to_file(std::ofstream &file);
+
+    void crossOver(const SolversIndividuals & Parent1, const SolversIndividuals & Parent2);
 };
 
 /*! @brief This class simulates a game between two solvers. */
@@ -235,12 +238,28 @@ class GamePlayer {
     int constructor_test();
 };
 
+
+class ThreadGamePlayer {
+   public:
+   int start;
+   int end;
+   GamePlayer gp;
+   ThreadGamePlayer();
+   void operator()(std::vector<SolversIndividuals> &population,bool is_white_evolving);/*std::vector<SolversIndividuals> &population,bool is_white_evolving*/
+};
+
+
 void write_scores(std::ofstream &file,
                   std::vector<SolversIndividuals> &population,
                   SolversIndividuals &best_to_write,
                   const int &gen);
 
 void evol(GamePlayer *gp,
+          std::vector<SolversIndividuals> &population,
+          SolversIndividuals *best_player,
+          bool is_white_evolving);
+
+void evol_thread(const std::vector<ThreadGamePlayer> & gps,
           std::vector<SolversIndividuals> &population,
           SolversIndividuals *best_player,
           bool is_white_evolving);
