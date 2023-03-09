@@ -82,9 +82,9 @@ class AlphaBeta : public ChineseCheckers{
     uint_fast64_t best_move_;
 
     /*! Transposition table used to store the results of previous searches. */
-    boost::unordered_map<bitBoards_t, std::pair<double, int>, bitBoardsHasher, bitBoardsEqual> transposition_table_;
+    boost::unordered_map<uint_fast64_t, std::pair<double, int>> transposition_table_;
     /*! Iterator used to find elements through the transposition table. */
-    boost::unordered_map<bitBoards_t, std::pair<double, int>>::iterator it_transposition_table_;
+    boost::unordered_map<uint_fast64_t, std::pair<double, int>>::iterator it_transposition_table_;
     /*! Map of pre-computed optimal openings. */
     boost::unordered_map<bitBoards_t, uint_fast64_t , bitBoardsHasher, bitBoardsEqual> opening_;
     /*! Tensorflow model used by @ref tensorflowOrderMoves. */
@@ -158,22 +158,13 @@ class AlphaBeta : public ChineseCheckers{
      */
     std::vector<uint8_t> bitBoardsAsVector(const bitBoards_t &bb);
 
-    /*! @brief
-     * Cancel the last move
-     * @param move The move to cancel
-     */
-    void reverseMove(const uint_fast64_t &move);
     /*!
      * @brief Compute the full path of a move from a simple bit mask.
      * @param move
      * @return the full path of a move.
      */
     ListOfPositionType retrieveMoves(const uint_fast64_t &move);
-    /*!
-     * @brief Hashes the grid.
-     * @return The hash of the grid.
-     */
-    inline uint64_t hashGrid();
+
  public:
     /* Constructors */
     /*! @brief
@@ -241,7 +232,8 @@ class AlphaBeta : public ChineseCheckers{
                                double alpha,
                                double beta,
                                const bool &maximizingPlayer,
-                               const bool &keepMove);
+                               const bool &keepMove,
+                               uint_fast64_t hash);
 
     /*! @brief A helper function for the python connexion */
     bool isHuman() { return false; }
