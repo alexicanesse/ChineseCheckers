@@ -14,7 +14,7 @@
 
 #define PLUS_INFTY (20)
 #define MINUS_INFTY (-20)
-#define DRAW_VALUE (10);
+#define DRAW_VALUE (10)
 
 
 /* AlphaBeta.hpp */
@@ -400,7 +400,11 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     }
 
     /* store the value in the transposition table */
-    if (depth < fullDepth_ - 1) transposition_table_.emplace(hash, std::make_pair(value, depth));
+    if (   (depth < fullDepth_ - 1)
+           && (value > alpha)
+           && (value < beta)) {
+        transposition_table_.emplace(hash, std::make_pair(value, depth));
+    }
 
     /* return value */
     return value;
