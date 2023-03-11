@@ -16,6 +16,9 @@
 #define MINUS_INFTY (-20)
 #define DRAW_VALUE (10)
 
+/* Set -1 to disable it/ */
+#define MAX_TREE_WIDTH (-1)
+
 
 /* AlphaBeta.hpp */
 #include "AlphaBeta.hpp"
@@ -31,6 +34,7 @@
 #include <vector>
 #include <queue>
 #include <map>
+#include <set>
 #include <algorithm>
 #include <unordered_map>
 #include <utility>
@@ -51,10 +55,10 @@ AlphaBeta::AlphaBeta() {
      * possible chess positions that can occur. The values in this vector are scaled so that they
      * range from 0 to 1. This vector is meant to be seen from the perspective of the black player. */
     player_to_win_value_ = std::vector<double>({
-        00.0/98,  1.0/98,  4.0/98,  9.0/98, 16.0/98, 25.0/98, 36.0/98, 49.0/98,
+        00.0/98,  1.0/98,  4.0/98,  6.0/98, 16.0/98, 25.0/98, 36.0/98, 49.0/98,
         01.0/98,  2.0/98,  5.0/98, 10.0/98, 17.0/98, 26.0/98, 37.0/98, 50.0/98,
         04.0/98,  5.0/98,  8.0/98, 13.0/98, 20.0/98, 29.0/98, 40.0/98, 53.0/98,
-        09.0/98, 10.0/98, 13.0/98, 18.0/98, 25.0/98, 34.0/98, 45.0/98, 58.0/98,
+        06.0/98, 10.0/98, 13.0/98, 18.0/98, 25.0/98, 34.0/98, 45.0/98, 58.0/98,
         16.0/98, 17.0/98, 20.0/98, 25.0/98, 32.0/98, 41.0/98, 52.0/98, 65.0/98,
         25.0/98, 26.0/98, 29.0/98, 34.0/98, 41.0/98, 50.0/98, 62.0/98, 74.0/98,
         36.0/98, 37.0/98, 40.0/98, 45.0/98, 52.0/98, 62.0/98, 72.0/98, 85.0/98,
@@ -64,18 +68,14 @@ AlphaBeta::AlphaBeta() {
      * possible chess positions that can occur. The values in this vector are scaled so that they
      * range from 0 to 1. This vector is meant to be seen from the perspective of the black player. */
     player_to_lose_value_ = std::vector<double>({
-        00.0/588,  1.0/588,  4.0/588,  9.0/588, 16.0/588, 25.0/588, 36.0/588, 49.0/588,
+        00.0/588,  1.0/588,  4.0/588,  6.0/588, 16.0/588, 25.0/588, 36.0/588, 49.0/588,
         01.0/588,  2.0/588,  5.0/588, 10.0/588, 17.0/588, 26.0/588, 37.0/588, 50.0/588,
         04.0/588,  5.0/588,  8.0/588, 13.0/588, 20.0/588, 29.0/588, 40.0/588, 53.0/588,
-        09.0/588, 10.0/588, 13.0/588, 18.0/588, 25.0/588, 34.0/588, 45.0/588, 58.0/588,
+        06.0/588, 10.0/588, 13.0/588, 18.0/588, 25.0/588, 34.0/588, 45.0/588, 58.0/588,
         16.0/588, 17.0/588, 20.0/588, 25.0/588, 32.0/588, 41.0/588, 52.0/588, 65.0/588,
         25.0/588, 26.0/588, 29.0/588, 34.0/588, 41.0/588, 50.0/588, 62.0/588, 74.0/588,
         36.0/588, 37.0/588, 40.0/588, 45.0/588, 52.0/588, 62.0/588, 72.0/588, 85.0/588,
         49.0/588, 50.0/588, 53.0/588, 58.0/588, 65.0/588, 74.0/588, 85.0/588, 98.0/588});
-
-    /* Initialize possible_elementary_move_ array to empty vectors for each board position. */
-    for (int i = 0; i < 64; ++i)
-        possible_elementary_move_[un_64_ << i] = std::vector<uint_fast64_t>(0);
 
     loadOpenings();
 }
@@ -86,21 +86,14 @@ AlphaBeta::AlphaBeta(const std::vector<double> &player_to_win_value_,
     this->player_to_win_value_ = player_to_win_value_;
     this->player_to_lose_value_ = player_to_lose_value_;
 
-    /* Initialize possible_elementary_move_ array to empty vectors for each board position. */
-    for (int i = 0; i < 64; ++i)
-        possible_elementary_move_[un_64_ << i] = std::vector<uint_fast64_t>(0);
-
     loadOpenings();
 }
 
-void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
+void AlphaBeta::availableMoves(std::set<uint_fast64_t, decltype(comp_move_)> &result) {
     /* This function calculates all available moves for the current player
      * and stores them in the result vector.
      * The result vector is passed as a reference so that it can be modified
      * inside the function. */
-
-    /* Reserve enough memory for 50 moves to avoid reallocations */
-    result.reserve(50);
 
     /* A bitboard that keeps track of whether we have computed the possible elementary
      * moves for each position or not. */
@@ -138,9 +131,7 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
     uint_fast64_t pawnPositionMask = currentBitBoard;
 
     /* A vector that stores the possible elementary moves for each position. */
-    std::vector<uint_fast64_t> temp_elementary_move;
-    /* Reserve enough memory for 12 moves to avoid reallocations. */
-    temp_elementary_move.reserve(12);
+    std::vector<std::vector<uint_fast64_t>> possible_elementary_move(64);
 
     /* Loop over all pawns of the current player. */
     for (root = pawnPositionMask & -pawnPositionMask;
@@ -171,8 +162,7 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
             /* If the possible elementary moves for this node have not been computed yet,
              * compute them and store them in the possible_elementary_move map. */
             if (!(computed_possible_elementary_move & v)) {
-                /* Clear the temporary storage vector for possible moves. */
-                temp_elementary_move.clear();
+                possible_elementary_move.reserve(12);
 
                 /* Loop over all possible jumps for the current node. */
                 for (const auto &possibleJumps : k_neighbours_[v]) {
@@ -183,19 +173,17 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
                             && ! (bit_boards_all
                                   & (possibleJump.second | possibleJump.first.second))) {
                             /* Store the possible elementary moves for the current node. */
-                            temp_elementary_move.emplace_back(possibleJump.first.second);
+                            possible_elementary_move[__builtin_ctzll(v)].emplace_back(possibleJump.first.second);
                             break;
                         }
                     }
                 }
-                /* Store the possible elementary moves for the current node. */
-                possible_elementary_move_[v] = std::move(temp_elementary_move);
                 /* Mark that the possible elementary moves have been computed for this node. */
                 computed_possible_elementary_move |= v;
             }
 
             /* Loop over all possible elementary moves for the current node. */
-            for (uint_fast64_t neig : possible_elementary_move_[v]) {
+            for (uint_fast64_t neig : possible_elementary_move[__builtin_ctzll(v)]) {
                 /* Get the coordinates of the current neighbour. */
                 std::tie(i_neig, j_neig) = uint64_to_pair_[neig];
                 /* Check that we haven't already explored this node and
@@ -206,9 +194,8 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
                     /* Add the node to the queue and mark it as explored. */
                     queue    |= neig;
                     explored |= neig;
-
                     /* Add the move to the result. */
-                    result.push_back(root | neig);
+                    result.insert(root | neig);
                 }
             }
         }
@@ -232,7 +219,7 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
             /* If the neighbor position is not occupied by any pawn (White or Black),
              * then the move is valid and is added to the result vector. */
             if (!((bit_boards_.White | bit_boards_.Black) & neig))
-                result.push_back(pawnPosition | neig);
+                result.insert(pawnPosition | neig);
         }
     }
 }
@@ -347,22 +334,34 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     }
 
     /* Retrieve the possibles moves. */
-    std::vector<uint_fast64_t> possible_moves;
+    std::set<uint_fast64_t, decltype(comp_move_)> possible_moves(comp_move_);
     availableMoves(possible_moves);
 
     /* Sort according to the value of the move in order to increase the number of cut-offs. */
-    if (0 && keepMove) tensorflowSortMoves(possible_moves);
-    else std::sort(possible_moves.begin(), possible_moves.end(), comp_move_);
-
-    /* We do not consider all moves in order to have a speed up */
-    //if (MINUS_INFTY != beta) possible_moves.resize(std::min(15UL, possible_moves.size()));
+    if (0 && keepMove) {
+        tensorflowSortMoves(possible_moves);
+        /* Trick to sort the set using another function. */
+        if (who_is_to_play_) {
+            std::set < uint_fast64_t, decltype(comp_move_black_) > buffer(comp_move_black_);
+            std::copy(possible_moves.begin(), possible_moves.end(), std::inserter(buffer, buffer.end()));
+            possible_moves = std::move(buffer);
+        } else {
+            std::set < uint_fast64_t, decltype(comp_move_white_) > buffer(comp_move_white_);
+            std::copy(possible_moves.begin(), possible_moves.end(), std::inserter(buffer, buffer.end()));
+            possible_moves = std::move(buffer);
+        }
+    }
 
     /* Initialize the value we will return. */
     double value = maximizingPlayer ? MINUS_INFTY - 1 : PLUS_INFTY + 1;
     /* Create a buff used to keep the result of the recursive call. */
     double buff;
 
+    /* We do not consider all moves in order to have a speed up */
+    int index = 0;
     for (const auto &move:possible_moves) {
+        if (index++ == MAX_TREE_WIDTH)
+            break;
         /* Update the heuristic value with the given move. */
         updateHeuristicValue(move);
         /* Update the hash for the current position. */
@@ -554,9 +553,6 @@ ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
      * moves for each position or not. */
     uint_fast64_t computed_possible_elementary_move_ = 0;
 
-    for (auto &x : possible_elementary_move_)
-        x.second.clear();
-
     /* A bitboard that represents the current player's pawns. */
     uint_fast64_t currentBitBoard = who_is_to_play_ ? bit_boards_.Black : bit_boards_.White;
 
@@ -602,6 +598,8 @@ ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
     /* A vector to store the possible elementary moves from the current node. */
     std::vector<uint_fast64_t> temp_elementary_move;
     temp_elementary_move.reserve(20);
+    /* Indicates if there is a jump from (i, j) to (k, l). */
+    boost::unordered_map<uint_fast64_t, std::vector<uint_fast64_t>> possible_elementary_move_;
 
     /* Get the coordinates of the root. */
     std::tie(i_root, j_root) = uint64_to_pair_[root];
@@ -677,19 +675,19 @@ ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
     return {};
 }
 
-void AlphaBeta::tensorflowSortMoves(std::vector<uint_fast64_t> &possible_moves) {
+void AlphaBeta::tensorflowSortMoves(std::set<uint_fast64_t, decltype(comp_move_)> &possible_moves) {
     /* We create a tensor for tensorFlow to evaluate all moves at once. */
-    std::vector<uint8_t> bb_temp;
+    std::vector <uint8_t> bb_temp;
     std::vector<float> data_;
     /* Reserve space for the data of each move. */
     data_.reserve(128 * possible_moves.size());
 
     bitBoards_t bb;
     /* Loop through each possible move and convert it to a bitboard representation. */
-    for (const uint_fast64_t &move : possible_moves) {
+    for (const uint_fast64_t &move: possible_moves) {
         bb = bit_boards_;
         if (who_is_to_play_) bb.Black ^= move;
-        else                 bb.White ^= move;
+        else bb.White ^= move;
 
         /* Convert the bitboard representation to a vector of uint8_t values. */
         bb_temp = bitBoardsAsVector(bb);
@@ -701,29 +699,16 @@ void AlphaBeta::tensorflowSortMoves(std::vector<uint_fast64_t> &possible_moves) 
     cppflow::tensor tensor_data_ = cppflow::tensor(data_, {static_cast<int>(possible_moves.size()), 128});
 
     /* Run the tensor through the TensorFlow model and get the predicted value of each move. */
-    std::vector<cppflow::tensor> output = (*model)({{"serving_default_dense_input:0", tensor_data_}},
+    std::vector <cppflow::tensor> output = (*model)({{"serving_default_dense_input:0", tensor_data_}},
                                                     {"StatefulPartitionedCall:0"});
 
     /* Map each possible move to its predicted value. */
-    std::unordered_map<uint_fast64_t, double> res;
+    result_tensorFlow_.clear();
     auto output_data_ = output[0].get_data<double>();
-    for (int d = 0; d < possible_moves.size(); ++d)
-        res[possible_moves[d]] = output_data_[d];
 
-    /* Sort the moves. The network has been trained as white so we cannot sort
-     * the moves the same way for the two players. The best move for Black is the worst
-     * for white. */
-    if (who_is_to_play_) {
-        auto compMoveB = [&](const uint_fast64_t &a, const uint_fast64_t &b) {
-            return res[a] > res[b];
-        };
-        std::sort(possible_moves.begin(), possible_moves.end(), compMoveB);
-    } else {
-        auto compMoveW = [&](const uint_fast64_t &a, const uint_fast64_t &b) {
-            return res[a] < res[b];
-        };
-        std::sort(possible_moves.begin(), possible_moves.end(), compMoveW);
-    }
+    int d = 0;
+    for (const auto &move : possible_moves)
+        result_tensorFlow_[move] = output_data_[d++];
 }
 
 std::vector<uint8_t> AlphaBeta::bitBoardsAsVector(const bitBoards_t &bb) {

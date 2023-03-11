@@ -42,12 +42,12 @@
 typedef std::vector<std::pair<std::string, tensorflow::Tensor>> tensor_dict;
 
 int main() {
-    std::vector<uint_fast64_t> moves;
     std::cout << std::fixed;
     std::cout << std::setprecision(2);
     for (int i = 0; i < NUMBER_OF_GAMES; ++i) {
         std::cout << std::setw(5) << 100 * static_cast<double>(i)/NUMBER_OF_GAMES << "%\n";
         IntuitionDataGenerator generator;
+        std::set<uint_fast64_t, decltype(generator.comp_move_)> moves(generator.comp_move_);
         generator.fillTransTable();
         srand(time(NULL));
         while (generator.stateOfGame() == NotFinished) {
@@ -62,8 +62,11 @@ int main() {
             } else {
                 moves.clear();
                 generator.availableMoves(moves);
-                generator.moveWithoutVerification(
-                        moves[rand() % static_cast<int>(moves.size())]);
+
+                auto it = moves.begin();
+                std::advance(it, rand() % static_cast<int>(moves.size()));
+
+                generator.moveWithoutVerification(*it);
             }
 
             if (rand() % 10 <= 7) {
@@ -71,8 +74,11 @@ int main() {
             } else {
                 moves.clear();
                 generator.availableMoves(moves);
-                generator.moveWithoutVerification(
-                        moves[rand() % static_cast<int>(moves.size())]);
+
+                auto it = moves.begin();
+                std::advance(it, rand() % static_cast<int>(moves.size()));
+
+                generator.moveWithoutVerification(*it);
             }
         }
     }
@@ -112,7 +118,7 @@ std::pair<std::vector<bitBoards_t>, std::vector<double>>
     maximizing_player_ = who_is_to_play_;
     fullDepth_         = depth;
 
-    std::vector<uint_fast64_t> moves;
+    std::set<uint_fast64_t, decltype(comp_move_)> moves(comp_move_);
     availableMoves(moves);
 
     std::vector<double> evals;
