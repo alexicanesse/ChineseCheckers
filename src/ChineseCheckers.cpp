@@ -38,71 +38,112 @@ template <typename T> int sgn(T val) {
     return (T(0) < val) - (val < T(0));
 }
 
-ChineseCheckers::ChineseCheckers() {
-    /* Initialize maps for converting between uint64_t and pairs of integers. */
+std::array<std::pair<int, int>, 64> initUint64ToPair() {
+    std::array<std::pair<int, int>, 64> result;
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j)
+            result[(i * 8) + j] = {i, j};
+    }
+    return result;
+}
+
+std::array<std::array<uint32_t, 8>, 8> initCantorPairing() {
+    std::array<std::array<uint32_t, 8>, 8> result ;
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j)
+            result[i][j] = 1 << ((i + j) * (i + j + 1) / 2 + i);
+    }
+    return result;
+}
+
+std::array<std::array<uint_fast64_t, 8>, 8> initIntToUint64() {
+    std::array<std::array<uint_fast64_t, 8>, 8> result;
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j)
+            result[i][j] = static_cast<uint_fast64_t>(1) << ((i * 8) + j);
+    }
+    return result;
+}
+
+std::array<std::vector<uint_fast64_t>, 64> initDirectNeighbours() {
+    std::array<std::vector<uint_fast64_t>, 64> result;
+
+    auto int_to_uint64_ = initIntToUint64();
+    std::vector<std::vector<int>> valid_lines = {{-1,  0}, {-1,  1}, {0 , -1},
+                                                 {0 ,  1}, {1 , -1}, {1 ,  0}};
+
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
-            uint64_to_pair_[__builtin_ctzll(un_64_ << ((i * 8) + j))] = {i, j};
-            int_to_uint64_[i][j] = un_64_ << ((i * 8) + j);
-            cantor_pairing_[i][j] = 1 << cantorPairingFunction(i , j);
-        }
-    }
-
-    /* Compute the direct neighbouring positions for each pawn position. */
-    int i, j;
-    for (uint_fast64_t pawnPosition = un_64_; pawnPosition; pawnPosition <<= 1) {
-        std::tie(i, j) = uint64_to_pair_[__builtin_ctzll(pawnPosition)];
-        for(const std::vector<int> &direction : valid_lines) {
-            if (      i + direction[0] >= 0
-                      && j + direction[1] >= 0
-                      && i + direction[0]  < 8
-                      && j + direction[1]  < 8) {
-                direct_neighbours_[__builtin_ctzll(pawnPosition)].push_back(int_to_uint64_[i + direction[0]][j + direction[1]]);
+            for (const std::vector<int> &direction: valid_lines) {
+                if (i + direction[0] >= 0
+                    && j + direction[1] >= 0
+                    && i + direction[0] < 8
+                    && j + direction[1] < 8) {
+                    result[8*i + j].push_back(int_to_uint64_[i + direction[0]][j + direction[1]]);
+                }
             }
         }
     }
+    return result;
+}
 
-    /* Compute the k-neighbours for each pawn position (ie, positions accessible by a jump). */
-    int s = 0;
+std::array<std::vector<
+        std::vector<std::pair<std::pair<uint_fast64_t,
+        uint_fast64_t>, uint_fast64_t> > >, 64> initKNeighbours() {
+    std::array<std::vector<
+            std::vector<std::pair<std::pair<uint_fast64_t,
+            uint_fast64_t>, uint_fast64_t> > >, 64> result;
+    auto int_to_uint64_ = initIntToUint64();
+    std::vector<std::vector<int>> valid_lines = {{-1,  0}, {-1,  1}, {0 , -1},
+                                                 {0 ,  1}, {1 , -1}, {1 ,  0}};
+
     /* Loops over all positions of the board. */
-    for (uint_fast64_t pawnPosition = un_64_; pawnPosition; pawnPosition <<= 1) {
-        std::tie(i, j) = uint64_to_pair_[__builtin_ctzll(pawnPosition)];
-        /* Loop of all directions for a given position. */
-        for (const std::vector<int> &direction: valid_lines) {
-            std::vector<std::pair<std::pair<uint_fast64_t, uint_fast64_t>, uint_fast64_t > > lines_dir;
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            /* Loop of all directions for a given position. */
+            for (const std::vector<int> &direction: valid_lines) {
+                std::vector<std::pair<std::pair<uint_fast64_t, uint_fast64_t>, uint_fast64_t > > lines_dir;
 
-            /* Loop over all possible jump from a given position in a given direction. */
-            for (int k = 1;    i + direction[0] * (k << 1) < 8
-                               && j + direction[1] * (k << 1) < 8
-                               && i + direction[0] * (k << 1) >= 0
-                               && j + direction[1] * (k << 1) >= 0; ++k) {
+                /* Loop over all possible jump from a given position in a given direction. */
+                for (int k = 1;    i + direction[0] * (k << 1) < 8
+                                   && j + direction[1] * (k << 1) < 8
+                                   && i + direction[0] * (k << 1) >= 0
+                                   && j + direction[1] * (k << 1) >= 0; ++k) {
+                    uint_fast64_t line = static_cast<uint_fast64_t>(0);
+                    for (int l = 1; l < k; ++l) {
+                        line |= (int_to_uint64_[i + direction[0] * (k - l)][j + direction[1] * (k - l)]);
+                        line |= (int_to_uint64_[i + direction[0] * (k + l)][j + direction[1] * (k + l)]);
+                    }
+                    line |= (int_to_uint64_[i + direction[0] * (k << 1)][j + direction[1] * (k << 1)]);
 
-                uint_fast64_t line = static_cast<uint_fast64_t>(0);
-                for (int l = 1; l < k; ++l) {
-                    line |= (int_to_uint64_[i + direction[0] * (k - l)][j + direction[1] * (k - l)]);
-                    line |= (int_to_uint64_[i + direction[0] * (k + l)][j + direction[1] * (k + l)]);
+                    if (line) {
+                        lines_dir.push_back({
+                                                    {int_to_uint64_[i + direction[0]*k][j + direction[1]*k],
+                                                     int_to_uint64_[i + direction[0] * (k << 1)][j + direction[1] * (k << 1)]},
+                                                    line
+                                            });
+                    }
                 }
-                line |= (int_to_uint64_[i + direction[0] * (k << 1)][j + direction[1] * (k << 1)]);
-
-                if (line) {
-                    lines_dir.push_back({
-                                                {int_to_uint64_[i + direction[0]*k][j + direction[1]*k],
-                                                 int_to_uint64_[i + direction[0] * (k << 1)][j + direction[1] * (k << 1)]},
-                                                line
-                                        });
-                }
+                result[8*i + j].push_back(lines_dir);
             }
-
-            k_neighbours_[__builtin_ctzll(pawnPosition)].push_back(lines_dir);
         }
     }
+    return result;
+};
+
+ChineseCheckers::ChineseCheckers() : uint64_to_pair_(initUint64ToPair()),
+                                     cantor_pairing_(initCantorPairing()),
+                                     int_to_uint64_(initIntToUint64()),
+                                     direct_neighbours_(initDirectNeighbours()),
+                                     k_neighbours_(initKNeighbours()),
+                                     illegal_positions_(loadIllegalPositions()) {
+    /* Compute the k-neighbours for each pawn position (ie, positions accessible by a jump). */
+    int i, j, s = 0;
 
     /* Set up the board. */
     newGame();
     /* Generates Zobrist's keys. */
     generateZobristKeys();
-    /* Load illegal positions. */
-    loadIllegalPositions();
 }
 
 void ChineseCheckers::newGame() {
@@ -279,7 +320,7 @@ bool ChineseCheckers::move(const Player &player,
 }
 
 MoveType ChineseCheckers::elementaryMove(const PositionType &original_position,
-                                         const PositionType &arrival_position) {
+                                         const PositionType &arrival_position) const {
     /* Check if the move is in the grid. */
     if (!(   arrival_position[0]  >= 0
           && arrival_position[0]   < 8
@@ -344,7 +385,8 @@ MoveType ChineseCheckers::elementaryMove(const PositionType &original_position,
     return Jump;
 }
 
-void ChineseCheckers::loadIllegalPositions() {
+boost::unordered_map<uint32_t, bool> ChineseCheckers::loadIllegalPositions() {
+    boost::unordered_map<uint32_t, bool> result;
     std::ifstream inFile("./raw_data/illegal_moves.dat");
     /* Iterate through the file and load each element through the file. */
     std::string line;
@@ -354,17 +396,19 @@ void ChineseCheckers::loadIllegalPositions() {
         std::istringstream ss(line);
         ss >> std::hex >> hash;
 
-        illegal_positions_[hash] = true;
+        result[hash] = true;
     }
     /* Close the file. */
     inFile.close();
+
+    return result;
 }
 
 int ChineseCheckers::cantorPairingFunction(const int &x, const int &y) {
     return (x + y) * (x + y + 1) / 2 + x;
 }
 
-bool ChineseCheckers::isPositionIllegal() {
+bool ChineseCheckers::isPositionIllegal() const {
     int i = 0, j = 0;
 
     /* White side. */
@@ -449,11 +493,11 @@ bool ChineseCheckers::isPositionIllegal() {
     return illegal_positions_.find(code) != illegal_positions_.end();
 }
 
-uint_fast64_t ChineseCheckers::getBitBoardWhite() {
+uint_fast64_t ChineseCheckers::getBitBoardWhite() const {
     return bit_boards_.White;
 }
 
-uint_fast64_t ChineseCheckers::getBitBoardBlack() {
+uint_fast64_t ChineseCheckers::getBitBoardBlack() const {
     return bit_boards_.Black;
 }
 
@@ -461,7 +505,7 @@ Player ChineseCheckers::getWhoIsToPlay() const {
     return who_is_to_play_;
 }
 
-void ChineseCheckers::printGrid() {
+void ChineseCheckers::printGrid() const {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             if (bit_boards_.White & int_to_uint64_[i][j])
@@ -475,6 +519,6 @@ void ChineseCheckers::printGrid() {
     }
 }
 
-void ChineseCheckers::printWhoIsToPlay() {
+void ChineseCheckers::printWhoIsToPlay() const {
     std::cout << who_is_to_play_ << "\n";
 }

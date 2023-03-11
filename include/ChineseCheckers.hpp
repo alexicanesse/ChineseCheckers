@@ -46,7 +46,7 @@
 class ChineseCheckers {
  protected:
     /*! @details Basic object used to create bitmasks efficiently. */
-    uint_fast64_t un_64_ = static_cast<uint_fast64_t>(1);
+    const  uint_fast64_t un_64_ = static_cast<uint_fast64_t>(1);
     /*! @details Indicate which is the next player to play. */
     Player who_is_to_play_ = 0;
     /*! @details A data structure containing the grid. */
@@ -54,11 +54,9 @@ class ChineseCheckers {
     /*! @details The hash of the current grid. */
     uint_fast64_t  zobrist_hash_;
     /*! @details Zobrist keys associated with each positions. */
-    std::vector<boost::unordered_map<uint_fast64_t, uint_fast64_t> > zobrist_keys_ =
-            std::vector<boost::unordered_map<uint_fast64_t, uint_fast64_t> >(2);
+    std::array<boost::unordered_map<uint_fast64_t, uint_fast64_t>, 2> zobrist_keys_;
     /*! @details Zobrist keys associated to a move. */
-    std::vector<boost::unordered_map<uint_fast64_t, uint_fast64_t> > zobrist_keys_moves_ =
-            std::vector<boost::unordered_map<uint_fast64_t, uint_fast64_t> >(2);
+    std::array<boost::unordered_map<uint_fast64_t, uint_fast64_t>, 2> zobrist_keys_moves_;
     /*! @details
      * Indicates the number of times a position has been seen.
      * It is used to check for draws.
@@ -71,25 +69,25 @@ class ChineseCheckers {
     /*! @details Keeps the positions of the black winning zone. */
     const uint_fast64_t winning_positions_black_ = 0x000000000103070F;
     /*! @details Stores the illegal positions. */
-    boost::unordered_map<uint32_t, bool> illegal_positions_;
+    const boost::unordered_map<uint32_t, bool> illegal_positions_;
     /*! @details Stores results of cantor pairing to make the check for illegal positions faster. */
-    std::array<std::array<uint32_t, 8>, 8> cantor_pairing_;
+    const std::array<std::array<uint32_t, 8>, 8> cantor_pairing_;
     /*! @details Stores the valid directions to find if a move is valid faster. */
-    std::vector<std::vector<int>> valid_lines = {{-1,  0}, {-1,  1}, {0 , -1},
+    const std::vector<std::vector<int>> valid_lines = {{-1,  0}, {-1,  1}, {0 , -1},
                                                  {0 ,  1}, {1 , -1}, {1 ,  0}};
     /*! @details Stores the valid directions to find if a position is legal faster. */
-    std::vector<std::vector<int>> valid_lines_illegal = {{-1,  0}, {-1,  1}, {0 , -1},
+    const std::vector<std::vector<int>> valid_lines_illegal = {{-1,  0}, {-1,  1}, {0 , -1},
                                                          {0 ,  1}, {1 , -1}, {1 ,  0},
                                                          {-2,  0}, {-2,  2}, {0 , -2},
                                                          {0 ,  2}, {2 , -2}, {2 ,  0}};
     /*! @details Stores the conversion of a bit-wise position to a pair of index. */
-    std::array<std::pair<int, int>, 64> uint64_to_pair_;
+    const std::array<std::pair<int, int>, 64> uint64_to_pair_;
     /*! @details Stores the conversion of a pair of index to a bit-wise position. */
-    std::array<std::array<uint_fast64_t, 8>, 8> int_to_uint64_;
+    const std::array<std::array<uint_fast64_t, 8>, 8> int_to_uint64_;
     /*! @details Stores the neighbours' position of all pawns. */
-    std::array<std::vector<uint_fast64_t>, 64> direct_neighbours_;
+    const std::array<std::vector<uint_fast64_t>, 64> direct_neighbours_;
     /*! @detailsStores all required bitMasks to find all jumps from a given pawn. */
-    std::array<std::vector<
+    const std::array<std::vector<
         std::vector<std::pair<std::pair<uint_fast64_t,
         uint_fast64_t>, uint_fast64_t> > >, 64> k_neighbours_;
 
@@ -104,14 +102,14 @@ class ChineseCheckers {
      * @sa move
      */
     MoveType elementaryMove(const PositionType &original_position,
-                            const PositionType &arrival_position);
+                            const PositionType &arrival_position) const;
     /*!
      * @details Indicates whether the position is illegal or not.
      * @return Returns true iff the position is illegal.
      * @sa cantorPairingFunction
      * @sa loadIllegalPositions
      */
-    bool isPositionIllegal();
+    bool isPositionIllegal() const;
 
     /*!
      * @details Cantor's pairing function.
@@ -121,14 +119,14 @@ class ChineseCheckers {
      * @sa isPositionIllegal
      * @sa loadIllegalPositions
      */
-    int cantorPairingFunction(const int &x, const int &y);
+    int cantorPairingFunction(const int &x, const int &y) const;
 
     /*!
      * @details Loads illegal positions.
      * @sa isPositionIllegal
      * @sa cantorPairingFunction
      */
-    void loadIllegalPositions();
+    boost::unordered_map<uint32_t, bool> loadIllegalPositions() const;
     /*!
      * @details Generates @ref zobrist_keys_.
      * @sa computeAndSetZobristHash
@@ -197,17 +195,17 @@ class ChineseCheckers {
      * Returns @ref bit_boards_.White
      * @return @ref bit_boards_.White
      */
-    uint_fast64_t getBitBoardWhite();
+    uint_fast64_t getBitBoardWhite() const;
     /*! @details
      * Returns @ref bit_boards_.Black
      * @return @ref bit_boards_.Black
      */
-    uint_fast64_t getBitBoardBlack();
+    uint_fast64_t getBitBoardBlack() const;
 
     /*! @details Prints the grid. */
-    void printGrid();
+    void printGrid() const ;
     /*! @details Prints @ref who_is_to_play_ */
-    void printWhoIsToPlay();
+    void printWhoIsToPlay() const;
 };
 
 
