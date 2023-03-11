@@ -83,22 +83,23 @@ Requirements for the software and other tools to build, test and push
 On Ubuntu and Debian based systems
 
 ```sh
+# CMake
+sudo apt install cmake
+# g++ (Or any other C++ compiler that supports C++-20.
+sudo apt install build-essential
+sudo apt install g++-12
 # pip3
 sudo apt install python3-pip
 # Numpy
 pip3 install numpy
 # Boost
-sudo apt-get install libboost-all-dev
-# Boost.Python
-sudo apt-get install libboost-python-dev
+sudo apt install libboost-all-dev
 # Tkinter
-sudo apt-get install python3-tk
+sudo apt install python3-tk
 # Google Test
-sudo apt-get install libgtest-dev
+sudo apt install libgtest-dev
 # Google Benchmark
-sudo apt-get install libbenchmark-dev
-# Eigen3
-sudo apt-get install libeigen3-dev
+sudo apt install libbenchmark-dev
 # Tensorflow C API
 FILENAME=libtensorflow-cpu-linux-x86_64-2.11.0.tar.gz
 wget -q --no-check-certificate https://storage.googleapis.com/tensorflow/libtensorflow/${FILENAME}
@@ -115,6 +116,8 @@ sudo make install
 
 On macOS
 ```sh
+# CMake
+brew install cmake
 # Numpy
 pip3 install numpy
 # Boost
@@ -127,8 +130,6 @@ brew install python-tk
 brew install googletest
 # Google Benchmark
 brew install google-benchmark
-# Eigen3
-brew install eigen
 # Tensorflow C API
 FILENAME=libtensorflow-cpu-darwin-x86_64-2.11.0.tar.gz
 wget -q --no-check-certificate https://storage.googleapis.com/tensorflow/libtensorflow/${FILENAME}

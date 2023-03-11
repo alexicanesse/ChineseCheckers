@@ -109,7 +109,6 @@ list(GET VERSION_LIST 1 PYTHONLIBS_VERSION_MINOR)
 
 
 find_package(Boost COMPONENTS python${PYTHONLIBS_VERSION_MAJOR}${PYTHONLIBS_VERSION_MINOR} REQUIRED)
-find_package(Eigen3 REQUIRED)
 find_package(cppflow REQUIRED)
 
 target_link_libraries(libChineseCheckers PUBLIC ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
@@ -131,7 +130,6 @@ endif()
 
 if(INTUITION_DATA_GENERATOR_ENABLED)
     target_link_libraries(Intuition_data_generator PUBLIC AlphaBeta cppflow::cppflow)
-    target_include_directories(Intuition_data_generator PUBLIC ${EIGEN3_INCLUDE_DIR})
 endif()
 
 if(OPENINGS_GENERATOR_ENABLED)
@@ -139,4 +137,4 @@ if(OPENINGS_GENERATOR_ENABLED)
 endif()
 
 target_include_directories(libChineseCheckers PUBLIC ${PYTHON_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
-target_include_directories(AlphaBeta PUBLIC ${PYTHON_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIR})
+target_include_directories(AlphaBeta PUBLIC ${PYTHON_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
