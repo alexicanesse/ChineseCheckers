@@ -259,8 +259,8 @@ void AlphaBeta::availableMoves(std::vector<uint_fast64_t> &result) {
 
 ListOfPositionType AlphaBeta::getMove(const int &depth, const double &alpha, const double &beta) {
     /* Checks if the current state of the game is in the opening book. */
-    if (opening_.find(bit_boards_) != opening_.end())
-        return retrieveMoves(opening_[bit_boards_]);
+    if (opening_[who_is_to_play_].find(bit_boards_) != opening_[who_is_to_play_].end())
+        return retrieveMoves(opening_[who_is_to_play_][bit_boards_]);
 
     /* If the current state is not in the opening book, the getMove64 function
      * is called with the same inputs to search for the best move. */
@@ -559,23 +559,29 @@ void AlphaBeta::setPlayerToWinValue(const std::vector<double> &player_to_win_val
 }
 
 void AlphaBeta::loadOpenings() {
-    /* Open the file containing the pre-calculated opening moves. */
-    std::ifstream inFile("raw_data/openings.dat");
+    std::array<std::string, 2> files =
+            {"./raw_data/openings_white.dat",
+             "./raw_data/openings_black.dat"};
 
-    /* Iterate through each line in the file and load the bitboards and move. */
-    std::string line;
-    uint_fast64_t move;
-    bitBoards_t bb;
-    while(std::getline(inFile, line)) {
-        std::istringstream ss(line);
-        ss >> std::hex >> bb.White >> std::hex >> bb.Black >> std::hex >> move;
+    for (int i = 0; i < 2; ++i) {
+        /* Open the file containing the pre-calculated opening moves. */
+        std::ifstream inFile(files[i]);
 
-        /* Store the opening move in the 'opening_' map, indexed by the bitboards. */
-        opening_[bb] = move;
+        /* Iterate through each line in the file and load the bitboards and move. */
+        std::string line;
+        uint_fast64_t move;
+        bitBoards_t bb;
+        while (std::getline(inFile, line)) {
+            std::istringstream ss(line);
+            ss >> std::hex >> bb.White >> std::hex >> bb.Black >> std::hex >> move;
+
+            /* Store the opening move in the 'opening_' map, indexed by the bitboards. */
+            opening_[i][bb] = move;
+        }
+
+        /* Close the file */
+        inFile.close();
     }
-
-    /* Close the file */
-    inFile.close();
 }
 
 ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
