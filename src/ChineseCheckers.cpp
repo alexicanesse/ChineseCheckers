@@ -385,7 +385,7 @@ MoveType ChineseCheckers::elementaryMove(const PositionType &original_position,
     return Jump;
 }
 
-boost::unordered_map<uint32_t, bool> ChineseCheckers::loadIllegalPositions() {
+boost::unordered_map<uint32_t, bool> ChineseCheckers::loadIllegalPositions() const {
     boost::unordered_map<uint32_t, bool> result;
     std::ifstream inFile("./raw_data/illegal_moves.dat");
     /* Iterate through the file and load each element through the file. */
@@ -404,7 +404,7 @@ boost::unordered_map<uint32_t, bool> ChineseCheckers::loadIllegalPositions() {
     return result;
 }
 
-int ChineseCheckers::cantorPairingFunction(const int &x, const int &y) {
+int ChineseCheckers::cantorPairingFunction(const int &x, const int &y) const {
     return (x + y) * (x + y + 1) / 2 + x;
 }
 
