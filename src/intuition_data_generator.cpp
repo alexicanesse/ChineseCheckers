@@ -127,13 +127,18 @@ std::pair<std::vector<bitBoards_t>, std::vector<double>>
         /* Check if we already have informations about this position */
         if (transposition_table_permanent_.find(bit_boards_)
                 != transposition_table_permanent_.end()) {
-            this->reverseMove(move);
+            --number_of_times_seen_[zobrist_hash_];
+            who_is_to_play_ ^= 1;
+            who_is_to_play_ ? bit_boards_.Black ^= move : bit_boards_.White ^= move;
+            zobrist_hash_ ^= zobrist_keys_moves_[who_is_to_play_][move];
             continue;
         }
 
         if (this->isPositionIllegal()) {
             /* cancel the move */
-            this->reverseMove(move);
+            who_is_to_play_ ^= 1;
+            who_is_to_play_ ? bit_boards_.Black ^= move : bit_boards_.White ^= move;
+            zobrist_hash_ ^= zobrist_keys_moves_[who_is_to_play_][move];
             continue;
         }
 
@@ -142,13 +147,16 @@ std::pair<std::vector<bitBoards_t>, std::vector<double>>
                              -20,
                              20,
                              true,
-                             false);
+                             false,
+                             zobrist_hash_);
 
         all_bit_boards.push_back(bit_boards_);
         evals.push_back(buff);
 
         /* cancel the move */
-        this->reverseMove(move);
+        who_is_to_play_ ^= 1;
+        who_is_to_play_ ? bit_boards_.Black ^= move : bit_boards_.White ^= move;
+        zobrist_hash_ ^= zobrist_keys_moves_[who_is_to_play_][move];
     }
 
     return std::make_pair(all_bit_boards, evals);

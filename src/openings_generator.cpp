@@ -46,23 +46,19 @@ int main() {
         og_black.generateOpeningsBlack(MAX_TREE_DEPTH + 1, &outFile);
         outFile.close();
     };
+    auto white_openings = []() {
+        OpeningsGenerator og_white;
+        og_white.loadOpenings();
+
+        std::ofstream outFile("./raw_data/openings_white.dat", std::ios_base::app);
+        og_white.generateOpeningsWhite(MAX_TREE_DEPTH, &outFile);
+        outFile.close();
+    };
 
     std::thread black(black_openings);
+    std::thread white(white_openings);
 
-    int depth = MAX_TREE_DEPTH;
-    while (black.joinable()) {
-        auto white_openings = [depth]() {
-            OpeningsGenerator og_white;
-            og_white.loadOpenings();
-
-            std::ofstream outFile("./raw_data/openings_white.dat", std::ios_base::app);
-            og_white.generateOpeningsWhite(depth, &outFile);
-            outFile.close();
-        };
-        std::thread white(white_openings);
-        white.join();
-        depth += 1;
-    }
+    white.join();
     black.join();
 
     return 0;
@@ -102,9 +98,9 @@ void OpeningsGenerator::generateOpeningsWhite(int depth, std::ofstream *outFile)
             generateOpeningsWhite(depth - 1, outFile);
 
         --number_of_times_seen_[zobrist_hash_];
-        who_is_to_play_ ^= 1;
-        who_is_to_play_ ? bit_boards_.Black ^= move_1 : bit_boards_.White ^= move_1;
-        zobrist_hash_ ^= zobrist_keys_moves_[who_is_to_play_][move_1];
+        who_is_to_play_ = 1;
+        bit_boards_.Black ^= move_1;
+        zobrist_hash_ ^= zobrist_keys_moves_[1][move_1];
     }
 
     --number_of_times_seen_[zobrist_hash_];
@@ -152,9 +148,9 @@ void OpeningsGenerator::generateOpeningsBlack(int depth, std::ofstream *outFile)
             this->generateOpeningsBlack(depth - 1, outFile);
 
         --number_of_times_seen_[zobrist_hash_];
-        who_is_to_play_ ^= 1;
-        who_is_to_play_ ? bit_boards_.Black ^= move_0 : bit_boards_.White ^= move_0;
-        zobrist_hash_ ^= zobrist_keys_moves_[who_is_to_play_][move_0];
+        who_is_to_play_ = 0;
+        bit_boards_.White ^= move_0;
+        zobrist_hash_ ^= zobrist_keys_moves_[0][move_0];
     }
 
     if (depth != MAX_TREE_DEPTH + 1) {
