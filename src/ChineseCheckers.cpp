@@ -115,9 +115,12 @@ void ChineseCheckers::newGame() {
 
     /* Initialize the history. */
     number_of_times_seen_.clear();
+    positions_seen_.clear();
     /* A good game usually last between 20 and 30 moves. */
-    number_of_times_seen_.reserve(31);
+    number_of_times_seen_.reserve(64);
+    positions_seen_.reserve(64);
     number_of_times_seen_[zobrist_hash_] = 1;
+    positions_seen_.push_back(zobrist_hash_);
 }
 
 void ChineseCheckers::generateZobristKeys() {
@@ -192,6 +195,10 @@ void ChineseCheckers::moveWithoutVerification(const uint_fast64_t &move) {
 
     /* Increase the count of the current position. */
     ++number_of_times_seen_[zobrist_hash_];
+    if (std::find(positions_seen_.begin(), positions_seen_.end(), zobrist_hash_)
+            == positions_seen_.end())
+        positions_seen_.push_back(zobrist_hash_);
+
 }
 
 bool ChineseCheckers::move(const Player &player,
@@ -264,6 +271,9 @@ bool ChineseCheckers::move(const Player &player,
 
     /* Increase the count of the current position. */
     ++number_of_times_seen_[zobrist_hash_];
+    if (std::find(positions_seen_.begin(), positions_seen_.end(), zobrist_hash_)
+        == positions_seen_.end())
+        positions_seen_.push_back(zobrist_hash_);
 
     return true;
 }

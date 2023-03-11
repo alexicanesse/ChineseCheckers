@@ -317,7 +317,9 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
         return maximizing_player_ ? MINUS_INFTY : PLUS_INFTY;
     }
 
-    if (number_of_times_seen_[hash] == MAX_NUMBER_OF_CYCLES_FOR_DRAW_) { /* Is there a draw ? */
+    if (std::find(positions_seen_.begin(), positions_seen_.end(), zobrist_hash_)
+        == positions_seen_.end()) { /* Is there a draw ? */
+        positions_seen_.push_back(zobrist_hash_);
         /* The game ended in a draw. */
         return DRAW_VALUE;
     } else { /* the game is not over. */
@@ -373,13 +375,16 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
         who_is_to_play_ ^= 1;
 
         /* Indicates that this position has been seen another time. */
-        ++number_of_times_seen_[hash];
+
+        positions_seen_.push_back(hash);
 
 
         /* Checks for an illegal position. */
         if (isPositionIllegal()) {
             /* Undo the move and continue to the next move. */
-            --number_of_times_seen_[hash];
+            positions_seen_.erase(std::remove(positions_seen_.begin(),
+                                              positions_seen_.end(), hash),
+                                  positions_seen_.end());
             who_is_to_play_ ^= 1;
             who_is_to_play_ ? bit_boards_.Black ^= move : bit_boards_.White ^= move;
             updateHeuristicValueBack(move);
@@ -396,7 +401,9 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
                              hash);
 
         /* Undo the move to backtrack to the current position. */
-        --number_of_times_seen_[hash];
+        positions_seen_.erase(std::remove(positions_seen_.begin(),
+                                          positions_seen_.end(), hash),
+        positions_seen_.end());
         who_is_to_play_ ^= 1;
         who_is_to_play_ ? bit_boards_.Black ^= move : bit_boards_.White ^= move;
         updateHeuristicValueBack(move);

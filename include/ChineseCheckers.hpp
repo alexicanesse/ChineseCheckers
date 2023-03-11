@@ -64,6 +64,8 @@ class ChineseCheckers {
      * It is used to check for draws.
      * */
     boost::unordered_map<uint64_t , int> number_of_times_seen_;
+    /*! @details Indicate the positions we have already seen. */
+    std::vector<uint64_t> positions_seen_;
     /*! @details Keeps the positions of the white winning zone. */
     const uint_fast64_t winning_positions_white_ = 0xF0E0C08000000000;
     /*! @details Keeps the positions of the black winning zone. */
