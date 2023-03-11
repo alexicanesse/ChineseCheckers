@@ -57,11 +57,11 @@
 #define SELECTION_RATIO 1
 
 /* Number of solvers in the evolution */
-#define POP_SIZE 800
+#define POP_SIZE 300
 /* Number of generations in the evolution */
-#define NUM_GENERATION 10
+#define NUM_GENERATION 1500
 /* Number of generation training white or black players */
-#define ROUND_LENGTH 2000
+#define ROUND_LENGTH 1400
 /* Maximum number of moves authorized in a evolution game */
 #define MAX_NUM_MOVES 100
 
@@ -78,7 +78,7 @@
 /* Mean for initialisation */
 #define SIGMA_INIT 0.1
 
-#define N_THREADS 4
+#define N_THREADS 6
 
 /* Creating distribution generators */
 //const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -97,8 +97,8 @@ auto unif_bernouilli = std::bind(unif_b_distrib,generator);
 auto unif_int = std::bind(int_distrib,generator);
 
 
-#warning TODO: Do cross over
-#warning TODO: écrire qu'a la fin dans les fichiers pour gagner du temps
+#warning TODO: Test cross over
+#warning TODO: écrire qu a la fin dans les fichiers pour gagner du temps
 
 int main() {
     /* Gives the seed to reproduce results */
@@ -669,8 +669,8 @@ void evol(GamePlayer *gp,
         if (other_parent == j) {
             population[i] = population[j];
         } else {
-            population[i] = population[j];
-            //population[i].crossOver(population[j],population[other_parent]);
+            //population[i] = population[j];
+            population[i].crossOver(population[j],population[other_parent]);
         } 
         position     += step_length;
     }
@@ -709,7 +709,6 @@ void evol_thread(const std::vector<ThreadGamePlayer> & gps,
     std::vector<double> cum_scores_normalized(POP_SIZE);
     double worst_score = population[POP_SIZE - 1].get_score();
     cum_scores_normalized[0] = population[0].get_score() - worst_score;
-    //Find m such that 
     for (int i = 1; i != POP_SIZE; ++i)
         cum_scores_normalized[i] = cum_scores_normalized[i-1]
                                     + population[i].get_score()
