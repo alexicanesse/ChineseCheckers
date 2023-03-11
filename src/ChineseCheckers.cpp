@@ -42,7 +42,7 @@ ChineseCheckers::ChineseCheckers() {
     /* Initialize maps for converting between uint64_t and pairs of integers. */
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
-            uint64_to_pair_[un_64_ << ((i * 8) + j)] = {i, j};
+            uint64_to_pair_[__builtin_ctzll(un_64_ << ((i * 8) + j))] = {i, j};
             int_to_uint64_[i][j] = un_64_ << ((i * 8) + j);
             cantor_pairing_[i][j] = 1 << cantorPairingFunction(i , j);
         }
@@ -51,13 +51,13 @@ ChineseCheckers::ChineseCheckers() {
     /* Compute the direct neighbouring positions for each pawn position. */
     int i, j;
     for (uint_fast64_t pawnPosition = un_64_; pawnPosition; pawnPosition <<= 1) {
-        std::tie(i, j) = uint64_to_pair_[pawnPosition];
+        std::tie(i, j) = uint64_to_pair_[__builtin_ctzll(pawnPosition)];
         for(const std::vector<int> &direction : valid_lines) {
             if (      i + direction[0] >= 0
                       && j + direction[1] >= 0
                       && i + direction[0]  < 8
                       && j + direction[1]  < 8) {
-                direct_neighbours_[pawnPosition].push_back(int_to_uint64_[i + direction[0]][j + direction[1]]);
+                direct_neighbours_[__builtin_ctzll(pawnPosition)].push_back(int_to_uint64_[i + direction[0]][j + direction[1]]);
             }
         }
     }
@@ -66,7 +66,7 @@ ChineseCheckers::ChineseCheckers() {
     int s = 0;
     /* Loops over all positions of the board. */
     for (uint_fast64_t pawnPosition = un_64_; pawnPosition; pawnPosition <<= 1) {
-        std::tie(i, j) = uint64_to_pair_[pawnPosition];
+        std::tie(i, j) = uint64_to_pair_[__builtin_ctzll(pawnPosition)];
         /* Loop of all directions for a given position. */
         for (const std::vector<int> &direction: valid_lines) {
             std::vector<std::pair<std::pair<uint_fast64_t, uint_fast64_t>, uint_fast64_t > > lines_dir;
@@ -93,7 +93,7 @@ ChineseCheckers::ChineseCheckers() {
                 }
             }
 
-            k_neighbours_[pawnPosition].push_back(lines_dir);
+            k_neighbours_[__builtin_ctzll(pawnPosition)].push_back(lines_dir);
         }
     }
 

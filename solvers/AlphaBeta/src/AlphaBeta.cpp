@@ -145,7 +145,7 @@ void AlphaBeta::availableMoves(std::set<uint_fast64_t, decltype(comp_move_)> &re
         explored = root;
 
         /* Get the coordinates of the root. */
-        std::tie(i_root_times_2, j_root_times_2) = uint64_to_pair_[root];
+        std::tie(i_root_times_2, j_root_times_2) = uint64_to_pair_[__builtin_ctzll(root)];
         /* Multiply them by two to use them in averages. */
         i_root_times_2 <<= 1;
         j_root_times_2 <<= 1;
@@ -157,7 +157,7 @@ void AlphaBeta::availableMoves(std::set<uint_fast64_t, decltype(comp_move_)> &re
             queue ^= v;
 
             /* Get the coordinates of the current node. */
-            std::tie(i, j) = uint64_to_pair_[v];
+            std::tie(i, j) = uint64_to_pair_[__builtin_ctzll(v)];
 
             /* If the possible elementary moves for this node have not been computed yet,
              * compute them and store them in the possible_elementary_move map. */
@@ -165,7 +165,7 @@ void AlphaBeta::availableMoves(std::set<uint_fast64_t, decltype(comp_move_)> &re
                 possible_elementary_move.reserve(12);
 
                 /* Loop over all possible jumps for the current node. */
-                for (const auto &possibleJumps : k_neighbours_[v]) {
+                for (const auto &possibleJumps : k_neighbours_[__builtin_ctzll(v)]) {
                     for (const auto &possibleJump : possibleJumps) {
 
                         /* Check if there is a pawn to jump over and if the jump is valid. */
@@ -185,7 +185,7 @@ void AlphaBeta::availableMoves(std::set<uint_fast64_t, decltype(comp_move_)> &re
             /* Loop over all possible elementary moves for the current node. */
             for (uint_fast64_t neig : possible_elementary_move[__builtin_ctzll(v)]) {
                 /* Get the coordinates of the current neighbour. */
-                std::tie(i_neig, j_neig) = uint64_to_pair_[neig];
+                std::tie(i_neig, j_neig) = uint64_to_pair_[__builtin_ctzll(neig)];
                 /* Check that we haven't already explored this node and
                  * that we're not jumping over the root. */
                 if (!(neig & explored)
@@ -215,7 +215,7 @@ void AlphaBeta::availableMoves(std::set<uint_fast64_t, decltype(comp_move_)> &re
 
         /* Iterates over each of the direct neighbors of the pawn
          * using the direct_neighbours_ data structure. */
-        for (const auto &neig : direct_neighbours_[pawnPosition]) {
+        for (const auto &neig : direct_neighbours_[__builtin_ctzll(pawnPosition)]) {
             /* If the neighbor position is not occupied by any pawn (White or Black),
              * then the move is valid and is added to the result vector. */
             if (!((bit_boards_.White | bit_boards_.Black) & neig))
@@ -561,12 +561,14 @@ ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
 
     /* Iterates over each of the direct neighbors of the pawn
      * using the direct_neighbours_ data structure. */
-    for (const auto &neig : direct_neighbours_[currentBitBoard & move]) {
+    for (const auto &neig : direct_neighbours_[__builtin_ctzll(currentBitBoard & move)]) {
         if (neig & move) {
             /* If the neighbor position is not occupied by any pawn (White or Black),
              * then the move is valid and returned. */
-            return {{uint64_to_pair_[currentBitBoard & move].first, uint64_to_pair_[currentBitBoard & move].second},
-                    {uint64_to_pair_[neig].first,                   uint64_to_pair_[neig].second}};
+            return {{uint64_to_pair_[__builtin_ctzll(currentBitBoard & move)].first,
+                     uint64_to_pair_[__builtin_ctzll(currentBitBoard & move)].second},
+                    {uint64_to_pair_[__builtin_ctzll(neig)].first,
+                     uint64_to_pair_[__builtin_ctzll(neig)].second}};
         }
     }
 
@@ -602,7 +604,7 @@ ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
     boost::unordered_map<uint_fast64_t, std::vector<uint_fast64_t>> possible_elementary_move_;
 
     /* Get the coordinates of the root. */
-    std::tie(i_root, j_root) = uint64_to_pair_[root];
+    std::tie(i_root, j_root) = uint64_to_pair_[__builtin_ctzll(root)];
 
     /* Start the BFS algorithm. */
     while (!queue.empty()) {
@@ -611,7 +613,7 @@ ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
         queue.pop();
 
         /* Get the coordinates of the node. */
-        std::tie(i, j) = uint64_to_pair_[v];
+        std::tie(i, j) = uint64_to_pair_[__builtin_ctzll(v)];
 
         /* If the possible elementary moves for this node have not been computed yet,
          * compute them and store them in the possible_elementary_move map. */
@@ -620,7 +622,7 @@ ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
             temp_elementary_move.clear();
 
             /* Loop over all possible jumps for the current node. */
-            for (const auto &possibleJumps : k_neighbours_[v]) {
+            for (const auto &possibleJumps : k_neighbours_[__builtin_ctzll(v)]) {
                 for (const auto &possibleJump : possibleJumps) {
 
                     /* Check if there is a pawn to jump over and if the jump is valid. */
@@ -642,7 +644,7 @@ ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
         /* Loop over all possible elementary moves for the current node. */
         for (uint_fast64_t neig : possible_elementary_move_[v]) {
             /* Get the coordinates of the current neighbour. */
-            std::tie(i_neig, j_neig) = uint64_to_pair_[neig];
+            std::tie(i_neig, j_neig) = uint64_to_pair_[__builtin_ctzll(neig)];
             if (!(neig & explored)
                 /* Check that we haven't already explored this node and
                  * that we're not jumping over the root. */
@@ -666,7 +668,8 @@ ListOfPositionType AlphaBeta::retrieveMoves(const uint_fast64_t &move) {
         for (const auto &m : paths) {
             if (m.second[0] == root && m.second.back() & move) {
                 for (const auto &pos : m.second)
-                    result.push_back({uint64_to_pair_[pos].first, uint64_to_pair_[pos].second});
+                    result.push_back({uint64_to_pair_[__builtin_ctzll(pos)].first,
+                                      uint64_to_pair_[__builtin_ctzll(pos)].second});
                 return result;
             }
         }

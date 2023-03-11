@@ -81,15 +81,15 @@ class ChineseCheckers {
                                                          {-2,  0}, {-2,  2}, {0 , -2},
                                                          {0 ,  2}, {2 , -2}, {2 ,  0}};
     /*! @details Stores the conversion of a bit-wise position to a pair of index. */
-    boost::unordered_map<uint_fast64_t, std::pair<int, int>> uint64_to_pair_;
+    std::array<std::pair<int, int>, 64> uint64_to_pair_;
     /*! @details Stores the conversion of a pair of index to a bit-wise position. */
     std::array<std::array<uint_fast64_t, 8>, 8> int_to_uint64_;
     /*! @details Stores the neighbours' position of all pawns. */
-    std::unordered_map<uint_fast64_t, std::vector<uint_fast64_t>> direct_neighbours_;
+    std::array<std::vector<uint_fast64_t>, 64> direct_neighbours_;
     /*! @detailsStores all required bitMasks to find all jumps from a given pawn. */
-    std::unordered_map<uint_fast64_t, std::vector<
+    std::array<std::vector<
         std::vector<std::pair<std::pair<uint_fast64_t,
-        uint_fast64_t>, uint_fast64_t> > > > k_neighbours_;
+        uint_fast64_t>, uint_fast64_t> > >, 64> k_neighbours_;
 
     /*! @details
      * A member returning the type of an elementary move
