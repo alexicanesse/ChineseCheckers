@@ -24,6 +24,7 @@
 /* C++ libraries */
 #include <utility>
 #include <map>
+#include <set>
 #include <vector>
 #include <unordered_map>
 #include <boost/unordered_map.hpp>
@@ -69,6 +70,8 @@ class AlphaBeta : public ChineseCheckers{
     std::array<boost::unordered_map<bitBoards_t, uint_fast64_t , bitBoardsHasher, bitBoardsEqual>, 2> opening_;
     /*! @details Tensorflow model used by @ref tensorflowOrderMoves. */
     cppflow::model *model = new cppflow::model("model");
+    /*! @details Result of the evaluation of the moes from tensorFlow */
+    std::unordered_map<uint_fast64_t, double> result_tensorFlow_;
 
     /*! @details The current heuristic value. It avoids to compute it from scratch at each terminating node. */
     double heuristic_value_;
@@ -79,25 +82,6 @@ class AlphaBeta : public ChineseCheckers{
      * Indicates if according to previous searches, a player can be sure to win.
      * It is used to compute shortest path to win in late game. */
     std::array<bool, 2> won_ = {false, false};
-    /*! @details Indicates if there is a jump from (i, j) to (k, l). */
-    boost::unordered_map<uint_fast64_t, std::vector<uint_fast64_t>> possible_elementary_move_;
-    /*! @details Function used to compare moves for sorting. */
-    std::function<bool(const uint_fast64_t&, const uint_fast64_t&)> comp_move_ =
-            [this](const uint_fast64_t &a,
-                   const uint_fast64_t &b){
-                if (who_is_to_play_) {
-                    return player_to_win_value_[__builtin_ctzll(a & ~bit_boards_.Black)]
-                           + player_to_win_value_[__builtin_ctzll(b & bit_boards_.Black)]
-                           < player_to_win_value_[__builtin_ctzll(b & ~bit_boards_.Black)]
-                             + player_to_win_value_[__builtin_ctzll(a & bit_boards_.Black)];
-                } else {
-                    return player_to_win_value_[63 - __builtin_ctzll(a & ~bit_boards_.White)]
-                           + player_to_win_value_[63 - __builtin_ctzll(b & bit_boards_.White)]
-                           < player_to_win_value_[63 - __builtin_ctzll(b & ~bit_boards_.White)]
-                             + player_to_win_value_[63 - __builtin_ctzll(a & bit_boards_.White)];
-                }
-            };
-
 
     /*! @details
      * The function computes a heuristic value for the current game state
@@ -122,14 +106,6 @@ class AlphaBeta : public ChineseCheckers{
      * @param move Said move.
      */
     inline void updateHeuristicValueBack(const uint_fast64_t &move);
-    /*! @details
-     * The moves are ordered using a tensorflow model that estimates
-     * the value that the alpha-beta algorithm would assign to each move.
-     * @param possible_moves The list of moves we could play.
-     * @sa heuristicValue
-     * @sa availableMoves
-     */
-    void tensorflowSortMoves(std::vector<uint_fast64_t> &possible_moves);
     /*!
      * @details Returns a representation of a given bit board as a vector.
      * @param bb The bit boards considered.
@@ -145,6 +121,33 @@ class AlphaBeta : public ChineseCheckers{
     ListOfPositionType retrieveMoves(const uint_fast64_t &move);
 
  public:
+    /*! @details Function used to compare moves for sorting. */
+    std::function<bool(const uint_fast64_t&, const uint_fast64_t&)> comp_move_ =
+            [this](const uint_fast64_t &a,
+                   const uint_fast64_t &b){
+                if (who_is_to_play_) {
+                    return player_to_win_value_[__builtin_ctzll(a & ~bit_boards_.Black)]
+                           + player_to_win_value_[__builtin_ctzll(b & bit_boards_.Black)]
+                           < player_to_win_value_[__builtin_ctzll(b & ~bit_boards_.Black)]
+                             + player_to_win_value_[__builtin_ctzll(a & bit_boards_.Black)];
+                } else {
+                    return player_to_win_value_[63 - __builtin_ctzll(a & ~bit_boards_.White)]
+                           + player_to_win_value_[63 - __builtin_ctzll(b & bit_boards_.White)]
+                           < player_to_win_value_[63 - __builtin_ctzll(b & ~bit_boards_.White)]
+                             + player_to_win_value_[63 - __builtin_ctzll(a & bit_boards_.White)];
+                }
+            };
+    /*! @details Function used to compare moves for sorting. */
+    std::function<bool(const uint_fast64_t&, const uint_fast64_t&)> comp_move_black_ =
+            [&](const uint_fast64_t &a, const uint_fast64_t &b) {
+                return result_tensorFlow_[a] > result_tensorFlow_[b];
+            };
+    /*! @details Function used to compare moves for sorting. */
+    std::function<bool(const uint_fast64_t&, const uint_fast64_t&)> comp_move_white_ =
+            [&](const uint_fast64_t &a, const uint_fast64_t &b) {
+                return result_tensorFlow_[a] < result_tensorFlow_[b];
+            };
+
     /* Constructors */
     /*! @details
      * Construct the object.
@@ -207,7 +210,15 @@ class AlphaBeta : public ChineseCheckers{
      * @sa getMove
      * @sa tensorflowOrderMoves
      */
-    void availableMoves(std::vector<uint_fast64_t> &result);
+    void availableMoves(std::set<uint_fast64_t, decltype(comp_move_)> &result);
+    /*! @details
+     * The moves are ordered using a tensorflow model that estimates
+     * the value that the alpha-beta algorithm would assign to each move.
+     * @param possible_moves The list of moves we could play.
+     * @sa heuristicValue
+     * @sa availableMoves
+     */
+    void tensorflowSortMoves(std::set<uint_fast64_t, decltype(comp_move_)> &possible_moves);
 
     /*! @details
      * This methode performs an Alpha-Beta search in the game tree to find the best move

@@ -87,12 +87,13 @@ void OpeningsGenerator::generateOpeningsWhite(int depth, std::ofstream *outFile)
     moveWithoutVerification(move_0);
 
     std::cout << "White : " << this->opening_[0].size() << "\n";
-    std::vector<uint_fast64_t> moves_1;
+    std::set<uint_fast64_t, decltype(comp_move_)> moves_1(comp_move_);
     availableMoves(moves_1);
-    std::sort(moves_1.begin(), moves_1.end(), comp_move_);
-    moves_1.resize(std::min(TREE_WIDTH, moves_1.size()));
 
+    int index = 0;
     for (const auto &move_1 : moves_1) {
+        if(++index > TREE_WIDTH) break;
+
         moveWithoutVerification(move_1);
         if (!this->isPositionIllegal())
             generateOpeningsWhite(depth - 1, outFile);
@@ -136,12 +137,13 @@ void OpeningsGenerator::generateOpeningsBlack(int depth, std::ofstream *outFile)
 
     std::cout << "Black : " << this->opening_[1].size() << "\n";
 
-    std::vector<uint_fast64_t> moves_0;
+    std::set<uint_fast64_t, decltype(comp_move_)> moves_0(comp_move_);
     this->availableMoves(moves_0);
-    std::sort(moves_0.begin(), moves_0.end(), comp_move_);
-    moves_0.resize(std::min(TREE_WIDTH, moves_0.size()));
 
+    int index = 0;
     for (const auto &move_0 : moves_0) {
+        if(++index > TREE_WIDTH) break;
+
         this->moveWithoutVerification(move_0);
 
         if (!this->isPositionIllegal())
