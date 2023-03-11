@@ -37,14 +37,14 @@ class OpeningsGenerator : public AlphaBeta {
  private:
  public:
     /*!
-     * @brief Generates the openings up to a given depth.
+     * @details Generates the openings up to a given depth.
      * @param depth Defines the length of the openings we will compute.
      * @param outFile Defines the file on which the openings must be written.
      */
     void generateOpeningsWhite(int depth, std::ofstream *outFile);
 
     /*!
-     * @brief Generates the openings up to a given depth.
+     * @details Generates the openings up to a given depth.
      * @param depth Defines the length of the openings we will compute.
      * @param outFile Defines the file on which the openings must be written.
      */

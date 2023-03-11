@@ -40,7 +40,7 @@ class IntuitionDataGenerator : public AlphaBeta {
     boost::unordered_map<bitBoards_t, uint_fast64_t, bitBoardsHasher, bitBoardsEqual> transposition_table_permanent_;
  public:
     /*!
-     * @brief this function is used to eval all possible moves.
+     * @details this function is used to eval all possible moves.
      * @param depth The depth used by the alpha beta algorithm.
      * @return The evaluation associated with each move and the grid obtained after each move.
      */
@@ -48,7 +48,7 @@ class IntuitionDataGenerator : public AlphaBeta {
                                                 evalAllMoves(int depth);
 
     /*!
-     * @brief Save a vector to a file.
+     * @details Save a vector to a file.
      * @tparam T
      * @param input The vector to save.
      * @param outputFileName The name of the file we need to save the data to.
@@ -58,7 +58,7 @@ class IntuitionDataGenerator : public AlphaBeta {
                           const std::string &outputFileName);
 
     /*!
-     * @brief Save a matrix to a file.
+     * @details Save a matrix to a file.
      * @param input The matrix to save.
      * @param outputFileName The name of the file we need to save the data to.
      */
@@ -67,7 +67,7 @@ class IntuitionDataGenerator : public AlphaBeta {
                                       const std::string &outputFileNameB);
 
     /*!
-     * @brief Fill the @ref transposition_table_ with the data we already calculated.
+     * @details Fill the @ref transposition_table_ with the data we already calculated.
      */
     void fillTransTable();
 };
