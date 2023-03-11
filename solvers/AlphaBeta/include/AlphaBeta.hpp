@@ -55,26 +55,6 @@ class AlphaBeta : public ChineseCheckers{
      * we are playing for.
      */
     std::vector<double> player_to_lose_value_;
-    /*! @details
-     * This map is used to get values without having to get indexes from bitmasks
-     * on \ref player_to_win_value_.
-     */
-    boost::unordered_map<uint_fast64_t, double> player_to_win_value_map_white_;
-    /*! @details
-     * This map is used to get values without having to get indexes from bitmasks
-     * on \ref player_to_win_value_.
-     */
-    boost::unordered_map<uint_fast64_t, double> player_to_win_value_map_black_;
-    /*! @details
-     * This map is used to get values without having to get indexes from bitmasks
-     * on \ref player_to_win_value_.
-     */
-    boost::unordered_map<uint_fast64_t, double> player_to_lose_value_map_white_;
-    /*! @details
-     * This map is used to get values without having to get indexes from bitmasks
-     * on \ref player_to_win_value_.
-     */
-    boost::unordered_map<uint_fast64_t, double> player_to_lose_value_map_black_;
 
     /*! @details Indicates which player we are playing for. */
     Player maximizing_player_;
@@ -106,15 +86,15 @@ class AlphaBeta : public ChineseCheckers{
             [this](const uint_fast64_t &a,
                    const uint_fast64_t &b){
                 if (who_is_to_play_) {
-                    return player_to_win_value_map_black_[a & ~bit_boards_.Black]
-                           + player_to_win_value_map_black_[b & bit_boards_.Black]
-                           < player_to_win_value_map_black_[b & ~bit_boards_.Black]
-                             + player_to_win_value_map_black_[a & bit_boards_.Black];
+                    return player_to_win_value_[__builtin_ctzll(a & ~bit_boards_.Black)]
+                           + player_to_win_value_[__builtin_ctzll(b & bit_boards_.Black)]
+                           < player_to_win_value_[__builtin_ctzll(b & ~bit_boards_.Black)]
+                             + player_to_win_value_[__builtin_ctzll(a & bit_boards_.Black)];
                 } else {
-                    return player_to_win_value_map_white_[a & ~bit_boards_.White]
-                           + player_to_win_value_map_white_[b & bit_boards_.White]
-                           < player_to_win_value_map_white_[b & ~bit_boards_.White]
-                             + player_to_win_value_map_white_[a & bit_boards_.White];
+                    return player_to_win_value_[63 - __builtin_ctzll(a & ~bit_boards_.White)]
+                           + player_to_win_value_[63 - __builtin_ctzll(b & bit_boards_.White)]
+                           < player_to_win_value_[63 - __builtin_ctzll(b & ~bit_boards_.White)]
+                             + player_to_win_value_[63 - __builtin_ctzll(a & bit_boards_.White)];
                 }
             };
 

@@ -73,16 +73,6 @@ AlphaBeta::AlphaBeta() {
         36.0/588, 37.0/588, 40.0/588, 45.0/588, 52.0/588, 62.0/588, 72.0/588, 85.0/588,
         49.0/588, 50.0/588, 53.0/588, 58.0/588, 65.0/588, 74.0/588, 85.0/588, 98.0/588});
 
-    /* Create maps for player values based on board position for both black and white players. */
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
-            player_to_lose_value_map_white_[int_to_uint64_[i][j]] = player_to_lose_value_[(7 - i)*8 + 7 - j];
-            player_to_lose_value_map_black_[int_to_uint64_[i][j]] = player_to_lose_value_[i*8 + j];
-            player_to_win_value_map_white_[int_to_uint64_[i][j]]  = player_to_win_value_[(7 - i)*8 + 7 - j];
-            player_to_win_value_map_black_[int_to_uint64_[i][j]]  = player_to_win_value_[i*8 + j];
-        }
-    }
-
     /* Initialize possible_elementary_move_ array to empty vectors for each board position. */
     for (int i = 0; i < 64; ++i)
         possible_elementary_move_[un_64_ << i] = std::vector<uint_fast64_t>(0);
@@ -95,16 +85,6 @@ AlphaBeta::AlphaBeta(const std::vector<double> &player_to_win_value_,
     /* Set member variables equal to the passed in values */
     this->player_to_win_value_ = player_to_win_value_;
     this->player_to_lose_value_ = player_to_lose_value_;
-
-    /* Create maps for player values based on board position for both black and white players. */
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
-            player_to_lose_value_map_white_[int_to_uint64_[i][j]] = player_to_lose_value_[(7 - i)*8 + 7 - j];
-            player_to_lose_value_map_black_[int_to_uint64_[i][j]] = player_to_lose_value_[i*8 + j];
-            player_to_win_value_map_white_[int_to_uint64_[i][j]]  = player_to_win_value_[(7 - i)*8 + 7 - j];
-            player_to_win_value_map_black_[int_to_uint64_[i][j]]  = player_to_win_value_[i*8 + j];
-        }
-    }
 
     /* Initialize possible_elementary_move_ array to empty vectors for each board position. */
     for (int i = 0; i < 64; ++i)
@@ -461,16 +441,16 @@ double AlphaBeta::heuristicValue() {
         /* Checks if there is a White pawn at the current position. */
         if (pawnPosition & bit_boards_.White) {
             if (maximizing_player_)
-                result -= player_to_lose_value_map_white_[pawnPosition];
+                result -= player_to_lose_value_[63 - __builtin_ctzll(pawnPosition)];
             else
-                result += player_to_win_value_map_white_[pawnPosition];
+                result += player_to_win_value_[63 - __builtin_ctzll(pawnPosition)];
         }
         /* Checks if there is a Black pawn at the current position. */
         else if (pawnPosition & bit_boards_.Black) {
             if (maximizing_player_)
-                result += player_to_win_value_map_black_[pawnPosition];
+                result += player_to_win_value_[__builtin_ctzll(pawnPosition)];
             else
-                result -= player_to_lose_value_map_black_[pawnPosition];
+                result -= player_to_lose_value_[__builtin_ctzll(pawnPosition)];
         }
     }
     return result;
@@ -481,19 +461,19 @@ inline void AlphaBeta::updateHeuristicValue(const uint_fast64_t &move) {
      * by adding or subtracting the value of the pawn moved in the last move. */
     if (who_is_to_play_) {
         if (maximizing_player_) {
-            heuristic_value_ += player_to_win_value_map_black_[move & ~bit_boards_.Black]
-                                - player_to_win_value_map_black_[move & bit_boards_.Black];
+            heuristic_value_ += player_to_win_value_[__builtin_ctzll(move & ~bit_boards_.Black)]
+                                - player_to_win_value_[__builtin_ctzll(move & bit_boards_.Black)];
         } else {
-            heuristic_value_ += player_to_lose_value_map_black_[move & bit_boards_.Black]
-                               - player_to_lose_value_map_black_[move & ~bit_boards_.Black];
+            heuristic_value_ += player_to_lose_value_[__builtin_ctzll(move & bit_boards_.Black)]
+                               - player_to_lose_value_[__builtin_ctzll(move & ~bit_boards_.Black)];
         }
     } else {
         if (maximizing_player_) {
-            heuristic_value_ += player_to_lose_value_map_white_[move & bit_boards_.White]
-                                - player_to_lose_value_map_white_[move & ~bit_boards_.White];
+            heuristic_value_ += player_to_lose_value_[63 - __builtin_ctzll(move & bit_boards_.White)]
+                                - player_to_lose_value_[63 - __builtin_ctzll(move & ~bit_boards_.White)];
         } else {
-            heuristic_value_ += player_to_win_value_map_white_[move & ~bit_boards_.White]
-                                - player_to_win_value_map_white_[move & bit_boards_.White];
+            heuristic_value_ += player_to_win_value_[63 - __builtin_ctzll(move & ~bit_boards_.White)]
+                                - player_to_win_value_[63 - __builtin_ctzll(move & bit_boards_.White)];
         }
     }
 }
@@ -503,19 +483,19 @@ inline void AlphaBeta::updateHeuristicValueBack(const uint_fast64_t &move) {
      * by adding or subtracting the value of the pawn moved in the last move. */
     if (who_is_to_play_) {
         if (maximizing_player_) {
-            heuristic_value_ += player_to_win_value_map_black_[move & bit_boards_.Black]
-                                - player_to_win_value_map_black_[move & ~bit_boards_.Black];
+            heuristic_value_ += player_to_win_value_[__builtin_ctzll(move & bit_boards_.Black)]
+                                - player_to_win_value_[__builtin_ctzll(move & ~bit_boards_.Black)];
         } else {
-            heuristic_value_ += player_to_lose_value_map_black_[move & ~bit_boards_.Black]
-                                - player_to_lose_value_map_black_[move & bit_boards_.Black];
+            heuristic_value_ += player_to_lose_value_[__builtin_ctzll(move & ~bit_boards_.Black)]
+                                - player_to_lose_value_[__builtin_ctzll(move & bit_boards_.Black)];
         }
     } else {
         if (maximizing_player_) {
-            heuristic_value_ += player_to_lose_value_map_white_[move & ~bit_boards_.White]
-                                - player_to_lose_value_map_white_[move & bit_boards_.White];
+            heuristic_value_ += player_to_lose_value_[63 - __builtin_ctzll(move & ~bit_boards_.White)]
+                                - player_to_lose_value_[63 - __builtin_ctzll(move & bit_boards_.White)];
         } else {
-            heuristic_value_ += player_to_win_value_map_white_[move & bit_boards_.White]
-                                - player_to_win_value_map_white_[move & ~bit_boards_.White];
+            heuristic_value_ += player_to_win_value_[63 - __builtin_ctzll(move & bit_boards_.White)]
+                                - player_to_win_value_[63 - __builtin_ctzll(move & ~bit_boards_.White)];
         }
     }
 }
@@ -534,26 +514,11 @@ std::vector<double> AlphaBeta::getPlayerToWinValue() {
 
 void AlphaBeta::setPlayerToLoseValue(const std::vector<double> &player_to_lose_value_) {
     this->player_to_lose_value_ = player_to_lose_value_;
-
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
-            player_to_lose_value_map_white_[int_to_uint64_[i][j]] = player_to_lose_value_[(7 - i)*8 + 7 - j];
-            player_to_lose_value_map_black_[int_to_uint64_[i][j]] = player_to_lose_value_[i*8 + j];
-        }
-    }
-
     transposition_table_.clear();
 }
 
 void AlphaBeta::setPlayerToWinValue(const std::vector<double> &player_to_win_value_) {
     this->player_to_win_value_ = player_to_win_value_;
-
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
-            player_to_win_value_map_white_[int_to_uint64_[i][j]]  = player_to_win_value_[(7 - i)*8 + 7 - j];
-            player_to_win_value_map_black_[int_to_uint64_[i][j]]  = player_to_win_value_[i*8 + j];
-        }
-    }
 
     transposition_table_.clear();
 }
