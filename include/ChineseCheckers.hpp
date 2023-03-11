@@ -45,53 +45,53 @@
 */
 class ChineseCheckers {
  protected:
-    /*! Basic object used to create bitmasks efficiently. */
+    /*! @details Basic object used to create bitmasks efficiently. */
     uint_fast64_t un_64_ = static_cast<uint_fast64_t>(1);
-    /*! Indicate which is the next player to play. */
+    /*! @details Indicate which is the next player to play. */
     Player who_is_to_play_ = 0;
-    /*! A data structure containing the grid. */
+    /*! @details A data structure containing the grid. */
     bitBoards_t bit_boards_;
-    /*! The hash of the current grid. */
+    /*! @details The hash of the current grid. */
     uint_fast64_t  zobrist_hash_;
-    /*! Zobrist keys associated with each positions. */
+    /*! @details Zobrist keys associated with each positions. */
     std::vector<boost::unordered_map<uint_fast64_t, uint_fast64_t> > zobrist_keys_ =
             std::vector<boost::unordered_map<uint_fast64_t, uint_fast64_t> >(2);
-    /*! Zobrist keys associated to a move. */
+    /*! @details Zobrist keys associated to a move. */
     std::vector<boost::unordered_map<uint_fast64_t, uint_fast64_t> > zobrist_keys_moves_ =
             std::vector<boost::unordered_map<uint_fast64_t, uint_fast64_t> >(2);
-    /*!
+    /*! @details
      * Indicates the number of times a position has been seen.
      * It is used to check for draws.
      * */
     boost::unordered_map<uint64_t , int> number_of_times_seen_;
-    /*! Keeps the positions of the white winning zone. */
+    /*! @details Keeps the positions of the white winning zone. */
     const uint_fast64_t winning_positions_white_ = 0xF0E0C08000000000;
-    /*! Keeps the positions of the black winning zone. */
+    /*! @details Keeps the positions of the black winning zone. */
     const uint_fast64_t winning_positions_black_ = 0x000000000103070F;
-    /*! Stores the illegal positions. */
+    /*! @details Stores the illegal positions. */
     boost::unordered_map<uint32_t, bool> illegal_positions_;
-    /*! Stores results of cantor pairing to make the check for illegal positions faster. */
+    /*! @details Stores results of cantor pairing to make the check for illegal positions faster. */
     std::array<std::array<uint32_t, 8>, 8> cantor_pairing_;
-    /* Stores the valid directions to find if a move is valid faster. */
+    /*! @details Stores the valid directions to find if a move is valid faster. */
     std::vector<std::vector<int>> valid_lines = {{-1,  0}, {-1,  1}, {0 , -1},
                                                  {0 ,  1}, {1 , -1}, {1 ,  0}};
-    /* Stores the valid directions to find if a position is legal faster. */
+    /*! @details Stores the valid directions to find if a position is legal faster. */
     std::vector<std::vector<int>> valid_lines_illegal = {{-1,  0}, {-1,  1}, {0 , -1},
                                                          {0 ,  1}, {1 , -1}, {1 ,  0},
                                                          {-2,  0}, {-2,  2}, {0 , -2},
                                                          {0 ,  2}, {2 , -2}, {2 ,  0}};
-    /*! Stores the conversion of a bit-wise position to a pair of index. */
+    /*! @details Stores the conversion of a bit-wise position to a pair of index. */
     boost::unordered_map<uint_fast64_t, std::pair<int, int>> uint64_to_pair_;
-    /* !Stores the conversion of a pair of index to a bit-wise position. */
+    /*! @details Stores the conversion of a pair of index to a bit-wise position. */
     std::array<std::array<uint_fast64_t, 8>, 8> int_to_uint64_;
-    /*! Stores the neighbours' position of all pawns. */
+    /*! @details Stores the neighbours' position of all pawns. */
     std::unordered_map<uint_fast64_t, std::vector<uint_fast64_t>> direct_neighbours_;
-    /*! Stores all required bitMasks to find all jumps from a given pawn. */
+    /*! @detailsStores all required bitMasks to find all jumps from a given pawn. */
     std::unordered_map<uint_fast64_t, std::vector<
         std::vector<std::pair<std::pair<uint_fast64_t,
         uint_fast64_t>, uint_fast64_t> > > > k_neighbours_;
 
-    /*! @brief
+    /*! @details
      * A member returning the type of an elementary move
      * (not a succession of jumps).
      * @param original_position The position.
@@ -104,7 +104,7 @@ class ChineseCheckers {
     MoveType elementaryMove(const PositionType &original_position,
                             const PositionType &arrival_position);
     /*!
-     * @brief Indicates whether the position is illegal or not.
+     * @details Indicates whether the position is illegal or not.
      * @return Returns true iff the position is illegal.
      * @sa cantorPairingFunction
      * @sa loadIllegalPositions
@@ -112,7 +112,7 @@ class ChineseCheckers {
     bool isPositionIllegal();
 
     /*!
-     * @brief Cantor's pairing function.
+     * @details Cantor's pairing function.
      * @param x first argument.
      * @param y second argument.
      * @return cantor's pairing function applied to `x` and `y`.
@@ -122,33 +122,36 @@ class ChineseCheckers {
     int cantorPairingFunction(const int &x, const int &y);
 
     /*!
-     * @brief Loads illegal positions.
+     * @details Loads illegal positions.
      * @sa isPositionIllegal
      * @sa cantorPairingFunction
      */
     void loadIllegalPositions();
     /*!
-     * @brief Generates @ref zobrist_keys_.
+     * @details Generates @ref zobrist_keys_.
      * @sa computeAndSetZobristHash
      */
     void generateZobristKeys();
     /*!
-     * @brief Computes and sets @ref zobrist_hash_.
+     * @details
+     * The function calculates the Zobrist hash value for the current game state based
+     * on the position of each piece on the board, using precomputed random keys for each
+     * square and each color. The hash value is stored in the @ref zobrist_hash_ member variable.
      * @sa generateZobristKeys
      */
     void computeAndSetZobristHash();
  public:
-    /*! @brief
-     * A simple constructor.
+    /*! @details
+     * Construct the object
      * @sa newGame
      */
     ChineseCheckers();
-    /*! @brief
+    /*! @details
     * Creates a new game.
     */
     void newGame();
 
-    /*! @brief
+    /*! @details
      * This member checks if a move is legal and executes it if it is legal.
      * @param player indicates which player made the move.
      * @param list_moves contains the list of intermediate positions.
@@ -160,9 +163,9 @@ class ChineseCheckers {
      */
     bool move(const Player &player,
               const ListOfPositionType &list_moves);
-    /*! @brief
-     * Indicates the current state of the game
-     * (ie, not finished, black won, white won or draw).
+    /*! @details
+     * This function returns the current state of the game, which can be
+     * one of the following four values: WhiteWon, BlackWon, Draw, or NotFinished.
      * @retval notFinished if the game is not finished.
      * @retval whiteWon if white won the game.
      * @retval blackWon if black won the game.
@@ -170,10 +173,10 @@ class ChineseCheckers {
      * @sa newGame
      */
     Result stateOfGame();
-    /*! @brief
-     * This member execute a move without checking if the move is legal.
+    /*!
      * @details
-     * This function is not made to be used by the end user. It has been engineered to
+     * This function is used to move a piece without verifying if the move is valid or not.
+     * It is not made to be used by the end user. It has been engineered to
      * be used by solvers. It bypasses usual verifications and hence allows illegal moves to be
      * played. This function should be used with great care.
      * @param move indicates the move do execute. This is a 64 bit type. Only two bits must be set : the original
@@ -183,25 +186,25 @@ class ChineseCheckers {
      */
     void moveWithoutVerification(const uint_fast64_t &move);
 
-    /*! @brief
+    /*! @details
      * Returns @ref who_is_to_play_
      * @return @ref who_is_to_play_
      */
     Player getWhoIsToPlay() const;
-    /*! @brief
+    /*! @details
      * Returns @ref bit_boards_.White
      * @return @ref bit_boards_.White
      */
     uint_fast64_t getBitBoardWhite();
-    /*! @brief
+    /*! @details
      * Returns @ref bit_boards_.Black
      * @return @ref bit_boards_.Black
      */
     uint_fast64_t getBitBoardBlack();
 
-    /*! @brief Prints the grid. */
+    /*! @details Prints the grid. */
     void printGrid();
-    /*! @brief Prints @ref who_is_to_play_ */
+    /*! @details Prints @ref who_is_to_play_ */
     void printWhoIsToPlay();
 };
 
