@@ -52,16 +52,16 @@
 /* Probability of mutation of an element */
 #define P_MUTATION 0.1
 /* Variability of a mutation */
-#define SIGMA_MUTATION  0.1
+#define SIGMA_MUTATION  0.05
 /*Ratio of cumulated scores taken in deciding the choices of parents*/
 #define SELECTION_RATIO 1
 
 /* Number of solvers in the evolution */
-#define POP_SIZE 300
+#define POP_SIZE 12
 /* Number of generations in the evolution */
-#define NUM_GENERATION 1500
+#define NUM_GENERATION 9
 /* Number of generation training white or black players */
-#define ROUND_LENGTH 1400
+#define ROUND_LENGTH 3
 /* Maximum number of moves authorized in a evolution game */
 #define MAX_NUM_MOVES 100
 
@@ -72,17 +72,19 @@
 
 /* Depth for AlphaBeta */
 #define AB_DEPTH 1
-
 /* Mean for initialisation */
 #define MEAN_INIT 0
 /* Mean for initialisation */
 #define SIGMA_INIT 0.1
 
-#define N_THREADS 6
+/*Choose if solvers are evolved from zero or from the default solver*/
+#define INIT_AT_RANDOM 0
+
+#define N_THREADS 4
 
 /* Creating distribution generators */
-//const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-const unsigned seed = 818934826;
+const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+//const unsigned seed = 818934826;
 /* Use std::random_device generator; for true randomness */
 std::mt19937 generator(seed);
 std::bernoulli_distribution b_distrib(P_MUTATION);
@@ -97,7 +99,6 @@ auto unif_bernouilli = std::bind(unif_b_distrib,generator);
 auto unif_int = std::bind(int_distrib,generator);
 
 
-#warning TODO: Test cross over
 #warning TODO: écrire qu a la fin dans les fichiers pour gagner du temps
 
 int main() {
@@ -149,10 +150,16 @@ int main() {
     std::vector<SolversIndividuals> pop_black(POP_SIZE);
 
     /* Initialisation of the population */
-    std::vector<double> zeros(64, 0);
-    for (int i = 0; i != POP_SIZE; ++i) {
-        pop_white[i].init_at_random();
-        pop_black[i].init_at_random();
+    if (INIT_AT_RANDOM) {
+        for (int i = 0; i != POP_SIZE; ++i) {
+            pop_white[i].init_at_random();
+            pop_black[i].init_at_random();
+        }
+    } else {//mutate at first
+        for (int i = 0; i != POP_SIZE; ++i) {
+            pop_white[i].mutate();
+            pop_black[i].mutate();
+        }
     }
 
     /* Initialisation of working variables */
@@ -177,19 +184,19 @@ int main() {
     int count = 0;
     for (int gen = 0; gen != NUM_GENERATION ; ++gen) {
         if (count == ROUND_LENGTH) {  /* Swaping who is evolving */
-            is_white_evolving = !is_white_evolving;
             count = 0;
-            if (is_white_evolving) {
+            if (is_white_evolving) { //We will evolve black at this generation; is_white_evolving is changed after this
                 //gp.set_white_player(best_white);/*single thread*/
                 for (int i = 0; i != N_THREADS; ++i)
                     gps[i].gp.set_white_player(best_white);
                 best_white.print_info_as_matrix_to_file(white_best_players);
-            } else {
+            } else { //We will evolve white at this generation; is_white_evolving is changed after this
                 //gp.set_black_player(best_black);/*single thread*/
                 for (int i = 0; i != N_THREADS; ++i)
                     gps[i].gp.set_black_player(best_black);
                 best_black.print_info_as_matrix_to_file(black_best_players);
             }
+            is_white_evolving = !is_white_evolving;
         }
 
 
@@ -222,6 +229,8 @@ int main() {
 
         ++count;
     }
+
+    (is_white_evolving) ? best_white.print_info_as_matrix_to_file(white_best_players): best_black.print_info_as_matrix_to_file(black_best_players);
 
     std::cout <<"Best white so far:\n";
     best_white.print_info();
@@ -261,14 +270,14 @@ win(std::vector<double> ({
     36.0/98, 37.0/98, 40.0/98, 45.0/98, 52.0/98, 62.0/98, 72.0/98, 85.0/98,
     49.0/98, 50.0/98, 53.0/98, 58.0/98, 65.0/98, 74.0/98, 85.0/98, 98.0/98  })),
 lose(std::vector<double> ({
-     0.0/98,  1.0/98,  4.0/98,  9.0/98, 16.0/98, 25.0/98, 36.0/98, 49.0/98,
-     1.0/98,  2.0/98,  5.0/98, 10.0/98, 17.0/98, 26.0/98, 37.0/98, 50.0/98,
-     4.0/98,  5.0/98,  8.0/98, 13.0/98, 20.0/98, 29.0/98, 40.0/98, 53.0/98,
-     9.0/98, 10.0/98, 13.0/98, 18.0/98, 25.0/98, 34.0/98, 45.0/98, 58.0/98,
-    16.0/98, 17.0/98, 20.0/98, 25.0/98, 32.0/98, 41.0/98, 52.0/98, 65.0/98,
-    25.0/98, 26.0/98, 29.0/98, 34.0/98, 41.0/98, 50.0/98, 62.0/98, 74.0/98,
-    36.0/98, 37.0/98, 40.0/98, 45.0/98, 52.0/98, 62.0/98, 72.0/98, 85.0/98,
-    49.0/98, 50.0/98, 53.0/98, 58.0/98, 65.0/98, 74.0/98, 85.0/98, 98.0/98  })),
+     0.0/588,  1.0/588,  4.0/588,  9.0/588, 16.0/588, 25.0/588, 36.0/588, 49.0/588,
+     1.0/588,  2.0/588,  5.0/588, 10.0/588, 17.0/588, 26.0/588, 37.0/588, 50.0/588,
+     4.0/588,  5.0/588,  8.0/588, 13.0/588, 20.0/588, 29.0/588, 40.0/588, 53.0/588,
+     9.0/588, 10.0/588, 13.0/588, 18.0/588, 25.0/588, 34.0/588, 45.0/588, 58.0/588,
+    16.0/588, 17.0/588, 20.0/588, 25.0/588, 32.0/588, 41.0/588, 52.0/588, 65.0/588,
+    25.0/588, 26.0/588, 29.0/588, 34.0/588, 41.0/588, 50.0/588, 62.0/588, 74.0/588,
+    36.0/588, 37.0/588, 40.0/588, 45.0/588, 52.0/588, 62.0/588, 72.0/588, 85.0/588,
+    49.0/588, 50.0/588, 53.0/588, 58.0/588, 65.0/588, 74.0/588, 85.0/588, 588.0/588  })),
 score(0) {}
 
 void SolversIndividuals::init_at_random() {
@@ -336,7 +345,6 @@ void SolversIndividuals::mutate() {
         if (mutates()) lose[i] = std::min(1.0, std::max(0.0, lose[i] + variation()));
     }
 
-
     /*
     const auto [min0, max0] = std::minmax_element(this->win.begin(),
                                                   this->win.end());
@@ -398,7 +406,7 @@ void SolversIndividuals::print_info_as_matrix() {
             std::cout << "}";
     }
 
-    std::cout << "}\nlose data:\n{";
+    std::cout << "}\nLose data:\n{";
     for (int i = 0; i != 8; ++i) {
         std::cout << "{";
         for (auto j = 0; j != 8; ++j) {
@@ -434,7 +442,7 @@ void SolversIndividuals::print_info_as_matrix_to_file(std::ofstream & file) {
             file << "}";
     }
 
-    file << "}\nlose data:\n{";
+    file << "}\nLose data:\n{";
     for (int i = 0; i != 8; ++i) {
         file << "{";
         for (auto j = 0; j != 8; ++j) {
