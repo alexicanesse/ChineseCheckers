@@ -17,7 +17,7 @@
 #define DRAW_VALUE (10)
 
 /* Set -1 to disable it/ */
-#define MAX_TREE_WIDTH (-1)
+#define MAX_TREE_WIDTH (10)
 
 
 /* AlphaBeta.hpp */
@@ -121,9 +121,9 @@ void AlphaBeta::availableMoves(std::set<uint_fast64_t, decltype(comp_move_)> &re
     uint_fast64_t v;
 
     /* Integer coordinates of the nodes. */
-    int i, j, i_neig, j_neig;
+    int i, j, i_neig, j_neig, idx, neig_idx;
     /* Integer coordinates of the root node multiplied by 2 (to avoid floating point calculations). */
-    int i_root_times_2, j_root_times_2;
+    int i_root_times_2, j_root_times_2, root_idx;
 
     /* The current root node. */
     uint_fast64_t root;
@@ -131,7 +131,7 @@ void AlphaBeta::availableMoves(std::set<uint_fast64_t, decltype(comp_move_)> &re
     uint_fast64_t pawnPositionMask = currentBitBoard;
 
     /* A vector that stores the possible elementary moves for each position. */
-    std::vector<std::vector<uint_fast64_t>> possible_elementary_move(64);
+    std::array<std::vector<uint_fast64_t>, 64> possible_elementary_move;
 
     /* Loop over all pawns of the current player. */
     for (root = pawnPositionMask & -pawnPositionMask;
@@ -145,10 +145,10 @@ void AlphaBeta::availableMoves(std::set<uint_fast64_t, decltype(comp_move_)> &re
         explored = root;
 
         /* Get the coordinates of the root. */
-        std::tie(i_root_times_2, j_root_times_2) = uint64_to_pair_[__builtin_ctzll(root)];
-        /* Multiply them by two to use them in averages. */
-        i_root_times_2 <<= 1;
-        j_root_times_2 <<= 1;
+        root_idx = __builtin_ctzll(root);
+        /* Calculate the row and column indices of the root. */
+        i_root_times_2 = (root_idx >> 3) << 1;
+        j_root_times_2 = (root_idx & 7) << 1;
 
         /* BFS to find all possible jumps. */
         while (queue) {
@@ -157,23 +157,27 @@ void AlphaBeta::availableMoves(std::set<uint_fast64_t, decltype(comp_move_)> &re
             queue ^= v;
 
             /* Get the coordinates of the current node. */
-            std::tie(i, j) = uint64_to_pair_[__builtin_ctzll(v)];
+            idx = __builtin_ctzll(v);
+            /* Calculate the row and column indices of the current neighbour. */
+            i = idx >> 3;
+            j = idx & 7;
 
             /* If the possible elementary moves for this node have not been computed yet,
              * compute them and store them in the possible_elementary_move map. */
             if (!(computed_possible_elementary_move & v)) {
-                possible_elementary_move.reserve(12);
-
                 /* Loop over all possible jumps for the current node. */
-                for (const auto &possibleJumps : k_neighbours_[__builtin_ctzll(v)]) {
-                    for (const auto &possibleJump : possibleJumps) {
+                for (auto pPossibleJumps = k_neighbours_[__builtin_ctzll(v)].begin();
+                     pPossibleJumps != k_neighbours_[__builtin_ctzll(v)].end();
+                     ++pPossibleJumps) {
+                    for (auto pPossibleJump = pPossibleJumps->begin();
+                         pPossibleJump != pPossibleJumps->end();
+                         ++pPossibleJump) {
 
                         /* Check if there is a pawn to jump over and if the jump is valid. */
-                        if ((bit_boards_all & possibleJump.first.first)
-                            && ! (bit_boards_all
-                                  & (possibleJump.second | possibleJump.first.second))) {
+                        if ((bit_boards_all & pPossibleJump->first.first)
+                            && !(bit_boards_all & (pPossibleJump->second | pPossibleJump->first.second))) {
                             /* Store the possible elementary moves for the current node. */
-                            possible_elementary_move[__builtin_ctzll(v)].emplace_back(possibleJump.first.second);
+                            possible_elementary_move[__builtin_ctzll(v)].emplace_back(pPossibleJump->first.second);
                             break;
                         }
                     }
@@ -183,9 +187,12 @@ void AlphaBeta::availableMoves(std::set<uint_fast64_t, decltype(comp_move_)> &re
             }
 
             /* Loop over all possible elementary moves for the current node. */
-            for (uint_fast64_t neig : possible_elementary_move[__builtin_ctzll(v)]) {
-                /* Get the coordinates of the current neighbour. */
-                std::tie(i_neig, j_neig) = uint64_to_pair_[__builtin_ctzll(neig)];
+            for (const uint_fast64_t &neig : possible_elementary_move[__builtin_ctzll(v)]) {
+                /* Get the index of the current neighbour. */
+                neig_idx = __builtin_ctzll(neig);
+                /* Calculate the row and column indices of the current neighbour. */
+                i_neig = neig_idx >> 3; /* Equivalent to neig_idx / 8. */
+                j_neig = neig_idx & 7;  /* Equivalent to neig_idx % 8. */
                 /* Check that we haven't already explored this node and
                  * that we're not jumping over the root. */
                 if (!(neig & explored)
@@ -203,23 +210,16 @@ void AlphaBeta::availableMoves(std::set<uint_fast64_t, decltype(comp_move_)> &re
 
 
     /* This part of the code handles the case of not jump moves. */
-
-
-    uint_fast64_t pawnPosition;
-    pawnPositionMask = currentBitBoard;
-    for (pawnPosition = pawnPositionMask & -pawnPositionMask;
-                        pawnPositionMask & -pawnPositionMask;
-         pawnPosition = pawnPositionMask & -pawnPositionMask) {
-        /* This ensures that each pawn is visited only once. */
-        pawnPositionMask ^= pawnPosition;
-
-        /* Iterates over each of the direct neighbors of the pawn
-         * using the direct_neighbours_ data structure. */
-        for (const auto &neig : direct_neighbours_[__builtin_ctzll(pawnPosition)]) {
-            /* If the neighbor position is not occupied by any pawn (White or Black),
-             * then the move is valid and is added to the result vector. */
-            if (!((bit_boards_.White | bit_boards_.Black) & neig))
-                result.insert(pawnPosition | neig);
+    for (int i = 0; i < 64; ++i) {
+        if ((un_64_ << i) & currentBitBoard) {
+            /* Iterates over each of the direct neighbors of the pawn
+            　* using the direct_neighbours_ data structure. */
+            for (const auto &neig : direct_neighbours_[i]) {
+                /* If the neighbor position is not occupied by any pawn (White or Black),
+                 * then the move is valid and is added to the result vector. */
+                if (!(bit_boards_all & neig))
+                    result.insert((un_64_ << i) | neig);
+            }
         }
     }
 }
@@ -359,7 +359,7 @@ const double AlphaBeta::AlphaBetaEval(const int &depth,
     /* Create a buff used to keep the result of the recursive call. */
     double buff;
 
-    /* We do not consider all moves in order to have a speed up */
+    /* We do not consider all moves in order to have a speed-up */
     int index = 0;
     for (const auto &move:possible_moves) {
         if (index++ == MAX_TREE_WIDTH)
@@ -520,13 +520,10 @@ std::vector<double> AlphaBeta::getPlayerToWinValue() {
 
 void AlphaBeta::setPlayerToLoseValue(const std::vector<double> &player_to_lose_value_) {
     this->player_to_lose_value_ = player_to_lose_value_;
-    transposition_table_.clear();
 }
 
 void AlphaBeta::setPlayerToWinValue(const std::vector<double> &player_to_win_value_) {
     this->player_to_win_value_ = player_to_win_value_;
-
-    transposition_table_.clear();
 }
 
 void AlphaBeta::loadOpenings() {
