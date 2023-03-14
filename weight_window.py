@@ -8,7 +8,7 @@ window_win = tk.Tk()
 window_lose = tk.Toplevel(window_win)
 
 # program constants
-WINDOW_SIDE = 1100
+WINDOW_SIDE = 800
 CASE_RADIUS_HIT = WINDOW_SIDE // (1 + 7 * math.sqrt(3))
 CASE_RADIUS_UI = CASE_RADIUS_HIT // 2
 FONT = f"Helvetica {WINDOW_SIDE // 47} bold"
@@ -44,7 +44,7 @@ def to_color(r : float):
     ''' converts a number between 0 and 1 to a tk color following a linear gradient '''
     assert(0 <= r and r <= 1)
     min_color = np.array([0, 255, 0])
-    max_color = np.array([255, 0, 120])
+    max_color = np.array([0, 0, 255])
     return from_rgb(r * max_color + (1 - r) * min_color)
 
 
