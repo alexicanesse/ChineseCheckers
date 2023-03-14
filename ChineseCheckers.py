@@ -127,9 +127,9 @@ class Board(Tk,Areas):
                                         choices, 
                                         self.DECO_WIDTH,
                                         default_selectedB)
-
+        # visual indicator that shows game infos (whose turn..)
         self.text_info_players = self.__parametersArea.create_text(parameters_width // 2,
-                                                                menu_height // 3,
+                                                                menu_height // 2,
                                                                 text="Choose the \nparameters", 
                                                                 font=self.get_font(13), 
                                                                 justify=CENTER,
@@ -316,7 +316,7 @@ class Board(Tk,Areas):
             self.__parametersArea.moveto(self.deco_elts[2], 2 * x + 2 * self.ITEM_WIDTH + self.DECO_WIDTH, y) 
             a, b, c, d = self.__parametersArea.bbox(self.text_info_players)
             text_width, text_height = c - a, d - b
-            self.__parametersArea.moveto(self.text_info_players, (parameters_width - text_width) // 2, menu_height // 3 - text_height // 2)
+            self.__parametersArea.moveto(self.text_info_players, (parameters_width - text_width) // 2, menu_height // 2 - text_height // 2)
 
             # fix buttons positions
             self.new_game_button.moveto((control_width - self.NEW_GAME_WIDTH) // 2, event.height // 4 - self.NEW_GAME_HEIGHT // 2) 
@@ -330,5 +330,5 @@ class Board(Tk,Areas):
 
 if __name__ == "__main__":
     
-    fen = Board(1300, 700)
+    fen = Board(1800, 900)
     fen.mainloop()
