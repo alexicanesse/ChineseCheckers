@@ -158,18 +158,20 @@ struct fromPythonToColor {
 
 
 
+
 BOOST_PYTHON_MODULE(AlphaBeta) {
     boost::python::to_python_converter<ListOfPositionType,
                                             ListOfPositionType_to_list>();
     fromPythonToColor();
 
     iterable_converter()
-      .from_python<std::vector<int> >()
-      .from_python<std::vector<PositionType> >()
-      .from_python< ListOfPositionType >()
-      .from_python<std::vector<std::vector<int> > >()
-      .from_python<std::vector<Color> >()
-      .from_python<std::vector<std::vector<Color> > >();
+        .from_python<std::vector<int> >()
+        .from_python<std::vector<double> >()
+        .from_python<std::vector<PositionType> >()
+        .from_python< ListOfPositionType >()
+        .from_python<std::vector<std::vector<int> > >()
+        .from_python<std::vector<Color> >()
+        .from_python<std::vector<std::vector<Color> > >();
 
     boost::python::enum_<Result>("Result")
         .value("NotFinished", NotFinished)
@@ -182,7 +184,10 @@ BOOST_PYTHON_MODULE(AlphaBeta) {
         .def("state_of_game", &AlphaBeta::stateOfGame)
         .def("print_grid_", &AlphaBeta::printGrid)
         .def("move", &AlphaBeta::move)
-        .def("isHuman", &AlphaBeta::isHuman);
+        .def("isHuman", &AlphaBeta::isHuman)
+        .def(boost::python::init<>())
+        .def(boost::python::init<const std::vector<double>&,
+                                 const std::vector<double>&>());
 }
 
 
