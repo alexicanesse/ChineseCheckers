@@ -71,7 +71,6 @@ Requirements for the software and other tools to build, test and push
 - [Tkinter](https://docs.python.org/3/library/tkinter.html)
 - [GoogleTest](https://github.com/google/googletest)
 - [Google Benchmark](https://github.com/google/benchmark)
-- [Eigen3](https://eigen.tuxfamily.org/index.php?title=Main_Page)
 - [Tensorflow C API](https://www.tensorflow.org/install/lang_c)
 - [Cppflow](https://github.com/serizba/cppflow)
 
