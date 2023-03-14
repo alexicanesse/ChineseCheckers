@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['k_5fneighbours_5f_0',['k_neighbours_',['../class_chinese_checkers.html#a1e00bb842e8295fad0676c2ce7159a6e',1,'ChineseCheckers']]]
+  ['heuristic_5fvalue_5f_0',['heuristic_value_',['../class_alpha_beta.html#a3e9eb1d69b18495c4d1eb48ea426a2f3',1,'AlphaBeta']]]
 ];

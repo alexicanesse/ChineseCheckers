@@ -157,7 +157,6 @@ Prerequisites</h3>
 <li><a href="https://docs.python.org/3/library/tkinter.html">Tkinter</a></li>
 <li><a href="https://github.com/google/googletest">GoogleTest</a></li>
 <li><a href="https://github.com/google/benchmark">Google Benchmark</a></li>
-<li><a href="https://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen3</a></li>
 <li><a href="https://www.tensorflow.org/install/lang_c">Tensorflow C API</a></li>
 <li><a href="https://github.com/serizba/cppflow">Cppflow</a></li>
 </ul>
@@ -166,22 +165,23 @@ Installing</h3>
 <h4><a class="anchor" id="autotoc_md29"></a>
 Installing prerequisites</h4>
 <p>On Ubuntu and Debian based systems</p>
-<div class="fragment"><div class="line"># pip3</div>
+<div class="fragment"><div class="line"># CMake</div>
+<div class="line">sudo apt install cmake</div>
+<div class="line"># g++ (Or any other C++ compiler that supports C++-20.</div>
+<div class="line">sudo apt install build-essential</div>
+<div class="line">sudo apt install g++-12</div>
+<div class="line"># pip3</div>
 <div class="line">sudo apt install python3-pip</div>
 <div class="line"># Numpy</div>
 <div class="line">pip3 install numpy</div>
 <div class="line"># Boost</div>
-<div class="line">sudo apt-get install libboost-all-dev</div>
-<div class="line"># Boost.Python</div>
-<div class="line">sudo apt-get install libboost-python-dev</div>
+<div class="line">sudo apt install libboost-all-dev</div>
 <div class="line"># Tkinter</div>
-<div class="line">sudo apt-get install python3-tk</div>
+<div class="line">sudo apt install python3-tk</div>
 <div class="line"># Google Test</div>
-<div class="line">sudo apt-get install libgtest-dev</div>
+<div class="line">sudo apt install libgtest-dev</div>
 <div class="line"># Google Benchmark</div>
-<div class="line">sudo apt-get install libbenchmark-dev</div>
-<div class="line"># Eigen3</div>
-<div class="line">sudo apt-get install libeigen3-dev</div>
+<div class="line">sudo apt install libbenchmark-dev</div>
 <div class="line"># Tensorflow C API</div>
 <div class="line">FILENAME=libtensorflow-cpu-linux-x86_64-2.11.0.tar.gz</div>
 <div class="line">wget -q --no-check-certificate https://storage.googleapis.com/tensorflow/libtensorflow/${FILENAME}</div>
@@ -194,7 +194,9 @@ Installing prerequisites</h4>
 <div class="line">cmake ..</div>
 <div class="line">make -j</div>
 <div class="line">sudo make install</div>
-</div><!-- fragment --><p>On macOS </p><div class="fragment"><div class="line"># Numpy</div>
+</div><!-- fragment --><p>On macOS </p><div class="fragment"><div class="line"># CMake</div>
+<div class="line">brew install cmake</div>
+<div class="line"># Numpy</div>
 <div class="line">pip3 install numpy</div>
 <div class="line"># Boost</div>
 <div class="line">brew install boost</div>
@@ -206,8 +208,6 @@ Installing prerequisites</h4>
 <div class="line">brew install googletest</div>
 <div class="line"># Google Benchmark</div>
 <div class="line">brew install google-benchmark</div>
-<div class="line"># Eigen3</div>
-<div class="line">brew install eigen</div>
 <div class="line"># Tensorflow C API</div>
 <div class="line">FILENAME=libtensorflow-cpu-darwin-x86_64-2.11.0.tar.gz</div>
 <div class="line">wget -q --no-check-certificate https://storage.googleapis.com/tensorflow/libtensorflow/${FILENAME}</div>

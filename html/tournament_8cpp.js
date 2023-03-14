@@ -1,8 +1,10 @@
 var tournament_8cpp =
 [
     [ "AB_DEPTH", "tournament_8cpp.html#aaffa4d3f0b933834c78503a99a69f640", null ],
+    [ "INIT_AT_RANDOM", "tournament_8cpp.html#ad6c6944609dc59dd9cfa195cdb1cb583", null ],
     [ "MAX_NUM_MOVES", "tournament_8cpp.html#a86a74b7a51b9d666e73427ee6391272a", null ],
     [ "MEAN_INIT", "tournament_8cpp.html#a0bf640530acb8271e68d397f4cf4a8fc", null ],
+    [ "N_THREADS", "tournament_8cpp.html#ab60b5074c740fd36061f48f90d1a0b21", null ],
     [ "NUM_GENERATION", "tournament_8cpp.html#a8cb0d5cfbec52986a3e45c9c4cd6e6d1", null ],
     [ "P_MUTATION", "tournament_8cpp.html#ad1d7b9efd831b763b6db9986dfb9e971", null ],
     [ "POP_SIZE", "tournament_8cpp.html#aea5b3e4c9df97408e95b67cdf3f992fb", null ],
@@ -12,15 +14,20 @@ var tournament_8cpp =
     [ "SIGMA_MUTATION", "tournament_8cpp.html#a63fe8d16c5a02d3931b942364f7ddfa7", null ],
     [ "b_distrib", "tournament_8cpp.html#ad163694ee7ab93c2148ab8debaafe207", null ],
     [ "evol", "tournament_8cpp.html#a19282ef4ab282b76796089de028db2b3", null ],
+    [ "evol_thread", "tournament_8cpp.html#a9b40f00eff029f842f540c6c7b41b977", null ],
     [ "generator", "tournament_8cpp.html#a317e8614a0096a3c03c1e8729bba7c2b", null ],
+    [ "int_distrib", "tournament_8cpp.html#a6d009b3de68b38e3cacd99f680faa515", null ],
     [ "main", "tournament_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4", null ],
     [ "n_distrib", "tournament_8cpp.html#ada04279ecb24d6f2e5a35f0dca958b97", null ],
     [ "n_distrib_for_initialisation", "tournament_8cpp.html#ac17962cbbb498109994cc22f4bfde3bd", null ],
     [ "operator<", "tournament_8cpp.html#a1775743a42a86622626422cfef898072", null ],
     [ "print_matrix", "tournament_8cpp.html#aaf189cdb7a88ad5fdf2acc7f34e949eb", null ],
+    [ "unif_b_distrib", "tournament_8cpp.html#a6aa7e7375ee407809fb9b8e097e3e69e", null ],
     [ "write_scores", "tournament_8cpp.html#aa3ac02038b98a7d1b39dbdc311f9ccaf", null ],
     [ "initiator_", "tournament_8cpp.html#a2fff424ef55f00e36377dc3ddcd2be2f", null ],
     [ "mutates", "tournament_8cpp.html#a191b325c4047498a1c9575e11c05d301", null ],
     [ "seed", "tournament_8cpp.html#acf74842513df74d6b7d338cac0c647fb", null ],
+    [ "unif_bernouilli", "tournament_8cpp.html#ae66ab4e2f578b32f078917a6feda0ec9", null ],
+    [ "unif_int", "tournament_8cpp.html#a9cfd4111b5a0856afee215ff04997f08", null ],
     [ "variation", "tournament_8cpp.html#a415f2b5a3a81139499530a697b21b1c4", null ]
 ];

@@ -107,6 +107,7 @@ $(document).ready(function(){initNavTree('tournament_8cpp.html',''); initResizab
 <code>#include &lt;iomanip&gt;</code><br />
 <code>#include &lt;limits&gt;</code><br />
 <code>#include &lt;fstream&gt;</code><br />
+<code>#include &lt;thread&gt;</code><br />
 <code>#include &lt;boost/python.hpp&gt;</code><br />
 <code>#include &quot;<a class="el" href="_types_8hpp_source.html">Types.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_alpha_beta_8hpp_source.html">AlphaBeta.hpp</a>&quot;</code><br />
@@ -115,15 +116,15 @@ $(document).ready(function(){initNavTree('tournament_8cpp.html',''); initResizab
 Macros</h2></td></tr>
 <tr class="memitem:ad1d7b9efd831b763b6db9986dfb9e971"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#ad1d7b9efd831b763b6db9986dfb9e971">P_MUTATION</a>&#160;&#160;&#160;0.1</td></tr>
 <tr class="separator:ad1d7b9efd831b763b6db9986dfb9e971"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63fe8d16c5a02d3931b942364f7ddfa7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#a63fe8d16c5a02d3931b942364f7ddfa7">SIGMA_MUTATION</a>&#160;&#160;&#160;0.1</td></tr>
+<tr class="memitem:a63fe8d16c5a02d3931b942364f7ddfa7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#a63fe8d16c5a02d3931b942364f7ddfa7">SIGMA_MUTATION</a>&#160;&#160;&#160;0.05</td></tr>
 <tr class="separator:a63fe8d16c5a02d3931b942364f7ddfa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63b3ff5c7d581f460d3a499f5517d23e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#a63b3ff5c7d581f460d3a499f5517d23e">SELECTION_RATIO</a>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:a63b3ff5c7d581f460d3a499f5517d23e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea5b3e4c9df97408e95b67cdf3f992fb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#aea5b3e4c9df97408e95b67cdf3f992fb">POP_SIZE</a>&#160;&#160;&#160;200</td></tr>
+<tr class="memitem:aea5b3e4c9df97408e95b67cdf3f992fb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#aea5b3e4c9df97408e95b67cdf3f992fb">POP_SIZE</a>&#160;&#160;&#160;12</td></tr>
 <tr class="separator:aea5b3e4c9df97408e95b67cdf3f992fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8cb0d5cfbec52986a3e45c9c4cd6e6d1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#a8cb0d5cfbec52986a3e45c9c4cd6e6d1">NUM_GENERATION</a>&#160;&#160;&#160;1000</td></tr>
+<tr class="memitem:a8cb0d5cfbec52986a3e45c9c4cd6e6d1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#a8cb0d5cfbec52986a3e45c9c4cd6e6d1">NUM_GENERATION</a>&#160;&#160;&#160;100</td></tr>
 <tr class="separator:a8cb0d5cfbec52986a3e45c9c4cd6e6d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3bdd229b122f1f4401b5821d94a167a7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#a3bdd229b122f1f4401b5821d94a167a7">ROUND_LENGTH</a>&#160;&#160;&#160;5</td></tr>
+<tr class="memitem:a3bdd229b122f1f4401b5821d94a167a7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#a3bdd229b122f1f4401b5821d94a167a7">ROUND_LENGTH</a>&#160;&#160;&#160;3</td></tr>
 <tr class="separator:a3bdd229b122f1f4401b5821d94a167a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a86a74b7a51b9d666e73427ee6391272a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#a86a74b7a51b9d666e73427ee6391272a">MAX_NUM_MOVES</a>&#160;&#160;&#160;100</td></tr>
 <tr class="separator:a86a74b7a51b9d666e73427ee6391272a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -133,6 +134,10 @@ Macros</h2></td></tr>
 <tr class="separator:a0bf640530acb8271e68d397f4cf4a8fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f6ad8818d7f5de228103a9617c9fd31"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#a5f6ad8818d7f5de228103a9617c9fd31">SIGMA_INIT</a>&#160;&#160;&#160;0.1</td></tr>
 <tr class="separator:a5f6ad8818d7f5de228103a9617c9fd31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6c6944609dc59dd9cfa195cdb1cb583"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#ad6c6944609dc59dd9cfa195cdb1cb583">INIT_AT_RANDOM</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:ad6c6944609dc59dd9cfa195cdb1cb583"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab60b5074c740fd36061f48f90d1a0b21"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#ab60b5074c740fd36061f48f90d1a0b21">N_THREADS</a>&#160;&#160;&#160;4</td></tr>
+<tr class="separator:ab60b5074c740fd36061f48f90d1a0b21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -140,10 +145,14 @@ Functions</h2></td></tr>
 <tr class="separator:a317e8614a0096a3c03c1e8729bba7c2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad163694ee7ab93c2148ab8debaafe207"><td class="memItemLeft" align="right" valign="top">std::bernoulli_distribution&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#ad163694ee7ab93c2148ab8debaafe207">b_distrib</a> (<a class="el" href="tournament_8cpp.html#ad1d7b9efd831b763b6db9986dfb9e971">P_MUTATION</a>)</td></tr>
 <tr class="separator:ad163694ee7ab93c2148ab8debaafe207"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6aa7e7375ee407809fb9b8e097e3e69e"><td class="memItemLeft" align="right" valign="top">std::bernoulli_distribution&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#a6aa7e7375ee407809fb9b8e097e3e69e">unif_b_distrib</a> (0.5)</td></tr>
+<tr class="separator:a6aa7e7375ee407809fb9b8e097e3e69e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada04279ecb24d6f2e5a35f0dca958b97"><td class="memItemLeft" align="right" valign="top">std::normal_distribution&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#ada04279ecb24d6f2e5a35f0dca958b97">n_distrib</a> (0, <a class="el" href="tournament_8cpp.html#a63fe8d16c5a02d3931b942364f7ddfa7">SIGMA_MUTATION</a>)</td></tr>
 <tr class="separator:ada04279ecb24d6f2e5a35f0dca958b97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac17962cbbb498109994cc22f4bfde3bd"><td class="memItemLeft" align="right" valign="top">std::normal_distribution&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#ac17962cbbb498109994cc22f4bfde3bd">n_distrib_for_initialisation</a> (<a class="el" href="tournament_8cpp.html#a0bf640530acb8271e68d397f4cf4a8fc">MEAN_INIT</a>, <a class="el" href="tournament_8cpp.html#a5f6ad8818d7f5de228103a9617c9fd31">SIGMA_INIT</a>)</td></tr>
 <tr class="separator:ac17962cbbb498109994cc22f4bfde3bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d009b3de68b38e3cacd99f680faa515"><td class="memItemLeft" align="right" valign="top">std::uniform_int_distribution&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#a6d009b3de68b38e3cacd99f680faa515">int_distrib</a> (0, 100 *<a class="el" href="tournament_8cpp.html#aea5b3e4c9df97408e95b67cdf3f992fb">POP_SIZE</a>)</td></tr>
+<tr class="separator:a6d009b3de68b38e3cacd99f680faa515"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae66f6b31b5ad750f1fe042a706a4e3d4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a> ()</td></tr>
 <tr class="separator:ae66f6b31b5ad750f1fe042a706a4e3d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1775743a42a86622626422cfef898072"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#a1775743a42a86622626422cfef898072">operator&lt;</a> (<a class="el" href="class_solvers_individuals.html">SolversIndividuals</a> const &amp;s1, <a class="el" href="class_solvers_individuals.html">SolversIndividuals</a> const &amp;s2)</td></tr>
@@ -154,10 +163,12 @@ Functions</h2></td></tr>
 <tr class="separator:aa3ac02038b98a7d1b39dbdc311f9ccaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19282ef4ab282b76796089de028db2b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#a19282ef4ab282b76796089de028db2b3">evol</a> (<a class="el" href="class_game_player.html">GamePlayer</a> *gp, std::vector&lt; <a class="el" href="class_solvers_individuals.html">SolversIndividuals</a> &gt; &amp;population, <a class="el" href="class_solvers_individuals.html">SolversIndividuals</a> *best_player, bool is_white_evolving)</td></tr>
 <tr class="separator:a19282ef4ab282b76796089de028db2b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b40f00eff029f842f540c6c7b41b977"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#a9b40f00eff029f842f540c6c7b41b977">evol_thread</a> (const std::vector&lt; <a class="el" href="class_thread_game_player.html">ThreadGamePlayer</a> &gt; &amp;gps, std::vector&lt; <a class="el" href="class_solvers_individuals.html">SolversIndividuals</a> &gt; &amp;population, <a class="el" href="class_solvers_individuals.html">SolversIndividuals</a> *best_player, bool is_white_evolving)</td></tr>
+<tr class="separator:a9b40f00eff029f842f540c6c7b41b977"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:acf74842513df74d6b7d338cac0c647fb"><td class="memItemLeft" align="right" valign="top">const unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#acf74842513df74d6b7d338cac0c647fb">seed</a> = 818934826</td></tr>
+<tr class="memitem:acf74842513df74d6b7d338cac0c647fb"><td class="memItemLeft" align="right" valign="top">const unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#acf74842513df74d6b7d338cac0c647fb">seed</a> = std::chrono::system_clock::now().time_since_epoch().count()</td></tr>
 <tr class="separator:acf74842513df74d6b7d338cac0c647fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a191b325c4047498a1c9575e11c05d301"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#a191b325c4047498a1c9575e11c05d301">mutates</a> = std::bind(<a class="el" href="tournament_8cpp.html#ad163694ee7ab93c2148ab8debaafe207">b_distrib</a>, <a class="el" href="tournament_8cpp.html#a317e8614a0096a3c03c1e8729bba7c2b">generator</a>)</td></tr>
 <tr class="separator:a191b325c4047498a1c9575e11c05d301"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -165,6 +176,10 @@ Variables</h2></td></tr>
 <tr class="separator:a415f2b5a3a81139499530a697b21b1c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fff424ef55f00e36377dc3ddcd2be2f"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#a2fff424ef55f00e36377dc3ddcd2be2f">initiator_</a> = std::bind(<a class="el" href="tournament_8cpp.html#ac17962cbbb498109994cc22f4bfde3bd">n_distrib_for_initialisation</a>,<a class="el" href="tournament_8cpp.html#a317e8614a0096a3c03c1e8729bba7c2b">generator</a>)</td></tr>
 <tr class="separator:a2fff424ef55f00e36377dc3ddcd2be2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae66ab4e2f578b32f078917a6feda0ec9"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#ae66ab4e2f578b32f078917a6feda0ec9">unif_bernouilli</a> = std::bind(<a class="el" href="tournament_8cpp.html#a6aa7e7375ee407809fb9b8e097e3e69e">unif_b_distrib</a>,<a class="el" href="tournament_8cpp.html#a317e8614a0096a3c03c1e8729bba7c2b">generator</a>)</td></tr>
+<tr class="separator:ae66ab4e2f578b32f078917a6feda0ec9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cfd4111b5a0856afee215ff04997f08"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tournament_8cpp.html#a9cfd4111b5a0856afee215ff04997f08">unif_int</a> = std::bind(<a class="el" href="tournament_8cpp.html#a6d009b3de68b38e3cacd99f680faa515">int_distrib</a>,<a class="el" href="tournament_8cpp.html#a317e8614a0096a3c03c1e8729bba7c2b">generator</a>)</td></tr>
+<tr class="separator:a9cfd4111b5a0856afee215ff04997f08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="aaffa4d3f0b933834c78503a99a69f640" name="aaffa4d3f0b933834c78503a99a69f640"></a>
@@ -175,6 +190,20 @@ Variables</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">#define AB_DEPTH&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad6c6944609dc59dd9cfa195cdb1cb583" name="ad6c6944609dc59dd9cfa195cdb1cb583"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6c6944609dc59dd9cfa195cdb1cb583">&#9670;&#160;</a></span>INIT_AT_RANDOM</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define INIT_AT_RANDOM&#160;&#160;&#160;0</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -209,6 +238,20 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="ab60b5074c740fd36061f48f90d1a0b21" name="ab60b5074c740fd36061f48f90d1a0b21"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab60b5074c740fd36061f48f90d1a0b21">&#9670;&#160;</a></span>N_THREADS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define N_THREADS&#160;&#160;&#160;4</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a8cb0d5cfbec52986a3e45c9c4cd6e6d1" name="a8cb0d5cfbec52986a3e45c9c4cd6e6d1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8cb0d5cfbec52986a3e45c9c4cd6e6d1">&#9670;&#160;</a></span>NUM_GENERATION</h2>
 
@@ -216,7 +259,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define NUM_GENERATION&#160;&#160;&#160;1000</td>
+          <td class="memname">#define NUM_GENERATION&#160;&#160;&#160;100</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -244,7 +287,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define POP_SIZE&#160;&#160;&#160;200</td>
+          <td class="memname">#define POP_SIZE&#160;&#160;&#160;12</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -258,7 +301,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define ROUND_LENGTH&#160;&#160;&#160;5</td>
+          <td class="memname">#define ROUND_LENGTH&#160;&#160;&#160;3</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -300,7 +343,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define SIGMA_MUTATION&#160;&#160;&#160;0.1</td>
+          <td class="memname">#define SIGMA_MUTATION&#160;&#160;&#160;0.05</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -366,6 +409,46 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a9b40f00eff029f842f540c6c7b41b977" name="a9b40f00eff029f842f540c6c7b41b977"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b40f00eff029f842f540c6c7b41b977">&#9670;&#160;</a></span>evol_thread()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void evol_thread </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="class_thread_game_player.html">ThreadGamePlayer</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>gps</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="class_solvers_individuals.html">SolversIndividuals</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>population</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_solvers_individuals.html">SolversIndividuals</a> *&#160;</td>
+          <td class="paramname"><em>best_player</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>is_white_evolving</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a317e8614a0096a3c03c1e8729bba7c2b" name="a317e8614a0096a3c03c1e8729bba7c2b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a317e8614a0096a3c03c1e8729bba7c2b">&#9670;&#160;</a></span>generator()</h2>
 
@@ -378,6 +461,34 @@ Variables</h2></td></tr>
           <td class="paramtype"><a class="el" href="tournament_8cpp.html#acf74842513df74d6b7d338cac0c647fb">seed</a>&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6d009b3de68b38e3cacd99f680faa515" name="a6d009b3de68b38e3cacd99f680faa515"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d009b3de68b38e3cacd99f680faa515">&#9670;&#160;</a></span>int_distrib()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::uniform_int_distribution int_distrib </td>
+          <td>(</td>
+          <td class="paramtype">0&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">100 *&#160;</td>
+          <td class="paramname"><em>POP_SIZE</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -504,6 +615,24 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a6aa7e7375ee407809fb9b8e097e3e69e" name="a6aa7e7375ee407809fb9b8e097e3e69e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6aa7e7375ee407809fb9b8e097e3e69e">&#9670;&#160;</a></span>unif_b_distrib()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::bernoulli_distribution unif_b_distrib </td>
+          <td>(</td>
+          <td class="paramtype">0.&#160;</td>
+          <td class="paramname"><em>5</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aa3ac02038b98a7d1b39dbdc311f9ccaf" name="aa3ac02038b98a7d1b39dbdc311f9ccaf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa3ac02038b98a7d1b39dbdc311f9ccaf">&#9670;&#160;</a></span>write_scores()</h2>
 
@@ -580,7 +709,35 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const unsigned seed = 818934826</td>
+          <td class="memname">const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count()</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae66ab4e2f578b32f078917a6feda0ec9" name="ae66ab4e2f578b32f078917a6feda0ec9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae66ab4e2f578b32f078917a6feda0ec9">&#9670;&#160;</a></span>unif_bernouilli</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto unif_bernouilli = std::bind(<a class="el" href="tournament_8cpp.html#a6aa7e7375ee407809fb9b8e097e3e69e">unif_b_distrib</a>,<a class="el" href="tournament_8cpp.html#a317e8614a0096a3c03c1e8729bba7c2b">generator</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9cfd4111b5a0856afee215ff04997f08" name="a9cfd4111b5a0856afee215ff04997f08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9cfd4111b5a0856afee215ff04997f08">&#9670;&#160;</a></span>unif_int</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto unif_int = std::bind(<a class="el" href="tournament_8cpp.html#a6d009b3de68b38e3cacd99f680faa515">int_distrib</a>,<a class="el" href="tournament_8cpp.html#a317e8614a0096a3c03c1e8729bba7c2b">generator</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">

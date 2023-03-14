@@ -5,5 +5,6 @@ var annotated_dup =
     [ "GamePlayer", "class_game_player.html", "class_game_player" ],
     [ "IntuitionDataGenerator", "class_intuition_data_generator.html", "class_intuition_data_generator" ],
     [ "OpeningsGenerator", "class_openings_generator.html", "class_openings_generator" ],
-    [ "SolversIndividuals", "class_solvers_individuals.html", "class_solvers_individuals" ]
+    [ "SolversIndividuals", "class_solvers_individuals.html", "class_solvers_individuals" ],
+    [ "ThreadGamePlayer", "class_thread_game_player.html", "class_thread_game_player" ]
 ];

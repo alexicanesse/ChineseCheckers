@@ -17,5 +17,6 @@ var searchData=
   ['sigma_5finit_14',['SIGMA_INIT',['../tournament_8cpp.html#a5f6ad8818d7f5de228103a9617c9fd31',1,'tournament.cpp']]],
   ['sigma_5fmutation_15',['SIGMA_MUTATION',['../tournament_8cpp.html#a63fe8d16c5a02d3931b942364f7ddfa7',1,'tournament.cpp']]],
   ['solversindividuals_16',['SolversIndividuals',['../class_solvers_individuals.html',1,'SolversIndividuals'],['../class_solvers_individuals.html#a25ba5290ea541cd9680a64b0075c3124',1,'SolversIndividuals::SolversIndividuals()'],['../class_solvers_individuals.html#a65dec433c7988291cd6be7069772863e',1,'SolversIndividuals::SolversIndividuals(std::vector&lt; double &gt; &amp;win_, std::vector&lt; double &gt; &amp;lose_)']]],
-  ['stateofgame_17',['stateOfGame',['../class_chinese_checkers.html#a917bd36429c79e4d4888ad6be3d8c092',1,'ChineseCheckers']]]
+  ['start_17',['start',['../class_thread_game_player.html#ab9d2171bec1d58c44bbe84f4575aba3d',1,'ThreadGamePlayer']]],
+  ['stateofgame_18',['stateOfGame',['../class_chinese_checkers.html#a917bd36429c79e4d4888ad6be3d8c092',1,'ChineseCheckers']]]
 ];

@@ -6,6 +6,6 @@ var searchData=
   ['print_5finfo_5fas_5fmatrix_5fto_5ffile_3',['print_info_as_matrix_to_file',['../class_solvers_individuals.html#a2bdf79c38032471af805354a50ecd862',1,'SolversIndividuals']]],
   ['print_5fmatrix_4',['print_matrix',['../tournament_8hpp.html#aaf189cdb7a88ad5fdf2acc7f34e949eb',1,'print_matrix(const std::vector&lt; double &gt; &amp;matrix):&#160;tournament.cpp'],['../tournament_8cpp.html#aaf189cdb7a88ad5fdf2acc7f34e949eb',1,'print_matrix(const std::vector&lt; double &gt; &amp;matrix):&#160;tournament.cpp']]],
   ['print_5fplayers_5finfo_5',['print_players_info',['../class_game_player.html#a4d853ca48865526dac0b0ea8f0e550ae',1,'GamePlayer']]],
-  ['printgrid_6',['printGrid',['../class_chinese_checkers.html#a47574785bdb5920db7722a1630ab4f40',1,'ChineseCheckers']]],
-  ['printwhoistoplay_7',['printWhoIsToPlay',['../class_chinese_checkers.html#a893b1a49725415014b9fb94243fb64d5',1,'ChineseCheckers']]]
+  ['printgrid_6',['printGrid',['../class_chinese_checkers.html#ab9bea688c2ff0cd9b92dd82dbfb5e876',1,'ChineseCheckers']]],
+  ['printwhoistoplay_7',['printWhoIsToPlay',['../class_chinese_checkers.html#a5afe7edd57f604bd08f9945367f98e1e',1,'ChineseCheckers']]]
 ];

@@ -108,10 +108,12 @@ $(document).ready(function(){initNavTree('_alpha_beta_8cpp.html',''); initResiza
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;queue&gt;</code><br />
 <code>#include &lt;map&gt;</code><br />
+<code>#include &lt;set&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;unordered_map&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 <code>#include &lt;fstream&gt;</code><br />
+<code>#include &lt;iomanip&gt;</code><br />
 <code>#include &lt;boost/unordered_map.hpp&gt;</code><br />
 <code>#include &quot;<a class="el" href="_types_8hpp_source.html">Types.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_chinese_checkers_8hpp_source.html">ChineseCheckers.hpp</a>&quot;</code><br />
@@ -122,8 +124,10 @@ Macros</h2></td></tr>
 <tr class="separator:ac4b5ee41053e48c95f4b505a79669bba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac47ac12a87b223e50a0ba1ac7a4820ac"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_alpha_beta_8cpp.html#ac47ac12a87b223e50a0ba1ac7a4820ac">MINUS_INFTY</a>&#160;&#160;&#160;(-20)</td></tr>
 <tr class="separator:ac47ac12a87b223e50a0ba1ac7a4820ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a941c3c601c2eb002b6fc9818b8382a71"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_alpha_beta_8cpp.html#a941c3c601c2eb002b6fc9818b8382a71">DRAW_VALUE</a>&#160;&#160;&#160;(10);</td></tr>
+<tr class="memitem:a941c3c601c2eb002b6fc9818b8382a71"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_alpha_beta_8cpp.html#a941c3c601c2eb002b6fc9818b8382a71">DRAW_VALUE</a>&#160;&#160;&#160;(0)</td></tr>
 <tr class="separator:a941c3c601c2eb002b6fc9818b8382a71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3379841f4ac53968c06be3383929abb3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_alpha_beta_8cpp.html#a3379841f4ac53968c06be3383929abb3">MAX_TREE_WIDTH</a>&#160;&#160;&#160;(-1)</td></tr>
+<tr class="separator:a3379841f4ac53968c06be3383929abb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Alpha-Beta algorithm implementation. </p>
@@ -136,7 +140,21 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define DRAW_VALUE&#160;&#160;&#160;(10);</td>
+          <td class="memname">#define DRAW_VALUE&#160;&#160;&#160;(0)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3379841f4ac53968c06be3383929abb3" name="a3379841f4ac53968c06be3383929abb3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3379841f4ac53968c06be3383929abb3">&#9670;&#160;</a></span>MAX_TREE_WIDTH</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAX_TREE_WIDTH&#160;&#160;&#160;(-1)</td>
         </tr>
       </table>
 </div><div class="memdoc">

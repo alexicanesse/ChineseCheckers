@@ -72,6 +72,36 @@ var NAVTREE =
         ] ]
       ] ]
     ] ],
+    [ "Chinese Checkers Solver using Alpha Beta pruning in C++: Project Report", "md__r_e_p_o_r_t.html", [
+      [ "Sommaire", "md__r_e_p_o_r_t.html#autotoc_md40", null ],
+      [ "Vue d'ensemble", "md__r_e_p_o_r_t.html#autotoc_md41", null ],
+      [ "Règles du jeu", "md__r_e_p_o_r_t.html#autotoc_md42", [
+        [ "Mouvements", "md__r_e_p_o_r_t.html#autotoc_md43", null ],
+        [ "Positions illégales", "md__r_e_p_o_r_t.html#autotoc_md44", null ]
+      ] ],
+      [ "Organisation du code", "md__r_e_p_o_r_t.html#autotoc_md45", null ],
+      [ "Heuristiques", "md__r_e_p_o_r_t.html#autotoc_md46", [
+        [ "Ouvertures", "md__r_e_p_o_r_t.html#autotoc_md47", null ],
+        [ "Tri", "md__r_e_p_o_r_t.html#autotoc_md48", null ],
+        [ "Coupure de l'arbre", "md__r_e_p_o_r_t.html#autotoc_md49", null ],
+        [ "Zero-width Window Search", "md__r_e_p_o_r_t.html#autotoc_md50", null ],
+        [ "Table de transposition", "md__r_e_p_o_r_t.html#autotoc_md51", null ]
+      ] ],
+      [ "Evaluation par algorithme génétique", "md__r_e_p_o_r_t.html#autotoc_md52", [
+        [ "Présentation de l'algorithme", "md__r_e_p_o_r_t.html#autotoc_md53", null ],
+        [ "Implémentation", "md__r_e_p_o_r_t.html#autotoc_md54", null ],
+        [ "Résultats", "md__r_e_p_o_r_t.html#autotoc_md55", null ]
+      ] ],
+      [ "Optimisation", "md__r_e_p_o_r_t.html#autotoc_md56", null ],
+      [ "Interface graphique", "md__r_e_p_o_r_t.html#autotoc_md57", null ],
+      [ "Libraries nécessaires", "md__r_e_p_o_r_t.html#autotoc_md58", null ],
+      [ "Compiler", "md__r_e_p_o_r_t.html#autotoc_md59", [
+        [ "Installer les libraries", "md__r_e_p_o_r_t.html#autotoc_md60", null ],
+        [ "Compiler", "md__r_e_p_o_r_t.html#autotoc_md61", null ]
+      ] ],
+      [ "Jouer", "md__r_e_p_o_r_t.html#autotoc_md62", null ],
+      [ "Difficultés rencontrées", "md__r_e_p_o_r_t.html#autotoc_md63", null ]
+    ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
@@ -101,7 +131,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_alpha_beta_8cpp.html",
-"tournament_8hpp.html"
+"md_code_of_conduct.html#autotoc_md6"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

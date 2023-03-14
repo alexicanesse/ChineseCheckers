@@ -2,6 +2,7 @@ var class_solvers_individuals =
 [
     [ "SolversIndividuals", "class_solvers_individuals.html#a25ba5290ea541cd9680a64b0075c3124", null ],
     [ "SolversIndividuals", "class_solvers_individuals.html#a65dec433c7988291cd6be7069772863e", null ],
+    [ "crossOver", "class_solvers_individuals.html#ada05ccf116f95818b5dc57473b56942e", null ],
     [ "get_lose", "class_solvers_individuals.html#a5b80327d9b2eff564b14d92fbeb31eb4", null ],
     [ "get_score", "class_solvers_individuals.html#af81cf8e95b1c272fe43cac8f76d19a9a", null ],
     [ "get_win", "class_solvers_individuals.html#a9be6caf9fd5dd5d0d36d2d1416d1522c", null ],

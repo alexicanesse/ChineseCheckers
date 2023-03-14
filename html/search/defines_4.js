@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['p_5fmutation_0',['P_MUTATION',['../tournament_8cpp.html#ad1d7b9efd831b763b6db9986dfb9e971',1,'tournament.cpp']]],
-  ['plus_5finfty_1',['PLUS_INFTY',['../_alpha_beta_8cpp.html#ac4b5ee41053e48c95f4b505a79669bba',1,'AlphaBeta.cpp']]],
-  ['pop_5fsize_2',['POP_SIZE',['../tournament_8cpp.html#aea5b3e4c9df97408e95b67cdf3f992fb',1,'tournament.cpp']]]
+  ['n_5fthreads_0',['N_THREADS',['../tournament_8cpp.html#ab60b5074c740fd36061f48f90d1a0b21',1,'tournament.cpp']]],
+  ['num_5fgeneration_1',['NUM_GENERATION',['../tournament_8cpp.html#a8cb0d5cfbec52986a3e45c9c4cd6e6d1',1,'tournament.cpp']]],
+  ['number_5fof_5fgames_2',['NUMBER_OF_GAMES',['../intuition__data__generator_8cpp.html#a2f1dccaed6cb94d2e37ff6340db54bb7',1,'intuition_data_generator.cpp']]]
 ];

@@ -7,5 +7,6 @@ var hierarchy =
       ] ]
     ] ],
     [ "GamePlayer", "class_game_player.html", null ],
-    [ "SolversIndividuals", "class_solvers_individuals.html", null ]
+    [ "SolversIndividuals", "class_solvers_individuals.html", null ],
+    [ "ThreadGamePlayer", "class_thread_game_player.html", null ]
 ];

@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['valid_5flines_0',['valid_lines',['../class_chinese_checkers.html#ad0d185a90a8793b5382cf3c1846921b7',1,'ChineseCheckers']]],
-  ['valid_5flines_5fillegal_1',['valid_lines_illegal',['../class_chinese_checkers.html#ae69c56a07a8b622689999ae410db0175',1,'ChineseCheckers']]],
-  ['variation_2',['variation',['../tournament_8cpp.html#a415f2b5a3a81139499530a697b21b1c4',1,'tournament.cpp']]]
+  ['transposition_5ftable_5f_0',['transposition_table_',['../class_alpha_beta.html#af417dfb51c90ed31954c9633200d6373',1,'AlphaBeta']]],
+  ['transposition_5ftable_5fpermanent_5f_1',['transposition_table_permanent_',['../class_intuition_data_generator.html#afa533a06eb948b5394498f55b6e94131',1,'IntuitionDataGenerator']]]
 ];

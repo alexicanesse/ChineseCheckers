@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['solversindividuals_0',['SolversIndividuals',['../class_solvers_individuals.html',1,'']]]
+  ['threadgameplayer_0',['ThreadGamePlayer',['../class_thread_game_player.html',1,'']]]
 ];

@@ -1,14 +1,21 @@
 var searchData=
 [
   ['illegal_0',['Illegal',['../_types_8hpp.html#ab152e38addc9865a033ed991583c1395aa6346545ee7955ddc811109b07ea08b0',1,'Types.hpp']]],
-  ['illegal_5fpositions_5f_1',['illegal_positions_',['../class_chinese_checkers.html#afc5501b982026001192b2c9c30f1cf33',1,'ChineseCheckers']]],
+  ['illegal_5fpositions_5f_1',['illegal_positions_',['../class_chinese_checkers.html#ac7afaf984eef7180deb1cd747034a4ae',1,'ChineseCheckers']]],
   ['init_5fat_5frandom_2',['init_at_random',['../class_solvers_individuals.html#aac9e989784998a64fb033e60d3471679',1,'SolversIndividuals']]],
-  ['initiator_5f_3',['initiator_',['../tournament_8cpp.html#a2fff424ef55f00e36377dc3ddcd2be2f',1,'tournament.cpp']]],
-  ['int_5fto_5fuint64_5f_4',['int_to_uint64_',['../class_chinese_checkers.html#acd386bc806bdee8b5da27c127035e0ac',1,'ChineseCheckers']]],
-  ['intuition_5fdata_5fgenerator_2ecpp_5',['intuition_data_generator.cpp',['../intuition__data__generator_8cpp.html',1,'']]],
-  ['intuition_5fdata_5fgenerator_2ehpp_6',['intuition_data_generator.hpp',['../intuition__data__generator_8hpp.html',1,'']]],
-  ['intuitiondatagenerator_7',['IntuitionDataGenerator',['../class_intuition_data_generator.html',1,'']]],
-  ['ishuman_8',['isHuman',['../class_alpha_beta.html#a02add2f65f9b637e3131d1db1565c490',1,'AlphaBeta']]],
-  ['ispositionillegal_9',['isPositionIllegal',['../class_chinese_checkers.html#adf3fee8d8c34b6f4ab67c9290ef63b5b',1,'ChineseCheckers']]],
-  ['it_5ftransposition_5ftable_5f_10',['it_transposition_table_',['../class_alpha_beta.html#a4c497c4f5103a9edb75ef2691765760c',1,'AlphaBeta']]]
+  ['init_5fat_5frandom_3',['INIT_AT_RANDOM',['../tournament_8cpp.html#ad6c6944609dc59dd9cfa195cdb1cb583',1,'tournament.cpp']]],
+  ['initcantorpairing_4',['initCantorPairing',['../_chinese_checkers_8cpp.html#aea7eee058346f60813366df0dbb69ccc',1,'ChineseCheckers.cpp']]],
+  ['initdirectneighbours_5',['initDirectNeighbours',['../_chinese_checkers_8cpp.html#a6bbfb393fb88f1f9e3d0d91757f8420f',1,'ChineseCheckers.cpp']]],
+  ['initiator_5f_6',['initiator_',['../tournament_8cpp.html#a2fff424ef55f00e36377dc3ddcd2be2f',1,'tournament.cpp']]],
+  ['initinttouint64_7',['initIntToUint64',['../_chinese_checkers_8cpp.html#ae9316b43dd488a6873fab7bab2b4d539',1,'ChineseCheckers.cpp']]],
+  ['initkneighbours_8',['initKNeighbours',['../_chinese_checkers_8cpp.html#a664f84267326af8a67b7278d2070979c',1,'ChineseCheckers.cpp']]],
+  ['inituint64topair_9',['initUint64ToPair',['../_chinese_checkers_8cpp.html#a3c89a9ea68e18417f43a9aadb3bdea41',1,'ChineseCheckers.cpp']]],
+  ['int_5fdistrib_10',['int_distrib',['../tournament_8cpp.html#a6d009b3de68b38e3cacd99f680faa515',1,'tournament.cpp']]],
+  ['int_5fto_5fuint64_5f_11',['int_to_uint64_',['../class_chinese_checkers.html#a788f49b5b15e5c3c8c88d0c50653fbbc',1,'ChineseCheckers']]],
+  ['intuition_5fdata_5fgenerator_2ecpp_12',['intuition_data_generator.cpp',['../intuition__data__generator_8cpp.html',1,'']]],
+  ['intuition_5fdata_5fgenerator_2ehpp_13',['intuition_data_generator.hpp',['../intuition__data__generator_8hpp.html',1,'']]],
+  ['intuitiondatagenerator_14',['IntuitionDataGenerator',['../class_intuition_data_generator.html',1,'']]],
+  ['ishuman_15',['isHuman',['../class_alpha_beta.html#a02add2f65f9b637e3131d1db1565c490',1,'AlphaBeta']]],
+  ['ispositionillegal_16',['isPositionIllegal',['../class_chinese_checkers.html#a5d16c626f50838315e80a38c0efd1a51',1,'ChineseCheckers']]],
+  ['it_5ftransposition_5ftable_5f_17',['it_transposition_table_',['../class_alpha_beta.html#a2aa1aa44c9b3b4963aa4cfbb9d020caa',1,'AlphaBeta']]]
 ];
